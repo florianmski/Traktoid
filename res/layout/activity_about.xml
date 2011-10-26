@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+        <ImageView
+            android:id="@+id/imageViewNyan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:padding="10dp"
+            android:text="I am a 19 years old french developer. Right now I&apos;m studying computer science at Polytech&apos; Paris Sud, an engineering school and I&apos;m working for a little startup as an android dev. I wrote this application in my spare time to test some android libraries I&apos;ve heard about and also because I found Trakt great! \nFeel free to contact me at florian.pub@gmail.com, on twitter @florianmski or even on Trakt : florianmski ;)"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:orientation="vertical"
+     android:layout_width="fill_parent"
+     android:layout_height="fill_parent">
+     <com.google.android.apps.iosched.ui.widget.DashboardLayout
+          android:layout_width="fill_parent"
+          android:layout_height="fill_parent">
+          <Button
+               android:layout_width="wrap_content"
+               android:textColor="#FFF"
+               android:layout_height="wrap_content"
+               android:id="@+id/home_btn_myshows"
+               android:text="Library"
+               android:background="#00000000"
+               android:drawableTop="@drawable/tv"
+               android:textSize="20sp"
+               android:textStyle="bold" />
+          <Button
+               android:layout_width="wrap_content"
+               android:background="#00000000"
+               android:textColor="#FFF"
+               android:layout_height="wrap_content"
+               android:id="@+id/home_btn_search"
+               android:text="Search"
+               android:textStyle="bold"
+               android:textSize="20sp"
+               android:drawableTop="@drawable/search" />
+          <Button
+               android:id="@+id/home_btn_recommendations"
+               android:background="#00000000"
+               android:textColor="#FFF"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Suggestions"
+               android:textStyle="bold"
+               android:textSize="20sp"
+               android:drawableTop="@drawable/help" />
+          <Button
+               android:id="@+id/home_btn_calendar"
+               android:background="#00000000"
+               android:textColor="#FFF"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Calendar"
+               android:textSize="20sp"
+               android:textStyle="bold"
+               android:drawableTop="@drawable/calendar" />
+          <Button
+               android:id="@+id/home_btn_vendors"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:visibility="invisible" />
+          <Button
+               android:id="@+id/home_btn_announcements"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:visibility="invisible" />
+     </com.google.android.apps.iosched.ui.widget.DashboardLayout>
+</LinearLayout>

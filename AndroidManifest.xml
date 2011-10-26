@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.florianmski.tracktoid"
+      android:versionCode="7"
+      android:versionName="0.5"
+      android:installLocation="preferExternal">
+      
+    <uses-sdk android:minSdkVersion="4" />
+    <uses-sdk android:targetSdkVersion="8" />
+    
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+
+    <application 	
+    	android:icon="@drawable/icon" 
+		android:label="@string/app_name" 
+		android:theme="@style/Theme.Traktoid"
+		android:name=".TracktoidApplication"
+        android:hardwareAccelerated="true">
+
+        <activity android:name=".ui.TracktoidActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".ui.SplashActivity"></activity>
+        <activity android:name=".ui.SearchActivity" android:label="Search"></activity>
+        <activity android:name=".ui.CalendarActivity" android:label="Calendar"></activity>
+        <activity android:name=".ui.ShowActivity"></activity>
+        <activity android:name=".ui.SeasonActivity"></activity>
+        <activity android:name=".ui.EpisodeActivity"></activity>
+        <activity android:name=".ui.MyShowsActivity" android:label="Library"></activity>
+        <activity android:name=".ui.MyShowActivity"></activity>
+        <activity android:name=".ui.SettingsActivity" android:label="Settings"></activity>
+        <activity android:name=".ui.RecommendationActivity" android:label="Recommendation"></activity>
+        <activity android:name=".ui.AboutActivity" android:label="About"></activity>
+
+    </application>
+</manifest>

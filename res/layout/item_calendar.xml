@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/RelativeLayoutScreen"
+     android:layout_width="fill_parent"
+     android:layout_height="fill_parent">
+     <ImageView
+          android:id="@+id/imageViewScreen"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:scaleType="centerCrop">
+     </ImageView>
+     <com.actionbarsherlock.internal.widget.ScrollingTextView
+          android:id="@+id/textViewShow"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:singleLine="true"
+          android:textColor="#FFF"
+          android:textStyle="bold"
+          android:background="#5F000000"
+          android:padding="5dp"
+          android:ellipsize="marquee"
+          android:marqueeRepeatLimit="marquee_forever"
+          android:scrollHorizontally="true" />
+     <LinearLayout
+          android:id="@+id/linearLayoutScreen"
+          android:layout_height="wrap_content"
+          android:layout_alignParentBottom="true"
+          android:layout_width="fill_parent"
+          android:background="#5F000000"
+          android:padding="5dp"
+          android:orientation="vertical">
+          <com.actionbarsherlock.internal.widget.ScrollingTextView
+               android:id="@+id/textViewTitle"
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               android:singleLine="true"
+               android:textColor="#FFF"
+               android:ellipsize="marquee"
+               android:marqueeRepeatLimit="marquee_forever"
+               android:scrollHorizontally="true" />
+          <com.actionbarsherlock.internal.widget.ScrollingTextView
+               android:id="@+id/textViewAirTime"
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               android:singleLine="true"
+               android:ellipsize="marquee"
+               android:marqueeRepeatLimit="marquee_forever"
+               android:scrollHorizontally="true" />
+     </LinearLayout>
+</RelativeLayout>

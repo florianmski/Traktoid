@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="fill_parent"
+     android:layout_height="75dp">
+     <TextView
+          android:text="TextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:textColor="#FFF"
+          android:textStyle="bold"
+          android:textSize="20sp"
+          android:paddingLeft="10dp"
+          android:id="@+id/textViewSeason"/>
+     <TextView
+          android:text="TextView"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:textSize="20sp"
+          android:layout_width="fill_parent"
+          android:layout_weight="1"
+          android:id="@+id/textViewLeft"
+          android:gravity="center"/>
+     <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/imageViewBadge"
+          android:src="@drawable/badge_watched"/>
+</LinearLayout>
