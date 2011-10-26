@@ -220,7 +220,7 @@ public class ListCalendarAdapter extends BaseAdapter
 				holder.tvTitle[i].setText(title);
 				holder.tvAirTime[i].setText(e.getShow().getAirTime() + " on " + e.getShow().getNetwork());
 
-				Image image = new Image(e.getShow().getTvdbId(), episode.getImages().getScreen(), Image.CALENDAR, true);
+				Image image = new Image(e.getShow().getTvdbId(), episode.getImages().getScreen(), Image.CALENDAR);
 				AQuery aq = new AQuery(holder.llEpisodes);
 
 				if(aq.shouldDelay(holder.llEpisodes, parent, image.getUrl(), 0))

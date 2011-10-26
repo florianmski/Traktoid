@@ -37,26 +37,26 @@ public class Image
 	public final static double RATIO_POSTER = 1.471014493;
 	public final static double RATIO_BANNER = 55.0/300.0;
 	
+	public static boolean smallSize = true;
+	
 	private String tvdb_id;
 	private int imageType;
-	private boolean smallSize;
 	private String url;
 	private int season = -1;
 	private int episode = -1;
 	
-	public Image(String tvdb_id, String traktURL, int imageType, boolean smallSize)
+	public Image(String tvdb_id, String traktURL, int imageType)
 	{
 		this.tvdb_id = tvdb_id;
 		this.imageType = imageType;
-		this.smallSize = smallSize;
 		
 		switch(imageType)
 		{
 			case BANNER : 
-			case FANART : this.url = getTVDBImage(tvdb_id, imageType, smallSize);
+			case FANART : this.url = getTVDBImage(tvdb_id, imageType);
 				break;
 			case CALENDAR :
-			case POSTER : this.url = getTraktImage(traktURL, imageType, smallSize);
+			case POSTER : this.url = getTraktImage(traktURL, imageType);
 				break;	
 		}
 		
@@ -69,13 +69,12 @@ public class Image
 	 * @param season
 	 * @param smallSize
 	 */
-	public Image(String tvdb_id, int season, boolean smallSize)
+	public Image(String tvdb_id, int season)
 	{
 		this.tvdb_id = tvdb_id;
 		this.imageType = SEASON;
 		this.season = season;
-		this.smallSize = smallSize;
-		this.url = getSeasonPoster(tvdb_id, season, smallSize);
+		this.url = getSeasonPoster(tvdb_id, season);
 	}
 	
 	/**
@@ -86,14 +85,13 @@ public class Image
 	 * @param episode
 	 * @param smallSize
 	 */
-	public Image(String tvdb_id, String traktURL, int season, int episode, boolean smallSize)
+	public Image(String tvdb_id, String traktURL, int season, int episode)
 	{
 		this.tvdb_id = tvdb_id;
 		this.imageType = SCREEN;
 		this.season = season;
 		this.episode = episode;
-		this.smallSize = smallSize;
-		this.url = getTraktImage(traktURL, imageType, smallSize);
+		this.url = getTraktImage(traktURL, imageType);
 	}
 	
 	public Image()
@@ -101,7 +99,7 @@ public class Image
 		
 	}
 	
-	private String getTVDBImage(String tvdb_id, int imageType, boolean smallSize)
+	private String getTVDBImage(String tvdb_id, int imageType)
 	{
 		String url = tvdbUrl + (smallSize ? tvdbSmallSize : "");
 		switch(imageType)
@@ -113,14 +111,14 @@ public class Image
 		return url;
 	}
 	
-	private String getSeasonPoster(String tvdb_id, int season, boolean smallSize)
+	private String getSeasonPoster(String tvdb_id, int season)
 	{
 		String url = tvdbUrl + (smallSize ? tvdbSmallSize : "");
 		url = String.format(url += tvdbSeason, tvdb_id, season);
 		return url;
 	}
 	
-	private String getTraktImage(String traktURL, int imageType, boolean smallSize)
+	private String getTraktImage(String traktURL, int imageType)
 	{
 		String url = traktURL;
 		if(smallSize)
@@ -166,10 +164,6 @@ public class Image
 
 	public void setImageType(int imageType) {
 		this.imageType = imageType;
-	}
-
-	public void setSmallSize(boolean smallSize) {
-		this.smallSize = smallSize;
 	}
 
 	public void setUrl(String url) {

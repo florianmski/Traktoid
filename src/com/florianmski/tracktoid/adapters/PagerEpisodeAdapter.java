@@ -124,7 +124,7 @@ public class PagerEpisodeAdapter extends PagerAdapter implements TitleProvider
 		tvPercentage.setText(e.getRatings().getPercentage()+"%");
 		ivWatched.setImageBitmap(null);
 
-		Image i = new Image(tvdbId, e.getImages().getScreen(), e.getSeason(), e.getNumber(), false);
+		Image i = new Image(tvdbId, e.getImages().getScreen(), e.getSeason(), e.getNumber());
 		AQuery aq = new AQuery(v);
 		//create a bitmap ajax callback object
 		BitmapAjaxCallback cb = new BitmapAjaxCallback();

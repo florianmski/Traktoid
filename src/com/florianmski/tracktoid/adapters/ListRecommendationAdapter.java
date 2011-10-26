@@ -93,7 +93,7 @@ public class ListRecommendationAdapter extends BaseAdapter
         
         TvShow s = recommendations.get(position);
         
-        Image i = new Image(s.getTvdbId(), s.getImages().getFanart(), Image.FANART, true);
+        Image i = new Image(s.getTvdbId(), s.getImages().getFanart(), Image.FANART);
         AQuery aq = new AQuery(convertView);
         if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
             aq.id(holder.ivFanart).image(placeholder);

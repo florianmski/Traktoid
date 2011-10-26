@@ -28,15 +28,19 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.ActionBar;
+import android.support.v4.app.ActionBar.OnNavigationListener;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.support.v4.view.Window;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -74,6 +78,22 @@ public class MyShowsActivity extends TraktActivity
 		setContentView(R.layout.activity_my_shows);
 
 		Utils.showLoading(this);
+		
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+		String[] items = new String[] {"All shows", "Unwatched shows", "Loved shows"};
+		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.abs__simple_spinner_item, items);
+		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		
+		getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, new OnNavigationListener() 
+		{
+			@Override
+			public boolean onNavigationItemSelected(int filter, long itemId) 
+			{
+				adapter.setFilter(filter);
+				return false;
+			}
+		});
 				
 		DatabaseWrapper dbw = new DatabaseWrapper(this);
 		dbw.open();
@@ -309,7 +329,10 @@ public class MyShowsActivity extends TraktActivity
 		});
 		
 		AlertDialog alert = builder.create();
-		alert.show();
+		
+		//avoid trying to show dialog if activity no longer exist
+		if(!isFinishing())
+			alert.show();
 	}
 	
 	@Override

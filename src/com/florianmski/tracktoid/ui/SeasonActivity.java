@@ -189,6 +189,6 @@ public class SeasonActivity extends TraktPagerActivity
 	{
 		super.onPageSelected(position);
 		
-		setBackground(new Image(tvdbId, seasons.get(position).getSeason(), true));
+		setBackground(new Image(tvdbId, seasons.get(position).getSeason()));
 	}
 }

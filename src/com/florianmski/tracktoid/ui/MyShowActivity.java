@@ -23,6 +23,8 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -42,9 +44,9 @@ import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBSeasonsTask;
 import com.florianmski.tracktoid.image.Fanart;
 import com.florianmski.tracktoid.image.Image;
+import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
-import com.jakewharton.trakt.entities.TvShow;
 
 public class MyShowActivity extends TraktActivity
 {
@@ -158,7 +160,7 @@ public class MyShowActivity extends TraktActivity
 			tvTitle.setText(e.getTitle());
 			tvEpisode.setText(Utils.addZero(e.getSeason()) + "x" + Utils.addZero(e.getNumber()));
 			
-			Image i = new Image(tvdbId, e.getImages().getScreen(), e.getSeason(), e.getNumber(), true);
+			Image i = new Image(tvdbId, e.getImages().getScreen(), e.getSeason(), e.getNumber());
 			AQuery aq = new AQuery(MyShowActivity.this);
 			aq.id(ivScreen).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in, 9.0f / 16.0f);
 

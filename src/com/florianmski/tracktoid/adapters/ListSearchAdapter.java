@@ -93,7 +93,7 @@ public class ListSearchAdapter extends BaseAdapter
 
 		TvShow show = shows.get(position);
 
-		Image i = new Image(show.getTvdbId(), null, Image.BANNER, true);
+		Image i = new Image(show.getTvdbId(), null, Image.BANNER);
 		AQuery aq = new AQuery(convertView);
 		if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
 			aq.id(holder.ivBanner).image(placeholder);

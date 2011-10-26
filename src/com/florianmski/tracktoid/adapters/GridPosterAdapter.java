@@ -41,17 +41,54 @@ import com.jakewharton.trakt.enumerations.Rating;
 
 public class GridPosterAdapter extends BaseAdapter
 {
-	private static final int padding = 2;
+	private static final int FILTER_ALL = 0;
+	private static final int FILTER_UNWATCHED = 1;
+	private static final int FILTER_LOVED = 2;
+	
+	private static final int PADDING = 2;
 
 	private Activity context;
 	private List<TvShow> shows;
+	private List<TvShow> filterShows = new ArrayList<TvShow>();
 	private int cHeight;
+	private int currentFilter = 0;
 
-	public GridPosterAdapter(Activity context, List<TvShow> series, int cHeight) 
+	public GridPosterAdapter(Activity context, List<TvShow> shows, int cHeight) 
 	{
 		this.context = context;
-		this.shows = series;
+		this.shows = shows;
+		this.filterShows.addAll(shows);
 		this.cHeight = cHeight;
+	}
+	
+	public void setFilter(int filter)
+	{
+		currentFilter = filter;
+		switch(filter)
+		{
+		case FILTER_ALL :
+			filterShows.clear();
+			filterShows.addAll(shows);
+			break;
+		case FILTER_UNWATCHED :
+			filterShows.clear();
+			for(TvShow s : shows)
+			{
+				if(s.getProgress() < 100)
+					filterShows.add(s);
+			}
+			break;
+		case FILTER_LOVED :
+			filterShows.clear();
+			for(TvShow s : shows)
+			{
+				if(s.getRating() == Rating.Love)
+					filterShows.add(s);
+			}
+			break;
+		}
+		
+		this.notifyDataSetChanged();
 	}
 
 	public void updateShow(TvShow show)
@@ -64,7 +101,7 @@ public class GridPosterAdapter extends BaseAdapter
 
 		Collections.sort(shows);
 
-		this.notifyDataSetChanged();
+		setFilter(currentFilter);
 	}
 
 	public void removeShow(TvShow show)
@@ -73,28 +110,23 @@ public class GridPosterAdapter extends BaseAdapter
 		if(index >= 0 && index < shows.size())
 			shows.remove(index);
 
-		this.notifyDataSetChanged();
+		setFilter(currentFilter);
 	}
 
 	public void updateShows(ArrayList<TvShow> shows, ArrayList<Integer> percentages)
 	{
 		this.shows = shows;
-		this.notifyDataSetChanged();
+		setFilter(currentFilter);
 	}
-
-	public List<TvShow> getShows()
-	{
-		return shows;
-	}
-
+	
 	public int getCount() 
 	{
-		return shows.size();
+		return filterShows.size();
 	}
 
 	public Object getItem(int position) 
 	{
-		return shows.get(position);
+		return filterShows.get(position);
 	}
 
 	public long getItemId(int position) 
@@ -115,7 +147,7 @@ public class GridPosterAdapter extends BaseAdapter
 			holder.rl = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutPoster);
 			GridView.LayoutParams paramsRl = new GridView.LayoutParams(LayoutParams.FILL_PARENT, cHeight);
 			holder.rl.setLayoutParams(paramsRl);
-			holder.rl.setPadding(padding, padding, padding, padding);
+			holder.rl.setPadding(PADDING, PADDING, PADDING, PADDING);
 
 			holder.ivPoster = (ImageView) convertView.findViewById(R.id.imageViewPoster);         	
 
@@ -134,13 +166,13 @@ public class GridPosterAdapter extends BaseAdapter
 		else
 			holder = (ViewHolder) convertView.getTag();
 
-		final TvShow show = shows.get(position);
+		final TvShow show = filterShows.get(position);
 
 		holder.ivRating.setImageBitmap(null);
 		holder.ivWatched.setImageBitmap(null);
 		holder.ivPoster.setImageBitmap(null);
 
-		Image i = new Image(show.getTvdbId(), show.getImages().getPoster(), Image.POSTER, true);
+		Image i = new Image(show.getTvdbId(), show.getImages().getPoster(), Image.POSTER);
 		AQuery aq = new AQuery(convertView);
 		//create a bitmap ajax callback object
 		BitmapAjaxCallback cb = new BitmapAjaxCallback();

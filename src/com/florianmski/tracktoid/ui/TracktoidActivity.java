@@ -26,6 +26,7 @@ import android.widget.Button;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
+import com.florianmski.tracktoid.image.Image;
 
 public class TracktoidActivity extends TraktActivity
 {
@@ -38,6 +39,10 @@ public class TracktoidActivity extends TraktActivity
         //check if db need an upgrade
         DatabaseWrapper dbw = new DatabaseWrapper(this);
         dbw.open();
+        
+        //Trying to set high definition image on high resolution
+        //does not seem to be a great idea, it's slow and I sometimes get an outOfMemoryError :/
+//        Image.smallSize = (getWindowManager().getDefaultDisplay().getHeight() <= 960 && getWindowManager().getDefaultDisplay().getWidth() <= 540);
                 
         Button btnSearch = (Button)findViewById(R.id.home_btn_search);
         Button btnMyShows = (Button)findViewById(R.id.home_btn_myshows);

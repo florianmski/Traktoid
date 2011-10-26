@@ -128,7 +128,7 @@ public class PagerShowAdapter extends PagerAdapter
 		ivRating.setImageBitmap(null);
 		ivWatched.setImageBitmap(null);
 
-		Image i = new Image(s.getTvdbId(), s.getImages().getScreen(), Image.FANART, true);
+		Image i = new Image(s.getTvdbId(), s.getImages().getScreen(), Image.FANART);
 		AQuery aq = new AQuery(v);
 		//create a bitmap ajax callback object
 		BitmapAjaxCallback cb = new BitmapAjaxCallback();

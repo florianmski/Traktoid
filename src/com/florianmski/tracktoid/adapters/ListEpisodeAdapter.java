@@ -130,7 +130,7 @@ public class ListEpisodeAdapter extends BaseAdapter
         
         TvShowEpisode e = episodes.get(position);
         
-        Image i = new Image(tvdb_id, e.getImages().getScreen(), e.getSeason(), e.getNumber(), true);
+        Image i = new Image(tvdb_id, e.getImages().getScreen(), e.getSeason(), e.getNumber());
         AQuery aq = new AQuery(convertView);
         //in case user scroll the list fast, stop loading images from web
         if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
