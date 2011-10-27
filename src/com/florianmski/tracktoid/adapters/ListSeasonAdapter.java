@@ -16,6 +16,7 @@
 
 package com.florianmski.tracktoid.adapters;
 
+import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
@@ -42,8 +43,15 @@ public class ListSeasonAdapter extends BaseAdapter
 	
 	public void reloadData(List<TvShowSeason> seasons)
 	{
-		this.seasons = seasons;
+		this.seasons.clear();
+		this.seasons.addAll(seasons);
+		Collections.reverse(this.seasons);
 		this.notifyDataSetChanged();
+	}
+	
+	public List<TvShowSeason> getSeasons()
+	{
+		return seasons;
 	}
 	
 	@Override

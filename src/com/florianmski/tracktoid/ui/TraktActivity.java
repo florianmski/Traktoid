@@ -35,6 +35,7 @@ public class TraktActivity extends FragmentActivity implements TraktListener
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
+		tm.addObserver(this);
 	}
 	
 	@Override
@@ -42,7 +43,6 @@ public class TraktActivity extends FragmentActivity implements TraktListener
 	{
 	   super.onStart();
 	   FlurryAgent.onStartSession(this, getResources().getString(R.string.flurry_key));
-	   tm.addObserver(this);
 	}
 	
 	@Override
@@ -50,7 +50,13 @@ public class TraktActivity extends FragmentActivity implements TraktListener
 	{
 	   super.onStop();
 	   FlurryAgent.onEndSession(this);
-	   tm.removeObserver(this);
+	}
+	
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		tm.removeObserver(this);
 	}
 	
 	protected void setTitle(String title)

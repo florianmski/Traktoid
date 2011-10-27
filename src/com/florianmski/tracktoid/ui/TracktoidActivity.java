@@ -26,7 +26,6 @@ import android.widget.Button;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.image.Image;
 
 public class TracktoidActivity extends TraktActivity
 {

@@ -16,6 +16,8 @@
 
 package com.florianmski.tracktoid.trakt.tasks;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,7 @@ import android.content.Context;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.jakewharton.trakt.entities.TvShow;
+import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
 import com.jakewharton.trakt.services.ShowService.EpisodeSeenBuilder;
 import com.jakewharton.trakt.services.ShowService.EpisodeUnseenBuilder;
@@ -47,6 +50,34 @@ public class WatchedEpisodesTask extends TraktTask
 		this.listWatched = listWatched;
 	}
 
+	public WatchedEpisodesTask(TraktManager tm, Context context, String tvdbId, int season, int episode, boolean watched) 
+	{
+		super(tm, context);
+		
+		this.tvdbId = tvdbId;
+		this.seasons = new int[]{season};
+		this.listWatched = new ArrayList<Map<Integer,Boolean>>();
+		this.listWatched.add(new HashMap<Integer, Boolean>());
+		this.listWatched.get(0).put(episode, watched);
+	}
+	
+	public WatchedEpisodesTask(TraktManager tm, Context context, String tvdbId, List<TvShowSeason> seasons, boolean watched) 
+	{
+		super(tm, context);
+		
+		this.tvdbId = tvdbId;
+		this.listWatched = new ArrayList<Map<Integer,Boolean>>();
+		this.seasons = new int[seasons.size()];
+		
+		for(int i = 0; i < seasons.size(); i++)
+		{
+			this.seasons[i] = seasons.get(i).getSeason();
+			this.listWatched.add(new HashMap<Integer, Boolean>());
+			for(int j = 1; j <= seasons.get(i).getEpisodes().getCount(); j++)
+				this.listWatched.get(i).put(j, watched);
+		}
+	}
+	
 	@Override
 	protected void doTraktStuffInBackground()
 	{
@@ -101,10 +132,9 @@ public class WatchedEpisodesTask extends TraktTask
 				}
 			}
 
-			seasonsList = dbw.getSeasons(tvdbId, true, true);
 			dbw.refreshPercentage(tvdbId);
 			show = dbw.getShow(tvdbId);			
-			show.setSeasons(seasonsList);
+			show.setSeasons(dbw.getSeasons(tvdbId, true, true));
 			
 			dbw.close();
 			
