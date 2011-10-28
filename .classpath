@@ -3,9 +3,9 @@
 	<classpathentry excluding="com/moviejukebox/thetvdb/|com/moviejukebox/|com/florianmski/tvshows/adapter/EpisodeGridAdapter.java|com/florianmski/tracktoid/TransitionAsyncImageView.java|com/florianmski/tracktoid/OpenAlertDialog.java|com/florianmski/tracktoid/SynchronizeIntentService.java|com/florianmski/tracktoid/adapter/CalendarListAdapter2.java|com/florianmski/tracktoid/LoadingImageView.java|com/florianmski/tracktoid/cache/|com/florianmski/tracktoid/ResourceHelper.java|com/florianmski/tracktoid/adapters/CalendarListAdapter2.java|com/florianmski/tracktoid/trakt/SynchronizationManager.java|com/florianmski/tracktoid/trakt/WatchedManager.java|com/florianmski/tracktoid/trakt/entities/_TvShow.java|com/florianmski/tracktoid/trakt/entities/_TvShowSeason.java|com/florianmski/tracktoid/trakt/entities/TvShowComparator.java" kind="src" path="src"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="libs/acra-4.2.3.jar"/>
-	<classpathentry kind="lib" path="libs/android-query.0.14.12.jar"/>
 	<classpathentry kind="lib" path="/home/florian/Téléchargements/FlurryAgent.jar"/>
 	<classpathentry kind="lib" path="libs/gson-1.7.1.jar"/>
+	<classpathentry kind="lib" path="libs/android-query.0.15.4.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/trakt-java"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="gen"/>

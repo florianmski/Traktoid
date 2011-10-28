@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.androidquery.service.MarketService;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 
@@ -38,6 +39,10 @@ public class TracktoidActivity extends TraktActivity
         //check if db need an upgrade
         DatabaseWrapper dbw = new DatabaseWrapper(this);
         dbw.open();
+        
+        //check if a new version of Traktoid is available and display a dialog if so
+        MarketService ms = new MarketService(this);
+        ms.checkVersion();
         
         //Trying to set high definition image on high resolution
         //does not seem to be a great idea, it's slow and I sometimes get an outOfMemoryError :/
