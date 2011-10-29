@@ -31,6 +31,7 @@ import com.jakewharton.trakt.entities.TvShow;
 
 public class ShowActivity extends TraktPagerActivity
 {
+	//TODO onShowUpdated()
 	private TvShow show;
 	private boolean isExist;
 
@@ -47,6 +48,7 @@ public class ShowActivity extends TraktPagerActivity
 	{
 		new Thread()
 		{
+			@Override
 			@SuppressWarnings("unchecked")
 			public void run()
 			{
@@ -72,7 +74,7 @@ public class ShowActivity extends TraktPagerActivity
 		if(!isExist)
 		{
 			menu.add(0, R.id.action_bar_add, 0, "Add")
-			.setIcon(R.drawable.gd_action_bar_add)
+			.setIcon(R.drawable.ab_icon_add)
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 

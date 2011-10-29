@@ -47,6 +47,7 @@ public class TraktPagerActivity extends TraktActivity implements OnPageChangeLis
     protected AQuery aq;
 
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);

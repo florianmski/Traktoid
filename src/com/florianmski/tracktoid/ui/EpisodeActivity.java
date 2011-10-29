@@ -19,9 +19,6 @@ package com.florianmski.tracktoid.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
@@ -76,7 +73,7 @@ public class EpisodeActivity extends TraktPagerActivity
 		if(adapter == null || !((PagerEpisodeAdapter) adapter).getEpisode(currentPagerPosition).getWatched())
 		{
 			menu.add(0, R.id.action_bar_watched, 0, "Watched")
-				.setIcon(R.drawable.gd_action_bar_eye)
+				.setIcon(R.drawable.ab_icon_eye)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 		return super.onCreateOptionsMenu(menu);

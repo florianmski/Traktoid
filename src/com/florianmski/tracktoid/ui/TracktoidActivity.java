@@ -97,10 +97,10 @@ public class TracktoidActivity extends TraktActivity
 	public boolean onCreateOptionsMenu (Menu menu)
 	{
     	menu.add(0, R.id.menu_settings, 0, "Settings")
-    		.setIcon(R.drawable.gd_action_bar_settings)
+    		.setIcon(R.drawable.ab_icon_settings)
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
     	menu.add(0, R.id.action_bar_about, 0, "About")
-			.setIcon(R.drawable.gd_action_bar_info)
+			.setIcon(R.drawable.ab_icon_info)
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     	return super.onCreateOptionsMenu(menu);
 	}

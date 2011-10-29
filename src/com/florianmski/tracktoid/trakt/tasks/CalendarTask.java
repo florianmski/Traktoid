@@ -49,11 +49,11 @@ public class CalendarTask extends TraktTask
 	{	
 		this.publishProgress("toast", "0", "Retrieving calendar...");
 		
-		ArrayList<CalendarDate> calendarListShows;
-		ArrayList<CalendarDate> calendarListPremieres = new ArrayList<CalendarDate>();
-		ArrayList<CalendarDate> calendarListMyShows = new ArrayList<CalendarDate>();
+		List<CalendarDate> calendarListShows;
+		List<CalendarDate> calendarListPremieres = new ArrayList<CalendarDate>();
+		List<CalendarDate> calendarListMyShows = new ArrayList<CalendarDate>();
 		
-		calendarListShows = (ArrayList<CalendarDate>) tm.calendarService().shows().fire();
+		calendarListShows = tm.calendarService().shows().fire();
 		
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
 		dbw.open();
@@ -70,8 +70,8 @@ public class CalendarTask extends TraktTask
 			calendarPremieres.setDate(cd.getDate());
 			calendarMyShows.setDate(cd.getDate());
 			
-			ArrayList<CalendarTvShowEpisode> episodesPremieres = new ArrayList<CalendarTvShowEpisode>();
-			ArrayList<CalendarTvShowEpisode> episodesMyShows = new ArrayList<CalendarTvShowEpisode>();
+			List<CalendarTvShowEpisode> episodesPremieres = new ArrayList<CalendarTvShowEpisode>();
+			List<CalendarTvShowEpisode> episodesMyShows = new ArrayList<CalendarTvShowEpisode>();
 			
 			for(CalendarTvShowEpisode e : cd.getEpisodes())
 			{				

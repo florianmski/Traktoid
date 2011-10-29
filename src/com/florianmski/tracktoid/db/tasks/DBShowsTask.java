@@ -31,6 +31,7 @@ public class DBShowsTask extends DBTask
 		super(context, listener);
 	}
 	
+	@Override
 	protected void doDBStuff() 
 	{
 		shows = dbw.getShows();		

@@ -35,7 +35,6 @@ import com.jakewharton.trakt.entities.Ratings;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
-import com.jakewharton.trakt.entities.MediaBase.Stats;
 import com.jakewharton.trakt.entities.TvShowSeason.Episodes;
 import com.jakewharton.trakt.enumerations.DayOfTheWeek;
 import com.jakewharton.trakt.enumerations.Rating;

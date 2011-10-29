@@ -27,7 +27,6 @@ import android.content.Context;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.jakewharton.trakt.entities.TvShow;
-import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
 import com.jakewharton.trakt.services.ShowService.EpisodeSeenBuilder;
 import com.jakewharton.trakt.services.ShowService.EpisodeUnseenBuilder;
@@ -36,7 +35,7 @@ public class WatchedEpisodesTask extends TraktTask
 {
 	private String tvdbId;
 	private int [] seasons;
-	private List<Map<Integer, Boolean>> listWatched;
+	private List<Map<Integer, Boolean>> listWatched = new ArrayList<Map<Integer,Boolean>>();
 	private List<TvShowSeason> seasonsList;
 	
 	private TvShow show;
@@ -47,7 +46,7 @@ public class WatchedEpisodesTask extends TraktTask
 		
 		this.tvdbId = tvdbId;
 		this.seasons = seasons;
-		this.listWatched = listWatched;
+		this.listWatched.addAll(listWatched);
 	}
 
 	public WatchedEpisodesTask(TraktManager tm, Context context, String tvdbId, int season, int episode, boolean watched) 
@@ -56,7 +55,6 @@ public class WatchedEpisodesTask extends TraktTask
 		
 		this.tvdbId = tvdbId;
 		this.seasons = new int[]{season};
-		this.listWatched = new ArrayList<Map<Integer,Boolean>>();
 		this.listWatched.add(new HashMap<Integer, Boolean>());
 		this.listWatched.get(0).put(episode, watched);
 	}
@@ -66,7 +64,6 @@ public class WatchedEpisodesTask extends TraktTask
 		super(tm, context);
 		
 		this.tvdbId = tvdbId;
-		this.listWatched = new ArrayList<Map<Integer,Boolean>>();
 		this.seasons = new int[seasons.size()];
 		
 		for(int i = 0; i < seasons.size(); i++)
@@ -94,7 +91,7 @@ public class WatchedEpisodesTask extends TraktTask
 			Map<Integer, Boolean> listEpisodes = listWatched.get(i);
 			for (Iterator<Integer> it = listEpisodes.keySet().iterator(); it.hasNext() ;)
 			{
-				Integer episode = (Integer) it.next();
+				Integer episode = it.next();
 				Boolean watched = listEpisodes.get(episode);
 
 				if(watched)
@@ -125,7 +122,7 @@ public class WatchedEpisodesTask extends TraktTask
 				Map<Integer, Boolean> listEpisodes = listWatched.get(i);
 				for (Iterator<Integer> it = listEpisodes.keySet().iterator() ; it.hasNext() ; )
 				{
-					Integer episode = (Integer) it.next();
+					Integer episode = it.next();
 					Boolean watched = listEpisodes.get(episode);
 
 					dbw.markEpisodeAsWatched(watched, tvdbId, seasons[i], episode);
@@ -147,7 +144,7 @@ public class WatchedEpisodesTask extends TraktTask
 	{
 		super.onPostExecute(success);
 		
-		if(success)
+		if(success && show != null)
 			tm.onShowUpdated(show);
 	}
 }

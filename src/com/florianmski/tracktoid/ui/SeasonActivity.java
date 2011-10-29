@@ -16,7 +16,6 @@
 
 package com.florianmski.tracktoid.ui;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -70,6 +69,7 @@ public class SeasonActivity extends TraktPagerActivity
 	{
 		new Thread()
 		{
+			@Override
 			public void run()
 			{
 				DatabaseWrapper dbw = new DatabaseWrapper(SeasonActivity.this);
@@ -100,7 +100,7 @@ public class SeasonActivity extends TraktPagerActivity
 		if(watchedMode)
 		{
 			menu.add(0, R.id.action_bar_send, 0, "Send")
-				.setIcon(R.drawable.gd_action_bar_export)
+				.setIcon(R.drawable.ab_icon_send)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 			menu.add(0, R.id.menu_all, 0, "All")
@@ -110,7 +110,7 @@ public class SeasonActivity extends TraktPagerActivity
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		}
 		menu.add(0, R.id.action_bar_watched, 0, "Watched")
-			.setIcon(R.drawable.gd_action_bar_eye)
+			.setIcon(R.drawable.ab_icon_eye)
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -161,7 +161,7 @@ public class SeasonActivity extends TraktPagerActivity
 	@Override
 	public void onShowUpdated(TvShow show)
 	{
-		if(show.getTvdbId().equals(tvdbId) && adapter != null)
+		if(show.getTvdbId().equals(tvdbId) && adapter != null && show.getSeasons() != null)
 			((PagerListEpisodesAdapter) adapter).reloadData(show.getSeasons());
 	}
 

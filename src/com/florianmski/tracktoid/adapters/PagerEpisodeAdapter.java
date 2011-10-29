@@ -121,7 +121,9 @@ public class PagerEpisodeAdapter extends PagerAdapter implements TitleProvider
 		else
 			tvAired.setText("First Aired : \n" + new SimpleDateFormat("MMMM d, y").format(e.getFirstAired()));
 		
-		tvPercentage.setText(e.getRatings().getPercentage()+"%");
+		if(e.getRatings() != null)
+			tvPercentage.setText(e.getRatings().getPercentage()+"%");
+		
 		ivWatched.setImageBitmap(null);
 
 		Image i = new Image(tvdbId, e.getImages().getScreen(), e.getSeason(), e.getNumber());

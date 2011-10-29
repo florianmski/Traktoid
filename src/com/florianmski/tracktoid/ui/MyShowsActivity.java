@@ -40,7 +40,6 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -53,11 +52,13 @@ import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBShowsTask;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.RateTask;
 import com.florianmski.tracktoid.trakt.tasks.RemoveShowTask;
 import com.florianmski.tracktoid.trakt.tasks.ShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.UpdateShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.ShowsTask.ShowsListener;
 import com.jakewharton.trakt.entities.TvShow;
+import com.jakewharton.trakt.enumerations.Rating;
 
 public class MyShowsActivity extends TraktActivity
 {		
@@ -143,9 +144,7 @@ public class MyShowsActivity extends TraktActivity
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
 			{
 				Intent i = new Intent(MyShowsActivity.this, MyShowActivity.class);
-				i.putExtra("tvdb_id", ((TvShow)adapter.getItem(position)).getTvdbId());
-				i.putExtra("title", ((TvShow)adapter.getItem(position)).getTitle());
-				i.putExtra("percentage", ((TvShow)adapter.getItem(position)).getProgress());
+				i.putExtra("show", (TvShow)adapter.getItem(position));
 				startActivity(i);
 			}
 		});
@@ -154,14 +153,19 @@ public class MyShowsActivity extends TraktActivity
 
 		ActionItem aiRefresh = new ActionItem();
 		aiRefresh.setTitle("Refresh");
-		aiRefresh.setIcon(getResources().getDrawable(R.drawable.gd_action_bar_refresh));
+		aiRefresh.setIcon(getResources().getDrawable(R.drawable.ab_icon_refresh));
 
 		ActionItem aiDelete = new ActionItem();
 		aiDelete.setTitle("Delete");
-		aiDelete.setIcon(getResources().getDrawable(R.drawable.gd_action_bar_trashcan));
+		aiDelete.setIcon(getResources().getDrawable(R.drawable.ab_icon_delete));
+		
+		ActionItem aiRating = new ActionItem();
+		aiRating.setTitle("Rate");
+		aiRating.setIcon(getResources().getDrawable(R.drawable.ab_icon_rate));
 
 		quickAction.addActionItem(aiRefresh);
 		quickAction.addActionItem(aiDelete);
+		quickAction.addActionItem(aiRating);
 
 		quickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() 
 		{			
@@ -177,6 +181,22 @@ public class MyShowsActivity extends TraktActivity
 					break;
 				case 1 :
 					tm.addToQueue(new RemoveShowTask(tm, MyShowsActivity.this, (TvShow)adapter.getItem(posterClickedPosition)));
+					break;
+				case 2:
+					final CharSequence[] items = {"Totally ninja!", "Week sauce :(", "Unrate"};
+					final Rating[] ratings = {Rating.Love, Rating.Hate, Rating.UNRATE};
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(MyShowsActivity.this);
+					builder.setTitle("Rate");
+					builder.setItems(items, new DialogInterface.OnClickListener() 
+					{
+					    public void onClick(DialogInterface dialog, int item) 
+					    {
+					        tm.addToQueue(new RateTask(tm, MyShowsActivity.this, (TvShow)adapter.getItem(posterClickedPosition), ratings[item]));
+					    }
+					});
+					AlertDialog alert = builder.create();
+					alert.show();
 					break;
 				}
 			}
@@ -214,7 +234,7 @@ public class MyShowsActivity extends TraktActivity
 		if(!tm.isUpdateTaskRunning())
 		{
 			menu.add(0, R.id.action_bar_refresh, 0, "Refresh")
-				.setIcon(R.drawable.gd_action_bar_refresh)
+				.setIcon(R.drawable.ab_icon_refresh)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 		else

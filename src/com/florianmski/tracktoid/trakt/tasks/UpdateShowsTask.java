@@ -123,7 +123,7 @@ public class UpdateShowsTask extends TraktTask
 	{
 		super.onProgressUpdate(values);
 
-		if(values[0].equals("update"))
+		if(values[0].equals("update") && lastProceedShow != null)
 			tm.onShowUpdated(lastProceedShow);
 	}
 	
@@ -138,7 +138,7 @@ public class UpdateShowsTask extends TraktTask
 	
 	private void createNotification()
 	{
-		notification = new Notification(R.drawable.gd_action_bar_refresh, "Refreshing...", System.currentTimeMillis());
+		notification = new Notification(R.drawable.ab_icon_refresh, "Refreshing...", System.currentTimeMillis());
 		nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 		contentView = new RemoteViews(context.getPackageName(), R.layout.notification_progress);
 		notification.contentView = contentView;

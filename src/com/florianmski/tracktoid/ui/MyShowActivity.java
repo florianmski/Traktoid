@@ -17,19 +17,25 @@
 package com.florianmski.tracktoid.ui;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import net.londatiga.android.ActionItem;
+import net.londatiga.android.QuickAction;
+import net.londatiga.android.QuickAction.OnActionItemClickListener;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,10 +53,12 @@ import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBSeasonsTask;
 import com.florianmski.tracktoid.image.Fanart;
 import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.trakt.tasks.RateTask;
 import com.florianmski.tracktoid.trakt.tasks.WatchedEpisodesTask;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
+import com.jakewharton.trakt.enumerations.Rating;
 
 public class MyShowActivity extends TraktActivity
 {
@@ -65,7 +73,9 @@ public class MyShowActivity extends TraktActivity
 
 	private ListSeasonAdapter adapter;
 
-	private String tvdbId;
+	private TvShow show = null;
+	
+	private QuickAction qa;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -73,8 +83,12 @@ public class MyShowActivity extends TraktActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_show);
 
+		show = (TvShow)getIntent().getExtras().get("show");
+		//in order to set the right heart color
+		invalidateOptionsMenu();
+
 		Utils.showLoading(this);
-		setTitle(getIntent().getStringExtra("title"));
+		setTitle(show.getTitle());
 
 		sbProgress = (ProgressBar)findViewById(R.id.progressBarProgress);
 		tvProgress = (TextView)findViewById(R.id.textViewProgress);
@@ -86,17 +100,14 @@ public class MyShowActivity extends TraktActivity
 
 		llNextEpisode = (LinearLayout)findViewById(R.id.linearLayoutNextEpisode);
 
-		tvdbId = getIntent().getStringExtra("tvdb_id");
-		int percentage = getIntent().getIntExtra("percentage", 0);
-
 		lvSeasons.setOnItemClickListener(new OnItemClickListener() 
 		{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
 			{
 				Intent i = new Intent(MyShowActivity.this, SeasonActivity.class);
-				i.putExtra("tvdb_id", tvdbId);
-				i.putExtra("title", getIntent().getStringExtra("title"));
+				i.putExtra("tvdb_id", show.getTvdbId());
+				i.putExtra("title", show.getTitle());
 				i.putExtra("position", lvSeasons.getCount()-position-1);
 				startActivity(i);
 			}
@@ -112,13 +123,32 @@ public class MyShowActivity extends TraktActivity
 				adapter = new ListSeasonAdapter(seasons, MyShowActivity.this);
 				lvSeasons.setAdapter(adapter);
 			}
-		}, tvdbId, false, false).execute();
+		}, show.getTvdbId(), false, false).execute();
 
 		displayClearLogo();
 
-		displayPercentage(percentage);
+		displayPercentage(show.getProgress());
 
 		displayNextEpisode();
+		
+		qa = new QuickAction(this);
+		Drawable d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
+		d.setColorFilter(Color.parseColor("#691909"), PorterDuff.Mode.MULTIPLY);
+		qa.addActionItem(new ActionItem(Rating.Love.ordinal(), "Totally ninja!", d));
+		d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
+		d.setColorFilter(Color.parseColor("#333333"), PorterDuff.Mode.MULTIPLY);
+		qa.addActionItem(new ActionItem(Rating.Hate.ordinal(), "Week sauce :(", d));
+		d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
+		qa.addActionItem(new ActionItem(Rating.UNRATE.ordinal(), "Unrate", d));
+		
+		qa.setOnActionItemClickListener(new OnActionItemClickListener() 
+		{
+			@Override
+			public void onItemClick(QuickAction source, int pos, int actionId) 
+			{
+				tm.addToQueue(new RateTask(tm, MyShowActivity.this, show, Rating.values()[actionId]));
+			}
+		});
 	}
 
 	private void displayPercentage(int percentage)
@@ -130,9 +160,10 @@ public class MyShowActivity extends TraktActivity
 	{
 		new Thread()
 		{
+			@Override
 			public void run()
 			{
-				final String url = Fanart.getFanartParser().getFanart(tvdbId, Fanart.CLEARLOGO, MyShowActivity.this);
+				final String url = Fanart.getFanartParser().getFanart(show.getTvdbId(), Fanart.CLEARLOGO, MyShowActivity.this);
 				runOnUiThread(new Runnable() 
 				{
 					@Override
@@ -150,7 +181,7 @@ public class MyShowActivity extends TraktActivity
 	{
 		DatabaseWrapper dbw = new DatabaseWrapper(this);
 		dbw.open();
-		final TvShowEpisode e = dbw.getNextEpisode(tvdbId);
+		final TvShowEpisode e = dbw.getNextEpisode(show.getTvdbId());
 		dbw.close();
 
 		if(e != null)
@@ -164,7 +195,7 @@ public class MyShowActivity extends TraktActivity
 			tvTitle.setText(e.getTitle());
 			tvEpisode.setText(Utils.addZero(e.getSeason()) + "x" + Utils.addZero(e.getNumber()));
 
-			Image i = new Image(tvdbId, e.getImages().getScreen(), e.getSeason(), e.getNumber());
+			Image i = new Image(show.getTvdbId(), e.getImages().getScreen(), e.getSeason(), e.getNumber());
 			AQuery aq = new AQuery(MyShowActivity.this);
 			aq.id(ivScreen).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in, 9.0f / 16.0f);
 
@@ -189,8 +220,29 @@ public class MyShowActivity extends TraktActivity
 	public boolean onCreateOptionsMenu (Menu menu)
 	{
 		menu.add(0, R.id.action_bar_watched, 0, "Watched")
-			.setIcon(R.drawable.gd_action_bar_eye)
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		.setIcon(R.drawable.ab_icon_eye)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+		Drawable d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
+
+		if(show != null && show.getRating() != null)
+		{
+			switch(show.getRating())
+			{
+			case Love :
+				d.setColorFilter(Color.parseColor("#691909"), PorterDuff.Mode.MULTIPLY);
+				break;
+			case Hate :
+				d.setColorFilter(Color.parseColor("#333333"), PorterDuff.Mode.MULTIPLY);
+				break;
+			default :
+				break;
+			}
+		}
+
+		menu.add(0, R.id.action_bar_rate, 0, "Rate")
+		.setIcon(d)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -207,10 +259,10 @@ public class MyShowActivity extends TraktActivity
 				final List<TvShowSeason> seasons = adapter.getSeasons();
 				final List<TvShowSeason> seasonsChecked = new ArrayList<TvShowSeason>();
 				CharSequence[] items = new CharSequence[seasons.size()];
-				
+
 				for(int i = 0; i < items.length; i++)
 					items[i] = seasons.get(i).getSeason() == 0 ? "Sepcials" : "Season " + seasons.get(i).getSeason();
-				
+
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setMultiChoiceItems(items, null, new OnMultiChoiceClickListener() 
 				{
@@ -229,7 +281,7 @@ public class MyShowActivity extends TraktActivity
 					@Override
 					public void onClick(DialogInterface dialog, int which) 
 					{
-						tm.addToQueue(new WatchedEpisodesTask(tm, MyShowActivity.this, tvdbId, seasonsChecked, true));
+						tm.addToQueue(new WatchedEpisodesTask(tm, MyShowActivity.this, show.getTvdbId(), seasonsChecked, true));
 					}
 				});
 
@@ -238,7 +290,7 @@ public class MyShowActivity extends TraktActivity
 					@Override
 					public void onClick(DialogInterface dialog, int which) 
 					{
-						tm.addToQueue(new WatchedEpisodesTask(tm, MyShowActivity.this, tvdbId, seasonsChecked, false));
+						tm.addToQueue(new WatchedEpisodesTask(tm, MyShowActivity.this, show.getTvdbId(), seasonsChecked, false));
 					}
 				});
 
@@ -247,13 +299,16 @@ public class MyShowActivity extends TraktActivity
 					@Override
 					public void onClick(DialogInterface dialog, int which) {}
 				});
-				
+
 				AlertDialog alert = builder.create();
-				
+
 				//avoid trying to show dialog if activity no longer exist
 				if(!isFinishing())
 					alert.show();
 			}
+			return true;
+		case R.id.action_bar_rate :
+			qa.show(findViewById(R.id.action_bar_rate));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -262,18 +317,23 @@ public class MyShowActivity extends TraktActivity
 	@Override
 	public void onShowUpdated(TvShow show) 
 	{
-		if(show.getTvdbId().equals(tvdbId) && adapter != null)
+		if(show.getTvdbId().equals(show.getTvdbId()) && adapter != null)
 		{
 			displayPercentage(show.getProgress());
 			displayNextEpisode();
-			adapter.reloadData(show.getSeasons());
+			
+			if(show.getSeasons() != null)
+				adapter.reloadData(show.getSeasons());
+			
+			this.show = show;
+			invalidateOptionsMenu();
 		}
 	}
 
 	@Override
 	public void onShowRemoved(TvShow show)
 	{
-		if(show.getTvdbId().equals(tvdbId))
+		if(show.getTvdbId().equals(show.getTvdbId()))
 			finish();
 	}
 

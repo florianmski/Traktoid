@@ -27,6 +27,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.util.AQUtility;
+import com.androidquery.util.Constants;
 
 public class MarketService{
 
@@ -115,7 +116,7 @@ public class MarketService{
 	
 	private String getQueryUrl(){
 		String appId = getAppId();		
-		String url = getHost() + "/api/market?app=" + appId + "&locale=" + locale + "&version=" + getVersion() + "&code=" + getVersionCode() + "&aq=" + AQuery.VERSION;
+		String url = getHost() + "/api/market?app=" + appId + "&locale=" + locale + "&version=" + getVersion() + "&code=" + getVersionCode() + "&aq=" + Constants.VERSION;
 		return url;
 	}
 	
@@ -408,13 +409,13 @@ public class MarketService{
 		public void onClick(DialogInterface dialog, int which) {
 			
 			switch (which) {
-				case AlertDialog.BUTTON_POSITIVE:
+				case DialogInterface.BUTTON_POSITIVE:
 					openUrl(act, rateUrl);
 					break;
-				case AlertDialog.BUTTON_NEGATIVE:
+				case DialogInterface.BUTTON_NEGATIVE:
 					openUrl(act, updateUrl);
 					break;
-				case AlertDialog.BUTTON_NEUTRAL:
+				case DialogInterface.BUTTON_NEUTRAL:
 					setSkipVersion(act, version);
 					break;
 			}
