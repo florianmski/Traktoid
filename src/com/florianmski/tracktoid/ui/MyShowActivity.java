@@ -35,7 +35,6 @@ import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;

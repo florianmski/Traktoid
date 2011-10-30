@@ -94,7 +94,7 @@ public class AboutActivity extends FragmentActivity
 	    {
 	        case android.R.id.home:
 	            // app icon in Action Bar clicked; go home
-	            Intent intent = new Intent(this, TracktoidActivity.class);
+	            Intent intent = new Intent(this, TraktoidActivity.class);
 	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	            startActivity(intent);
 	            return true;

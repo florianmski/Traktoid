@@ -19,6 +19,8 @@ This app use the following libs, thanks to the authors !
 - AndroidQuery : https://github.com/androidquery/androidquery
 - QuickAction : https://github.com/lorensiuswlt/NewQuickAction3D
 - ACRA : http://code.google.com/p/acra/
+- Panel widget : http://code.google.com/p/android-misc-widgets/
+- CoverFlow based on : http://code.google.com/p/android-coverflow/ which is based on : http://www.inter-fuser.com/2010/02/android-coverflow-widget-v2.html
 - icons are from here http://chrfb.deviantart.com/art/quot-ecqlipse-2-quot-PNG-59941546
 
 

@@ -16,6 +16,7 @@
 
 package com.florianmski.tracktoid.adapters;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +45,7 @@ public class GridPosterAdapter extends BaseAdapter
 	private static final int FILTER_ALL = 0;
 	private static final int FILTER_UNWATCHED = 1;
 	private static final int FILTER_LOVED = 2;
-	
+
 	private static final int PADDING = 2;
 
 	private Activity context;
@@ -60,7 +61,7 @@ public class GridPosterAdapter extends BaseAdapter
 		this.filterShows.addAll(shows);
 		this.cHeight = cHeight;
 	}
-	
+
 	public void setFilter(int filter)
 	{
 		currentFilter = filter;
@@ -87,7 +88,7 @@ public class GridPosterAdapter extends BaseAdapter
 			}
 			break;
 		}
-		
+
 		this.notifyDataSetChanged();
 	}
 
@@ -118,7 +119,7 @@ public class GridPosterAdapter extends BaseAdapter
 		this.shows = shows;
 		setFilter(currentFilter);
 	}
-	
+
 	public int getCount() 
 	{
 		return filterShows.size();
@@ -177,10 +178,17 @@ public class GridPosterAdapter extends BaseAdapter
 		//create a bitmap ajax callback object
 		BitmapAjaxCallback cb = new BitmapAjaxCallback();
 
-		//configure the callback
-		cb.url(i.getUrl()).animation(android.R.anim.fade_in).fileCache(true).memCache(true);
-		aq.id(holder.ivPoster).image(cb);
+		File posterImage = aq.getCachedFile(i.getUrl());
 		
+		//configure the callback
+		if(posterImage != null)
+			aq.id(holder.ivPoster).image(posterImage, 0);
+		else
+		{
+			cb.url(i.getUrl()).animation(android.R.anim.fade_in).fileCache(true).memCache(true);
+			aq.id(holder.ivPoster).image(cb);
+		}
+
 		TransitionDrawable td = null;
 
 		if(show.getRating() == Rating.Love)

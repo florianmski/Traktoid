@@ -49,7 +49,7 @@ public class SplashActivity extends Activity
 				case STOPSPLASH:
 					//remove SplashScreen from view
 					finish();
-					Intent intent = new Intent(SplashActivity.this, TracktoidActivity.class);
+					Intent intent = new Intent(SplashActivity.this, TraktoidActivity.class);
 					startActivity(intent);
 					break;
 			}

@@ -27,7 +27,7 @@ import android.app.Application;
 
 @ReportsCrashes(formKey = "dGlwaUVySktzbEJuVlBKUjBMeUNfYXc6MQ",
 				customReportContent = { APP_VERSION_NAME, ANDROID_VERSION, PHONE_MODEL, STACK_TRACE })
-public class TracktoidApplication extends Application
+public class TraktoidApplication extends Application
 {
 	@Override
     public void onCreate() 
