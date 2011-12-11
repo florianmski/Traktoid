@@ -1,20 +1,4 @@
-/*
- * Copyright 2011 Florian Mierzejewski
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.florianmski.tracktoid.ui;
+package com.florianmski.tracktoid.ui.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +13,15 @@ import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ActionBar.OnNavigationListener;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
-import android.support.v4.view.Window;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -57,36 +44,60 @@ import com.florianmski.tracktoid.trakt.tasks.RemoveShowTask;
 import com.florianmski.tracktoid.trakt.tasks.ShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.UpdateShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.ShowsTask.ShowsListener;
+import com.florianmski.tracktoid.ui.activities.phone.MyShowActivity;
+import com.florianmski.tracktoid.ui.activities.tablet.MyShowsTabletActivity;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public class MyShowsActivity extends TraktActivity
-{		
+public class MyShowsFragment extends TraktFragment
+{
+	private final static int NB_COLUMNS_TABLET_PORTRAIT = 5;
+	private final static int NB_COLUMNS_TABLET_LANDSCAPE = 7;
+	private final static int NB_COLUMNS_PHONE_PORTRAIT = 3;
+	private final static int NB_COLUMNS_PHONE_LANDSCAPE = 5;
+
 	private GridView gd;
 	private QuickAction quickAction;
 
-	private int padding = 2;
-	private int nbColumns;
 	private int posterClickedPosition = -1;
+	private boolean hasMyShowFragment;
 
 	private GridPosterAdapter adapter;
+
+	public MyShowsFragment() {}
+
+	public MyShowsFragment(FragmentListener listener) 
+	{
+		super(listener);
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
-		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_my_shows);
+		setHasOptionsMenu(true);
+	}
 
-		Utils.showLoading(this);
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
 		
-		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		if(savedInstanceState != null && savedInstanceState.containsKey("hasMyShowFragment"))
+			hasMyShowFragment = savedInstanceState.getBoolean("hasMyShowFragment");
+		else
+		{
+			MyShowFragment myShowFragment = (MyShowFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_my_show);
+			hasMyShowFragment = (myShowFragment != null) && (myShowFragment.isVisible());
+		}
+
+		getSupportActivity().getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
 		String[] items = new String[] {"All shows", "Unwatched shows", "Loved shows"};
-		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.abs__simple_spinner_item, items);
+		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.abs__simple_spinner_item, items);
 		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		
-		getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, new OnNavigationListener() 
+
+		getSupportActivity().getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, new OnNavigationListener() 
 		{
 			@Override
 			public boolean onNavigationItemSelected(int filter, long itemId) 
@@ -95,27 +106,20 @@ public class MyShowsActivity extends TraktActivity
 				return false;
 			}
 		});
-				
-		DatabaseWrapper dbw = new DatabaseWrapper(this);
+
+		DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
 		dbw.open();
 		boolean isDBEmpty = dbw.isEmpty();
-		dbw.close();
+		dbw.close();		
 
-		gd = (GridView)findViewById(R.id.gridViewShows);
+		refreshGridView();
 
-		if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-			nbColumns = 5;
-		else
-			nbColumns = 3;
-		
-		gd.setNumColumns(nbColumns);
-		
-		adapter = new GridPosterAdapter(this, new ArrayList<TvShow>(), calculatePosterHeight());
+		adapter = new GridPosterAdapter(getActivity(), new ArrayList<TvShow>(), refreshGridView());
+		Utils.setEmptyView(gd, getActivity());
 		gd.setAdapter(adapter);
 
 		if(isDBEmpty)
 		{
-			Utils.removeLoading();
 			if(!tm.isUpdateTaskRunning())
 				tm.addToQueue(new ShowsTask(tm, this, new ShowsListener() 
 				{
@@ -127,14 +131,22 @@ public class MyShowsActivity extends TraktActivity
 				}, tm.userService().libraryShowsAll(TraktManager.getUsername()), true));
 		}
 		else
-			new DBShowsTask(this, new DBAdapter() 
+			new DBShowsTask(getActivity(), new DBAdapter() 
 			{
 				@Override
 				public void onDBShows(List<TvShow> shows)
 				{
-					Utils.removeLoading();
-					adapter = new GridPosterAdapter(MyShowsActivity.this, shows, calculatePosterHeight());
-					gd.setAdapter(adapter);
+					adapter.updateShows(shows);
+
+
+					//					TvShow firstShow = getFirstShow();
+					//					
+					//					if(firstShow != null)
+					//					{
+					//						Bundle b = new Bundle();
+					//						b.putSerializable("show", firstShow);
+					//						listener.onFragmentAction(MyShowsFragment.this, b, MyShowsTabletActivity.FRAGMENT_REFRESH_DATA);
+					//					}
 				}
 			}).execute();
 
@@ -143,13 +155,40 @@ public class MyShowsActivity extends TraktActivity
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
 			{
-				Intent i = new Intent(MyShowsActivity.this, MyShowActivity.class);
+				Intent i = new Intent(getActivity(), MyShowActivity.class);
 				i.putExtra("show", (TvShow)adapter.getItem(position));
-				startActivity(i);
+				getActivity().setIntent(i);
+
+				if(Utils.isLandscape(getActivity()))
+				{
+					if(hasMyShowFragment)
+					{
+						((MyShowFragment)(getSupportFragmentManager().findFragmentById(R.id.fragment_my_show))).refreshFragment();
+					}
+					else
+					{
+						MyShowFragment msf = new MyShowFragment();
+
+						getSupportFragmentManager()
+						.beginTransaction()
+						.replace(R.id.fragment_my_show, msf)
+						.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+						.commit();
+
+						hasMyShowFragment = true;
+						refreshGridView();
+					}					
+				}
+				else
+				{
+					startActivity(i);
+				}
+
+				//				listener.onFragmentAction(MyShowsFragment.this, i.getExtras(), MyShowsTabletActivity.FRAGMENT_REFRESH_DATA);
 			}
 		});
 
-		quickAction = new QuickAction(this);
+		quickAction = new QuickAction(getActivity());
 
 		ActionItem aiRefresh = new ActionItem();
 		aiRefresh.setTitle("Refresh");
@@ -158,7 +197,7 @@ public class MyShowsActivity extends TraktActivity
 		ActionItem aiDelete = new ActionItem();
 		aiDelete.setTitle("Delete");
 		aiDelete.setIcon(getResources().getDrawable(R.drawable.ab_icon_delete));
-		
+
 		ActionItem aiRating = new ActionItem();
 		aiRating.setTitle("Rate");
 		aiRating.setIcon(getResources().getDrawable(R.drawable.ab_icon_rate));
@@ -177,23 +216,23 @@ public class MyShowsActivity extends TraktActivity
 				case 0 :
 					ArrayList<TvShow> showsSelected = new ArrayList<TvShow>();
 					showsSelected.add((TvShow)adapter.getItem(posterClickedPosition));
-					tm.addToQueue(new UpdateShowsTask(tm, MyShowsActivity.this, showsSelected));
+					tm.addToQueue(new UpdateShowsTask(tm, MyShowsFragment.this, showsSelected));
 					break;
 				case 1 :
-					tm.addToQueue(new RemoveShowTask(tm, MyShowsActivity.this, (TvShow)adapter.getItem(posterClickedPosition)));
+					tm.addToQueue(new RemoveShowTask(tm, MyShowsFragment.this, (TvShow)adapter.getItem(posterClickedPosition)));
 					break;
 				case 2:
 					final CharSequence[] items = {"Totally ninja!", "Week sauce :(", "Unrate"};
 					final Rating[] ratings = {Rating.Love, Rating.Hate, Rating.UNRATE};
 
-					AlertDialog.Builder builder = new AlertDialog.Builder(MyShowsActivity.this);
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 					builder.setTitle("Rate");
 					builder.setItems(items, new DialogInterface.OnClickListener() 
 					{
-					    public void onClick(DialogInterface dialog, int item) 
-					    {
-					        tm.addToQueue(new RateTask(tm, MyShowsActivity.this, (TvShow)adapter.getItem(posterClickedPosition), ratings[item]));
-					    }
+						public void onClick(DialogInterface dialog, int item) 
+						{
+							tm.addToQueue(new RateTask(tm, MyShowsFragment.this, (TvShow)adapter.getItem(posterClickedPosition), ratings[item]));
+						}
 					});
 					AlertDialog alert = builder.create();
 					alert.show();
@@ -211,8 +250,66 @@ public class MyShowsActivity extends TraktActivity
 				return false;
 			}
 
-		});
+		});		
+	}
 
+	@Override
+	public void onSaveInstanceState(Bundle toSave) 
+	{
+		super.onSaveInstanceState(toSave);
+
+		toSave.putBoolean("hasMyShowFragment", hasMyShowFragment);
+	}
+
+	public TvShow getFirstShow()
+	{
+		if(adapter.isEmpty())
+			return null;
+		else
+			return (TvShow) adapter.getItem(0);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
+	{
+		View v = inflater.inflate(R.layout.fragment_my_shows, null);
+
+		gd = (GridView)v.findViewById(R.id.gridViewShows);
+
+		return v;
+	}
+
+	public int refreshGridView()
+	{
+		int coeffDivision;
+		int nbColumns;
+
+		if(hasMyShowFragment && Utils.isLandscape(getActivity()))
+			coeffDivision = 2;
+		else
+			coeffDivision = 1;
+
+		if(Utils.isTabletDevice(getActivity()))
+		{
+			if(!hasMyShowFragment && Utils.isLandscape(getActivity()))
+				nbColumns = NB_COLUMNS_TABLET_LANDSCAPE;
+			else
+				nbColumns = NB_COLUMNS_TABLET_PORTRAIT;	
+		}
+		else
+		{
+			if(!hasMyShowFragment && Utils.isLandscape(getActivity()))
+				nbColumns = NB_COLUMNS_PHONE_LANDSCAPE;
+			else
+				nbColumns = NB_COLUMNS_PHONE_PORTRAIT;	
+		}
+
+		gd.setNumColumns(nbColumns);
+
+		if(adapter != null)
+			adapter.setHeight(calculatePosterHeight(coeffDivision, nbColumns));
+
+		return calculatePosterHeight(coeffDivision, nbColumns);
 	}
 
 	public void onShowQuickAction(View v, int position) 
@@ -221,36 +318,35 @@ public class MyShowsActivity extends TraktActivity
 		posterClickedPosition = position;
 		quickAction.show(v);
 	}
-	
-	private int calculatePosterHeight()
+
+	private int calculatePosterHeight(int coeffDivision, int nbColumns)
 	{
-		int width = (getWindowManager().getDefaultDisplay().getWidth()/nbColumns)-padding*2;
-		return (int) (width*Image.RATIO_POSTER)-padding*2;
+		int width = (getActivity().getWindowManager().getDefaultDisplay().getWidth()/(coeffDivision*nbColumns));
+		return (int) (width*Image.RATIO_POSTER);
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu (Menu menu)
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
+		super.onCreateOptionsMenu(menu, inflater);
 		if(!tm.isUpdateTaskRunning())
 		{
 			menu.add(0, R.id.action_bar_refresh, 0, "Refresh")
-				.setIcon(R.drawable.ab_icon_refresh)
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			.setIcon(R.drawable.ab_icon_refresh)
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 		else
 		{
 			int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics());
-			ProgressBar pbRefresh = new ProgressBar(this);
+			ProgressBar pbRefresh = new ProgressBar(getActivity());
 			pbRefresh.setIndeterminate(true);
 			pbRefresh.setLayoutParams(new LinearLayout.LayoutParams(value, value));
-			
+
 			menu.add(0, R.id.action_bar_refresh, 0, "Refresh")
-				.setActionView(pbRefresh)
-				.setEnabled(false)
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			.setActionView(pbRefresh)
+			.setEnabled(false)
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
-			
-		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -270,44 +366,44 @@ public class MyShowsActivity extends TraktActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	public void onBeforeTraktRequest()
 	{
-		invalidateOptionsMenu();
+		getSupportActivity().invalidateOptionsMenu();
 	}
 
 	@Override
 	public void onAfterTraktRequest(boolean success) 
 	{
-		invalidateOptionsMenu();
+		getSupportActivity().invalidateOptionsMenu();
 	}
-	
+
 	@Override
 	public void onShowUpdated(TvShow show)
-	{
+	{		
 		if(adapter != null)
 			adapter.updateShow(show);
 	}
-	
-	
+
+
 	@Override
 	public void onShowRemoved(TvShow show)
 	{
 		if(adapter != null)
 			adapter.removeShow(show);
 	}
-	
+
 	public void createShowsDialog(final ArrayList<TvShow> shows)
 	{
 		final ArrayList<TvShow> selectedShows = new ArrayList<TvShow>();
-		
+
 		String[] items = new String[shows.size()];
 
 		for(int i = 0; i < shows.size(); i++)
 			items[i] = shows.get(i).getTitle();
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle("Which show(s) do you want to refresh ?");
 		builder.setMultiChoiceItems(items, null, new OnMultiChoiceClickListener() 
 		{
@@ -327,9 +423,9 @@ public class MyShowsActivity extends TraktActivity
 			public void onClick(DialogInterface dialog, int which) 
 			{
 				if(selectedShows.size() > 0)
-					tm.addToQueue(new UpdateShowsTask(tm, MyShowsActivity.this, selectedShows));
+					tm.addToQueue(new UpdateShowsTask(tm, MyShowsFragment.this, selectedShows));
 				else
-					Toast.makeText(MyShowsActivity.this, "Nothing selected...", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), "Nothing selected...", Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -338,7 +434,7 @@ public class MyShowsActivity extends TraktActivity
 			@Override
 			public void onClick(DialogInterface dialog, int which) 
 			{
-				tm.addToQueue(new UpdateShowsTask(tm, MyShowsActivity.this, shows));
+				tm.addToQueue(new UpdateShowsTask(tm, MyShowsFragment.this, shows));
 			}
 		});
 
@@ -347,19 +443,18 @@ public class MyShowsActivity extends TraktActivity
 			@Override
 			public void onClick(DialogInterface dialog, int which) {}
 		});
-		
+
 		AlertDialog alert = builder.create();
-		
+
 		//avoid trying to show dialog if activity no longer exist
-		if(!isFinishing())
+		if(!getActivity().isFinishing())
 			alert.show();
 	}
-	
+
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-		invalidateOptionsMenu();
+		getSupportActivity().invalidateOptionsMenu();
 	}
-
 }

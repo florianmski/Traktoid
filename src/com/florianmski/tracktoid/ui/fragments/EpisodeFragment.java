@@ -1,20 +1,4 @@
-/*
- * Copyright 2011 Florian Mierzejewski
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.florianmski.tracktoid.ui;
+package com.florianmski.tracktoid.ui.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +6,10 @@ import java.util.List;
 import android.os.Bundle;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
@@ -29,54 +17,70 @@ import com.florianmski.tracktoid.adapters.PagerEpisodeAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBEpisodesTask;
 import com.florianmski.tracktoid.trakt.tasks.WatchedEpisodesTask;
+import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
+import com.florianmski.tracktoid.ui.fragments.TraktFragment.FragmentListener;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class EpisodeActivity extends TraktPagerActivity
+public class EpisodeFragment extends PagerFragment
 {
 	private String tvdbId;
 	private String seasonId;
-
-	@SuppressWarnings("unchecked")
+	
+	public EpisodeFragment() {}
+	
+	public EpisodeFragment(FragmentListener listener) 
+	{
+		super(listener);
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		Utils.showLoading(this);
+		setHasOptionsMenu(true);
+	}
 
-		setSubtitle(getIntent().getStringExtra("title"));
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) 
+	{
+		super.onActivityCreated(savedInstanceState);
+		
+		Utils.showLoading(getActivity());
 
-		tvdbId = getIntent().getStringExtra("tvdb_id");
-		seasonId = getIntent().getStringExtra("seasonId");
+		setSubtitle(getActivity().getIntent().getStringExtra("title"));
 
-		ArrayList<TvShowEpisode> episodes = (ArrayList<TvShowEpisode>)getIntent().getSerializableExtra("results");
+		tvdbId = getActivity().getIntent().getStringExtra("tvdb_id");
+		seasonId = getActivity().getIntent().getStringExtra("seasonId");
+
+		ArrayList<TvShowEpisode> episodes = (ArrayList<TvShowEpisode>)getActivity().getIntent().getSerializableExtra("results");
 		if(episodes == null)
-			new DBEpisodesTask(this, new DBAdapter() 
+			new DBEpisodesTask(getActivity(), new DBAdapter() 
 			{
 				@Override
 				public void onDBEpisodes(List<TvShowEpisode> episodes) 
 				{
 					Utils.removeLoading();
-					initPagerActivity(new PagerEpisodeAdapter(episodes, tvdbId, EpisodeActivity.this));
+					initPagerFragment(new PagerEpisodeAdapter(episodes, tvdbId, getActivity()));
 				}
 			}, seasonId).execute();
 		else
 		{
 			Utils.removeLoading();
-			initPagerActivity(new PagerEpisodeAdapter(episodes, tvdbId, EpisodeActivity.this));
+			initPagerFragment(new PagerEpisodeAdapter(episodes, tvdbId, getActivity()));
 		}
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu (Menu menu)
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
+		super.onCreateOptionsMenu(menu, inflater);
 		if(adapter == null || !((PagerEpisodeAdapter) adapter).getEpisode(currentPagerPosition).getWatched())
 		{
 			menu.add(0, R.id.action_bar_watched, 0, "Watched")
 				.setIcon(R.drawable.ab_icon_eye)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
-		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -88,7 +92,7 @@ public class EpisodeActivity extends TraktPagerActivity
 			//if adapter is not currently loading
 			if(adapter != null)
 			{
-				invalidateOptionsMenu();
+				getSupportActivity().invalidateOptionsMenu();
 				TvShowEpisode e = ((PagerEpisodeAdapter) adapter).getEpisode(currentPagerPosition);
 				tm.addToQueue(new WatchedEpisodesTask(tm, this, tvdbId, e.getSeason(), e.getNumber(), !e.getWatched()));
 			}
@@ -96,18 +100,18 @@ public class EpisodeActivity extends TraktPagerActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
 	@Override
 	public void onShowUpdated(TvShow show) 
 	{
 		if(show.getTvdbId().equals(tvdbId) && adapter != null)
-			new DBEpisodesTask(this, new DBAdapter()
+			new DBEpisodesTask(getActivity(), new DBAdapter()
 			{
 				@Override
 				public void onDBEpisodes(List<TvShowEpisode> episodes) 
 				{
 					((PagerEpisodeAdapter)adapter).reloadData(episodes);
-					invalidateOptionsMenu();
+					getSupportActivity().invalidateOptionsMenu();
 				}
 			}, seasonId).execute();
 	}
@@ -116,7 +120,7 @@ public class EpisodeActivity extends TraktPagerActivity
 	public void onShowRemoved(TvShow show)
 	{
 		if(show.getTvdbId().equals(tvdbId))
-			finish();
+			getActivity().finish();
 	}
 
 	@Override
@@ -124,8 +128,7 @@ public class EpisodeActivity extends TraktPagerActivity
 	{
 		super.onPageSelected(position);
 
-		invalidateOptionsMenu();
+		getSupportActivity().invalidateOptionsMenu();
 		setTitle(((PagerEpisodeAdapter)adapter).getEpisode(position).getTitle());
 	}
-
 }

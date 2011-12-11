@@ -14,28 +14,18 @@
  * limitations under the License.
  */
 
-package com.florianmski.tracktoid;
+package com.florianmski.tracktoid.ui.activities.phone;
 
-import org.acra.ACRA;
-import org.acra.annotation.ReportsCrashes;
+import com.florianmski.tracktoid.R;
+import android.os.Bundle;
+import android.preference.PreferenceActivity;
 
-import com.florianmski.tracktoid.trakt.TraktManager;
-
-import static org.acra.ReportField.*;
-
-import android.app.Application;
-
-@ReportsCrashes(formKey = "dGlwaUVySktzbEJuVlBKUjBMeUNfYXc6MQ",
-				customReportContent = { APP_VERSION_NAME, ANDROID_VERSION, PHONE_MODEL, STACK_TRACE })
-public class TraktoidApplication extends Application
+public class SettingsActivity extends PreferenceActivity
 {
 	@Override
-    public void onCreate() 
+    protected void onCreate(Bundle savedInstanceState) 
 	{
-        // The following line triggers the initialization of ACRA
-//        ACRA.init(this);
-        
-        TraktManager.create(this);
-        super.onCreate();
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.settings);
     }
 }

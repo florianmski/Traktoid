@@ -1,20 +1,4 @@
-/*
- * Copyright 2011 Florian Mierzejewski
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.florianmski.tracktoid.ui;
+package com.florianmski.tracktoid.ui.fragments;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +6,10 @@ import java.util.Map;
 import android.os.Bundle;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
@@ -31,24 +19,40 @@ import com.florianmski.tracktoid.adapters.PagerListEpisodesAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.tasks.WatchedEpisodesTask;
+import com.florianmski.tracktoid.ui.activities.phone.SeasonActivity;
+import com.florianmski.tracktoid.ui.fragments.TraktFragment.FragmentListener;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
-public class SeasonActivity extends TraktPagerActivity
+public class SeasonFragment extends PagerFragment
 {
 	private boolean watchedMode = false;
 	private String tvdbId;
 	private List<TvShowSeason> seasons;
 	
+	public SeasonFragment() {}
+	
+	public SeasonFragment(FragmentListener listener) 
+	{
+		super(listener);
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
 
-		Utils.showLoading(this);
-		setTitle(getIntent().getStringExtra("title"));
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) 
+	{
+		super.onActivityCreated(savedInstanceState);
 		
-		tvdbId = getIntent().getStringExtra("tvdb_id");
+		Utils.showLoading(getActivity());
+		setTitle(getActivity().getIntent().getStringExtra("title"));
+		
+		tvdbId = getActivity().getIntent().getStringExtra("tvdb_id");
 
 //		new DBSeasonsTask(this, new DBAdapter() 
 //		{
@@ -63,7 +67,7 @@ public class SeasonActivity extends TraktPagerActivity
 
 		setData();
 	}
-
+	
 	//don't know why but using this thread is like 3 time faster than using an asynctask doing the same thing (???)
 	public void setData()
 	{
@@ -72,22 +76,22 @@ public class SeasonActivity extends TraktPagerActivity
 			@Override
 			public void run()
 			{
-				DatabaseWrapper dbw = new DatabaseWrapper(SeasonActivity.this);
+				DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
 				dbw.open();
-				String tvdb_id = getIntent().getStringExtra("tvdb_id");
+				String tvdb_id = getActivity().getIntent().getStringExtra("tvdb_id");
 				List<TvShowSeason> seasons = dbw.getSeasons(tvdb_id, true, true);
-				SeasonActivity.this.seasons = seasons;
+				SeasonFragment.this.seasons = seasons;
 				dbw.close();
 
-				adapter = new PagerListEpisodesAdapter(seasons, tvdb_id, SeasonActivity.this);
+				adapter = new PagerListEpisodesAdapter(seasons, tvdb_id, getActivity());
 
-				runOnUiThread(new Runnable() 
+				getActivity().runOnUiThread(new Runnable() 
 				{
 					@Override
 					public void run() 
 					{
 						Utils.removeLoading();
-						initPagerActivity(adapter);
+						initPagerFragment(adapter);
 					}
 				});
 			}
@@ -95,8 +99,9 @@ public class SeasonActivity extends TraktPagerActivity
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu (Menu menu)
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
+		super.onCreateOptionsMenu(menu, inflater);
 		if(watchedMode)
 		{
 			menu.add(0, R.id.action_bar_send, 0, "Send")
@@ -112,7 +117,6 @@ public class SeasonActivity extends TraktPagerActivity
 		menu.add(0, R.id.action_bar_watched, 0, "Watched")
 			.setIcon(R.drawable.ab_icon_eye)
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -125,7 +129,7 @@ public class SeasonActivity extends TraktPagerActivity
 			if(adapter != null)
 			{
 				watchedMode = !watchedMode;
-				invalidateOptionsMenu();
+				getSupportActivity().invalidateOptionsMenu();
 				((PagerListEpisodesAdapter) adapter).setWatchedMode(watchedMode);
 			}
 			return true;
@@ -139,12 +143,12 @@ public class SeasonActivity extends TraktPagerActivity
 				isEmpty &= listWatched.get(i).isEmpty();
 
 			if(isEmpty)
-				Toast.makeText(this, "Nothing to send...", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), "Nothing to send...", Toast.LENGTH_SHORT).show();
 			else
 				tm.addToQueue(new WatchedEpisodesTask(tm, this, tvdbId, seasons, listWatched));
 
 			watchedMode = !watchedMode;
-			invalidateOptionsMenu();
+			getSupportActivity().invalidateOptionsMenu();
 			((PagerListEpisodesAdapter) adapter).setWatchedMode(watchedMode);
 		}
 		return true;
@@ -157,7 +161,7 @@ public class SeasonActivity extends TraktPagerActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
 	@Override
 	public void onShowUpdated(TvShow show)
 	{
@@ -169,14 +173,15 @@ public class SeasonActivity extends TraktPagerActivity
 	public void onShowRemoved(TvShow show)
 	{
 		if(show.getTvdbId().equals(tvdbId))
-			finish();
+			getActivity().finish();
 	}
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu)
-	{
-		return watchedMode ? super.onPrepareOptionsMenu(menu) : false;
-	}
+	//TODO
+//	@Override
+//	public boolean onPrepareOptionsMenu(Menu menu)
+//	{
+//		return watchedMode ? super.onPrepareOptionsMenu(menu) : false;
+//	}
 
 	public void checkBoxSelection(boolean checked)
 	{

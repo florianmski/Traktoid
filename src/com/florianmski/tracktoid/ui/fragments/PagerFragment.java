@@ -1,38 +1,29 @@
-/*
- * Copyright 2011 Florian Mierzejewski
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.florianmski.tracktoid.ui;
+package com.florianmski.tracktoid.ui.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.Menu;
+import android.support.v4.view.MenuItem;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.ui.fragments.TraktFragment.FragmentListener;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 
-public class TraktPagerActivity extends TraktActivity implements OnPageChangeListener
+public class PagerFragment extends TraktFragment implements OnPageChangeListener
 {
 	protected TitlePageIndicator pagerIndicatorTitle;
 	protected CirclePageIndicator pagerIndicatorCircle;
@@ -45,18 +36,25 @@ public class TraktPagerActivity extends TraktActivity implements OnPageChangeLis
 	protected boolean titleIndicator = true;
 	
     protected AQuery aq;
-
-	
+    
+    public PagerFragment() {}
+    
+	public PagerFragment(FragmentListener listener) 
+	{
+		super(listener);
+	}
+    
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_pager);
-		
-		viewPager = (ViewPager) findViewById(R.id.paged_view);
-		pagerIndicatorTitle = (TitlePageIndicator) findViewById(R.id.page_indicator_title);
-		pagerIndicatorCircle = (CirclePageIndicator) findViewById(R.id.page_indicator_circle);
-		ivBackground = (ImageView) findViewById(R.id.imageViewBackground);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) 
+	{
+		super.onActivityCreated(savedInstanceState);
 		
 		//if we don't set an adapter and user go back home, an exception is raised because view pager can't save its state
 		//(nullpointer exception)
@@ -88,7 +86,20 @@ public class TraktPagerActivity extends TraktActivity implements OnPageChangeLis
 			public void destroyItem(View container, int position, Object object) {}
 		});
 		
-		aq = new AQuery(this);
+		aq = new AQuery(getActivity());
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
+	{
+		View v = inflater.inflate(R.layout.fragment_pager, null);
+		
+		viewPager = (ViewPager) v.findViewById(R.id.paged_view);
+		pagerIndicatorTitle = (TitlePageIndicator) v.findViewById(R.id.page_indicator_title);
+		pagerIndicatorCircle = (CirclePageIndicator) v.findViewById(R.id.page_indicator_circle);
+		ivBackground = (ImageView) v.findViewById(R.id.imageViewBackground);
+		
+		return v;
 	}
 	
 	protected void setBackground(Image i)
@@ -96,11 +107,11 @@ public class TraktPagerActivity extends TraktActivity implements OnPageChangeLis
         aq.id(ivBackground).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
 	}
 	
-	protected void initPagerActivity(PagerAdapter adapter)
+	protected void initPagerFragment(PagerAdapter adapter)
 	{
 		this.adapter = adapter;
 		
-		currentPagerPosition = getIntent().getIntExtra("position", 0);
+		currentPagerPosition = getActivity().getIntent().getIntExtra("position", 0);
 		
 		viewPager.setAdapter(adapter);
 

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.content.Context;
+import android.support.v4.app.Fragment;
 
 import com.florianmski.tracktoid.adapters.ListCalendarAdapter;
 import com.florianmski.tracktoid.adapters.PagerCalendarAdapter;
@@ -36,9 +36,9 @@ public class CalendarTask extends TraktTask
 	
 	private CalendarListener listener;
 
-	public CalendarTask(TraktManager tm, Context context, CalendarListener listener) 
+	public CalendarTask(TraktManager tm, Fragment fragment, CalendarListener listener) 
 	{
-		super(tm, context);
+		super(tm, fragment);
 		
 		this.listener = listener;
 	}

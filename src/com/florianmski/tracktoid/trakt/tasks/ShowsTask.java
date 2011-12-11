@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.jakewharton.trakt.TraktApiBuilder;
@@ -32,9 +33,9 @@ public class ShowsTask extends TraktTask
 	private boolean sort;
 	private ShowsListener listener;
 	
-	public ShowsTask(TraktManager tm, Context context, ShowsListener listener, TraktApiBuilder<?> builder, boolean sort) 
+	public ShowsTask(TraktManager tm, Fragment fragment, ShowsListener listener, TraktApiBuilder<?> builder, boolean sort) 
 	{
-		super(tm, context);
+		super(tm, fragment);
 		
 		this.builder = builder;
 		this.sort = sort;

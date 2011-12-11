@@ -42,7 +42,7 @@ import com.actionbarsherlock.internal.widget.ScrollingTextView;
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.Image;
-import com.florianmski.tracktoid.ui.EpisodeActivity;
+import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
 import com.jakewharton.trakt.entities.CalendarDate;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.CalendarDate.CalendarTvShowEpisode;

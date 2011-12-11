@@ -25,12 +25,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.widget.RemoteViews;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.ui.MyShowsActivity;
+import com.florianmski.tracktoid.ui.activities.phone.MyShowsActivity;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
@@ -47,9 +48,9 @@ public class UpdateShowsTask extends TraktTask
 	private NotificationManager nm;
 	private RemoteViews contentView;
 
-	public UpdateShowsTask(TraktManager tm, Context context, ArrayList<TvShow> selectedShows) 
+	public UpdateShowsTask(TraktManager tm, Fragment fragment, ArrayList<TvShow> selectedShows) 
 	{
-		super(tm, context);
+		super(tm, fragment);
 
 		this.showsSelected = selectedShows;
 	}

@@ -103,7 +103,8 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 	
 	public void onBeforeTraktRequest(TraktListener listener)
 	{
-		listener.onBeforeTraktRequest();
+		if(listeners.contains(listener))
+			listener.onBeforeTraktRequest();
 	}
 	
 	public void onAfterTraktRequest(TraktListener listener, boolean success)
@@ -114,6 +115,7 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 		if(!tasks.isEmpty())
 			tasks.get(0).execute();
 		
+		if(listeners.contains(listener))
 			listener.onAfterTraktRequest(success);
 	}
 	

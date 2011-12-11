@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.florianmski.tracktoid.ui;
+package com.florianmski.tracktoid.ui.activities.phone;
 
 import java.util.ArrayList;
 
@@ -34,44 +34,10 @@ import com.jakewharton.trakt.entities.TvShow;
 
 public class RecommendationActivity extends TraktActivity
 {
-	private ArrayList<TvShow> recommendations;
-	
-	private ListView lvRecommendations;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_recommendation);
-		
-		lvRecommendations = (ListView)findViewById(R.id.listViewRecommendation);
-
-		Utils.showLoading(this);
-
-		new ShowsTask(tm, this, new ShowsListener() 
-		{
-			@Override
-			public void onShows(ArrayList<TvShow> shows) 
-			{
-				Utils.removeLoading();
-				recommendations = shows;
-				lvRecommendations.setAdapter(new ListRecommendationAdapter(shows, RecommendationActivity.this));
-			}
-		}, tm.recommendationsService().shows(), false).execute();
-
-		lvRecommendations.setOnItemClickListener(new OnItemClickListener() 
-		{
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) 
-			{
-				Intent intent = new Intent(RecommendationActivity.this, ShowActivity.class);
-				intent.putExtra("results", recommendations);
-				intent.putExtra("position", position);
-				startActivity(intent);
-			}
-
-		});
-
 	}
 }

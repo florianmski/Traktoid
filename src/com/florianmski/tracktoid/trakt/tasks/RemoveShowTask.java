@@ -17,6 +17,7 @@
 package com.florianmski.tracktoid.trakt.tasks;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
@@ -26,9 +27,9 @@ public class RemoveShowTask extends TraktTask
 {
 	private TvShow show;
 
-	public RemoveShowTask(TraktManager tm, Context context, TvShow show) 
+	public RemoveShowTask(TraktManager tm, Fragment fragment, TvShow show) 
 	{
-		super(tm, context);
+		super(tm, fragment);
 
 		this.show = show;
 	}
@@ -38,7 +39,7 @@ public class RemoveShowTask extends TraktTask
 	{
 		this.publishProgress("toast", "0", "Removing " + show.getTitle() + "...");
 		
-		tm.showService().unlibrary(Integer.valueOf(show.getTvdbId())).fire();
+//		tm.showService().unlibrary(Integer.valueOf(show.getTvdbId())).fire();
 
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
 		dbw.open();

@@ -1,6 +1,7 @@
 package com.florianmski.tracktoid.trakt.tasks;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
@@ -12,9 +13,9 @@ public class RateTask extends TraktTask
 	private TvShow show;
 	private Rating rating;
 	
-	public RateTask(TraktManager tm, Context context, TvShow show, Rating rating) 
+	public RateTask(TraktManager tm, Fragment fragment, TvShow show, Rating rating) 
 	{
-		super(tm, context);
+		super(tm, fragment);
 		
 		this.show = show;
 		this.rating = rating;

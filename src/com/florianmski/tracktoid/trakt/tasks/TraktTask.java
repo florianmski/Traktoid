@@ -18,6 +18,7 @@ package com.florianmski.tracktoid.trakt.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.Utils;
@@ -29,14 +30,16 @@ import com.jakewharton.trakt.TraktException;
 public class TraktTask extends AsyncTask<Void, String, Boolean>
 {
 	protected TraktManager tm;
+	protected Fragment fragment;
 	protected Context context;
 	protected TraktListener listener;
 	
-	public TraktTask(TraktManager tm, Context context)
+	public TraktTask(TraktManager tm, Fragment fragment)
 	{
 		this.tm = tm;
-		this.context = context;
-		listener = (TraktListener)context;
+		this.fragment = fragment;
+		this.context = fragment.getActivity();
+		listener = (TraktListener)fragment;
 	}
 	
 	@Override

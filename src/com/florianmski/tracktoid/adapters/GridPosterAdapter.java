@@ -24,6 +24,7 @@ import java.util.List;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ImageView.ScaleType;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
@@ -46,20 +48,24 @@ public class GridPosterAdapter extends BaseAdapter
 	private static final int FILTER_UNWATCHED = 1;
 	private static final int FILTER_LOVED = 2;
 
-	private static final int PADDING = 2;
-
 	private Activity context;
 	private List<TvShow> shows;
 	private List<TvShow> filterShows = new ArrayList<TvShow>();
-	private int cHeight;
+	private int height;
 	private int currentFilter = 0;
 
-	public GridPosterAdapter(Activity context, List<TvShow> shows, int cHeight) 
+	public GridPosterAdapter(Activity context, List<TvShow> shows, int height) 
 	{
 		this.context = context;
 		this.shows = shows;
 		this.filterShows.addAll(shows);
-		this.cHeight = cHeight;
+		this.height = height;
+	}
+	
+	public void setHeight(int height)
+	{
+		this.height = height;
+		notifyDataSetChanged();
 	}
 
 	public void setFilter(int filter)
@@ -114,7 +120,7 @@ public class GridPosterAdapter extends BaseAdapter
 		setFilter(currentFilter);
 	}
 
-	public void updateShows(ArrayList<TvShow> shows, ArrayList<Integer> percentages)
+	public void updateShows(List<TvShow> shows)
 	{
 		this.shows = shows;
 		setFilter(currentFilter);
@@ -138,6 +144,8 @@ public class GridPosterAdapter extends BaseAdapter
 	public View getView(final int position, View convertView, ViewGroup parent) 
 	{
 		final ViewHolder holder;
+		
+//		Log.e("test","test");
 
 		if (convertView == null)
 		{
@@ -146,27 +154,38 @@ public class GridPosterAdapter extends BaseAdapter
 			convertView = LayoutInflater.from(context).inflate(R.layout.grid_item_show, null, false);
 
 			holder.rl = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutPoster);
-			GridView.LayoutParams paramsRl = new GridView.LayoutParams(LayoutParams.FILL_PARENT, cHeight);
-			holder.rl.setLayoutParams(paramsRl);
-			holder.rl.setPadding(PADDING, PADDING, PADDING, PADDING);
+//			GridView.LayoutParams paramsRl = new GridView.LayoutParams(LayoutParams.FILL_PARENT, height);
+//			holder.rl.setLayoutParams(paramsRl);
+//			holder.rl.setPadding(PADDING, PADDING, PADDING, PADDING);
 
-			holder.ivPoster = (ImageView) convertView.findViewById(R.id.imageViewPoster);         	
+			holder.ivPoster = (ImageView) convertView.findViewById(R.id.imageViewPoster);
+			holder.ivPoster.setScaleType(ScaleType.CENTER_CROP);
 
 			holder.ivRating = (ImageView) convertView.findViewById(R.id.imageViewRating);
 			holder.ivWatched = (ImageView) convertView.findViewById(R.id.imageViewWatched);
 
-			RelativeLayout.LayoutParams paramsIvRating = new RelativeLayout.LayoutParams(cHeight/8, cHeight/8);
-			paramsIvRating.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			RelativeLayout.LayoutParams paramsIvWatched = new RelativeLayout.LayoutParams(cHeight/4, cHeight/4);
-			paramsIvWatched.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			holder.ivRating.setLayoutParams(paramsIvRating);
-			holder.ivWatched.setLayoutParams(paramsIvWatched);
+//			RelativeLayout.LayoutParams paramsIvRating = new RelativeLayout.LayoutParams(height/8, height/8);
+//			paramsIvRating.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
+//			RelativeLayout.LayoutParams paramsIvWatched = new RelativeLayout.LayoutParams(height/4, height/4);
+//			paramsIvWatched.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
+//			holder.ivRating.setLayoutParams(paramsIvRating);
+//			holder.ivWatched.setLayoutParams(paramsIvWatched);
 
 			convertView.setTag(holder);
 		} 
 		else
 			holder = (ViewHolder) convertView.getTag();
-
+		
+		GridView.LayoutParams paramsRl = new GridView.LayoutParams(LayoutParams.FILL_PARENT, height);
+		holder.rl.setLayoutParams(paramsRl);
+		
+		RelativeLayout.LayoutParams paramsIvRating = new RelativeLayout.LayoutParams(height/8, height/8);
+		paramsIvRating.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
+		RelativeLayout.LayoutParams paramsIvWatched = new RelativeLayout.LayoutParams(height/4, height/4);
+		paramsIvWatched.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
+		holder.ivRating.setLayoutParams(paramsIvRating);
+		holder.ivWatched.setLayoutParams(paramsIvWatched);
+		
 		final TvShow show = filterShows.get(position);
 
 		holder.ivRating.setImageBitmap(null);

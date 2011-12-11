@@ -16,21 +16,40 @@
 
 package com.florianmski.tracktoid;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.app.Fragment;
 import android.view.Gravity;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 public class Utils 
 {
 	private static ProgressBar pb;
 	private static LinearLayout ll;
+
+	public static void setEmptyView(AdapterView av, Context context)
+	{
+		ProgressBar emptyView = new ProgressBar(context);
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(100, 100);
+		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+		emptyView.setLayoutParams(lp);
+		emptyView.setIndeterminate(true);
+		((ViewGroup)av.getParent()).addView(emptyView);
+		av.setEmptyView(emptyView);
+	}
 	
 	public static void showLoading(Activity a)
 	{
@@ -40,28 +59,37 @@ public class Utils
 		ll.addView(pb);
 		a.addContentView(ll, new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
 	}
+	
+	public static void showLoading(Fragment f)
+	{
+		ll = new LinearLayout(f.getActivity());
+		ll.setGravity(Gravity.CENTER);
+		pb = new ProgressBar(f.getActivity());
+		ll.addView(pb);
+		((ViewGroup)f.getView()).addView(ll, new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+	}
 
 	public static void removeLoading()
 	{
 		if(ll != null)
 			ll.removeAllViews();
 	}
-	
+
 	//check if device is connected to the internet or not
 	public static final boolean isOnline(Context context) 
 	{
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
-	    if (netInfo != null && netInfo.isConnectedOrConnecting())
-	        return true;
-	    return false;
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		if (netInfo != null && netInfo.isConnectedOrConnecting())
+			return true;
+		return false;
 	}
-	
+
 	public static String addZero(int number)
 	{
 		return number < 10 ? "0"+number : number+"";
 	}
-	
+
 	private static String convertToHex(byte[] data) 
 	{ 
 		StringBuffer buf = new StringBuffer();
@@ -92,5 +120,38 @@ public class Utils
 		}
 		catch(Exception e) {}
 		return null;
+	}
+
+	public static boolean isTabletDevice(Context context) 
+	{
+		if (android.os.Build.VERSION.SDK_INT >= 11) // honeycomb
+		{
+			Configuration con = context.getResources().getConfiguration();
+			return con.isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_XLARGE);
+		}
+		return false;
+	}
+	
+	public static boolean isLandscape(Activity a)
+	{
+		return a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+	}
+	
+	public static AnimationDrawable getNyanCat(Context context)
+	{
+		//prepare nyan cat animation
+		final AnimationDrawable animation = new AnimationDrawable();
+		for(int i = 0; i < 12; i++)
+		{
+			try 
+			{
+				animation.addFrame(Drawable.createFromStream(context.getAssets().open("Frame"+i+".png"), null), 75);
+			} 
+			catch (IOException e) {}
+		}
+
+		animation.setOneShot(false);
+		
+		return animation;
 	}
 }

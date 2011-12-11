@@ -537,8 +537,8 @@ public class DatabaseWrapper
 		int nbRowsAffected = db.update(
 				table,
 				values,
-				key_id + "='" + id + "'",
-				null);
+				key_id + "=?",
+				new String[]{id});
 
 		// If nothing has been updated, insert a new entry
 		if(nbRowsAffected == 0)
@@ -660,6 +660,8 @@ public class DatabaseWrapper
 			c.moveToNext();
 		}
 		
+		c.close();
+		
 		Collections.sort(shows);
 		
 		return shows;
@@ -670,17 +672,23 @@ public class DatabaseWrapper
 		Cursor c = db.rawQuery(
 				"SELECT * " +
 				"FROM " + TVSHOWS_TABLE + " " +
-				"WHERE " + KEY_TVSHOW_TVDB_ID + "=" + tvdbId, null);
+				"WHERE " + KEY_TVSHOW_TVDB_ID + "=?", 
+				new String[]{tvdbId});
 		c.moveToFirst();
-		return getShowFromCursor(c);
+		
+		TvShow show = getShowFromCursor(c);
+		
+		c.close();
+		
+		return show;
 	}
 	
 	public void removeShow(String tvdbId)
 	{
 		boolean showFound = db.delete(
 				TVSHOWS_TABLE,
-				KEY_TVSHOW_TVDB_ID + "='" + tvdbId + "'",
-				null) > 0;
+				KEY_TVSHOW_TVDB_ID + "=?",
+				new String[]{tvdbId}) > 0;
 
 			if(showFound) 
 			{
@@ -690,15 +698,15 @@ public class DatabaseWrapper
 					List<TvShowEpisode> episodes = season.getEpisodes().getEpisodes();
 					db.delete(
 							SEASONS_TABLE,
-							KEY_SEASON_URL + "='" + season.getUrl() + "'",
-							null);
+							KEY_SEASON_URL + "=?",
+							new String[]{season.getUrl()});
 					
 					for(TvShowEpisode episode : episodes)
 					{
 						db.delete(
 								EPISODES_TABLE,
-								KEY_EPISODE_URL + "='" + episode.getUrl() + "'",
-								null);
+								KEY_EPISODE_URL + "=?",
+								new String[]{episode.getUrl()});
 					}
 					
 				}
@@ -710,9 +718,12 @@ public class DatabaseWrapper
 		Cursor c = db.rawQuery(
 				"SELECT " + KEY_TVSHOW_TVDB_ID + " " +
 				"FROM " + TVSHOWS_TABLE + " " +
-				"WHERE " + KEY_TVSHOW_TVDB_ID + "='" + tvdbId + "'", 
-				null);
-		return c.moveToFirst();
+				"WHERE " + KEY_TVSHOW_TVDB_ID + "=?", 
+				new String[]{tvdbId});
+		
+		boolean exist = c.moveToFirst();
+		
+		return exist;
 	}
 	
 	/************************** Seasons methods *******************************/	
@@ -774,15 +785,17 @@ public class DatabaseWrapper
 		String sql = 
 			"SELECT * " + 
 			"FROM " + SEASONS_TABLE + " " +
-			"WHERE " + KEY_SEASON_TVSHOW_ID	+ "=" + tvdbId + " " +
+			"WHERE " + KEY_SEASON_TVSHOW_ID	+ "=? " +
 			"ORDER BY " + KEY_SEASON_SEASON + (orderByASC ? " ASC" : " DESC");
-		Cursor c = db.rawQuery(sql, null);
+		Cursor c = db.rawQuery(sql, new String[]{tvdbId});
 		c.moveToFirst();
 		for(int i = 0; i < c.getCount(); i++)
 		{
 			seasons.add(getSeasonFromCursor(c, getEpisodesToo));
 			c.moveToNext();
 		}
+		
+		c.close();
 		
 		return seasons;
 	}
@@ -792,12 +805,17 @@ public class DatabaseWrapper
 		String sql = 
 			"SELECT * "+
 			"FROM " + SEASONS_TABLE + " " + 
-			"WHERE " + KEY_SEASON_TVSHOW_ID + "=" + tvdbId + " " +
-			"AND s." + KEY_SEASON_SEASON + "=" + season + " " +
+			"WHERE " + KEY_SEASON_TVSHOW_ID + "=? " +
+			"AND s." + KEY_SEASON_SEASON + "=? " +
 			"ORDER BY " + KEY_SEASON_SEASON + " DESC";
-		Cursor c = db.rawQuery(sql, null);
+		Cursor c = db.rawQuery(sql, new String[]{tvdbId, String.valueOf(season)});
 		c.moveToFirst();
-		return getSeasonFromCursor(c, getEpisodesToo);
+		
+		TvShowSeason tvSeason = getSeasonFromCursor(c, getEpisodesToo);
+		
+		c.close();
+		
+		return tvSeason;
 	}
 	
 	/************************** Episodes methods *******************************/
@@ -873,15 +891,17 @@ public class DatabaseWrapper
 		String sql = 
 			"SELECT * " + 
 			"FROM " + EPISODES_TABLE + " " +
-			"WHERE " + KEY_EPISODE_SEASON_ID + "='" + seasonId + "' " + 
+			"WHERE " + KEY_EPISODE_SEASON_ID + "=? " + 
 			"ORDER BY " + KEY_EPISODE_EPISODE;
-		Cursor c = db.rawQuery(sql, null);
+		Cursor c = db.rawQuery(sql, new String[]{seasonId});
 		c.moveToFirst();
 		for(int i = 0; i < c.getCount(); i++)
 		{
 			episodes.add(getEpisodeFromCursor(c));
 			c.moveToNext();
 		}
+		
+		c.close();
 		
 		return episodes;
 	}
@@ -891,26 +911,33 @@ public class DatabaseWrapper
 		String sql = 
 			"SELECT * " + 
 			"FROM " + EPISODES_TABLE + " " +
-			"WHERE " + KEY_EPISODE_SEASON_ID + "='" + seasonId + "' " + 
-			"AND " + KEY_EPISODE_EPISODE + "=" + episode + " " +
+			"WHERE " + KEY_EPISODE_SEASON_ID + "=? " + 
+			"AND " + KEY_EPISODE_EPISODE + "=? " +
 			"ORDER BY " + KEY_EPISODE_EPISODE;
-		Cursor c = db.rawQuery(sql, null);
+		Cursor c = db.rawQuery(sql, new String[]{seasonId, String.valueOf(episode)});
 		c.moveToFirst();
-		return getEpisodeFromCursor(c);
+		
+		TvShowEpisode tvEpisode = getEpisodeFromCursor(c);
+		
+		c.close();
+		
+		return tvEpisode;
 	}
 	
 	public void markEpisodeAsWatched(boolean watched, String tvdbId, int season, int episode)
 	{
-		String sql = 
-			"UPDATE " + EPISODES_TABLE + " " +
-			"SET " + KEY_EPISODE_WATCHED + "=" + (watched ? "1" : "0") + " " +
-			"WHERE " + KEY_EPISODE_SEASON + "=" + season + " AND " + KEY_EPISODE_EPISODE + "=" + episode + " " +
-			"AND " + KEY_EPISODE_SEASON_ID + " " +
-			"IN (SELECT " + KEY_SEASON_URL + " " +
-			 	"FROM " + SEASONS_TABLE + " " +
-			 	"WHERE " + KEY_SEASON_TVSHOW_ID + "=" + tvdbId +");";
+		ContentValues cv = new ContentValues();
+		cv.put(KEY_EPISODE_WATCHED, watched);
 		
-		db.execSQL(sql);
+		db.update(
+				EPISODES_TABLE, 
+				cv, 
+				KEY_EPISODE_SEASON + "=? AND " + KEY_EPISODE_EPISODE + "=? " +
+				"AND " + KEY_EPISODE_SEASON_ID + " " +
+				"IN (SELECT " + KEY_SEASON_URL + " " +
+				 	"FROM " + SEASONS_TABLE + " " +
+				 	"WHERE " + KEY_SEASON_TVSHOW_ID + "=?)", 
+				new String[]{String.valueOf(season), String.valueOf(episode), tvdbId});
 	}
 	
 	
@@ -929,15 +956,19 @@ public class DatabaseWrapper
 			"SELECT " + SELECT_EPISODE + " " +
 			"FROM " + EPISODES_TABLE + "," + SEASONS_TABLE + " " +
 			"WHERE " + SEASONS_TABLE+"."+KEY_SEASON_URL + "=" + KEY_EPISODE_SEASON_ID + " " +
-				"AND " + SEASONS_TABLE+"."+KEY_SEASON_SEASON + "!=0 " +
-				"AND " + KEY_EPISODE_WATCHED + "=0 " + 
-				"AND " + KEY_SEASON_TVSHOW_ID + "=" + tvdbId + " " +
+				"AND " + SEASONS_TABLE+"."+KEY_SEASON_SEASON + "!=? " +
+				"AND " + KEY_EPISODE_WATCHED + "=? " + 
+				"AND " + KEY_SEASON_TVSHOW_ID + "=? " +
 			"ORDER BY " + EPISODES_TABLE+"."+KEY_EPISODE_SEASON + "," + KEY_EPISODE_EPISODE + " ASC LIMIT 1";
 		
-		Cursor c = db.rawQuery(sql, null);
+		Cursor c = db.rawQuery(sql, new String[]{String.valueOf(0), String.valueOf(0), tvdbId});
 		c.moveToFirst();
 		
-		return getEpisodeFromCursor(c);		
+		TvShowEpisode tvEpisode = getEpisodeFromCursor(c);
+		
+		c.close();
+		
+		return tvEpisode;		
 	}
 	
 	//refresh a show percentage (based on episodes watched, episodes not aired yet, specials episodes...)
@@ -946,9 +977,9 @@ public class DatabaseWrapper
 		String sql = 
 			"SELECT " + KEY_TVSHOW_EPISODES + "," + KEY_TVSHOW_EPISODES_WATCHED + " " +
 			"FROM " + TVSHOWS_TABLE + " " +
-			"WHERE " + KEY_TVSHOW_TVDB_ID + "=" + tvdbId;
+			"WHERE " + KEY_TVSHOW_TVDB_ID + "=?";
 		
-		Cursor c = db.rawQuery(sql , null);
+		Cursor c = db.rawQuery(sql , new String[]{tvdbId});
 		c.moveToFirst();
 				
 		int numberOfEpisodes = c.getInt(0);
@@ -958,23 +989,31 @@ public class DatabaseWrapper
 			"SELECT count(*) " +
 			"FROM " + EPISODES_TABLE + "," + SEASONS_TABLE + " " +
 			"WHERE " + SEASONS_TABLE+"."+KEY_SEASON_URL + "=" + KEY_EPISODE_SEASON_ID + " " + 
-			"AND " + KEY_SEASON_TVSHOW_ID + "=" + tvdbId + " " +
-			"AND " + SEASONS_TABLE+"."+KEY_SEASON_SEASON + "!=0 " +
-			"AND(" + KEY_EPISODE_FIRST_AIRED + "=0 " + " " +
-				"OR " + KEY_EPISODE_FIRST_AIRED + ">" + new Date().getTime() + " " + 
-				"OR " + EPISODES_TABLE+"."+KEY_EPISODE_EPISODE + "=0 )";
+			"AND " + KEY_SEASON_TVSHOW_ID + "=? " +
+			"AND " + SEASONS_TABLE+"."+KEY_SEASON_SEASON + "!=? " +
+			"AND(" + KEY_EPISODE_FIRST_AIRED + "=? " + " " +
+				"OR " + KEY_EPISODE_FIRST_AIRED + "> ? " + 
+				"OR " + EPISODES_TABLE+"."+KEY_EPISODE_EPISODE + "=? )";
 		
-		Cursor c2 = db.rawQuery(sql2 , null);
+		c.close();
+		
+		Cursor c2 = db.rawQuery(sql2 , new String[]{tvdbId, String.valueOf(0), String.valueOf(0), String.valueOf(new Date().getTime()), String.valueOf(0)});
 		c2.moveToFirst();
 		numberOfEpisodes -= c2.getInt(0);
+		
+		c2.close();
 		
 		int realPercentage = (int) ((numberOfEpisodesSeen*1.0/numberOfEpisodes*1.0)*100);
 		realPercentage = (realPercentage > 100) ? 100 : ((realPercentage < 0) ? 0 : realPercentage);
 
-		db.execSQL(
-				"UPDATE " + TVSHOWS_TABLE + " " +
-				"SET " + KEY_TVSHOW_PROGRESS + "=" + realPercentage + " " +
-				"WHERE " + KEY_TVSHOW_TVDB_ID + "=" + tvdbId +";");
+		ContentValues cv = new ContentValues();
+		cv.put(KEY_TVSHOW_PROGRESS, realPercentage);
+		
+		db.update(
+				TVSHOWS_TABLE, 
+				cv, 
+				KEY_TVSHOW_TVDB_ID + "=?", 
+				new String[]{tvdbId});
 		
 		return realPercentage;
 	}

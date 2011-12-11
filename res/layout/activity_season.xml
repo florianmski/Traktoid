@@ -2,8 +2,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <fragment android:name="com.florianmski.tracktoid.ui.fragments.RecommendationFragment"
-        android:id="@+id/fragment_recommendation"
+    <fragment android:name="com.florianmski.tracktoid.ui.fragments.SeasonFragment"
+        android:id="@+id/fragment_season"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>

@@ -6,7 +6,7 @@
       android:installLocation="preferExternal">
       
     <uses-sdk android:minSdkVersion="4" />
-    <uses-sdk android:targetSdkVersion="8" />
+    <uses-sdk android:targetSdkVersion="14" />
     
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
@@ -19,24 +19,26 @@
 		android:name=".TraktoidApplication"
         android:hardwareAccelerated="true">
 
-        <activity android:name=".ui.TraktoidActivity">
+        <activity android:name=".ui.activities.phone.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         
-        <activity android:name=".ui.SplashActivity"></activity>
-        <activity android:name=".ui.SearchActivity" android:label="Search"></activity>
-        <activity android:name=".ui.CalendarActivity" android:label="Calendar"></activity>
-        <activity android:name=".ui.ShowActivity"></activity>
-        <activity android:name=".ui.SeasonActivity"></activity>
-        <activity android:name=".ui.EpisodeActivity"></activity>
-        <activity android:name=".ui.MyShowsActivity" android:label="Library"></activity>
-        <activity android:name=".ui.MyShowActivity"></activity>
-        <activity android:name=".ui.SettingsActivity" android:label="Settings"></activity>
-        <activity android:name=".ui.RecommendationActivity" android:label="Recommendation"></activity>
-        <activity android:name=".ui.AboutActivity" android:label="About"></activity>
+        <activity android:name=".ui.activities.phone.SplashActivity"></activity>
+        <activity android:name=".ui.activities.phone.SearchActivity" android:label="Search"></activity>
+        <activity android:name=".ui.activities.phone.CalendarActivity" android:label="Calendar"></activity>
+        <activity android:name=".ui.activities.phone.ShowActivity"></activity>
+        <activity android:name=".ui.activities.phone.SeasonActivity"></activity>
+        <activity android:name=".ui.activities.phone.EpisodeActivity"></activity>
+        <activity android:name=".ui.activities.phone.MyShowsActivity" android:label="Library"></activity>
+        <activity android:name=".ui.activities.phone.MyShowActivity"></activity>
+        <activity android:name=".ui.activities.phone.SettingsActivity" android:label="Settings"></activity>
+        <activity android:name=".ui.activities.phone.RecommendationActivity" android:label="Recommendation"></activity>
+        <activity android:name=".ui.activities.phone.AboutActivity" android:label="About"></activity>
+        
+        <activity android:name=".ui.activities.tablet.MyShowsTabletActivity"></activity>
 
     </application>
 </manifest>

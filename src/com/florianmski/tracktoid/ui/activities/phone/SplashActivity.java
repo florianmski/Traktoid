@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.florianmski.tracktoid.ui;
+package com.florianmski.tracktoid.ui.activities.phone;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -49,7 +49,7 @@ public class SplashActivity extends Activity
 				case STOPSPLASH:
 					//remove SplashScreen from view
 					finish();
-					Intent intent = new Intent(SplashActivity.this, TraktoidActivity.class);
+					Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
 					startActivity(intent);
 					break;
 			}

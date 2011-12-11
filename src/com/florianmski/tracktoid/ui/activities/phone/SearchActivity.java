@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.florianmski.tracktoid.ui;
+package com.florianmski.tracktoid.ui.activities.phone;
 
 import java.util.ArrayList;
 
@@ -36,51 +36,11 @@ import com.florianmski.tracktoid.trakt.tasks.ShowsTask.ShowsListener;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class SearchActivity extends TraktActivity
-{		
-	private ArrayList<TvShow> shows = new ArrayList<TvShow>();
-	
-	private ListView lvSearch;
-	private EditText edtSearch;
-	private Button btnSearch;
-	
+{			
 	@Override
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        
-        lvSearch = (ListView)findViewById(android.R.id.list);
-        edtSearch = (EditText)findViewById(R.id.editTextSearch);
-        btnSearch = (Button)findViewById(R.id.buttonSearch);
-        
-        lvSearch.setOnItemClickListener(new OnItemClickListener() 
-        {	
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				Intent i = new Intent(SearchActivity.this, ShowActivity.class);
-				i.putExtra("position", position);
-				i.putExtra("results", shows);
-				startActivity(i);
-			}
-		});
-        
-        btnSearch.setOnClickListener(new OnClickListener()
-        {
-			@Override
-			public void onClick(View v)
-			{
-				Utils.showLoading(SearchActivity.this);
-				tm.addToQueue(new ShowsTask(tm, SearchActivity.this, new ShowsListener() 
-				{
-					@Override
-					public void onShows(ArrayList<TvShow> shows) 
-					{
-						SearchActivity.this.shows = shows;
-						Utils.removeLoading();
-						lvSearch.setAdapter(new ListSearchAdapter(SearchActivity.this, shows));
-					}
-				}, tm.searchService().shows(edtSearch.getText().toString().trim()), false));
-			}
-		});    
     }	
 }

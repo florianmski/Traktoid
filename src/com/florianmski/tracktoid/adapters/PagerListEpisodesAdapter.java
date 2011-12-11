@@ -33,7 +33,7 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.ui.EpisodeActivity;
+import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
 import com.jakewharton.trakt.entities.TvShowSeason;
 import com.viewpagerindicator.TitleProvider;
 
