@@ -121,7 +121,8 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 	
 	public void onErrorTraktRequest(TraktListener listener, Exception e, String message)
 	{
-		listener.onErrorTraktRequest(e, message);
+		if(listeners.contains(listener))
+			listener.onErrorTraktRequest(e, message);
 	}
 	
 	public void onShowUpdated(TvShow show)

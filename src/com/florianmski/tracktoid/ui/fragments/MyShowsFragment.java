@@ -82,7 +82,7 @@ public class MyShowsFragment extends TraktFragment
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-		
+				
 		if(savedInstanceState != null && savedInstanceState.containsKey("hasMyShowFragment"))
 			hasMyShowFragment = savedInstanceState.getBoolean("hasMyShowFragment");
 		else

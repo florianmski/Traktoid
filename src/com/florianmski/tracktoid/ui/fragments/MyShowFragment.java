@@ -11,16 +11,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -47,6 +43,7 @@ import com.florianmski.tracktoid.trakt.tasks.RateTask;
 import com.florianmski.tracktoid.trakt.tasks.WatchedEpisodesTask;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SeasonActivity;
+import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
@@ -94,7 +91,7 @@ public class MyShowFragment extends TraktFragment
 		Utils.setEmptyView(lvSeasons, getActivity());
 		adapter = new ListSeasonAdapter(new ArrayList<TvShowSeason>(), getActivity());
 		lvSeasons.setAdapter(adapter);
-		
+
 		lvSeasons.setOnItemClickListener(new OnItemClickListener() 
 		{
 			@Override
@@ -128,40 +125,30 @@ public class MyShowFragment extends TraktFragment
 			}
 		});
 
-//		Bundle b = getArguments();
-//
-//		if(b != null)
+		//		Bundle b = getArguments();
+		//
+		//		if(b != null)
 		refreshFragment();
-//		else
-//		{
-//			displayPercentage(42);
-//			llNextEpisode.setVisibility(View.GONE);
-//
-//			//prepare nyan cat animation
-//			final AnimationDrawable animation = Utils.getNyanCat(getActivity());
-//
-//			ivBackground.setImageDrawable(animation);
-//
-//			// run the start() method later on the UI thread
-//			ivBackground.post(new Runnable() 
-//			{
-//				@Override
-//				public void run() 
-//				{
-//					animation.start();
-//				}
-//			});
-//		}
-	}
-
-	public void onConfigurationChanged(Configuration newConfig)
-	{
-		super.onConfigurationChanged(newConfig);
-
-		if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
-			getSupportFragmentManager().beginTransaction().show(this).commit();
-		else
-			getSupportFragmentManager().beginTransaction().hide(this).commit();
+		//		else
+		//		{
+		//			displayPercentage(42);
+		//			llNextEpisode.setVisibility(View.GONE);
+		//
+		//			//prepare nyan cat animation
+		//			final AnimationDrawable animation = Utils.getNyanCat(getActivity());
+		//
+		//			ivBackground.setImageDrawable(animation);
+		//
+		//			// run the start() method later on the UI thread
+		//			ivBackground.post(new Runnable() 
+		//			{
+		//				@Override
+		//				public void run() 
+		//				{
+		//					animation.start();
+		//				}
+		//			});
+		//		}
 	}
 
 	public void refreshFragment()
@@ -270,6 +257,9 @@ public class MyShowFragment extends TraktFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
+		if (container == null) 
+			getSupportFragmentManager().beginTransaction().hide(this).commit();
+
 		View v = inflater.inflate(R.layout.fragment_my_show, null);
 
 		sbProgress = (ProgressBar)v.findViewById(R.id.progressBarProgress);
@@ -309,9 +299,13 @@ public class MyShowFragment extends TraktFragment
 				break;
 			}
 		}
-
+		
 		menu.add(0, R.id.action_bar_rate, 0, "Rate")
 		.setIcon(d)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		
+		menu.add(0, R.id.action_bar_about, 0, "Info")
+		.setIcon(R.drawable.ab_icon_info)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 	}
 
@@ -377,6 +371,13 @@ public class MyShowFragment extends TraktFragment
 			return true;
 		case R.id.action_bar_rate :
 			qa.show(getActivity().findViewById(R.id.action_bar_rate));
+			return true;
+		case R.id.action_bar_about :
+			Intent i = new Intent(getActivity(), ShowActivity.class);
+			ArrayList<TvShow> shows = new ArrayList<TvShow>();
+			shows.add(this.show);
+			i.putExtra("results", shows);
+			startActivity(i);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

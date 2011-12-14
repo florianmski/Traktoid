@@ -26,6 +26,7 @@ public class CalendarFragment extends PagerFragment
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
+		setPageIndicatorType(PagerFragment.IT_TITLE);
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}

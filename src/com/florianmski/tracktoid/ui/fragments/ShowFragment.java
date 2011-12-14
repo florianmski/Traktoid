@@ -3,6 +3,7 @@ package com.florianmski.tracktoid.ui.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
@@ -15,6 +16,7 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.PagerShowAdapter;
 import com.florianmski.tracktoid.trakt.tasks.UpdateShowsTask;
+import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
 import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment.FragmentListener;
 import com.jakewharton.trakt.entities.TvShow;
@@ -35,6 +37,7 @@ public class ShowFragment extends PagerFragment
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
+		setPageIndicatorType(PagerFragment.IT_CIRCLE);
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
@@ -64,7 +67,6 @@ public class ShowFragment extends PagerFragment
 					public void run() 
 					{
 						Utils.removeLoading();
-						setTitleIndicator(false);
 						initPagerFragment(new PagerShowAdapter(shows, getActivity()));
 					}
 				});
@@ -82,6 +84,9 @@ public class ShowFragment extends PagerFragment
 			.setIcon(R.drawable.ab_icon_add)
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
+		menu.add(0, R.id.action_bar_shouts, 0, "Info")
+		.setIcon(R.drawable.ab_icon_shouts)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 	}
 
 	@Override
@@ -93,6 +98,11 @@ public class ShowFragment extends PagerFragment
 			ArrayList<TvShow> shows = new ArrayList<TvShow>();
 			shows.add(show);
 			tm.addToQueue(new UpdateShowsTask(tm, this, shows));
+			return true;
+		case R.id.action_bar_shouts :
+			Intent i = new Intent(getActivity(), ShoutsActivity.class);
+			i.putExtra("tvdbId", show.getTvdbId());
+			startActivity(i);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

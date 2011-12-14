@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.florianmski.tracktoid"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
@@ -17,6 +18,19 @@
             android:layout_height="wrap_content" >
             <com.viewpagerindicator.TitlePageIndicator
                 android:id="@+id/page_indicator_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#5F000000"
+                app:footerColor="#FFFFFF"
+                app:footerIndicatorHeight="3dp"
+                app:footerIndicatorStyle="underline"
+                app:footerLineHeight="1dp"
+                app:selectedBold="true"
+                app:selectedColor="#FFFFFF"
+                app:textColor="#AAFFFFFF"
+                android:visibility="gone" />
+            <com.viewpagerindicator.TabPageIndicator
+                android:id="@+id/page_indicator_tab"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone" />

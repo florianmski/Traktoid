@@ -55,6 +55,7 @@ import com.florianmski.tracktoid.image.Fanart;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.tasks.RateTask;
 import com.florianmski.tracktoid.trakt.tasks.WatchedEpisodesTask;
+import com.florianmski.tracktoid.ui.fragments.MyShowFragment;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
@@ -67,9 +68,20 @@ public class MyShowActivity extends TraktActivity
 	{
 		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_my_show);
+		//setContentView(R.layout.activity_my_show);
 		
 		if(Utils.isLandscape(this))
+		{
 			finish();
+			return;
+		}
+		
+		if (savedInstanceState == null) 
+		{
+            getSupportFragmentManager()
+             .beginTransaction()
+             .add(android.R.id.content, new MyShowFragment())
+             .commit();
+        }
 	}
 }

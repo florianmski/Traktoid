@@ -43,7 +43,7 @@ public class PagerCalendarAdapter extends PagerAdapter implements TitleProvider
 	}
 
 	@Override
-	public int getCount() 
+	public int getCount()
 	{
 		return adapters.size();
 	}

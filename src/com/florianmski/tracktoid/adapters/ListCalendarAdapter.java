@@ -16,6 +16,7 @@
 
 package com.florianmski.tracktoid.adapters;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -184,7 +185,7 @@ public class ListCalendarAdapter extends BaseAdapter
 		{
 			CalendarDate cd = (CalendarDate) getItem(position);
 
-			holder.tvDay.setText(DateFormat.getLongDateFormat(context).format(cd.getDate()));
+			holder.tvDay.setText(new SimpleDateFormat("EEEE dd MMMM yyyy").format(cd.getDate()));
 
 			return holder.llSeparator;
 		}
