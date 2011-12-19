@@ -7,8 +7,7 @@
     android:orientation="vertical" >
     <com.google.android.apps.iosched.ui.widget.DashboardLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1" >
+        android:layout_height="fill_parent">
         <Button
             android:id="@+id/home_btn_myshows"
             android:layout_width="wrap_content"

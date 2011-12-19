@@ -26,12 +26,13 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.ImageView.ScaleType;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
@@ -97,7 +98,6 @@ public class PagerEpisodeAdapter extends PagerAdapter implements TitleProvider
 	public Object instantiateItem(View pager, int position) 
 	{
 		View v = LayoutInflater.from(context).inflate(R.layout.pager_item_episode, null, false);
-		TextView tvTitle = (TextView)v.findViewById(R.id.textViewTitle);
 		TextView tvOverview = (TextView)v.findViewById(R.id.textViewOverview);
 		TextView tvAired = (TextView)v.findViewById(R.id.textViewAired);
 		TextView tvPercentage = (TextView)v.findViewById(R.id.textViewPercentage);
@@ -113,7 +113,6 @@ public class PagerEpisodeAdapter extends PagerAdapter implements TitleProvider
 		
 		TvShowEpisode e = episodes.get(position);
 
-		tvTitle.setText(e.getTitle());
 		tvOverview.setText(e.getOverview());
 		
 		if(e.getFirstAired().getTime() == 0)

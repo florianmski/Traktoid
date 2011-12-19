@@ -22,6 +22,7 @@ import java.util.List;
 
 import android.support.v4.app.Fragment;
 
+import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.ListCalendarAdapter;
 import com.florianmski.tracktoid.adapters.PagerCalendarAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
@@ -110,7 +111,7 @@ public class CalendarTask extends TraktTask
 	{
 		super.onPostExecute(success);
 		
-		if(success)
+		if(success && !Utils.isActivityFinished(fragment.getActivity()))
 			listener.onCalendar(adapter);
 	}
 	

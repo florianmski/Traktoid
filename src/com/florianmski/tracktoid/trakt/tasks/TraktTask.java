@@ -32,20 +32,21 @@ public class TraktTask extends AsyncTask<Void, String, Boolean>
 	protected TraktManager tm;
 	protected Fragment fragment;
 	protected Context context;
-	protected TraktListener listener;
+	protected TraktListener tListener;
 	
 	public TraktTask(TraktManager tm, Fragment fragment)
 	{
 		this.tm = tm;
 		this.fragment = fragment;
 		this.context = fragment.getActivity();
-		listener = (TraktListener)fragment;
+		tListener = (TraktListener)fragment;
 	}
 	
 	@Override
 	protected void onPreExecute()
 	{
-		tm.onBeforeTraktRequest(listener);
+		if(!Utils.isActivityFinished(fragment.getActivity()))
+			tm.onBeforeTraktRequest(tListener);
 	}
 	
 	@Override
@@ -53,7 +54,8 @@ public class TraktTask extends AsyncTask<Void, String, Boolean>
 	{
 		if(!Utils.isOnline(context))
 		{
-			tm.onErrorTraktRequest(listener, null, "Internet connection required!");
+			if(!Utils.isActivityFinished(fragment.getActivity()))
+				tm.onErrorTraktRequest(tListener, null, "Internet connection required!");
 			this.publishProgress("toast", "1", "Internet connection required!");
 			return false;
 		}
@@ -84,7 +86,8 @@ public class TraktTask extends AsyncTask<Void, String, Boolean>
 	@Override
 	protected void onPostExecute (Boolean success)
 	{
-		tm.onAfterTraktRequest(listener, success);
+		if(!Utils.isActivityFinished(fragment.getActivity()))
+			tm.onAfterTraktRequest(tListener, success);
 	}
 
 	@Override
@@ -99,7 +102,8 @@ public class TraktTask extends AsyncTask<Void, String, Boolean>
 		//TODO com.jakewharton.trakt.TraktException: com.jakewharton.apibuilder.ApiException: java.net.SocketTimeoutException
 		//TODO onErrorTraktRequest must be executed on UIThread
 		e.printStackTrace();
-		tm.onErrorTraktRequest(listener, e, e.getMessage());
+		if(!Utils.isActivityFinished(fragment.getActivity()))
+			tm.onErrorTraktRequest(tListener, e, e.getMessage());
 		this.publishProgress("toast", "1", "Error : " + e.getMessage());
 	}
 }

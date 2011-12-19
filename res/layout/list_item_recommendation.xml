@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-     xmlns:android="http://schemas.android.com/apk/res/android"
-     android:id="@+id/relativeLayoutBanner"
-     android:layout_width="fill_parent"
-     android:layout_height="fill_parent">
-     <ImageView
-          android:id="@+id/imageViewFanart"
-          android:layout_width="fill_parent"
-          android:layout_height="fill_parent"></ImageView>
-     <LinearLayout
-          android:layout_width="fill_parent"
-          android:gravity="left|center"
-          android:id="@+id/linearLayoutShow"
-          android:background="#8F000000"
-          android:layout_alignBottom="@+id/imageViewBanner"
-          android:layout_alignParentBottom="true"
-          android:layout_height="25dp">
-          <TextView
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:textColor="#FFF"
-               android:text="Show"
-               android:id="@+id/textViewShow"
-               android:paddingLeft="10dp"
-               android:textStyle="bold"
-               android:textSize="15sp"></TextView>
-     </LinearLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayoutBanner"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <ImageView
+        android:id="@+id/imageViewFanart"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </ImageView>
+
+    <TextView
+        android:id="@+id/textViewShow"
+        android:layout_width="fill_parent"
+        android:layout_height="25dp"
+        android:layout_alignBottom="@+id/imageViewBanner"
+        android:layout_alignParentBottom="true"
+        android:background="#8F000000"
+        android:gravity="left|center"
+        android:paddingLeft="10dp"
+        android:text="Show"
+        android:textColor="#FFF"
+        android:textSize="15sp"
+        android:textStyle="bold" >
+    </TextView>
+
 </RelativeLayout>

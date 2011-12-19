@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.support.v4.app.Fragment;
 
+import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.ShowsTask.ShowsListener;
 import com.jakewharton.trakt.entities.Shout;
@@ -35,7 +36,7 @@ public class ShoutsGetTask extends TraktTask
 	{
 		super.onPostExecute(success);
 		
-		if(success)
+		if(success && !Utils.isActivityFinished(fragment.getActivity()))
 			listener.onShouts(shouts);
 	}
 	

@@ -50,7 +50,6 @@ public class HomeFragment extends TraktFragment
 	private ProgressBar pb;
 
 	private ArrayList<TvShow> shows;
-	private ShowsTask trendingTask;
 
 	public HomeFragment() {}
 	
@@ -85,17 +84,6 @@ public class HomeFragment extends TraktFragment
 		//Trying to set high definition image on high resolution
 		//does not seem to be a great idea, it's slow and I sometimes get an outOfMemoryError :/
 		//        Image.smallSize = (getWindowManager().getDefaultDisplay().getHeight() <= 960 && getWindowManager().getDefaultDisplay().getWidth() <= 540);
-
-		trendingTask = new ShowsTask(tm, this, new ShowsListener() 
-		{
-			@Override
-			public void onShows(ArrayList<TvShow> shows) 
-			{
-				HomeFragment.this.shows = shows;
-				cv.setAdapter(new CoverFlowImageAdapter(shows));
-				pb.setVisibility(View.GONE);
-			}
-		}, tm.showService().trending(), false);
 	}
 
 	@Override
@@ -187,8 +175,20 @@ public class HomeFragment extends TraktFragment
 			public void onPanelOpened(Panel panel) 
 			{
 				//if we don't already downloaded trending shows, do it
-				if(shows == null && trendingTask.getStatus() != AsyncTask.Status.RUNNING)
-					trendingTask.execute();
+				if(shows == null && (commonTask == null || commonTask.getStatus() != AsyncTask.Status.RUNNING))
+				{
+					commonTask = new ShowsTask(tm, HomeFragment.this, new ShowsListener() 
+					{
+						@Override
+						public void onShows(ArrayList<TvShow> shows) 
+						{
+							HomeFragment.this.shows = shows;
+							cv.setAdapter(new CoverFlowImageAdapter(shows));
+							pb.setVisibility(View.GONE);
+						}
+					}, tm.showService().trending(), false);
+					commonTask.execute();
+				}
 				else if(shows != null)
 					tvPanelhandle.setText(shows.get(cv.getSelectedItemPosition()).getTitle());
 			}

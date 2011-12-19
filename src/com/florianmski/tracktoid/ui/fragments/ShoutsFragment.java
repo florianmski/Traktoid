@@ -54,7 +54,7 @@ public class ShoutsFragment extends TraktFragment
 		
 		String tvdbId = getActivity().getIntent().getStringExtra("tvdbId");
 
-		new ShoutsGetTask(tm, this, tvdbId, new ShoutsListener() 
+		commonTask = new ShoutsGetTask(tm, this, tvdbId, new ShoutsListener() 
 		{
 			@Override
 			public void onShouts(List<Shout> shouts) 
@@ -63,7 +63,8 @@ public class ShoutsFragment extends TraktFragment
 				ShoutsFragment.this.shouts = shouts;
 				lvShouts.setAdapter(new ListShoutsAdapter(shouts, getActivity()));
 			}
-		}).execute();
+		});
+		commonTask.execute();
 
 		lvShouts.setOnItemClickListener(new OnItemClickListener() 
 		{

@@ -75,7 +75,7 @@ public class EpisodeFragment extends PagerFragment
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
 		super.onCreateOptionsMenu(menu, inflater);
-		if(adapter == null || !((PagerEpisodeAdapter) adapter).getEpisode(currentPagerPosition).getWatched())
+		if(adapter == null || (!((PagerEpisodeAdapter) adapter).getEpisode(currentPagerPosition).getWatched() && seasonId != null))
 		{
 			menu.add(0, R.id.action_bar_watched, 0, "Watched")
 				.setIcon(R.drawable.ab_icon_eye)

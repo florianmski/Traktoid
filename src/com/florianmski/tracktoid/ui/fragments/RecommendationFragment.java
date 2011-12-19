@@ -51,7 +51,7 @@ public class RecommendationFragment extends TraktFragment
 		
 		Utils.showLoading(getActivity());
 
-		new ShowsTask(tm, this, new ShowsListener() 
+		commonTask = new ShowsTask(tm, this, new ShowsListener() 
 		{
 			@Override
 			public void onShows(ArrayList<TvShow> shows) 
@@ -60,7 +60,8 @@ public class RecommendationFragment extends TraktFragment
 				recommendations = shows;
 				lvRecommendations.setAdapter(new ListRecommendationAdapter(shows, getActivity()));
 			}
-		}, tm.recommendationsService().shows(), false).execute();
+		}, tm.recommendationsService().shows(), false);
+		commonTask.execute();
 
 		lvRecommendations.setOnItemClickListener(new OnItemClickListener() 
 		{

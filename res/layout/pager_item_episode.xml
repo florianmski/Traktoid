@@ -11,18 +11,9 @@
         <LinearLayout
             android:id="@+id/linearLayout1"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="5dp" >
-            <TextView
-                android:id="@+id/textViewTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Title"
-                android:textColor="#FFF"
-                android:textSize="30dp"
-                android:visibility="gone" />
             <RelativeLayout
                 android:id="@+id/relativeLayout1"
                 android:layout_width="match_parent"
@@ -47,7 +38,7 @@
                 android:paddingTop="10dp" >
                 <TextView
                     android:id="@+id/textViewAired"
-                    android:layout_width="fill_parent"
+                    android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:gravity="center"

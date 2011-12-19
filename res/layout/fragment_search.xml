@@ -11,8 +11,8 @@
           <EditText
                android:id="@+id/editTextSearch"
                android:layout_height="wrap_content"
-               android:layout_width="fill_parent"
-               android:layout_weight="1" />
+               android:layout_width="0dp"
+               android:layout_weight="1" android:inputType="text"/>
           <Button
                android:id="@+id/buttonSearch"
                android:layout_width="wrap_content"

@@ -22,6 +22,7 @@ import java.util.Collections;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 
+import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.TvShow;
@@ -59,7 +60,7 @@ public class ShowsTask extends TraktTask
 	{
 		super.onPostExecute(success);
 		
-		if(success)
+		if(success && !Utils.isActivityFinished(fragment.getActivity()))
 			listener.onShows(shows);
 	}
 	

@@ -1,52 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-     xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_height="fill_parent"
-     android:layout_width="fill_parent"
-     android:orientation="vertical">
-     <GridView
-          android:id="@+id/gridViewShows"
-          android:layout_width="fill_parent"
-          android:stretchMode="columnWidth"
-          android:clipToPadding="false"
-          android:layout_height="fill_parent"
-          android:paddingTop="?actionBarSize" android:smoothScrollbar="true" android:verticalSpacing="2px" android:horizontalSpacing="2px"/>
-     <LinearLayout
-          android:orientation="vertical"
-          android:id="@+id/linearLayoutDownload"
-          android:layout_width="fill_parent"
-          android:paddingTop="?actionBarSize"
-          android:layout_height="wrap_content"
-          android:paddingBottom="10dp"
-          android:paddingLeft="10dp"
-          android:paddingRight="10dp"
-          android:visibility="gone"
-          android:background="#AF000000">
-          <LinearLayout
-               android:id="@+id/linearLayout2"
-               android:layout_width="wrap_content"
-               android:layout_height="fill_parent">
-               <TextView
-                    android:id="@+id/textViewShow"
-                    android:text="Loading..."
-                    android:textSize="15sp"
-                    android:layout_width="wrap_content"
-                    android:textStyle="bold"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FFF" />
-               <TextView
-                    android:id="@+id/textViewSeason"
-                    android:textSize="15sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FFF"
-                    android:paddingLeft="20dp" />
-          </LinearLayout>
-          <ProgressBar
-               android:id="@+id/progressBarDownload"
-               style="?android:attr/progressBarStyleHorizontal"
-               android:layout_width="fill_parent"
-               android:progressDrawable="@drawable/gradient_progress"
-               android:layout_height="wrap_content" />
-     </LinearLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <GridView
+        android:id="@+id/gridViewShows"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clipToPadding="false"
+        android:horizontalSpacing="2dp"
+        android:paddingTop="?actionBarSize"
+        android:smoothScrollbar="true"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="2dp" />
+
 </RelativeLayout>

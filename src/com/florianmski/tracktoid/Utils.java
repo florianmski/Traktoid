@@ -154,4 +154,9 @@ public class Utils
 		
 		return animation;
 	}
+	
+	public static boolean isActivityFinished(Activity a)
+	{
+		return a == null || a.isFinishing();
+	}
 }

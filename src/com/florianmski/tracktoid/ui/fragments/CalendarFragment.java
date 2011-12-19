@@ -38,7 +38,7 @@ public class CalendarFragment extends PagerFragment
 
 		Utils.showLoading(getActivity());
 
-		new CalendarTask(tm, this, new CalendarListener() 
+		commonTask = new CalendarTask(tm, this, new CalendarListener() 
 		{
 			@Override
 			public void onCalendar(PagerCalendarAdapter adapter) 
@@ -46,6 +46,8 @@ public class CalendarFragment extends PagerFragment
 				Utils.removeLoading();
 				initPagerFragment(adapter);
 			}
-		}).execute();
+		});
+		
+		commonTask.execute();
 	}
 }

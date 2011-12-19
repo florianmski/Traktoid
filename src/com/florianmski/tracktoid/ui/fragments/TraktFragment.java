@@ -1,19 +1,19 @@
 package com.florianmski.tracktoid.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.SupportActivity;
-import android.util.Log;
 
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.TraktManager.TraktListener;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class TraktFragment extends Fragment implements TraktListener
 {
 	protected TraktManager tm = TraktManager.getInstance();
-	protected FragmentListener listener;
+//	protected FragmentListener listener;
+	protected TraktTask commonTask;
 
 	public TraktFragment() 
 	{
@@ -23,7 +23,7 @@ public class TraktFragment extends Fragment implements TraktListener
 	public TraktFragment(FragmentListener listener)
 	{
 		super();
-		this.listener = listener;
+//		this.listener = listener;
 	}
 
 	@Override
@@ -45,7 +45,11 @@ public class TraktFragment extends Fragment implements TraktListener
 	@Override
 	public void onDestroy()
 	{
+		//remove observer
 		tm.removeObserver(this);
+		//cancel a task which is useless outside this activity
+		if(commonTask != null)
+			commonTask.cancel(true);
 		super.onDestroy();
 	}
 

@@ -71,7 +71,7 @@ public class SearchFragment extends TraktFragment
 			public void onClick(View v)
 			{
 				Utils.showLoading(getActivity());
-				tm.addToQueue(new ShowsTask(tm, SearchFragment.this, new ShowsListener() 
+				commonTask = new ShowsTask(tm, SearchFragment.this, new ShowsListener() 
 				{
 					@Override
 					public void onShows(ArrayList<TvShow> shows) 
@@ -80,7 +80,8 @@ public class SearchFragment extends TraktFragment
 						Utils.removeLoading();
 						lvSearch.setAdapter(new ListSearchAdapter(getActivity(), shows));
 					}
-				}, tm.searchService().shows(edtSearch.getText().toString().trim()), false));
+				}, tm.searchService().shows(edtSearch.getText().toString().trim()), false);
+        		commonTask.execute();
 			}
 		});
 	}
