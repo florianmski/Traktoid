@@ -46,7 +46,7 @@ public class ShowsTask extends TraktTask
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void doTraktStuffInBackground()
+	protected boolean doTraktStuffInBackground()
 	{
 		showToast("Retrieving a list of shows...", Toast.LENGTH_SHORT);
 		
@@ -54,6 +54,8 @@ public class ShowsTask extends TraktTask
 		
 		if(sort)
 			Collections.sort(shows);
+		
+		return true;
 	}
 	
 	@Override

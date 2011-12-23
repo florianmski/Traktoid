@@ -37,7 +37,7 @@
         <activity android:name=".ui.activities.phone.SettingsActivity" android:label="Settings"></activity>
         <activity android:name=".ui.activities.phone.RecommendationActivity" android:label="Recommendation"></activity>
         <activity android:name=".ui.activities.phone.AboutActivity" android:label="About"></activity>
-        <activity android:name=".ui.activities.phone.ShoutsActivity" android:label="Shouts"></activity>
+        <activity android:name=".ui.activities.phone.ShoutsActivity" android:label="Shouts" android:windowSoftInputMode="stateAlwaysHidden"></activity>
         
         <activity android:name=".ui.activities.tablet.MyShowsTabletActivity"></activity>
 

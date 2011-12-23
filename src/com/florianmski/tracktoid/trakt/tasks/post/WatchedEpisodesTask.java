@@ -76,7 +76,7 @@ public class WatchedEpisodesTask extends TraktTask
 	}
 	
 	@Override
-	protected void doTraktStuffInBackground()
+	protected boolean doTraktStuffInBackground()
 	{
 		showToast("Sending...", Toast.LENGTH_SHORT);
 		
@@ -137,6 +137,8 @@ public class WatchedEpisodesTask extends TraktTask
 			
 			showToast("Send to Trakt!", Toast.LENGTH_SHORT);
 		}
+		
+		return true;
 	}
 	
 	@Override

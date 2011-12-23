@@ -23,11 +23,38 @@ public class ListShoutsAdapter extends BaseAdapter
 	private Context context;
 	private Bitmap placeholder;
 	
-	public ListShoutsAdapter(List<Shout> shouts2, Context context)
+	public ListShoutsAdapter(List<Shout> shouts, Context context)
 	{
-		this.shouts = shouts2;
+		this.shouts = shouts;
 		this.context = context;
 		placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
+	}
+	
+	public void clear()
+	{
+		this.shouts.clear();
+		this.notifyDataSetChanged();
+	}
+	
+	public void reload(List<Shout> shouts)
+	{
+		this.shouts = shouts;
+		this.notifyDataSetChanged();
+	}
+	
+	public void addShout(Shout s)
+	{
+		shouts.add(0, s);
+		this.notifyDataSetChanged();
+	}
+	
+	public void revealSpoiler(int position)
+	{
+		if(position < getCount() && shouts.get(position).spoiler)
+		{
+			shouts.get(position).spoiler = false;
+			this.notifyDataSetChanged();
+		}
 	}
 	
 	@Override
@@ -39,7 +66,7 @@ public class ListShoutsAdapter extends BaseAdapter
     @Override
     public Object getItem(int position) 
     {
-        return null;
+        return shouts.get(position);
     }
     
     @Override
@@ -64,12 +91,11 @@ public class ListShoutsAdapter extends BaseAdapter
         	convertView = LayoutInflater.from(context).inflate(R.layout.list_item_shout, null);
             holder = new ViewHolder();
             holder.ivAvatar = (ImageView)convertView.findViewById(R.id.imageViewAvatar);
+            holder.ivSpoiler = (ImageView)convertView.findViewById(R.id.imageViewSpoiler);
             holder.tvUsername = (TextView)convertView.findViewById(R.id.textViewUsername);
             holder.tvDate = (TextView)convertView.findViewById(R.id.textViewDate);
             holder.tvShout = (TextView)convertView.findViewById(R.id.textViewShout);
-//            int width = ((Activity)context).getWindowManager().getDefaultDisplay().getWidth();
-//            int height = (int) (width * Image.RATIO_FANART);
-//            holder.ivAvatar.setLayoutParams(new RelativeLayout.LayoutParams(width, height));           
+            
             convertView.setTag(holder);
         } 
         else
@@ -86,6 +112,17 @@ public class ListShoutsAdapter extends BaseAdapter
         holder.tvUsername.setText(s.user.username);
         holder.tvDate.setText(new SimpleDateFormat("EEEE dd MMMM yyyy hh:mm").format(s.inserted.getTime()));
         holder.tvShout.setText(s.shout);
+        
+        if(s.spoiler)
+        {
+        	holder.tvShout.setVisibility(View.GONE);
+        	holder.ivSpoiler.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+        	holder.tvShout.setVisibility(View.VISIBLE);
+        	holder.ivSpoiler.setVisibility(View.GONE);
+        }
 
         return convertView;
     }
@@ -93,6 +130,7 @@ public class ListShoutsAdapter extends BaseAdapter
     private static class ViewHolder 
     {
     	private ImageView ivAvatar;
+    	private ImageView ivSpoiler;
     	private TextView tvShout;
     	private TextView tvUsername;
     	private TextView tvDate;

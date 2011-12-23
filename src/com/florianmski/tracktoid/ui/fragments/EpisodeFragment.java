@@ -3,6 +3,7 @@ package com.florianmski.tracktoid.ui.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
@@ -13,6 +14,7 @@ import com.florianmski.tracktoid.adapters.PagerEpisodeAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBEpisodesTask;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
+import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
@@ -77,6 +79,9 @@ public class EpisodeFragment extends PagerFragment
 				.setIcon(R.drawable.ab_icon_eye)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
+		menu.add(0, R.id.action_bar_shouts, 0, "Shouts")
+		.setIcon(R.drawable.ab_icon_shouts)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 	}
 
 	@Override
@@ -92,6 +97,12 @@ public class EpisodeFragment extends PagerFragment
 				TvShowEpisode e = ((PagerEpisodeAdapter) adapter).getEpisode(currentPagerPosition);
 				tm.addToQueue(new WatchedEpisodesTask(tm, this, tvdbId, e.season, e.number, !e.watched));
 			}
+			return true;
+		case R.id.action_bar_shouts :
+			Intent i = new Intent(getActivity(), ShoutsActivity.class);
+			i.putExtra("tvdbId", tvdbId);
+			i.putExtra("episode", ((PagerEpisodeAdapter) adapter).getEpisode(currentPagerPosition));
+			startActivity(i);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

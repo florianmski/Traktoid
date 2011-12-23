@@ -35,7 +35,7 @@ public class RemoveShowTask extends TraktTask
 	}
 
 	@Override
-	protected void doTraktStuffInBackground()
+	protected boolean doTraktStuffInBackground()
 	{
 		showToast("Removing " + show.title + "...", Toast.LENGTH_SHORT);
 		
@@ -50,6 +50,8 @@ public class RemoveShowTask extends TraktTask
 		dbw.close();
 		
 		showToast(show.title + " removed!", Toast.LENGTH_SHORT);
+		
+		return true;
 	}
 	
 	@Override

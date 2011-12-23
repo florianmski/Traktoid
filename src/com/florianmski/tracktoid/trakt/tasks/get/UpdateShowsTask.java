@@ -58,7 +58,7 @@ public class UpdateShowsTask extends TraktTask
 	}
 
 	@Override
-	protected void doTraktStuffInBackground()
+	protected boolean doTraktStuffInBackground()
 	{		
 		//TODO remove it (or not ?)
 		//allow task to failed before creating notification if something is wrong (bad username, trakt server issue...)
@@ -119,6 +119,8 @@ public class UpdateShowsTask extends TraktTask
 			showToast("Refresh done!", Toast.LENGTH_SHORT);
 		
 		dbw.close();
+		
+		return true;
 	}
 
 	@Override

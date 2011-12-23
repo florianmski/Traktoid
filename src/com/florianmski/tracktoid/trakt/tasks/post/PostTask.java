@@ -10,50 +10,55 @@ import com.jakewharton.trakt.entities.Response;
 
 public class PostTask extends TraktTask
 {
-	private TraktApiBuilder<?> builder;
-	private PostListener pListener;
-	private Response r;
-	
+	protected TraktApiBuilder<?> builder;
+	protected PostListener pListener;
+	protected Response r;
+
 	public PostTask(TraktManager tm, Fragment fragment, TraktApiBuilder<?> builder, PostListener pListener) 
 	{
 		super(tm, fragment);
-		
+
 		this.builder = builder;
 		this.pListener = pListener;
 	}
-	
+
 	@Override
-	protected void doTraktStuffInBackground() 
+	protected boolean doTraktStuffInBackground() 
 	{
 		showToast("Sending...", Toast.LENGTH_SHORT);
-		
+
 		doPrePostStuff();
-		
+
 		r = (Response) builder.fire();
-		
-		doAfterPostStuff();
-		
+
 		if(r.error == null)
+		{
 			showToast("Send to Trakt!", Toast.LENGTH_SHORT);
+			doAfterPostStuff();
+			return true;
+		}
 		else
+		{
 			showToast("Something goes wrong : " + r.error, Toast.LENGTH_SHORT);
+			return false;
+		}			
 	}
-	
+
 	protected void doPrePostStuff() {}
-	
+
 	protected void doAfterPostStuff() {}
-	
+
 	@Override
 	protected void onPostExecute(Boolean success)
 	{
 		super.onPostExecute(success);
-		
-		if(success && pListener != null)
-			pListener.onComplete(r);
+
+		if(pListener != null)
+			pListener.onComplete(r, success);
 	}
-	
+
 	public interface PostListener
 	{
-		public void onComplete(Response r);
+		public void onComplete(Response r, boolean success);
 	}
 }

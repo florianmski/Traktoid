@@ -78,7 +78,7 @@ public class ShowFragment extends PagerFragment
 			.setIcon(R.drawable.ab_icon_add)
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
-		menu.add(0, R.id.action_bar_shouts, 0, "Info")
+		menu.add(0, R.id.action_bar_shouts, 0, "Shouts")
 		.setIcon(R.drawable.ab_icon_shouts)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 	}

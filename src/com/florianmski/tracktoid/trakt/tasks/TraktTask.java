@@ -27,7 +27,7 @@ import com.florianmski.tracktoid.trakt.TraktManager.TraktListener;
 import com.jakewharton.apibuilder.ApiException;
 import com.jakewharton.trakt.TraktException;
 
-public class TraktTask extends AsyncTask<Void, String, Boolean>
+public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 {
 	protected TraktManager tm;
 	protected Fragment fragment;
@@ -65,7 +65,7 @@ public class TraktTask extends AsyncTask<Void, String, Boolean>
 			if(isCancelled())
 				return false;
 			else
-				doTraktStuffInBackground();
+				return doTraktStuffInBackground();
 		}
 		catch (ApiException e) 
 		{
@@ -82,10 +82,9 @@ public class TraktTask extends AsyncTask<Void, String, Boolean>
 			handleException(e);
 			return false;
         }
-		return true;
 	}
 	
-	protected void doTraktStuffInBackground() {}
+	protected abstract boolean doTraktStuffInBackground();
 	
 	protected void showToast(String message, int duration)
 	{

@@ -64,9 +64,8 @@
 
         <LinearLayout
             android:id="@+id/linearLayout1"
-            android:layout_width="0dp"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:paddingLeft="10dp" >
@@ -96,13 +95,6 @@
                 android:scrollHorizontally="true"
                 android:singleLine="true" />
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/imageViewBadge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="15dp" />
     </LinearLayout>
 
 </LinearLayout>

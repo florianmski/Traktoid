@@ -48,7 +48,7 @@ public class CalendarTask extends TraktTask
 	
 	//instead of doing 3 requests (user shows, premieres and all), we do only "all" and then sorts
 	@Override
-	protected void doTraktStuffInBackground()
+	protected boolean doTraktStuffInBackground()
 	{	
 		showToast("Retrieving calendar...", Toast.LENGTH_SHORT);
 		
@@ -106,6 +106,8 @@ public class CalendarTask extends TraktTask
 		adapters.add(new ListCalendarAdapter(calendarListShows, context));
 		
 		adapter = new PagerCalendarAdapter(context, adapters);
+		
+		return true;
 	}
 	
 	@Override
