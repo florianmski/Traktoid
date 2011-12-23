@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +73,8 @@ public class ListRecommendationAdapter extends BaseAdapter
 		return position;
     }
 
-    public View getView(final int position, View convertView, ViewGroup parent) 
+    @Override
+	public View getView(final int position, View convertView, ViewGroup parent) 
     {
     	final ViewHolder holder;
 
@@ -94,14 +94,14 @@ public class ListRecommendationAdapter extends BaseAdapter
         
         TvShow s = recommendations.get(position);
         
-        Image i = new Image(s.getTvdbId(), s.getImages().getFanart(), Image.FANART);
+        Image i = new Image(s.tvdbId, s.images.fanart, Image.FANART);
         AQuery aq = new AQuery(convertView);
         if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
             aq.id(holder.ivFanart).image(placeholder);
         else
         	aq.id(holder.ivFanart).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
                         
-        holder.tvShow.setText(s.getTitle());
+        holder.tvShow.setText(s.title);
 
         return convertView;
     }

@@ -55,13 +55,17 @@ public class TraktTask extends AsyncTask<Void, String, Boolean>
 		if(!Utils.isOnline(context))
 		{
 			if(!Utils.isActivityFinished(fragment.getActivity()))
-				tm.onErrorTraktRequest(tListener, null, "Internet connection required!");
-			this.publishProgress("toast", "1", "Internet connection required!");
+				tm.onErrorTraktRequest(tListener, new Exception("Internet connection required!"));
+			
+			showToast("Internet connection required!", Toast.LENGTH_LONG);
 			return false;
 		}
 		try
 		{
-			doTraktStuffInBackground();
+			if(isCancelled())
+				return false;
+			else
+				doTraktStuffInBackground();
 		}
 		catch (ApiException e) 
 		{
@@ -82,6 +86,11 @@ public class TraktTask extends AsyncTask<Void, String, Boolean>
 	}
 	
 	protected void doTraktStuffInBackground() {}
+	
+	protected void showToast(String message, int duration)
+	{
+		this.publishProgress("toast", String.valueOf(duration), message);
+	}
 
 	@Override
 	protected void onPostExecute (Boolean success)
@@ -103,7 +112,7 @@ public class TraktTask extends AsyncTask<Void, String, Boolean>
 		//TODO onErrorTraktRequest must be executed on UIThread
 		e.printStackTrace();
 		if(!Utils.isActivityFinished(fragment.getActivity()))
-			tm.onErrorTraktRequest(tListener, e, e.getMessage());
-		this.publishProgress("toast", "1", "Error : " + e.getMessage());
+			tm.onErrorTraktRequest(tListener, e);
+		showToast("Error : " + e, Toast.LENGTH_LONG);
 	}
 }

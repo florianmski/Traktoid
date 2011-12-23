@@ -302,6 +302,7 @@ public class Panel extends LinearLayout {
 		int initX;
 		int initY;
 		boolean setInitialPosition;
+		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			if (mState == State.ANIMATING) {
 				// we are animating
@@ -350,6 +351,7 @@ public class Panel extends LinearLayout {
 	};
 	
 	OnClickListener clickListener = new OnClickListener() {
+		@Override
 		public void onClick(View v) {
 			if (mBringToFront) {
 				bringToFront();
@@ -376,6 +378,7 @@ public class Panel extends LinearLayout {
 	}
 
 	Runnable startAnimation = new Runnable() {
+		@Override
 		public void run() {
 			// this is why we post this Runnable couple of lines above:
 			// now its save to use mContent.getHeight() && mContent.getWidth()
@@ -461,6 +464,7 @@ public class Panel extends LinearLayout {
 	};
 
 	private AnimationListener animationListener = new AnimationListener() {
+		@Override
 		public void onAnimationEnd(Animation animation) {
 			mState = State.READY;
 			if (mIsShrinking) {
@@ -468,8 +472,10 @@ public class Panel extends LinearLayout {
 			}
 			postProcess();
 		}
+		@Override
 		public void onAnimationRepeat(Animation animation) {
 		}
+		@Override
 		public void onAnimationStart(Animation animation) {
 			mState = State.ANIMATING;
 		}
@@ -499,20 +505,24 @@ public class Panel extends LinearLayout {
 			scrollX = initScrollX;
 			scrollY = initScrollY;
 		}
+		@Override
 		public boolean onDown(MotionEvent e) {
 			scrollX = scrollY = 0;
 			initChange();
 			return true;
 		}
+		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 			mState = State.FLYING;
 			mVelocity = mOrientation == VERTICAL? velocityY : velocityX;
 			post(startAnimation);
 			return true;
 		}
+		@Override
 		public void onLongPress(MotionEvent e) {
 			// not used
 		}
+		@Override
 		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 			mState = State.TRACKING;
 			float tmpY = 0, tmpX = 0;
@@ -538,9 +548,11 @@ public class Panel extends LinearLayout {
 			}
 			return true;
 		}
+		@Override
 		public void onShowPress(MotionEvent e) {
 			// not used
 		}
+		@Override
 		public boolean onSingleTapUp(MotionEvent e) {
 			// not used
 			return false;

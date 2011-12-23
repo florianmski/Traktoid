@@ -70,8 +70,8 @@ public class ListEpisodeAdapter extends BaseAdapter
     	listWatched.clear();
     	for(TvShowEpisode e : episodes)
     	{
-    		if(e.getWatched() != checked)
-    			listWatched.put(e.getNumber(), checked);
+    		if(e.watched != checked)
+    			listWatched.put(e.number, checked);
     	}
 	}
     
@@ -108,7 +108,8 @@ public class ListEpisodeAdapter extends BaseAdapter
         return 0;
     }
 
-    public View getView(final int position, View convertView, ViewGroup parent) 
+    @Override
+	public View getView(final int position, View convertView, ViewGroup parent) 
     {
     	final ViewHolder holder;
 
@@ -130,7 +131,7 @@ public class ListEpisodeAdapter extends BaseAdapter
         
         TvShowEpisode e = episodes.get(position);
         
-        Image i = new Image(tvdb_id, e.getImages().getScreen(), e.getSeason(), e.getNumber());
+        Image i = new Image(tvdb_id, e.images.screen, e.season, e.number);
         AQuery aq = new AQuery(convertView);
         //in case user scroll the list fast, stop loading images from web
         if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
@@ -138,8 +139,8 @@ public class ListEpisodeAdapter extends BaseAdapter
         else
         	aq.id(holder.ivScreen).image(i.getUrl(), true, false, 0, 0, placeholder, android.R.anim.fade_in, 9.0f / 16.0f);
         
-        holder.tvTitle.setText(e.getTitle());
-        holder.tvEpisode.setText("Episode " + e.getNumber());
+        holder.tvTitle.setText(e.title);
+        holder.tvEpisode.setText("Episode " + e.number);
         
         if(watchedMode)
         {       	
@@ -151,8 +152,8 @@ public class ListEpisodeAdapter extends BaseAdapter
 				{
 					if(watchedMode)
 					{
-						int episode = episodes.get(position).getNumber();
-						boolean watched = episodes.get(position).getWatched();
+						int episode = episodes.get(position).number;
+						boolean watched = episodes.get(position).watched;
 						//it means that episode has been checked twice so user has changed his mind
 						if(listWatched.containsKey(episode) || (watched == holder.cbWatched.isChecked()))
 							listWatched.remove(episode);
@@ -162,20 +163,20 @@ public class ListEpisodeAdapter extends BaseAdapter
 				}
 			});
             
-            if(listWatched.containsKey(e.getNumber()))
-        		holder.cbWatched.setChecked(listWatched.get(e.getNumber()));
+            if(listWatched.containsKey(e.number))
+        		holder.cbWatched.setChecked(listWatched.get(e.number));
         	else
-        		holder.cbWatched.setChecked(e.getWatched());
+        		holder.cbWatched.setChecked(e.watched);
             
         }
         else
         {
         	holder.llWatched.setVisibility(View.GONE);
         	
-            holder.cbWatched.setChecked(e.getWatched());
+            holder.cbWatched.setChecked(e.watched);
         }
         
-        if(e.getWatched())
+        if(e.watched)
         	holder.ivBandeau.setVisibility(View.VISIBLE);
         else
         	holder.ivBandeau.setVisibility(View.GONE);

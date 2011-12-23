@@ -16,50 +16,10 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.londatiga.android.ActionItem;
-import net.londatiga.android.QuickAction;
-import net.londatiga.android.QuickAction.OnActionItemClickListener;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.DialogInterface.OnMultiChoiceClickListener;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
 import android.support.v4.view.Window;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-
-import com.androidquery.AQuery;
-import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.ListSeasonAdapter;
-import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.db.tasks.DBAdapter;
-import com.florianmski.tracktoid.db.tasks.DBSeasonsTask;
-import com.florianmski.tracktoid.image.Fanart;
-import com.florianmski.tracktoid.image.Image;
-import com.florianmski.tracktoid.trakt.tasks.RateTask;
-import com.florianmski.tracktoid.trakt.tasks.WatchedEpisodesTask;
 import com.florianmski.tracktoid.ui.fragments.MyShowFragment;
-import com.jakewharton.trakt.entities.TvShow;
-import com.jakewharton.trakt.entities.TvShowEpisode;
-import com.jakewharton.trakt.entities.TvShowSeason;
-import com.jakewharton.trakt.enumerations.Rating;
 
 public class MyShowActivity extends TraktActivity
 {

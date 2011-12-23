@@ -16,8 +16,8 @@
 
 package com.florianmski.tracktoid.trakt.tasks;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
@@ -37,18 +37,19 @@ public class RemoveShowTask extends TraktTask
 	@Override
 	protected void doTraktStuffInBackground()
 	{
-		this.publishProgress("toast", "0", "Removing " + show.getTitle() + "...");
+		showToast("Removing " + show.title + "...", Toast.LENGTH_SHORT);
 		
+		//delete only locally
 //		tm.showService().unlibrary(Integer.valueOf(show.getTvdbId())).fire();
 
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
 		dbw.open();
 
-		dbw.removeShow(show.getTvdbId());
+		dbw.removeShow(show.tvdbId);
 		
 		dbw.close();
 		
-		this.publishProgress("toast", "0", show.getTitle() + " removed!");
+		showToast(show.title + " removed!", Toast.LENGTH_SHORT);
 	}
 	
 	@Override

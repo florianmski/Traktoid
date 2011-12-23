@@ -40,7 +40,7 @@ public class Utils
 	private static ProgressBar pb;
 	private static LinearLayout ll;
 
-	public static void setEmptyView(AdapterView av, Context context)
+	public static void setEmptyView(AdapterView<?> av, Context context)
 	{
 		ProgressBar emptyView = new ProgressBar(context);
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(100, 100);

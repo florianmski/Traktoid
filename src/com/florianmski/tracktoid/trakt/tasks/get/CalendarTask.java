@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package com.florianmski.tracktoid.trakt.tasks;
+package com.florianmski.tracktoid.trakt.tasks.get;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.ListCalendarAdapter;
 import com.florianmski.tracktoid.adapters.PagerCalendarAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.jakewharton.trakt.entities.CalendarDate;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.CalendarDate.CalendarTvShowEpisode;
@@ -48,7 +50,7 @@ public class CalendarTask extends TraktTask
 	@Override
 	protected void doTraktStuffInBackground()
 	{	
-		this.publishProgress("toast", "0", "Retrieving calendar...");
+		showToast("Retrieving calendar...", Toast.LENGTH_SHORT);
 		
 		List<CalendarDate> calendarListShows;
 		List<CalendarDate> calendarListPremieres = new ArrayList<CalendarDate>();
@@ -68,17 +70,17 @@ public class CalendarTask extends TraktTask
 			CalendarDate calendarPremieres = new CalendarDate();
 			CalendarDate calendarMyShows = new CalendarDate();
 			
-			calendarPremieres.setDate(cd.getDate());
-			calendarMyShows.setDate(cd.getDate());
+			calendarPremieres.date = cd.date;
+			calendarMyShows.date = cd.date;
 			
 			List<CalendarTvShowEpisode> episodesPremieres = new ArrayList<CalendarTvShowEpisode>();
 			List<CalendarTvShowEpisode> episodesMyShows = new ArrayList<CalendarTvShowEpisode>();
 			
-			for(CalendarTvShowEpisode e : cd.getEpisodes())
+			for(CalendarTvShowEpisode e : cd.episodes)
 			{				
-				int index = Collections.binarySearch(shows, e.getShow());
+				int index = Collections.binarySearch(shows, e.show);
 				
-				if(e.getEpisode().getNumber() == 1)
+				if(e.episode.number == 1)
 					episodesPremieres.add(e);
 				if(index != -1 && index >= 0 && index < shows.size())
 					episodesMyShows.add(e);
@@ -86,13 +88,13 @@ public class CalendarTask extends TraktTask
 			
 			if(!episodesPremieres.isEmpty())
 			{
-				calendarPremieres.setEpisodes(episodesPremieres);
+				calendarPremieres.episodes = episodesPremieres;
 				calendarListPremieres.add(calendarPremieres);
 			}
 			
 			if(!episodesMyShows.isEmpty())
 			{
-				calendarMyShows.setEpisodes(episodesMyShows);
+				calendarMyShows.episodes = episodesMyShows;
 				calendarListMyShows.add(calendarMyShows);
 			}
 		}

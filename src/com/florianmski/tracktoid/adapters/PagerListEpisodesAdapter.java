@@ -51,7 +51,7 @@ public class PagerListEpisodesAdapter extends PagerAdapter implements TitleProvi
 		this.context = context;
 
 		for(TvShowSeason s : seasons)
-			adapters.add(new ListEpisodeAdapter(s.getEpisodes().getEpisodes(), context, tvdbId));
+			adapters.add(new ListEpisodeAdapter(s.episodes.episodes, context, tvdbId));
 	}
 
 	public void reloadData(List<TvShowSeason> seasons)
@@ -60,7 +60,7 @@ public class PagerListEpisodesAdapter extends PagerAdapter implements TitleProvi
 				
 		for(int i = 0; i < seasons.size(); i++)
 		{
-			adapters.get(i).reloadData(seasons.get(i).getEpisodes().getEpisodes());
+			adapters.get(i).reloadData(seasons.get(i).episodes.episodes);
 			adapters.get(i).notifyDataSetChanged();
 		}
 	}
@@ -92,7 +92,7 @@ public class PagerListEpisodesAdapter extends PagerAdapter implements TitleProvi
 	{
 		int[] seasons = new int[this.seasons.size()];
 		for(int i = 0; i < seasons.length; i++)
-			seasons[i] = this.seasons.get(i).getSeason();
+			seasons[i] = this.seasons.get(i).season;
 
 		return seasons;
 	}
@@ -107,7 +107,7 @@ public class PagerListEpisodesAdapter extends PagerAdapter implements TitleProvi
 	@Override
 	public String getTitle(int position) 
 	{
-		int season = seasons.get(position).getSeason();
+		int season = seasons.get(position).season;
 		return season == 0 ? "Specials" : "Season "+season;
 	}
 	
@@ -142,7 +142,7 @@ public class PagerListEpisodesAdapter extends PagerAdapter implements TitleProvi
 			public void onItemClick(AdapterView<?> arg0, View arg1, int episode, long arg3) 
 			{
 				Intent i = new Intent(context, EpisodeActivity.class);
-				i.putExtra("seasonId", seasons.get(position).getUrl());
+				i.putExtra("seasonId", seasons.get(position).url);
 				i.putExtra("tvdb_id", tvdbId);
 				i.putExtra("title", context.getIntent().getStringExtra("title"));
 				i.putExtra("position", episode);

@@ -44,7 +44,15 @@ public class DBTask extends AsyncTask<Void, String, Boolean>
 		dbw = new DatabaseWrapper(context);
 		dbw.open();
 		
-		doDBStuff();
+		try
+		{
+			doDBStuff();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 		
 		dbw.close();
 		return true;

@@ -80,7 +80,7 @@ public class TraktFragment extends Fragment implements TraktListener
 	public void onBeforeTraktRequest() {}
 
 	@Override
-	public void onErrorTraktRequest(Exception e, String message) 
+	public void onErrorTraktRequest(Exception e) 
 	{
 		//TODO
 		//can't do this because onErrorTraktRequest is not executed in the ui thread

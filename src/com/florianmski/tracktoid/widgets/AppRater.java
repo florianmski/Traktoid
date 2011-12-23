@@ -70,7 +70,8 @@ public class AppRater
         b1.setText("Rate " + APP_TITLE);
         b1.setOnClickListener(new OnClickListener() 
         {
-            public void onClick(View v) 
+            @Override
+			public void onClick(View v) 
             {
                 mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + APP_PNAME)));
                 dialog.dismiss();
@@ -82,7 +83,8 @@ public class AppRater
         b2.setText("Remind me later");
         b2.setOnClickListener(new OnClickListener() 
         {
-            public void onClick(View v) 
+            @Override
+			public void onClick(View v) 
             {
                 dialog.dismiss();
             }
@@ -93,7 +95,8 @@ public class AppRater
         b3.setText("No, thanks");
         b3.setOnClickListener(new OnClickListener() 
         {
-            public void onClick(View v) 
+            @Override
+			public void onClick(View v) 
             {
                 if (editor != null) 
                 {

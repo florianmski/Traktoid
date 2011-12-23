@@ -39,8 +39,8 @@ import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBSeasonsTask;
 import com.florianmski.tracktoid.image.Fanart;
 import com.florianmski.tracktoid.image.Image;
-import com.florianmski.tracktoid.trakt.tasks.RateTask;
-import com.florianmski.tracktoid.trakt.tasks.WatchedEpisodesTask;
+import com.florianmski.tracktoid.trakt.tasks.post.RateTask;
+import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SeasonActivity;
 import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
@@ -98,8 +98,8 @@ public class MyShowFragment extends TraktFragment
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
 			{
 				Intent i = new Intent(getActivity(), SeasonActivity.class);
-				i.putExtra("tvdb_id", show.getTvdbId());
-				i.putExtra("title", show.getTitle());
+				i.putExtra("tvdb_id", show.tvdbId);
+				i.putExtra("title", show.title);
 				i.putExtra("position", lvSeasons.getCount()-position-1);
 				startActivity(i);
 			}
@@ -114,7 +114,7 @@ public class MyShowFragment extends TraktFragment
 		d.setColorFilter(Color.parseColor("#333333"), PorterDuff.Mode.MULTIPLY);
 		qa.addActionItem(new ActionItem(Rating.Hate.ordinal(), "Week sauce :(", d));
 		d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
-		qa.addActionItem(new ActionItem(Rating.UNRATE.ordinal(), "Unrate", d));
+		qa.addActionItem(new ActionItem(Rating.Unrate.ordinal(), "Unrate", d));
 
 		qa.setOnActionItemClickListener(new OnActionItemClickListener() 
 		{
@@ -159,7 +159,7 @@ public class MyShowFragment extends TraktFragment
 		{
 			TvShow show = (TvShow)bundle.get("show");
 
-			if(this.show == null || !this.show.getTvdbId().equals(show.getTvdbId()))
+			if(this.show == null || !this.show.tvdbId.equals(show.tvdbId))
 			{
 				this.show = show;
 				ivBackground.setImageBitmap(null);
@@ -167,7 +167,7 @@ public class MyShowFragment extends TraktFragment
 				//in order to set the right heart color
 				getSupportActivity().invalidateOptionsMenu();
 
-				setTitle(show.getTitle());
+				setTitle(show.title);
 
 				new DBSeasonsTask(getActivity(), new DBAdapter() 
 				{
@@ -177,11 +177,11 @@ public class MyShowFragment extends TraktFragment
 						Collections.reverse(seasons);
 						adapter.reloadData(seasons);
 					}
-				}, show.getTvdbId(), false, false).execute();
+				}, show.tvdbId, false, false).execute();
 
 				displayClearLogo();
 
-				displayPercentage(show.getProgress());
+				displayPercentage(show.progress);
 
 				displayNextEpisode();
 			}
@@ -200,7 +200,7 @@ public class MyShowFragment extends TraktFragment
 			@Override
 			public void run()
 			{
-				final String url = Fanart.getFanartParser().getFanart(show.getTvdbId(), Fanart.CLEARLOGO, getActivity());
+				final String url = Fanart.getFanartParser().getFanart(show.tvdbId, Fanart.CLEARLOGO, getActivity());
 				if(getActivity() != null)
 					getActivity().runOnUiThread(new Runnable() 
 					{
@@ -219,7 +219,7 @@ public class MyShowFragment extends TraktFragment
 	{
 		DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
 		dbw.open();
-		final TvShowEpisode e = dbw.getNextEpisode(show.getTvdbId());
+		final TvShowEpisode e = dbw.getNextEpisode(show.tvdbId);
 		dbw.close();
 
 		if(e != null)
@@ -230,10 +230,10 @@ public class MyShowFragment extends TraktFragment
 			TextView tvEpisode = (TextView)llNextEpisode.findViewById(R.id.textViewEpisode);
 			ImageView ivScreen = (ImageView)llNextEpisode.findViewById(R.id.imageViewScreen);
 
-			tvTitle.setText(e.getTitle());
-			tvEpisode.setText(Utils.addZero(e.getSeason()) + "x" + Utils.addZero(e.getNumber()));
+			tvTitle.setText(e.title);
+			tvEpisode.setText(Utils.addZero(e.season) + "x" + Utils.addZero(e.number));
 
-			Image i = new Image(show.getTvdbId(), e.getImages().getScreen(), e.getSeason(), e.getNumber());
+			Image i = new Image(show.tvdbId, e.images.screen, e.season, e.number);
 			AQuery aq = new AQuery(getActivity());
 			aq.id(ivScreen).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in, 9.0f / 16.0f);
 
@@ -243,9 +243,14 @@ public class MyShowFragment extends TraktFragment
 				public void onClick(View v) 
 				{
 					Intent i = new Intent(getActivity(), EpisodeActivity.class);
-					ArrayList<TvShowEpisode> episodes = new ArrayList<TvShowEpisode>();
-					episodes.add(e);
-					i.putExtra("results", episodes);
+					for(TvShowSeason s : adapter.getSeasons())
+					{
+						if(s.season == e.season)
+							i.putExtra("seasonId", s.url);
+					}
+					
+					i.putExtra("tvdb_id", show.tvdbId);
+					i.putExtra("position", e.number-1);
 					startActivity(i);
 				}
 			});
@@ -285,9 +290,9 @@ public class MyShowFragment extends TraktFragment
 
 		Drawable d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
 
-		if(show != null && show.getRating() != null)
+		if(show != null && show.rating != null)
 		{
-			switch(show.getRating())
+			switch(show.rating)
 			{
 			case Love :
 				d.setColorFilter(Color.parseColor("#691909"), PorterDuff.Mode.MULTIPLY);
@@ -323,7 +328,7 @@ public class MyShowFragment extends TraktFragment
 				CharSequence[] items = new CharSequence[seasons.size()];
 
 				for(int i = 0; i < items.length; i++)
-					items[i] = seasons.get(i).getSeason() == 0 ? "Sepcials" : "Season " + seasons.get(i).getSeason();
+					items[i] = seasons.get(i).season == 0 ? "Sepcials" : "Season " + seasons.get(i).season;
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 				builder.setMultiChoiceItems(items, null, new OnMultiChoiceClickListener() 
@@ -343,7 +348,7 @@ public class MyShowFragment extends TraktFragment
 					@Override
 					public void onClick(DialogInterface dialog, int which) 
 					{
-						tm.addToQueue(new WatchedEpisodesTask(tm, MyShowFragment.this, show.getTvdbId(), seasonsChecked, true));
+						tm.addToQueue(new WatchedEpisodesTask(tm, MyShowFragment.this, show.tvdbId, seasonsChecked, true));
 					}
 				});
 
@@ -352,7 +357,7 @@ public class MyShowFragment extends TraktFragment
 					@Override
 					public void onClick(DialogInterface dialog, int which) 
 					{
-						tm.addToQueue(new WatchedEpisodesTask(tm, MyShowFragment.this, show.getTvdbId(), seasonsChecked, false));
+						tm.addToQueue(new WatchedEpisodesTask(tm, MyShowFragment.this, show.tvdbId, seasonsChecked, false));
 					}
 				});
 
@@ -386,13 +391,13 @@ public class MyShowFragment extends TraktFragment
 	@Override
 	public void onShowUpdated(TvShow show) 
 	{
-		if(show.getTvdbId().equals(this.show.getTvdbId()) && adapter != null)
+		if(show.tvdbId.equals(this.show.tvdbId) && adapter != null)
 		{
-			displayPercentage(show.getProgress());
+			displayPercentage(show.progress);
 			displayNextEpisode();
 
-			if(show.getSeasons() != null)
-				adapter.reloadData(show.getSeasons());
+			if(show.seasons != null)
+				adapter.reloadData(show.seasons);
 
 			this.show = show;
 			getSupportActivity().invalidateOptionsMenu();
@@ -402,7 +407,7 @@ public class MyShowFragment extends TraktFragment
 	@Override
 	public void onShowRemoved(TvShow show)
 	{
-		if(show.getTvdbId().equals(show.getTvdbId()))
+		if(show.tvdbId.equals(show.tvdbId))
 			getActivity().finish();
 	}
 

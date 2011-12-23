@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package com.florianmski.tracktoid.trakt.tasks;
+package com.florianmski.tracktoid.trakt.tasks.get;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.TvShow;
 
@@ -47,7 +48,7 @@ public class ShowsTask extends TraktTask
 	@Override
 	protected void doTraktStuffInBackground()
 	{
-		this.publishProgress("toast", "0", "Retrieving a list of shows...");
+		showToast("Retrieving a list of shows...", Toast.LENGTH_SHORT);
 		
 		shows = (ArrayList<TvShow>) builder.fire();
 		

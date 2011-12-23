@@ -16,24 +16,8 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import java.util.ArrayList;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
-
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.ListSearchAdapter;
-import com.florianmski.tracktoid.trakt.tasks.ShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.ShowsTask.ShowsListener;
-import com.jakewharton.trakt.entities.TvShow;
 
 public class SearchActivity extends TraktActivity
 {			

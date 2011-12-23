@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.florianmski.tracktoid.trakt.tasks;
+package com.florianmski.tracktoid.trakt.tasks.post;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,11 +22,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowSeason;
 import com.jakewharton.trakt.services.ShowService.EpisodeSeenBuilder;
@@ -37,8 +38,6 @@ public class WatchedEpisodesTask extends TraktTask
 	private String tvdbId;
 	private int [] seasons;
 	private List<Map<Integer, Boolean>> listWatched = new ArrayList<Map<Integer,Boolean>>();
-	private List<TvShowSeason> seasonsList;
-	
 	private TvShow show;
 
 	public WatchedEpisodesTask(TraktManager tm, Fragment fragment, String tvdbId, int [] seasons, List<Map<Integer, Boolean>> listWatched) 
@@ -69,9 +68,9 @@ public class WatchedEpisodesTask extends TraktTask
 		
 		for(int i = 0; i < seasons.size(); i++)
 		{
-			this.seasons[i] = seasons.get(i).getSeason();
+			this.seasons[i] = seasons.get(i).season;
 			this.listWatched.add(new HashMap<Integer, Boolean>());
-			for(int j = 1; j <= seasons.get(i).getEpisodes().getCount(); j++)
+			for(int j = 1; j <= seasons.get(i).episodes.count; j++)
 				this.listWatched.get(i).put(j, watched);
 		}
 	}
@@ -79,7 +78,7 @@ public class WatchedEpisodesTask extends TraktTask
 	@Override
 	protected void doTraktStuffInBackground()
 	{
-		this.publishProgress("toast", "0", "Sending...");
+		showToast("Sending...", Toast.LENGTH_SHORT);
 		
 		EpisodeSeenBuilder seenBuilder = tm.showService().episodeSeen(Integer.valueOf(tvdbId));
 		EpisodeUnseenBuilder unseenBuilder = tm.showService().episodeUnseen(Integer.valueOf(tvdbId));
@@ -132,11 +131,11 @@ public class WatchedEpisodesTask extends TraktTask
 
 			dbw.refreshPercentage(tvdbId);
 			show = dbw.getShow(tvdbId);			
-			show.setSeasons(dbw.getSeasons(tvdbId, true, true));
+			show.seasons = dbw.getSeasons(tvdbId, true, true);
 			
 			dbw.close();
 			
-			this.publishProgress("toast", "0", "Send to Trakt!");
+			showToast("Send to Trakt!", Toast.LENGTH_SHORT);
 		}
 	}
 	

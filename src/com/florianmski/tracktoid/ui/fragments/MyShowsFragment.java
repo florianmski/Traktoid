@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBar;
 import android.support.v4.app.FragmentTransaction;
@@ -39,13 +38,12 @@ import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBShowsTask;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.RateTask;
 import com.florianmski.tracktoid.trakt.tasks.RemoveShowTask;
-import com.florianmski.tracktoid.trakt.tasks.ShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.UpdateShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.ShowsTask.ShowsListener;
+import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
+import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
+import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
+import com.florianmski.tracktoid.trakt.tasks.post.RateTask;
 import com.florianmski.tracktoid.ui.activities.phone.MyShowActivity;
-import com.florianmski.tracktoid.ui.activities.tablet.MyShowsTabletActivity;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.enumerations.Rating;
 
@@ -223,12 +221,13 @@ public class MyShowsFragment extends TraktFragment
 					break;
 				case 2:
 					final CharSequence[] items = {"Totally ninja!", "Week sauce :(", "Unrate"};
-					final Rating[] ratings = {Rating.Love, Rating.Hate, Rating.UNRATE};
+					final Rating[] ratings = {Rating.Love, Rating.Hate, Rating.Unrate};
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 					builder.setTitle("Rate");
 					builder.setItems(items, new DialogInterface.OnClickListener() 
 					{
+						@Override
 						public void onClick(DialogInterface dialog, int item) 
 						{
 							tm.addToQueue(new RateTask(tm, MyShowsFragment.this, (TvShow)adapter.getItem(posterClickedPosition), ratings[item]));
@@ -401,7 +400,7 @@ public class MyShowsFragment extends TraktFragment
 		String[] items = new String[shows.size()];
 
 		for(int i = 0; i < shows.size(); i++)
-			items[i] = shows.get(i).getTitle();
+			items[i] = shows.get(i).title;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle("Which show(s) do you want to refresh ?");

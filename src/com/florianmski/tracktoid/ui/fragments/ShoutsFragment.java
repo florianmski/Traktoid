@@ -1,9 +1,7 @@
 package com.florianmski.tracktoid.ui.fragments;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,16 +12,13 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.ListRecommendationAdapter;
 import com.florianmski.tracktoid.adapters.ListShoutsAdapter;
-import com.florianmski.tracktoid.trakt.tasks.ShoutsGetTask;
-import com.florianmski.tracktoid.trakt.tasks.ShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.ShoutsGetTask.ShoutsListener;
-import com.florianmski.tracktoid.trakt.tasks.ShowsTask.ShowsListener;
-import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
-import com.florianmski.tracktoid.ui.fragments.TraktFragment.FragmentListener;
+import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask;
+import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask.ShoutsListener;
+import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
+import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
+import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.Shout;
-import com.jakewharton.trakt.entities.TvShow;
 
 public class ShoutsFragment extends TraktFragment
 {
@@ -73,8 +68,16 @@ public class ShoutsFragment extends TraktFragment
 			{
 				//TODO
 			}
-
 		});
+		
+		new PostTask(tm, this, tm.shoutService().show(2).shout(""), new PostListener() 
+		{
+			@Override
+			public void onComplete(Response r) 
+			{
+				
+			}
+		}).execute();
 	}
 	
 	@Override

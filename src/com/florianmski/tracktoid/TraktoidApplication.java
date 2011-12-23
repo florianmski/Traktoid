@@ -26,16 +26,16 @@ import static org.acra.ReportField.*;
 import android.app.Application;
 
 @ReportsCrashes(formKey = "dGlwaUVySktzbEJuVlBKUjBMeUNfYXc6MQ",
-				customReportContent = { APP_VERSION_NAME, ANDROID_VERSION, PHONE_MODEL, STACK_TRACE })
+customReportContent = { APP_VERSION_NAME, ANDROID_VERSION, PHONE_MODEL, STACK_TRACE })
 public class TraktoidApplication extends Application
 {
 	@Override
-    public void onCreate() 
+	public void onCreate() 
 	{
-        // The following line triggers the initialization of ACRA
-//        ACRA.init(this);
-        
-        TraktManager.create(this);
-        super.onCreate();
-    }
+		// The following line triggers the initialization of ACRA
+		//        ACRA.init(this);
+
+		TraktManager.create(this);
+		super.onCreate();
+	}
 }

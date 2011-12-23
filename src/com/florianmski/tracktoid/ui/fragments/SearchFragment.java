@@ -4,10 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -20,11 +17,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.ListSearchAdapter;
-import com.florianmski.tracktoid.trakt.tasks.ShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.ShowsTask.ShowsListener;
-import com.florianmski.tracktoid.ui.activities.phone.SearchActivity;
+import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
+import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
 import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
-import com.florianmski.tracktoid.ui.fragments.TraktFragment.FragmentListener;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class SearchFragment extends TraktFragment

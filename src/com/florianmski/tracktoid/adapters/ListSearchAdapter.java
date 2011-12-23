@@ -69,6 +69,7 @@ public class ListSearchAdapter extends BaseAdapter
 		return position;
 	}
 
+	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) 
 	{
 		final ViewHolder holder;
@@ -93,14 +94,14 @@ public class ListSearchAdapter extends BaseAdapter
 
 		TvShow show = shows.get(position);
 
-		Image i = new Image(show.getTvdbId(), null, Image.BANNER);
+		Image i = new Image(show.tvdbId, null, Image.BANNER);
 		AQuery aq = new AQuery(convertView);
 		if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
 			aq.id(holder.ivBanner).image(placeholder);
 		else
 			aq.id(holder.ivBanner).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
 
-		holder.tvSeason.setText(show.getTitle());
+		holder.tvSeason.setText(show.title);
 
 		return convertView;
 	}

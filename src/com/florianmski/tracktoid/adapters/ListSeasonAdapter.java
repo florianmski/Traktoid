@@ -92,10 +92,10 @@ public class ListSeasonAdapter extends BaseAdapter
         
         TvShowSeason season = seasons.get(position);
         
-        int episodes = season.getEpisodes().getCount();
-        int episodesWatched = season.getEpisodesWatched();
+        int episodes = season.episodes.count;
+        int episodesWatched = season.episodesWatched;
         
-        holder.tvSeason.setText(season.getSeason() == 0 ? "Specials" : "Season " + season.getSeason());
+        holder.tvSeason.setText(season.season == 0 ? "Specials" : "Season " + season.season);
         holder.tvLeft.setText(episodesWatched + "/" + episodes);
         holder.ivBandeau.setVisibility(episodesWatched >= episodes ? View.VISIBLE : View.INVISIBLE);
 		

@@ -58,8 +58,8 @@ public class PagerShowAdapter extends PagerAdapter
 		for(int i = 0; i < shows.size(); i++)
 		{
 			TvShow s = shows.get(i);
-			if(dbw.showExist(s.getTvdbId()))
-				shows.set(i, dbw.getShow(s.getTvdbId()));
+			if(dbw.showExist(s.tvdbId))
+				shows.set(i, dbw.getShow(s.tvdbId));
 		}
 		
 		dbw.close();
@@ -98,7 +98,6 @@ public class PagerShowAdapter extends PagerAdapter
 	public Object instantiateItem(View pager, int position) 
 	{
 		View v = LayoutInflater.from(context).inflate(R.layout.pager_item_show, null, false);
-		TextView tvTitle = (TextView)v.findViewById(R.id.textViewTitle);
 		TextView tvAir = (TextView)v.findViewById(R.id.textViewAir);
 		TextView tvOverview = (TextView)v.findViewById(R.id.textViewOverview);
 		TextView tvPercentage = (TextView)v.findViewById(R.id.textViewPercentage);
@@ -115,20 +114,20 @@ public class PagerShowAdapter extends PagerAdapter
 
 		final TvShow s = shows.get(position);
 
-		DayOfTheWeek airDay = s.getAirDay();
+		DayOfTheWeek airDay = s.airDay;
 
-		String airTime = s.getAirTime() == null || s.getAirTime().equals("") || s.getAirTime().equals("null") ? "?" : s.getAirTime();
-		String network = s.getNetwork() == null || s.getNetwork().equals("") || s.getNetwork().equals("null") ? "?" : s.getNetwork();
-		String runtime = s.getRuntime() == 0 ? "?min" : s.getRuntime() + "min";
-		String firstAired = s.getFirstAired() == null ? "" : "First Aired : " + new SimpleDateFormat("MM/dd/yyyy").format(s.getFirstAired()) + "\n";
+		String airTime = s.airTime == null || s.airTime.equals("") || s.airTime.equals("null") ? "?" : s.airTime;
+		String network = s.network == null || s.network.equals("") || s.network.equals("null") ? "?" : s.network;
+		String runtime = s.runtime == 0 ? "?min" : s.runtime + "min";
+		String firstAired = s.firstAired == null ? "" : "First Aired : " + new SimpleDateFormat("MM/dd/yyyy").format(s.firstAired) + "\n";
 
 		tvAir.setText(firstAired + ((airDay == null || airDay.toString().equals("")) ? "?" : airDay) + " at " + airTime + " on " + network + " (" + runtime + ")");
 
-		tvOverview.setText(s.getOverview());
+		tvOverview.setText(s.overview);
 		ivRating.setImageBitmap(null);
 		ivWatched.setImageBitmap(null);
 
-		Image i = new Image(s.getTvdbId(), s.getImages().getScreen(), Image.FANART);
+		Image i = new Image(s.tvdbId, s.images.screen, Image.FANART);
 		AQuery aq = new AQuery(v);
 		//create a bitmap ajax callback object
 		BitmapAjaxCallback cb = new BitmapAjaxCallback();
@@ -139,9 +138,9 @@ public class PagerShowAdapter extends PagerAdapter
 		
 		TransitionDrawable td = null;
 
-		if(s.getRating() == Rating.Love)
+		if(s.rating == Rating.Love)
 			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_loved)});
-		else if(s.getRating() == Rating.Hate)
+		else if(s.rating == Rating.Hate)
 			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_hated)});
 
 		if(td != null)
@@ -149,7 +148,7 @@ public class PagerShowAdapter extends PagerAdapter
 
 		ivRating.setImageDrawable(td);
 
-		if(s.getProgress() == 100)
+		if(s.progress == 100)
 		{
 			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watched)});
 			td.startTransition(1000);
@@ -158,8 +157,8 @@ public class PagerShowAdapter extends PagerAdapter
 		else
 			ivWatched.setImageDrawable(null);
 
-		if(s.getRatings() != null)
-			tvPercentage.setText(s.getRatings().getPercentage()+"%");
+		if(s.ratings != null)
+			tvPercentage.setText(s.ratings.percentage+"%");
 		else
 			tvPercentage.setText("?%");
 

@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,13 +69,13 @@ public class ListCalendarAdapter extends BaseAdapter
 			for(CalendarDate cd : calendarDates)
 			{
 				objects.add(cd);
-				for(int i = 0; i < (int) Math.ceil((cd.getEpisodes().size()*1.0)/(nbByRow*1.0)); i++)
+				for(int i = 0; i < (int) Math.ceil((cd.episodes.size()*1.0)/(nbByRow*1.0)); i++)
 				{
 					List<CalendarTvShowEpisode> temp = new ArrayList<CalendarTvShowEpisode>();
 					for(int j = 0; j < nbByRow; j++)
 					{
-						if(j+(nbByRow*i) < cd.getEpisodes().size())
-							temp.add(cd.getEpisodes().get(j+(nbByRow*i)));
+						if(j+(nbByRow*i) < cd.episodes.size())
+							temp.add(cd.episodes.get(j+(nbByRow*i)));
 					}
 					objects.add(temp);
 				}
@@ -89,7 +88,7 @@ public class ListCalendarAdapter extends BaseAdapter
 	{
 		int count = 0;
 		for(CalendarDate cd : calendarDates)
-			count += Math.ceil(cd.getEpisodes().size()/(nbByRow*1.0));
+			count += Math.ceil(cd.episodes.size()/(nbByRow*1.0));
 		return count + calendarDates.size();
 	}
 
@@ -120,6 +119,7 @@ public class ListCalendarAdapter extends BaseAdapter
 		return 2;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public View getView(final int position, View convertView, ViewGroup parent) 
 	{
@@ -185,7 +185,7 @@ public class ListCalendarAdapter extends BaseAdapter
 		{
 			CalendarDate cd = (CalendarDate) getItem(position);
 
-			holder.tvDay.setText(new SimpleDateFormat("EEEE dd MMMM yyyy").format(cd.getDate()));
+			holder.tvDay.setText(new SimpleDateFormat("EEEE dd MMMM yyyy").format(cd.date));
 
 			return holder.llSeparator;
 		}
@@ -208,20 +208,20 @@ public class ListCalendarAdapter extends BaseAdapter
 				holder.tvAirTime[i].setVisibility(View.VISIBLE);
 				holder.livScreen[i].setVisibility(View.VISIBLE);
 
-				CalendarTvShowEpisode e = episodes.get(i);
+				final CalendarTvShowEpisode e = episodes.get(i);
 
-				final TvShowEpisode episode = e.getEpisode();
+				final TvShowEpisode episode = e.episode;
 
-				holder.tvShow[i].setText(e.getShow().getTitle());
+				holder.tvShow[i].setText(e.show.title);
 
-				String title = (episode.getSeason() < 10) ? "0"+episode.getSeason()+"x" : episode.getSeason()+"x";
-				title += (episode.getNumber() < 10) ? "0"+episode.getNumber() : episode.getNumber()+"";
-				title += " "+episode.getTitle();
+				String title = (episode.season < 10) ? "0"+episode.season+"x" : episode.season+"x";
+				title += (episode.number < 10) ? "0"+episode.number : episode.number+"";
+				title += " "+episode.title;
 
 				holder.tvTitle[i].setText(title);
-				holder.tvAirTime[i].setText(e.getShow().getAirTime() + " on " + e.getShow().getNetwork());
+				holder.tvAirTime[i].setText(e.show.airTime + " on " + e.show.network);
 
-				Image image = new Image(e.getShow().getTvdbId(), episode.getImages().getScreen(), Image.CALENDAR);
+				Image image = new Image(e.show.tvdbId, episode.images.screen, Image.CALENDAR);
 				AQuery aq = new AQuery(holder.llEpisodes);
 
 				if(aq.shouldDelay(holder.llEpisodes, parent, image.getUrl(), 0))
@@ -236,8 +236,11 @@ public class ListCalendarAdapter extends BaseAdapter
 					{
 						Intent i = new Intent(context, EpisodeActivity.class);
 						ArrayList<TvShowEpisode> episodes = new ArrayList<TvShowEpisode>();
+						//workaround to display image in the episode view
+						episode.images.screen = episode.images.screen.replace("-940","");
 						episodes.add(episode);
 						i.putExtra("results", episodes);
+						i.putExtra("tvdb_id", e.show.tvdbId);
 						context.startActivity(i);
 					}
 				});

@@ -10,37 +10,33 @@ import android.support.v4.view.MenuItem;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.androidquery.service.MarketService;
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.ShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.ShowsTask.ShowsListener;
+import com.jakewharton.trakt.entities.TvShow;
+import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
+import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
 import com.florianmski.tracktoid.ui.activities.phone.AboutActivity;
 import com.florianmski.tracktoid.ui.activities.phone.CalendarActivity;
-import com.florianmski.tracktoid.ui.activities.phone.MyShowsActivity;
 import com.florianmski.tracktoid.ui.activities.phone.RecommendationActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SearchActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SettingsActivity;
 import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
 import com.florianmski.tracktoid.ui.activities.tablet.MyShowsTabletActivity;
-import com.florianmski.tracktoid.ui.fragments.TraktFragment.FragmentListener;
 import com.florianmski.tracktoid.widgets.AppRater;
 import com.florianmski.tracktoid.widgets.Panel;
 import com.florianmski.tracktoid.widgets.Panel.OnPanelListener;
 import com.florianmski.tracktoid.widgets.coverflow.CoverFlow;
 import com.florianmski.tracktoid.widgets.coverflow.CoverFlowImageAdapter;
-import com.jakewharton.trakt.entities.TvShow;
 
 public class HomeFragment extends TraktFragment
 {
@@ -150,7 +146,7 @@ public class HomeFragment extends TraktFragment
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) 
 			{
-				tvPanelhandle.setText(shows.get(position).getTitle());
+				tvPanelhandle.setText(shows.get(position).title);
 			}
 
 			@Override
@@ -190,7 +186,7 @@ public class HomeFragment extends TraktFragment
 					commonTask.execute();
 				}
 				else if(shows != null)
-					tvPanelhandle.setText(shows.get(cv.getSelectedItemPosition()).getTitle());
+					tvPanelhandle.setText(shows.get(cv.getSelectedItemPosition()).title);
 			}
 
 			@Override

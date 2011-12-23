@@ -24,7 +24,6 @@ import java.util.List;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +80,7 @@ public class GridPosterAdapter extends BaseAdapter
 			filterShows.clear();
 			for(TvShow s : shows)
 			{
-				if(s.getProgress() < 100)
+				if(s.progress < 100)
 					filterShows.add(s);
 			}
 			break;
@@ -89,7 +88,7 @@ public class GridPosterAdapter extends BaseAdapter
 			filterShows.clear();
 			for(TvShow s : shows)
 			{
-				if(s.getRating() == Rating.Love)
+				if(s.rating == Rating.Love)
 					filterShows.add(s);
 			}
 			break;
@@ -126,21 +125,25 @@ public class GridPosterAdapter extends BaseAdapter
 		setFilter(currentFilter);
 	}
 
+	@Override
 	public int getCount() 
 	{
 		return filterShows.size();
 	}
 
+	@Override
 	public Object getItem(int position) 
 	{
 		return filterShows.get(position);
 	}
 
+	@Override
 	public long getItemId(int position) 
 	{
 		return position;
 	}
 
+	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) 
 	{
 		final ViewHolder holder;
@@ -192,7 +195,7 @@ public class GridPosterAdapter extends BaseAdapter
 		holder.ivWatched.setImageBitmap(null);
 		holder.ivPoster.setImageBitmap(null);
 
-		Image i = new Image(show.getTvdbId(), show.getImages().getPoster(), Image.POSTER);
+		Image i = new Image(show.tvdbId, show.images.poster, Image.POSTER);
 		AQuery aq = new AQuery(convertView);
 		//create a bitmap ajax callback object
 		BitmapAjaxCallback cb = new BitmapAjaxCallback();
@@ -210,9 +213,9 @@ public class GridPosterAdapter extends BaseAdapter
 
 		TransitionDrawable td = null;
 
-		if(show.getRating() == Rating.Love)
+		if(show.rating == Rating.Love)
 			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_loved)});
-		else if(show.getRating() == Rating.Hate)
+		else if(show.rating == Rating.Hate)
 			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_hated)});
 
 		if(td != null)
@@ -220,7 +223,7 @@ public class GridPosterAdapter extends BaseAdapter
 
 		holder.ivRating.setImageDrawable(td);
 
-		if(show.getProgress() == 100)
+		if(show.progress == 100)
 		{
 			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watched)});
 			td.startTransition(2000);

@@ -23,11 +23,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItem;
 
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.TraktManager.TraktListener;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment.FragmentListener;
 import com.flurry.android.FlurryAgent;
-import com.jakewharton.trakt.entities.TvShow;
 
 public class TraktActivity extends FragmentActivity implements FragmentListener
 {		

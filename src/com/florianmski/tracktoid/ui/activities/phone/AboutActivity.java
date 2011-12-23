@@ -16,22 +16,9 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import java.io.IOException;
-
-import net.londatiga.android.ActionItem;
-import net.londatiga.android.QuickAction;
-
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-
 import com.florianmski.tracktoid.R;
 
 public class AboutActivity extends TraktActivity

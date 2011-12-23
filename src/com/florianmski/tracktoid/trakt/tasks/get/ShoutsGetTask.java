@@ -1,13 +1,13 @@
-package com.florianmski.tracktoid.trakt.tasks;
+package com.florianmski.tracktoid.trakt.tasks.get;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.ShowsTask.ShowsListener;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.jakewharton.trakt.entities.Shout;
 
 public class ShoutsGetTask extends TraktTask
@@ -24,9 +24,10 @@ public class ShoutsGetTask extends TraktTask
 		this.listener = listener;
 	}
 	
+	@Override
 	protected void doTraktStuffInBackground()
 	{
-		this.publishProgress("toast", "0", "Retrieving shouts...");
+		showToast("Retrieving shouts...", Toast.LENGTH_SHORT);
 		
 		shouts = tm.showService().shouts(tvdbId).fire();
 	}

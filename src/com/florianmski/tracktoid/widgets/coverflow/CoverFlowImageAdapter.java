@@ -128,7 +128,7 @@ public class CoverFlowImageAdapter extends BaseAdapter
 			}
 		};
 
-		Image i = new Image(show.getTvdbId(), show.getImages().getPoster(), Image.POSTER);
+		Image i = new Image(show.tvdbId, show.images.poster, Image.POSTER);
 		cb.url(i.getUrl()).fileCache(false).memCache(true);
 		aq.id(imageView).image(cb);
 

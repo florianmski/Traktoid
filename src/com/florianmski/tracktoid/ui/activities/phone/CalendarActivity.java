@@ -19,10 +19,6 @@ package com.florianmski.tracktoid.ui.activities.phone;
 import android.os.Bundle;
 
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.PagerCalendarAdapter;
-import com.florianmski.tracktoid.trakt.tasks.CalendarTask;
-import com.florianmski.tracktoid.trakt.tasks.CalendarTask.CalendarListener;
 
 public class CalendarActivity extends TraktActivity
 {

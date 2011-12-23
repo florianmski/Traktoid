@@ -16,49 +16,9 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.londatiga.android.ActionItem;
-import net.londatiga.android.QuickAction;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnMultiChoiceClickListener;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.ActionBar;
-import android.support.v4.app.ActionBar.OnNavigationListener;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
 import android.support.v4.view.Window;
-import android.util.TypedValue;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.GridPosterAdapter;
-import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.db.tasks.DBAdapter;
-import com.florianmski.tracktoid.db.tasks.DBShowsTask;
-import com.florianmski.tracktoid.image.Image;
-import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.RateTask;
-import com.florianmski.tracktoid.trakt.tasks.RemoveShowTask;
-import com.florianmski.tracktoid.trakt.tasks.ShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.UpdateShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.ShowsTask.ShowsListener;
-import com.jakewharton.trakt.entities.TvShow;
-import com.jakewharton.trakt.enumerations.Rating;
 
 public class MyShowsActivity extends TraktActivity
 {		

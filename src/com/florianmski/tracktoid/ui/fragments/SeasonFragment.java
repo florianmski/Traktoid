@@ -6,10 +6,7 @@ import java.util.Map;
 import android.os.Bundle;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
-import android.view.LayoutInflater;
 import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
@@ -18,9 +15,7 @@ import com.florianmski.tracktoid.adapters.ListEpisodeAdapter;
 import com.florianmski.tracktoid.adapters.PagerListEpisodesAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
-import com.florianmski.tracktoid.trakt.tasks.WatchedEpisodesTask;
-import com.florianmski.tracktoid.ui.activities.phone.SeasonActivity;
-import com.florianmski.tracktoid.ui.fragments.TraktFragment.FragmentListener;
+import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
@@ -165,14 +160,14 @@ public class SeasonFragment extends PagerFragment
 	@Override
 	public void onShowUpdated(TvShow show)
 	{
-		if(show.getTvdbId().equals(tvdbId) && adapter != null && show.getSeasons() != null)
-			((PagerListEpisodesAdapter) adapter).reloadData(show.getSeasons());
+		if(show.tvdbId.equals(tvdbId) && adapter != null && show.seasons != null)
+			((PagerListEpisodesAdapter) adapter).reloadData(show.seasons);
 	}
 
 	@Override
 	public void onShowRemoved(TvShow show)
 	{
-		if(show.getTvdbId().equals(tvdbId))
+		if(show.tvdbId.equals(tvdbId))
 			getActivity().finish();
 	}
 
@@ -195,6 +190,6 @@ public class SeasonFragment extends PagerFragment
 	{
 		super.onPageSelected(position);
 		
-		setBackground(new Image(tvdbId, seasons.get(position).getSeason()));
+		setBackground(new Image(tvdbId, seasons.get(position).season));
 	}
 }

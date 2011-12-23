@@ -1,47 +1,40 @@
-package com.florianmski.tracktoid.trakt.tasks;
+package com.florianmski.tracktoid.trakt.tasks.post;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
-
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public class RateTask extends TraktTask
+public class RateTask extends PostTask
 {
 	private TvShow show;
 	private Rating rating;
-	
+
 	public RateTask(TraktManager tm, Fragment fragment, TvShow show, Rating rating) 
 	{
-		super(tm, fragment);
-		
+		super(tm, fragment, tm.rateService().show(show.title, show.year).rating(rating), null);
+
 		this.show = show;
 		this.rating = rating;
 	}
-	
+
 	@Override
-	protected void doTraktStuffInBackground() 
+	protected void doAfterPostStuff()
 	{
-		this.publishProgress("toast", "0", "Sending...");
-		
-		tm.rateService().show(show.getTitle(), show.getYear()).rating(rating).fire();
-		show.setRating(rating);
-		
+		show.rating = rating;
+
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
 		dbw.open();
 		dbw.insertOrUpdateShow(show);
 		dbw.close();
-		
-		this.publishProgress("toast", "0", "You now " + rating.name().toLowerCase() + " " + show.getTitle() +"!");
 	}
-	
+
 	@Override
 	protected void onPostExecute(Boolean success)
 	{
 		super.onPostExecute(success);
-		
+
 		if(success)
 			tm.onShowUpdated(show);
 	}

@@ -26,7 +26,6 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -82,7 +81,7 @@ public class PagerEpisodeAdapter extends PagerAdapter implements TitleProvider
 	@Override
 	public String getTitle(int position) 
 	{
-		return "S" + Utils.addZero(episodes.get(position).getSeason()) + " E" + Utils.addZero(episodes.get(position).getNumber());
+		return "S" + Utils.addZero(episodes.get(position).season) + " E" + Utils.addZero(episodes.get(position).number);
 	}
 	
 	@Override
@@ -113,19 +112,19 @@ public class PagerEpisodeAdapter extends PagerAdapter implements TitleProvider
 		
 		TvShowEpisode e = episodes.get(position);
 
-		tvOverview.setText(e.getOverview());
+		tvOverview.setText(e.overview);
 		
-		if(e.getFirstAired().getTime() == 0)
+		if(e.firstAired.getTime() == 0)
 			tvAired.setText("Never or date is not known");
 		else
-			tvAired.setText("First Aired : \n" + new SimpleDateFormat("MMMM d, y").format(e.getFirstAired()));
+			tvAired.setText("First Aired : \n" + new SimpleDateFormat("MMMM d, y").format(e.firstAired));
 		
-		if(e.getRatings() != null)
-			tvPercentage.setText(e.getRatings().getPercentage()+"%");
+		if(e.ratings != null)
+			tvPercentage.setText(e.ratings.percentage+"%");
 		
 		ivWatched.setImageBitmap(null);
 
-		Image i = new Image(tvdbId, e.getImages().getScreen(), e.getSeason(), e.getNumber());
+		Image i = new Image(tvdbId, e.images.screen, e.season, e.number);
 		AQuery aq = new AQuery(v);
 		//create a bitmap ajax callback object
 		BitmapAjaxCallback cb = new BitmapAjaxCallback();
@@ -134,7 +133,7 @@ public class PagerEpisodeAdapter extends PagerAdapter implements TitleProvider
 		cb.url(i.getUrl()).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
 		aq.id(ivScreen).image(cb);
 		
-		if(e.getWatched())
+		if(e.watched)
 		{
 			TransitionDrawable td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watched)});
 			td.startTransition(1000);

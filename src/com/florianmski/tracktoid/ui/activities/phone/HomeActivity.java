@@ -17,7 +17,6 @@
 package com.florianmski.tracktoid.ui.activities.phone;
 
 import android.os.Bundle;
-import android.support.v4.view.Window;
 import android.view.KeyEvent;
 
 import com.florianmski.tracktoid.R;

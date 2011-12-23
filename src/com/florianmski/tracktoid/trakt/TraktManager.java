@@ -26,9 +26,9 @@ import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.trakt.tasks.ShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
-import com.florianmski.tracktoid.trakt.tasks.UpdateShowsTask;
+import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
+import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.jakewharton.trakt.ServiceManager;
 import com.jakewharton.trakt.entities.TvShow;
 
@@ -119,10 +119,10 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 			listener.onAfterTraktRequest(success);
 	}
 	
-	public void onErrorTraktRequest(TraktListener listener, Exception e, String message)
+	public void onErrorTraktRequest(TraktListener listener, Exception e)
 	{
 		if(listeners.contains(listener))
-			listener.onErrorTraktRequest(e, message);
+			listener.onErrorTraktRequest(e);
 	}
 	
 	public void onShowUpdated(TvShow show)
@@ -141,7 +141,7 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 	{
 		public void onBeforeTraktRequest();
 		public void onAfterTraktRequest(boolean success);
-		public void onErrorTraktRequest(Exception e, String message);
+		public void onErrorTraktRequest(Exception e);
 		public void onShowUpdated(TvShow show);
 		public void onShowRemoved(TvShow show);
 	}

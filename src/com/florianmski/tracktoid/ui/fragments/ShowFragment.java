@@ -7,18 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
-import android.view.LayoutInflater;
 import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.PagerShowAdapter;
-import com.florianmski.tracktoid.trakt.tasks.UpdateShowsTask;
+import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
-import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
-import com.florianmski.tracktoid.ui.fragments.TraktFragment.FragmentListener;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class ShowFragment extends PagerFragment
@@ -101,7 +95,7 @@ public class ShowFragment extends PagerFragment
 			return true;
 		case R.id.action_bar_shouts :
 			Intent i = new Intent(getActivity(), ShoutsActivity.class);
-			i.putExtra("tvdbId", show.getTvdbId());
+			i.putExtra("tvdbId", show.tvdbId);
 			startActivity(i);
 			return true;
 		}
@@ -115,8 +109,8 @@ public class ShowFragment extends PagerFragment
 
 		//check if user has already this show in his lib. If so hide the "add" button
 		show = ((PagerShowAdapter)adapter).getItem(currentPagerPosition);
-		setTitle(show.getTitle());
-		isExist = show.getProgress() > 0;
+		setTitle(show.title);
+		isExist = show.progress > 0;
 		getSupportActivity().invalidateOptionsMenu();
 	}
 }

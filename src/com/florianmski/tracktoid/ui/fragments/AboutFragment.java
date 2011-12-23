@@ -1,18 +1,12 @@
 package com.florianmski.tracktoid.ui.fragments;
 
-import java.io.IOException;
-
 import net.londatiga.android.ActionItem;
 import net.londatiga.android.QuickAction;
-import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -21,7 +15,6 @@ import android.widget.LinearLayout;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.ui.activities.phone.AboutActivity;
 
 public class AboutFragment extends Fragment
 {

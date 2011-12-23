@@ -420,6 +420,7 @@ public class DatabaseWrapper
 			
 			new Thread()
 			{
+				@Override
 				public void run()
 				{
 					if(newVersion <= 2)
@@ -474,7 +475,7 @@ public class DatabaseWrapper
 			dbw.open();
 			
 			for(TvShow s : dbw.getShows())
-				dbw.refreshPercentage(s.getTvdbId());
+				dbw.refreshPercentage(s.tvdbId);
 			
 			dbw.close();
 		}
@@ -554,49 +555,49 @@ public class DatabaseWrapper
 	{
 		ContentValues values = new ContentValues();
 		
-		if(s.getRatings() != null)
+		if(s.ratings != null)
 		{
-			values.put(KEY_TVSHOW_HATED, s.getRatings().getHated());
-			values.put(KEY_TVSHOW_PERCENTAGE, s.getRatings().getPercentage());
-			values.put(KEY_TVSHOW_LOVED, s.getRatings().getLoved());
-			values.put(KEY_TVSHOW_VOTES, s.getRatings().getVotes());			
+			values.put(KEY_TVSHOW_HATED, s.ratings.hated);
+			values.put(KEY_TVSHOW_PERCENTAGE, s.ratings.percentage);
+			values.put(KEY_TVSHOW_LOVED, s.ratings.loved);
+			values.put(KEY_TVSHOW_VOTES, s.ratings.votes);			
 		}
 		
-		if(s.getRating() != null)
-			values.put(KEY_TVSHOW_RATING, s.getRating().toString());
+		if(s.rating != null)
+			values.put(KEY_TVSHOW_RATING, s.rating.toString());
 		
-		if(s.getAirDay() != null)
-			values.put(KEY_TVSHOW_AIR_DAY, s.getAirDay().toString());
+		if(s.airDay != null)
+			values.put(KEY_TVSHOW_AIR_DAY, s.airDay.toString());
 		else
 			values.put(KEY_TVSHOW_AIR_DAY, "");
 		
-		values.put(KEY_TVSHOW_AIR_TIME, s.getAirTime());
-		values.put(KEY_TVSHOW_CERTIFICATION, s.getCertification());
-		values.put(KEY_TVSHOW_COUNTRY, s.getCountry());
+		values.put(KEY_TVSHOW_AIR_TIME, s.airTime);
+		values.put(KEY_TVSHOW_CERTIFICATION, s.certification);
+		values.put(KEY_TVSHOW_COUNTRY, s.country);
 
-		if(s.getImages() != null)
+		if(s.images != null)
 		{
-			values.put(KEY_TVSHOW_FANART, s.getImages().getFanart());
-			values.put(KEY_TVSHOW_POSTER, s.getImages().getPoster());
+			values.put(KEY_TVSHOW_FANART, s.images.fanart);
+			values.put(KEY_TVSHOW_POSTER, s.images.poster);
 		}
 
-		if(s.getFirstAired() != null)
-			values.put(KEY_TVSHOW_FIRST_AIRED, s.getFirstAired().toString());
+		if(s.firstAired != null)
+			values.put(KEY_TVSHOW_FIRST_AIRED, s.firstAired.toString());
 		
-		values.put(KEY_TVSHOW_IMDB_ID, s.getImdbId());
-		values.put(KEY_TVSHOW_IN_WATCHLIST, s.getInWatchlist());
-		values.put(KEY_TVSHOW_NETWORK, s.getNetwork());
-		values.put(KEY_TVSHOW_OVERVIEW, s.getOverview());
-		values.put(KEY_TVSHOW_RUNTIME, s.getRuntime());
-		values.put(KEY_TVSHOW_TITLE, s.getTitle());
-		values.put(KEY_TVSHOW_TVDB_ID, s.getTvdbId());
-		values.put(KEY_TVSHOW_TVRAGE_ID, s.getTvRageId());
-		values.put(KEY_TVSHOW_URL, s.getUrl());
-		values.put(KEY_TVSHOW_YEAR, Integer.valueOf(s.getYear()));
+		values.put(KEY_TVSHOW_IMDB_ID, s.imdbId);
+		values.put(KEY_TVSHOW_IN_WATCHLIST, s.inWatchlist);
+		values.put(KEY_TVSHOW_NETWORK, s.network);
+		values.put(KEY_TVSHOW_OVERVIEW, s.overview);
+		values.put(KEY_TVSHOW_RUNTIME, s.runtime);
+		values.put(KEY_TVSHOW_TITLE, s.title);
+		values.put(KEY_TVSHOW_TVDB_ID, s.tvdbId);
+		values.put(KEY_TVSHOW_TVRAGE_ID, s.tvrageId);
+		values.put(KEY_TVSHOW_URL, s.url);
+		values.put(KEY_TVSHOW_YEAR, Integer.valueOf(s.year));
 		
 //		values.put(KEY_TVSHOW_PROGRESS, s.getProgress());
 
-		insertOrUpdate(TVSHOWS_TABLE, values, s.getTvdbId());
+		insertOrUpdate(TVSHOWS_TABLE, values, s.tvdbId);
 	}
 	
 	/**
@@ -614,33 +615,33 @@ public class DatabaseWrapper
 		Images i = new Images();
 		Ratings r = new Ratings();
 		
-		i.setFanart(c.getString(COLUMN_TVSHOW_FANART));
-		i.setPoster(c.getString(COLUMN_TVSHOW_POSTER));
+		i.fanart = c.getString(COLUMN_TVSHOW_FANART);
+		i.poster = c.getString(COLUMN_TVSHOW_POSTER);
 		
-		r.setHated(c.getInt(COLUMN_TVSHOW_HATED));
-		r.setLoved(c.getInt(COLUMN_TVSHOW_LOVED));
-		r.setPercentage(c.getInt(COLUMN_TVSHOW_PERCENTAGE));
-		r.setVotes(c.getInt(COLUMN_TVSHOW_VOTES));
+		r.hated = c.getInt(COLUMN_TVSHOW_HATED);
+		r.loved = c.getInt(COLUMN_TVSHOW_LOVED);
+		r.percentage = c.getInt(COLUMN_TVSHOW_PERCENTAGE);
+		r.votes = c.getInt(COLUMN_TVSHOW_VOTES);
 		
-		show.setAirDay(DayOfTheWeek.fromValue(c.getString(COLUMN_TVSHOW_AIR_DAY)));
-		show.setAirTime(c.getString(COLUMN_TVSHOW_AIR_TIME));
-		show.setCertification(c.getString(COLUMN_TVSHOW_CERTIFICATION));
-		show.setCountry(c.getString(COLUMN_TVSHOW_COUNTRY));
-		show.setNetwork(c.getString(COLUMN_TVSHOW_NETWORK));
-		show.setOverview(c.getString(COLUMN_TVSHOW_OVERVIEW));
-		show.setRuntime(c.getInt(COLUMN_TVSHOW_RUNTIME));
-		show.setTvdbId(c.getString(COLUMN_TVSHOW_TVDB_ID));
-		show.setTvRageId(c.getString(COLUMN_TVSHOW_TVRAGE_ID));
-		show.setRating(c.getString(COLUMN_TVSHOW_RATING) == null ? null : Rating.fromValue(c.getString(COLUMN_TVSHOW_RATING)));
-		show.setInWatchList(c.getInt(COLUMN_TVSHOW_IN_WATCHLIST) != 0);
-		show.setImages(i);
-		show.setImdbId(c.getString(COLUMN_TVSHOW_IMDB_ID));
-		show.setRatings(r);
-		show.setTitle(c.getString(COLUMN_TVSHOW_TITLE));
-		show.setUrl(c.getString(COLUMN_TVSHOW_URL));
-		show.setYear(c.getInt(COLUMN_TVSHOW_YEAR));
+		show.airDay = DayOfTheWeek.fromValue(c.getString(COLUMN_TVSHOW_AIR_DAY));
+		show.airTime = c.getString(COLUMN_TVSHOW_AIR_TIME);
+		show.certification = c.getString(COLUMN_TVSHOW_CERTIFICATION);
+		show.country = c.getString(COLUMN_TVSHOW_COUNTRY);
+		show.network = c.getString(COLUMN_TVSHOW_NETWORK);
+		show.overview = c.getString(COLUMN_TVSHOW_OVERVIEW);
+		show.runtime = c.getInt(COLUMN_TVSHOW_RUNTIME);
+		show.tvdbId = c.getString(COLUMN_TVSHOW_TVDB_ID);
+		show.tvrageId = c.getString(COLUMN_TVSHOW_TVRAGE_ID);
+		show.rating = c.getString(COLUMN_TVSHOW_RATING) == null ? null : Rating.fromValue(c.getString(COLUMN_TVSHOW_RATING));
+		show.inWatchlist = c.getInt(COLUMN_TVSHOW_IN_WATCHLIST) != 0;
+		show.images = i;
+		show.imdbId = c.getString(COLUMN_TVSHOW_IMDB_ID);
+		show.ratings = r;
+		show.title = c.getString(COLUMN_TVSHOW_TITLE);
+		show.url = c.getString(COLUMN_TVSHOW_URL);
+		show.year = c.getInt(COLUMN_TVSHOW_YEAR);
 		
-		show.setProgress(c.getInt(COLUMN_TVSHOW_PROGRESS));
+		show.progress = c.getInt(COLUMN_TVSHOW_PROGRESS);
 		
 		return show;
 	}
@@ -695,18 +696,18 @@ public class DatabaseWrapper
 				List<TvShowSeason> seasons = getSeasons(tvdbId, true, true);
 				for(TvShowSeason season : seasons)
 				{
-					List<TvShowEpisode> episodes = season.getEpisodes().getEpisodes();
+					List<TvShowEpisode> episodes = season.episodes.episodes;
 					db.delete(
 							SEASONS_TABLE,
 							KEY_SEASON_URL + "=?",
-							new String[]{season.getUrl()});
+							new String[]{season.url});
 					
 					for(TvShowEpisode episode : episodes)
 					{
 						db.delete(
 								EPISODES_TABLE,
 								KEY_EPISODE_URL + "=?",
-								new String[]{episode.getUrl()});
+								new String[]{episode.url});
 					}
 					
 				}
@@ -735,14 +736,14 @@ public class DatabaseWrapper
 	{
 		ContentValues values = new ContentValues();
 		
-		if(s.getEpisodes() != null)
+		if(s.episodes != null)
 		{
-			int episodes = s.getEpisodes().getEpisodes().size();
+			int episodes = s.episodes.episodes.size();
 			values.put(KEY_SEASON_EPISODES, episodes);
 		}
 		
-		int season = s.getSeason();
-		String url = s.getUrl();
+		int season = s.season;
+		String url = s.url;
 				
 		values.put(KEY_SEASON_SEASON, season);
 		values.put(KEY_SEASON_URL, url);
@@ -767,15 +768,15 @@ public class DatabaseWrapper
 		Episodes episodes = new Episodes();
 		
 		if(getEpisodesToo)
-			episodes.setEpisodes(getEpisodes(c.getString(COLUMN_SEASON_URL)));
+			episodes.episodes = getEpisodes(c.getString(COLUMN_SEASON_URL));
 		
-		s.setEpisodes(episodes);
+		s.episodes = episodes;
 		
-		s.setSeason(c.getInt(COLUMN_SEASON_SEASON));
-		s.setEpisodesWatched(c.getInt(COLUMN_SEASON_EPISODES_WATCHED));
-		s.getEpisodes().setCount((c.getInt(COLUMN_SEASON_EPISODES)));
-		s.setUrl(c.getString(COLUMN_SEASON_URL));
-		
+		s.season = c.getInt(COLUMN_SEASON_SEASON);
+		s.episodesWatched = c.getInt(COLUMN_SEASON_EPISODES_WATCHED);
+		s.episodes.count = (c.getInt(COLUMN_SEASON_EPISODES));
+		s.url = c.getString(COLUMN_SEASON_URL);
+	
 		return s;
 	}
 	
@@ -827,20 +828,20 @@ public class DatabaseWrapper
 	{
 		ContentValues values = new ContentValues();
 		
-		String url = e.getUrl();
+		String url = e.url;
 				
-		values.put(KEY_EPISODE_EPISODE, e.getNumber());
-		values.put(KEY_EPISODE_FIRST_AIRED, e.getFirstAired().getTime());
-		values.put(KEY_EPISODE_HATED, e.getRatings().getHated());
-		values.put(KEY_EPISODE_LOVED, e.getRatings().getLoved());
-		values.put(KEY_EPISODE_OVERVIEW, e.getOverview());
-		values.put(KEY_EPISODE_PERCENTAGE, e.getRatings().getPercentage());
-		values.put(KEY_EPISODE_SCREEN, e.getImages().getScreen());
-		values.put(KEY_EPISODE_SEASON, e.getSeason());
-		values.put(KEY_EPISODE_TITLE, e.getTitle());
+		values.put(KEY_EPISODE_EPISODE, e.number);
+		values.put(KEY_EPISODE_FIRST_AIRED, e.firstAired.getTime());
+		values.put(KEY_EPISODE_HATED, e.ratings.hated);
+		values.put(KEY_EPISODE_LOVED, e.ratings.loved);
+		values.put(KEY_EPISODE_OVERVIEW, e.overview);
+		values.put(KEY_EPISODE_PERCENTAGE, e.ratings.percentage);
+		values.put(KEY_EPISODE_SCREEN, e.images.screen);
+		values.put(KEY_EPISODE_SEASON, e.season);
+		values.put(KEY_EPISODE_TITLE, e.title);
 		values.put(KEY_EPISODE_URL, url);
-		values.put(KEY_EPISODE_VOTES, e.getRatings().getVotes());
-		values.put(KEY_EPISODE_WATCHED, e.getWatched());
+		values.put(KEY_EPISODE_VOTES, e.ratings.votes);
+		values.put(KEY_EPISODE_WATCHED, e.watched);
 		values.put(KEY_EPISODE_SEASON_ID, seasonId);
 				
 		insertOrUpdate(EPISODES_TABLE, values, url);
@@ -864,23 +865,23 @@ public class DatabaseWrapper
 		TvShowEpisode e = new TvShowEpisode();
 		
 		Ratings r = new Ratings();
-		r.setHated(c.getInt(COLUMN_EPISODE_HATED));
-		r.setLoved(c.getInt(COLUMN_EPISODE_LOVED));
-		r.setPercentage(c.getInt(COLUMN_EPISODE_PERCENTAGE));
-		r.setVotes(c.getInt(COLUMN_EPISODE_VOTES));
+		r.hated = c.getInt(COLUMN_EPISODE_HATED);
+		r.loved = c.getInt(COLUMN_EPISODE_LOVED);
+		r.percentage = c.getInt(COLUMN_EPISODE_PERCENTAGE);
+		r.votes = c.getInt(COLUMN_EPISODE_VOTES);
 		
 		Images i = new Images();
-		i.setScreen(c.getString(COLUMN_EPISODE_SCREEN));
+		i.screen = c.getString(COLUMN_EPISODE_SCREEN);
 		
-		e.setNumber(c.getInt(COLUMN_EPISODE_EPISODE));
-		e.setFirstAired(new Date(c.getLong(COLUMN_EPISODE_FIRST_AIRED)));
-		e.setOverview(c.getString(COLUMN_EPISODE_OVERVIEW));
-		e.setRatings(r);
-		e.setImages(i);
-		e.setSeason(c.getInt(COLUMN_EPISODE_SEASON));
-		e.setTitle(c.getString(COLUMN_EPISODE_TITLE));
-		e.setUrl(c.getString(COLUMN_EPISODE_URL));
-		e.setWatched(c.getInt(COLUMN_EPISODE_WATCHED) != 0);
+		e.number = c.getInt(COLUMN_EPISODE_EPISODE);
+		e.firstAired = new Date(c.getLong(COLUMN_EPISODE_FIRST_AIRED));
+		e.overview = c.getString(COLUMN_EPISODE_OVERVIEW);
+		e.ratings = r;
+		e.images = i;
+		e.season = c.getInt(COLUMN_EPISODE_SEASON);
+		e.title = c.getString(COLUMN_EPISODE_TITLE);
+		e.url = c.getString(COLUMN_EPISODE_URL);
+		e.watched = c.getInt(COLUMN_EPISODE_WATCHED) != 0;
 		
 		return e;
 	}

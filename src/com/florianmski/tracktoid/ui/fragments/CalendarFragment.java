@@ -1,18 +1,10 @@
 package com.florianmski.tracktoid.ui.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.PagerCalendarAdapter;
-import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.CalendarTask;
-import com.florianmski.tracktoid.trakt.tasks.CalendarTask.CalendarListener;
-import com.florianmski.tracktoid.ui.fragments.TraktFragment.FragmentListener;
+import com.florianmski.tracktoid.trakt.tasks.get.CalendarTask;
+import com.florianmski.tracktoid.trakt.tasks.get.CalendarTask.CalendarListener;
 
 public class CalendarFragment extends PagerFragment
 {

@@ -25,7 +25,10 @@ import com.jakewharton.trakt.entities.TvShowSeason;
 
 public abstract class DBAdapter implements DBListener
 {
+	@Override
 	public void onDBShows(List<TvShow> shows) {}
+	@Override
 	public void onDBSeasons(List<TvShowSeason> seasons) {}
+	@Override
 	public void onDBEpisodes(List<TvShowEpisode> episodes) {}
 }

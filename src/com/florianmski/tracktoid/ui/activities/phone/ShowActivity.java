@@ -16,18 +16,8 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Bundle;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
-
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.PagerShowAdapter;
-import com.florianmski.tracktoid.trakt.tasks.UpdateShowsTask;
-import com.jakewharton.trakt.entities.TvShow;
 
 public class ShowActivity extends TraktActivity
 {

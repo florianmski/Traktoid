@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.florianmski.tracktoid.trakt.tasks;
+package com.florianmski.tracktoid.trakt.tasks.get;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,10 +27,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.ui.activities.phone.MyShowsActivity;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
@@ -78,43 +80,43 @@ public class UpdateShowsTask extends TraktTask
 			 * Because it seems impossible to setSecondaryProgress on progressBar in remoteViews, 
 			 * I ended up with two different progressBar and a relativeLayout
 			 */
-			updateProgress(s.getTitle(), (int)(i * (MAX_PERCENTAGE*1.0/showsSelected.size()*1.0)));
+			updateProgress(s.title, (int)(i * (MAX_PERCENTAGE*1.0/showsSelected.size()*1.0)));
 			updateSecondaryProgress("Downloading...", 0);
 
-			this.publishProgress("toast", "0", "Refreshing " + s.getTitle() + "...");
+			showToast("Refreshing " + s.title + "...", Toast.LENGTH_SHORT);
 
-			s = tm.showService().summary(s.getTvdbId()).extended().fire();
+			s = tm.showService().summary(s.tvdbId).extended().fire();
 
 			dbw.insertOrUpdateShow(s);
 			
-			List<TvShowSeason> seasons = s.getSeasons();
-			dbw.insertOrUpdateSeasons(seasons, s.getTvdbId());
+			List<TvShowSeason> seasons = s.seasons;
+			dbw.insertOrUpdateSeasons(seasons, s.tvdbId);
 			for(TvShowSeason season : seasons)
 			{				
-				updateSecondaryProgress(season.getSeason() == 0 ? "Specials" : "Season " + season.getSeason(), (int) ((Math.abs(season.getSeason()-seasons.size()))*(MAX_PERCENTAGE*1.0/seasons.size()*1.0)));
+				updateSecondaryProgress(season.season == 0 ? "Specials" : "Season " + season.season, (int) ((Math.abs(season.season-seasons.size()))*(MAX_PERCENTAGE*1.0/seasons.size()*1.0)));
 
-				List<TvShowEpisode> episodes = season.getEpisodes().getEpisodes();
-				dbw.insertOrUpdateEpisodes(episodes, season.getUrl());
+				List<TvShowEpisode> episodes = season.episodes.episodes;
+				dbw.insertOrUpdateEpisodes(episodes, season.url);
 			}
 			
-			dbw.refreshPercentage(s.getTvdbId());
+			dbw.refreshPercentage(s.tvdbId);
 			//get show with his progress field
-			lastProceedShow = dbw.getShow(s.getTvdbId());
+			lastProceedShow = dbw.getShow(s.tvdbId);
 			//get seasons with episodesWatched field (a bit stupid to retrieve this amount of data for only one field)
 			//TODO something more optimized
-			lastProceedShow.setSeasons(dbw.getSeasons(s.getTvdbId(), true, true));
+			lastProceedShow.seasons = dbw.getSeasons(s.tvdbId, true, true);
 
 			//send an event to activities which are listening to the update of a specific show (or not)
 			this.publishProgress("update");
 
 			i++;
 
-			this.publishProgress("toast", "0", s.getTitle() + " refreshed!");
+			showToast(s.title + " refreshed!", Toast.LENGTH_SHORT);
 		}		
 
 		//if user choose to refresh only one show, no need to toast "show refreshed" then "refresh done"
 		if(showsSelected.size() > 1)
-			this.publishProgress("toast", "0", "Refresh done!");
+			showToast("Refresh done!", Toast.LENGTH_SHORT);
 		
 		dbw.close();
 	}
