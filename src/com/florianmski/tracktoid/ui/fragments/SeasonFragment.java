@@ -140,7 +140,7 @@ public class SeasonFragment extends PagerFragment
 			if(isEmpty)
 				Toast.makeText(getActivity(), "Nothing to send...", Toast.LENGTH_SHORT).show();
 			else
-				tm.addToQueue(new WatchedEpisodesTask(tm, this, tvdbId, seasons, listWatched));
+				Utils.chooseBetweenSeenAndCheckin((new WatchedEpisodesTask(tm, this, tvdbId, seasons, listWatched)), getActivity());
 
 			watchedMode = !watchedMode;
 			getSupportActivity().invalidateOptionsMenu();

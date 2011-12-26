@@ -95,7 +95,7 @@ public class EpisodeFragment extends PagerFragment
 			{
 				getSupportActivity().invalidateOptionsMenu();
 				TvShowEpisode e = ((PagerEpisodeAdapter) adapter).getEpisode(currentPagerPosition);
-				tm.addToQueue(new WatchedEpisodesTask(tm, this, tvdbId, e.season, e.number, !e.watched));
+				Utils.chooseBetweenSeenAndCheckin(new WatchedEpisodesTask(tm, this, tvdbId, e.season, e.number, !e.watched), getActivity());
 			}
 			return true;
 		case R.id.action_bar_shouts :

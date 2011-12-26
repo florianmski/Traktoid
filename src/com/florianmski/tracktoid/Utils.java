@@ -18,15 +18,20 @@ package com.florianmski.tracktoid;
 
 import java.io.IOException;
 import java.security.MessageDigest;
+import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -34,6 +39,9 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
+import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 
 public class Utils 
 {
@@ -50,7 +58,7 @@ public class Utils
 		((ViewGroup)av.getParent()).addView(emptyView);
 		av.setEmptyView(emptyView);
 	}
-	
+
 	public static void showLoading(Activity a)
 	{
 		ll = new LinearLayout(a);
@@ -59,7 +67,7 @@ public class Utils
 		ll.addView(pb);
 		a.addContentView(ll, new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
 	}
-	
+
 	public static void showLoading(Fragment f)
 	{
 		ll = new LinearLayout(f.getActivity());
@@ -131,12 +139,12 @@ public class Utils
 		}
 		return false;
 	}
-	
+
 	public static boolean isLandscape(Activity a)
 	{
 		return a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 	}
-	
+
 	public static AnimationDrawable getNyanCat(Context context)
 	{
 		//prepare nyan cat animation
@@ -151,12 +159,49 @@ public class Utils
 		}
 
 		animation.setOneShot(false);
-		
+
 		return animation;
 	}
-	
+
 	public static boolean isActivityFinished(Activity a)
 	{
 		return a == null || a.isFinishing();
+	}
+
+	public static void chooseBetweenSeenAndCheckin(final WatchedEpisodesTask task, Context context)
+	{
+		List<Map<Integer, Boolean>> listWatched = task.getListWatched();
+		
+		int size = 0;
+		int index = 0;
+		int i = 0;
+		
+		for(Map<Integer, Boolean> map : listWatched)
+		{
+			size += map.size();
+			if(size > 0)
+				index = i;
+			i++;
+		}
+		
+		//if there is only one episode selected and user want to mark it as watched
+		if(size == 1 && listWatched.get(index).containsValue(true))
+		{
+			final CharSequence[] items = {"I've watched it", "I'm watching it right now!"};
+
+			final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+			builder.setTitle("Pick a method");
+			builder.setItems(items, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int item) 
+				{
+					TraktManager.getInstance().addToQueue(task.init(item == 1));
+				}
+			});
+			builder.create().show();
+		}
+		//standard "seen" method
+		else
+			TraktManager.getInstance().addToQueue(task.init(false));
 	}
 }
