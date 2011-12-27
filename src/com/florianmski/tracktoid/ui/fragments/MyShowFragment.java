@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -58,7 +59,7 @@ public class MyShowFragment extends TraktFragment
 	private ListView lvSeasons;
 	private ImageView ivBackground;
 
-	private LinearLayout llNextEpisode;
+	private RelativeLayout rlNextEpisode;
 
 	private ListSeasonAdapter adapter;
 
@@ -224,11 +225,11 @@ public class MyShowFragment extends TraktFragment
 
 		if(e != null)
 		{
-			llNextEpisode.setVisibility(View.VISIBLE);
+			rlNextEpisode.setVisibility(View.VISIBLE);
 
-			TextView tvTitle = (TextView)llNextEpisode.findViewById(R.id.textViewTitle);
-			TextView tvEpisode = (TextView)llNextEpisode.findViewById(R.id.textViewEpisode);
-			ImageView ivScreen = (ImageView)llNextEpisode.findViewById(R.id.imageViewScreen);
+			TextView tvTitle = (TextView)rlNextEpisode.findViewById(R.id.textViewTitle);
+			TextView tvEpisode = (TextView)rlNextEpisode.findViewById(R.id.textViewEpisode);
+			ImageView ivScreen = (ImageView)rlNextEpisode.findViewById(R.id.imageViewScreen);
 
 			tvTitle.setText(e.title);
 			tvEpisode.setText(Utils.addZero(e.season) + "x" + Utils.addZero(e.number));
@@ -237,7 +238,7 @@ public class MyShowFragment extends TraktFragment
 			AQuery aq = new AQuery(getActivity());
 			aq.id(ivScreen).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in, 9.0f / 16.0f);
 
-			llNextEpisode.setOnClickListener(new OnClickListener() 
+			rlNextEpisode.setOnClickListener(new OnClickListener() 
 			{
 				@Override
 				public void onClick(View v) 
@@ -256,7 +257,7 @@ public class MyShowFragment extends TraktFragment
 			});
 		}
 		else
-			llNextEpisode.setVisibility(View.GONE);
+			rlNextEpisode.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -275,7 +276,7 @@ public class MyShowFragment extends TraktFragment
 		sbProgress.setEnabled(false);
 		sbProgress.setProgressDrawable(getResources().getDrawable(R.drawable.gradient_progress));
 
-		llNextEpisode = (LinearLayout)v.findViewById(R.id.linearLayoutNextEpisode);
+		rlNextEpisode = (RelativeLayout)v.findViewById(R.id.RelativeLayoutLayoutNextEpisode);
 
 		return v;
 	}

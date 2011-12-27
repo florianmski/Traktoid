@@ -5,9 +5,58 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-    <com.google.android.apps.iosched.ui.widget.DashboardLayout
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutWatchingNow"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="75dp"
+        android:background="@drawable/default_state"
+        android:padding="5dp" >
+
+        <ImageView
+            android:id="@+id/imageViewScreen"
+            android:layout_width="125dp"
+            android:layout_height="fill_parent"
+            android:layout_marginRight="10dp" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imageViewScreen"
+            android:text="You're watching" />
+
+        <com.actionbarsherlock.internal.widget.ScrollingTextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView1"
+            android:layout_below="@+id/textView1"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="#FFF"
+            android:textSize="16sp" />
+
+        <com.actionbarsherlock.internal.widget.ScrollingTextView
+            android:id="@+id/textViewEpisode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView1"
+            android:layout_below="@+id/textViewTitle"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true" />
+    </RelativeLayout>
+
+    <com.google.android.apps.iosched.ui.widget.DashboardLayout
+        android:id="@+id/dashboardLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/relativeLayoutWatchingNow" >
+
         <Button
             android:id="@+id/home_btn_myshows"
             android:layout_width="wrap_content"
@@ -18,6 +67,7 @@
             android:textColor="#FFF"
             android:textSize="20sp"
             android:textStyle="bold" />
+
         <Button
             android:id="@+id/home_btn_search"
             android:layout_width="wrap_content"
@@ -28,6 +78,7 @@
             android:textColor="#FFF"
             android:textSize="20sp"
             android:textStyle="bold" />
+
         <Button
             android:id="@+id/home_btn_recommendations"
             android:layout_width="wrap_content"
@@ -38,6 +89,7 @@
             android:textColor="#FFF"
             android:textSize="20sp"
             android:textStyle="bold" />
+
         <Button
             android:id="@+id/home_btn_calendar"
             android:layout_width="wrap_content"
@@ -48,17 +100,20 @@
             android:textColor="#FFF"
             android:textSize="20sp"
             android:textStyle="bold" />
+
         <Button
             android:id="@+id/home_btn_vendors"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible" />
+
         <Button
             android:id="@+id/home_btn_announcements"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible" />
     </com.google.android.apps.iosched.ui.widget.DashboardLayout>
+
     <com.florianmski.tracktoid.widgets.Panel
         android:id="@+id/panel"
         android:layout_width="fill_parent"
@@ -71,6 +126,7 @@
         panel:linearFlying="true"
         panel:openedHandle="@drawable/actionbar_non_transparent"
         panel:position="bottom" >
+
         <TextView
             android:id="@+id/panelHandle"
             android:layout_width="fill_parent"
@@ -80,17 +136,20 @@
             android:textColor="#FFF"
             android:textSize="20sp"
             android:textStyle="bold" />
+
         <RelativeLayout
             android:id="@+id/panelContent"
             android:layout_width="fill_parent"
             android:layout_height="185dp"
             android:background="@drawable/background"
             android:orientation="vertical" >
+
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true" />
+
             <com.florianmski.tracktoid.widgets.coverflow.CoverFlow
                 android:id="@+id/coverflow"
                 android:layout_width="fill_parent"
@@ -102,4 +161,5 @@
                 coverflow:withReflection="true" />
         </RelativeLayout>
     </com.florianmski.tracktoid.widgets.Panel>
+
 </RelativeLayout>

@@ -33,7 +33,8 @@ public class PostTask extends TraktTask
 
 		if(r.error == null)
 		{
-			showToast("Send to Trakt!", Toast.LENGTH_SHORT);
+//			showToast("Send to Trakt!", Toast.LENGTH_SHORT);
+			showToast(r.message, Toast.LENGTH_SHORT);
 			doAfterPostStuff();
 			return true;
 		}

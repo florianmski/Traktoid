@@ -16,15 +16,22 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.androidquery.AQuery;
 import com.androidquery.service.MarketService;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.jakewharton.trakt.entities.TvShow;
+import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
+import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
+import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.ui.activities.phone.AboutActivity;
 import com.florianmski.tracktoid.ui.activities.phone.CalendarActivity;
 import com.florianmski.tracktoid.ui.activities.phone.RecommendationActivity;
@@ -37,6 +44,12 @@ import com.florianmski.tracktoid.widgets.Panel;
 import com.florianmski.tracktoid.widgets.Panel.OnPanelListener;
 import com.florianmski.tracktoid.widgets.coverflow.CoverFlow;
 import com.florianmski.tracktoid.widgets.coverflow.CoverFlowImageAdapter;
+import com.jakewharton.trakt.entities.ActivityItemBase;
+import com.jakewharton.trakt.entities.Response;
+import com.jakewharton.trakt.entities.TvShow;
+import com.jakewharton.trakt.entities.TvShowEpisode;
+import com.jakewharton.trakt.enumerations.ActivityAction;
+import com.jakewharton.trakt.enumerations.ActivityType;
 
 public class HomeFragment extends TraktFragment
 {
@@ -44,6 +57,11 @@ public class HomeFragment extends TraktFragment
 	private TextView tvPanelhandle;
 	private Panel panel;
 	private ProgressBar pb;
+	
+	private RelativeLayout rlWatchingNow;
+	private TextView tvEpisodeTitle;
+	private TextView tvEpisodeEpisode;
+	private ImageView ivScreen;
 
 	private ArrayList<TvShow> shows;
 
@@ -95,8 +113,12 @@ public class HomeFragment extends TraktFragment
 		panel = (Panel)v.findViewById(R.id.panel);
 		tvPanelhandle = (TextView)v.findViewById(R.id.panelHandle);
 		pb = (ProgressBar)v.findViewById(R.id.progressBar);
-
 		cv = (CoverFlow)v.findViewById(R.id.coverflow);
+		
+		rlWatchingNow = (RelativeLayout)v.findViewById(R.id.relativeLayoutWatchingNow);
+		tvEpisodeTitle = (TextView)v.findViewById(R.id.textViewTitle);
+		tvEpisodeEpisode = (TextView)v.findViewById(R.id.textViewEpisode);
+		ivScreen = (ImageView)v.findViewById(R.id.imageViewScreen);
 
 		btnSearch.setOnClickListener(new OnClickListener() 
 		{
@@ -195,6 +217,26 @@ public class HomeFragment extends TraktFragment
 				tvPanelhandle.setText("Trending");
 			}
 		});
+		
+		rlWatchingNow.setOnClickListener(new OnClickListener() 
+		{
+			@Override
+			public void onClick(View v) 
+			{
+				//TODO yes/no dialog
+
+				new PostTask(tm, HomeFragment.this, tm.showService().cancelCheckin(), new PostListener() 
+				{
+					@Override
+					public void onComplete(Response r, boolean success) 
+					{
+						//TODO if episode exists in db, unwatched it!
+						if(success)
+							rlWatchingNow.setVisibility(View.GONE);
+					}
+				}).execute();
+			}
+		});
 
 		return v;
 	}
@@ -236,5 +278,40 @@ public class HomeFragment extends TraktFragment
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		
+		new Thread()
+		{
+			public void run()
+			{
+				final ActivityItemBase checkin = tm.userService().watching(TraktManager.getUsername()).fire();
+				HomeFragment.this.getActivity().runOnUiThread(new Runnable() 
+				{
+					@Override
+					public void run() 
+					{
+						if(checkin != null && checkin.type == ActivityType.Episode && checkin.action == ActivityAction.Checkin)
+						{
+							TvShowEpisode e = checkin.episode;
+							rlWatchingNow.setVisibility(View.VISIBLE);
+							tvEpisodeTitle.setText(e.title);
+							tvEpisodeEpisode.setText(Utils.addZero(e.number) + "x" + Utils.addZero(e.season));
+							Image i = new Image(checkin.show.tvdbId, e.images.screen, e.season, e.number);
+							AQuery aq = new AQuery(getActivity());
+							aq.id(ivScreen).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in, 9.0f / 16.0f);
+						}
+						else
+						{
+							rlWatchingNow.setVisibility(View.GONE);
+						}
+					}
+				});
+			}
+		}.start();
 	}
 }

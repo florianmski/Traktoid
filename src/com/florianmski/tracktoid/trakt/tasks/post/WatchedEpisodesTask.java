@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
+import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowSeason;
 import com.jakewharton.trakt.services.ShowService.EpisodeSeenBuilder;
@@ -88,12 +89,29 @@ public class WatchedEpisodesTask extends TraktTask
 		showToast("Sending...", Toast.LENGTH_SHORT);
 
 		if(checkin)
+		{
+			int index = 0;
+			for(Map<Integer, Boolean> map : listWatched)
+			{
+				if(!map.isEmpty())
+					break;
+				index++;
+			}
 //			tm.showService().cancelCheckin().fire();
-			tm.showService()
+			Response r = tm.showService()
 			.checkin(Integer.valueOf(tvdbId))
-			.episode(listWatched.get(0).keySet().iterator().next())
-			.season(seasons[0])
+			.episode(listWatched.get(index).keySet().iterator().next())
+			.season(seasons[index])
 			.fire();
+			
+			if(r.error != null)
+			{
+				showToast(r.error, Toast.LENGTH_SHORT);
+				return false;
+			}
+			else
+				showToast(r.message, Toast.LENGTH_SHORT);
+		}
 		else
 		{
 			EpisodeSeenBuilder seenBuilder = tm.showService().episodeSeen(Integer.valueOf(tvdbId));
@@ -127,6 +145,8 @@ public class WatchedEpisodesTask extends TraktTask
 				seenBuilder.fire();
 			if(unseenEpisodes > 0)
 				unseenBuilder.fire();
+			
+			showToast("Send to Trakt!", Toast.LENGTH_SHORT);
 		}
 
 
@@ -150,9 +170,7 @@ public class WatchedEpisodesTask extends TraktTask
 		show.seasons = dbw.getSeasons(tvdbId, true, true);
 
 		dbw.close();
-
-		showToast("Send to Trakt!", Toast.LENGTH_SHORT);
-
+		
 		return true;
 	}
 

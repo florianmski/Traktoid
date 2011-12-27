@@ -40,7 +40,7 @@
             android:id="@+id/imageViewBackground"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:padding="5dp"/>
+            android:padding="5dp" />
 
         <ListView
             android:id="@+id/listViewSeasons"
@@ -50,8 +50,8 @@
             android:cacheColorHint="#00000000" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayoutNextEpisode"
+    <RelativeLayout
+        android:id="@+id/RelativeLayoutLayoutNextEpisode"
         android:layout_width="fill_parent"
         android:layout_height="75dp"
         android:background="@drawable/default_state"
@@ -60,41 +60,39 @@
         <ImageView
             android:id="@+id/imageViewScreen"
             android:layout_width="125dp"
-            android:layout_height="fill_parent" />
-
-        <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingLeft="10dp" >
+            android:layout_marginRight="10dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Next episode" />
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imageViewScreen"
+            android:text="Next episode" />
 
-            <com.actionbarsherlock.internal.widget.ScrollingTextView
-                android:id="@+id/textViewTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:textColor="#FFF"
-                android:textSize="16sp" />
+        <com.actionbarsherlock.internal.widget.ScrollingTextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView1"
+            android:layout_below="@+id/textView1"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="#FFF"
+            android:textSize="16sp" />
 
-            <com.actionbarsherlock.internal.widget.ScrollingTextView
-                android:id="@+id/textViewEpisode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine="true" />
-        </LinearLayout>
-    </LinearLayout>
+        <com.actionbarsherlock.internal.widget.ScrollingTextView
+            android:id="@+id/textViewEpisode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView1"
+            android:layout_below="@+id/textViewTitle"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true" />
+    </RelativeLayout>
 
 </LinearLayout>
