@@ -134,8 +134,9 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 		showToast("Error : " + e, Toast.LENGTH_LONG);
 	}
 
-	public void setSilent(boolean silent) 
+	public TraktTask silent(boolean silent) 
 	{
 		this.silent = silent;
+		return this;
 	}
 }
