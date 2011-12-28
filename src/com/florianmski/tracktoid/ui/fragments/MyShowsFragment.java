@@ -7,28 +7,29 @@ import net.londatiga.android.ActionItem;
 import net.londatiga.android.QuickAction;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBar;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ActionBar.OnNavigationListener;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
@@ -39,9 +40,10 @@ import com.florianmski.tracktoid.db.tasks.DBShowsTask;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.RemoveShowTask;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
+import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.post.RateTask;
 import com.florianmski.tracktoid.ui.activities.phone.MyShowActivity;
 import com.jakewharton.trakt.entities.TvShow;
@@ -81,6 +83,11 @@ public class MyShowsFragment extends TraktFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 				
+		TraktTask updateTask = tm.getCurrentTask();
+		Log.e("test1","test1 : " + (updateTask == null));
+		if(updateTask != null && updateTask instanceof UpdateShowsTask)
+			updateTask.reconnect(this);
+		
 		if(savedInstanceState != null && savedInstanceState.containsKey("hasMyShowFragment"))
 			hasMyShowFragment = savedInstanceState.getBoolean("hasMyShowFragment");
 		else
@@ -336,7 +343,7 @@ public class MyShowsFragment extends TraktFragment
 		}
 		else
 		{
-			int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics());
+			int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
 			ProgressBar pbRefresh = new ProgressBar(getActivity());
 			pbRefresh.setIndeterminate(true);
 			pbRefresh.setLayoutParams(new LinearLayout.LayoutParams(value, value));
@@ -454,6 +461,5 @@ public class MyShowsFragment extends TraktFragment
 	public void onResume()
 	{
 		super.onResume();
-		getSupportActivity().invalidateOptionsMenu();
 	}
 }

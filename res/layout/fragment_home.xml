@@ -11,7 +11,8 @@
         android:layout_width="fill_parent"
         android:layout_height="75dp"
         android:background="@drawable/default_state"
-        android:padding="5dp" >
+        android:padding="5dp"
+        android:visibility="invisible" >
 
         <ImageView
             android:id="@+id/imageViewScreen"

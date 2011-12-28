@@ -21,13 +21,14 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
-import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.jakewharton.trakt.ServiceManager;
 import com.jakewharton.trakt.entities.TvShow;
@@ -35,12 +36,12 @@ import com.jakewharton.trakt.entities.TvShow;
 public class TraktManager extends ServiceManager implements OnSharedPreferenceChangeListener
 {	
 	private static TraktManager traktManager;
-		
+
 	private static String username;
 	private static String password;
-	
-	private ArrayList<TraktTask> tasks = new ArrayList<TraktTask>();
-	private ArrayList<TraktListener> listeners = new ArrayList<TraktListener>();
+
+	private static ArrayList<TraktTask> tasks;
+	private static ArrayList<TraktListener> listeners;
 	private Context context;
 
 	public static synchronized TraktManager getInstance()
@@ -54,32 +55,34 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 	private TraktManager(Context context) 
 	{		
 		this.context = context;
-		
+
 		setApiKey(context.getResources().getString(R.string.trakt_key));
 		setAccountInformations(context);
 	}
-	
+
 	public static void create(Context context)
 	{
 		traktManager = new TraktManager(context);
+		tasks = new ArrayList<TraktTask>();
+		listeners = new ArrayList<TraktListener>();
 	}
-	
+
 	public void setAccountInformations(Context context)
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		username = prefs.getString("editTextUsername", "test1").trim();
 		password = prefs.getString("editTextPassword", "test1").trim();
-		
+
 		setAuthentication(username, Utils.SHA1(password));
-		
+
 		prefs.registerOnSharedPreferenceChangeListener(this);
 	}
-	
+
 	public static String getUsername()
 	{
 		return username;
 	}
-	
+
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) 
 	{
@@ -87,7 +90,7 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 			username = sharedPreferences.getString("editTextUsername", "test1").trim();
 		else if(key.equals("editTextPassword"))
 			password = sharedPreferences.getString("editTextPassword", "test1").trim();
-		
+
 		setAuthentication(username, Utils.SHA1(password));
 	}
 
@@ -100,37 +103,49 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 	{
 		listeners.remove(listener);
 	}
-	
+
 	public void onBeforeTraktRequest(TraktListener listener)
 	{
 		if(listeners.contains(listener))
 			listener.onBeforeTraktRequest();
 	}
-	
-	public void onAfterTraktRequest(TraktListener listener, boolean success)
+
+	public synchronized void onAfterTraktRequest(TraktListener listener, boolean success, boolean inQueue)
 	{
-		if(!tasks.isEmpty())
+		//		if(!tasks.isEmpty())
+		//			tasks.remove(task);
+		//
+		//		if(!tasks.isEmpty())
+		//			tasks.get(0).execute();
+		//		
+		//		if(listeners.contains(listener))
+		//			listener.onAfterTraktRequest(success);
+		
+		//at the end of their execution ALL the task come here, even the ones that weren't queued. Be careful!
+		if(!tasks.isEmpty() && inQueue)
+		{
 			tasks.remove(0);
 
-		if(!tasks.isEmpty())
-			tasks.get(0).execute();
-		
+			if(!tasks.isEmpty())
+				tasks.get(0).inQueue().execute();
+		}
+
 		if(listeners.contains(listener))
 			listener.onAfterTraktRequest(success);
 	}
-	
+
 	public void onErrorTraktRequest(TraktListener listener, Exception e)
 	{
 		if(listeners.contains(listener))
 			listener.onErrorTraktRequest(e);
 	}
-	
+
 	public void onShowUpdated(TvShow show)
 	{
 		for(TraktListener l : listeners)
 			l.onShowUpdated(show);
 	}
-	
+
 	public void onShowRemoved(TvShow show)
 	{
 		for(TraktListener l : listeners)
@@ -145,21 +160,26 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 		public void onShowUpdated(TvShow show);
 		public void onShowRemoved(TvShow show);
 	}
-	
+
 	//add user action in a queue so actions are done one by one
 	public synchronized void addToQueue(TraktTask task)
 	{
 		tasks.add(task);
-		
+
 		if(tasks.size() == 1)
-			task.execute();
+			task.inQueue().execute();
 		else
 			Toast.makeText(context, "This action will be done later...", Toast.LENGTH_SHORT).show();
 	}
-	
+
 	//check if a show is currently updating
 	public boolean isUpdateTaskRunning()
 	{
-		return !tasks.isEmpty() && (tasks.get(0) instanceof UpdateShowsTask || tasks.get(0) instanceof ShowsTask);
+		return !tasks.isEmpty() && (tasks.get(0) instanceof UpdateShowsTask);
+	}
+
+	public TraktTask getCurrentTask()
+	{
+		return tasks.isEmpty() ? null : tasks.get(0);
 	}
 }

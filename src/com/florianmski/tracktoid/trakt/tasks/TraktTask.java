@@ -19,6 +19,7 @@ package com.florianmski.tracktoid.trakt.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.Utils;
@@ -33,10 +34,27 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 	protected Fragment fragment;
 	protected Context context;
 	protected TraktListener tListener;
+	//this not will not display toast
+	protected boolean silent = false;
+	protected boolean inQueue = false;
 	
 	public TraktTask(TraktManager tm, Fragment fragment)
 	{
 		this.tm = tm;
+		this.fragment = fragment;
+		this.context = fragment.getActivity();
+		tListener = (TraktListener)fragment;
+	}
+	
+	public TraktTask inQueue()
+	{
+		this.inQueue = true;
+		return this;
+	}
+	
+	public void reconnect(Fragment fragment)
+	{
+		Log.e("test","test");
 		this.fragment = fragment;
 		this.context = fragment.getActivity();
 		tListener = (TraktListener)fragment;
@@ -88,14 +106,15 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 	
 	protected void showToast(String message, int duration)
 	{
-		this.publishProgress("toast", String.valueOf(duration), message);
+		if(!silent)
+			this.publishProgress("toast", String.valueOf(duration), message);
 	}
 
 	@Override
 	protected void onPostExecute (Boolean success)
 	{
-		if(!Utils.isActivityFinished(fragment.getActivity()))
-			tm.onAfterTraktRequest(tListener, success);
+		//has to be executed otherwise tasks will stay in queue even when finished
+		tm.onAfterTraktRequest(tListener, success, inQueue);
 	}
 
 	@Override
@@ -113,5 +132,10 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 		if(!Utils.isActivityFinished(fragment.getActivity()))
 			tm.onErrorTraktRequest(tListener, e);
 		showToast("Error : " + e, Toast.LENGTH_LONG);
+	}
+
+	public void setSilent(boolean silent) 
+	{
+		this.silent = silent;
 	}
 }

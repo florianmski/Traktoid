@@ -26,12 +26,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.TraktManager.TraktListener;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.ui.activities.phone.MyShowsActivity;
 import com.jakewharton.trakt.entities.TvShow;
