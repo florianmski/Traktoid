@@ -16,14 +16,21 @@
 
 package com.florianmski.tracktoid;
 
-import org.acra.ACRA;
+import static org.acra.ReportField.ANDROID_VERSION;
+import static org.acra.ReportField.APP_VERSION_NAME;
+import static org.acra.ReportField.PHONE_MODEL;
+import static org.acra.ReportField.STACK_TRACE;
+
+import java.io.File;
+
 import org.acra.annotation.ReportsCrashes;
 
-import com.florianmski.tracktoid.trakt.TraktManager;
-
-import static org.acra.ReportField.*;
-
 import android.app.Application;
+import android.os.Environment;
+
+import com.androidquery.callback.BitmapAjaxCallback;
+import com.androidquery.util.AQUtility;
+import com.florianmski.tracktoid.trakt.TraktManager;
 
 @ReportsCrashes(formKey = "dGlwaUVySktzbEJuVlBKUjBMeUNfYXc6MQ",
 customReportContent = { APP_VERSION_NAME, ANDROID_VERSION, PHONE_MODEL, STACK_TRACE })
@@ -36,6 +43,24 @@ public class TraktoidApplication extends Application
 		//        ACRA.init(this);
 
 		TraktManager.create(this);
+
+		//if extern media is mounted, use it for cache, else use default cache
+		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
+		{
+			File ext = new File(Environment.getExternalStorageDirectory() + "/Android/data/" + getPackageName());
+			File cacheDir = new File(ext, "/cache"); 
+			AQUtility.setCacheDir(cacheDir);
+		}
+
 		super.onCreate();
 	}
+
+	@Override
+	public void onLowMemory()
+	{  
+		//clear all memory cached images when system is in low memory
+		//note that you can configure the max image cache count, see CONFIGURATION
+		BitmapAjaxCallback.clearCache();
+	}
+
 }

@@ -675,9 +675,11 @@ public class DatabaseWrapper
 				"FROM " + TVSHOWS_TABLE + " " +
 				"WHERE " + KEY_TVSHOW_TVDB_ID + "=?", 
 				new String[]{tvdbId});
-		c.moveToFirst();
 		
-		TvShow show = getShowFromCursor(c);
+		TvShow show = null;
+		
+		if(c.moveToFirst())
+			show = getShowFromCursor(c);
 		
 		c.close();
 		
@@ -845,7 +847,38 @@ public class DatabaseWrapper
 		values.put(KEY_EPISODE_SEASON_ID, seasonId);
 				
 		insertOrUpdate(EPISODES_TABLE, values, url);
+	}
+	
+	/**
+	 *  Insert or update an episode
+	 *  /!\ be careful, this episode MUST BE ALREADY IN DB /!\
+	 */
+	public boolean insertOrUpdateEpisode(TvShowEpisode e) 
+	{
+		//this episode is not in db, cancel insertion
+		if(getEpisode(e.url) == null)
+			return false;
 		
+		ContentValues values = new ContentValues();
+		
+		String url = e.url;
+				
+		values.put(KEY_EPISODE_EPISODE, e.number);
+		values.put(KEY_EPISODE_FIRST_AIRED, e.firstAired.getTime());
+		values.put(KEY_EPISODE_HATED, e.ratings.hated);
+		values.put(KEY_EPISODE_LOVED, e.ratings.loved);
+		values.put(KEY_EPISODE_OVERVIEW, e.overview);
+		values.put(KEY_EPISODE_PERCENTAGE, e.ratings.percentage);
+		values.put(KEY_EPISODE_SCREEN, e.images.screen);
+		values.put(KEY_EPISODE_SEASON, e.season);
+		values.put(KEY_EPISODE_TITLE, e.title);
+		values.put(KEY_EPISODE_URL, url);
+		values.put(KEY_EPISODE_VOTES, e.ratings.votes);
+		values.put(KEY_EPISODE_WATCHED, e.watched);
+				
+		insertOrUpdate(EPISODES_TABLE, values, url);
+		
+		return true;
 	}
 	
 	/**
@@ -919,6 +952,25 @@ public class DatabaseWrapper
 		c.moveToFirst();
 		
 		TvShowEpisode tvEpisode = getEpisodeFromCursor(c);
+		
+		c.close();
+		
+		return tvEpisode;
+	}
+	
+	public TvShowEpisode getEpisode(String url)
+	{
+		String sql = 
+			"SELECT * " + 
+			"FROM " + EPISODES_TABLE + " " +
+			"WHERE " + KEY_EPISODE_URL + "=? " + 
+			"ORDER BY " + KEY_EPISODE_EPISODE;
+		Cursor c = db.rawQuery(sql, new String[]{url});
+		
+		TvShowEpisode tvEpisode = null;
+		
+		if(c.moveToFirst())
+			tvEpisode = getEpisodeFromCursor(c);
 		
 		c.close();
 		
