@@ -24,6 +24,8 @@ public class ActivityTask extends TraktTask
 	private Activity activities;
 	
 	private DatabaseWrapper dbw;
+	//TODO save a timestamp (be careful with gmt !)
+	//TODO redo the checkintask
 
 	//shows we'll have to refresh (ex: show or an episode of a show is not in the db)
 	private TreeSet<TvShow> refreshList = new TreeSet<TvShow>();
@@ -109,6 +111,7 @@ public class ActivityTask extends TraktTask
 	
 	private void updateEpisode(TvShow show, TvShowEpisode episode)
 	{
+		episode.watched = true;
 		//this episode is in the db
 		if(dbw.insertOrUpdateEpisode(episode))
 			//add to the update list
