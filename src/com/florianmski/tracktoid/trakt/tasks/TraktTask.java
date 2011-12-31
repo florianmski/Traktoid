@@ -54,7 +54,6 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 	
 	public void reconnect(Fragment fragment)
 	{
-		Log.e("test","test");
 		this.fragment = fragment;
 		this.context = fragment.getActivity();
 		tListener = (TraktListener)fragment;
@@ -63,6 +62,7 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 	@Override
 	protected void onPreExecute()
 	{
+		Log.i("Traktoid","start a task...");
 		if(!Utils.isActivityFinished(fragment.getActivity()))
 			tm.onBeforeTraktRequest(tListener);
 	}
@@ -115,6 +115,7 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 	{
 		//has to be executed otherwise tasks will stay in queue even when finished
 		tm.onAfterTraktRequest(tListener, success, inQueue);
+		Log.i("Traktoid","task finish!");
 	}
 
 	@Override

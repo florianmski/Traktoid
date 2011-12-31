@@ -65,7 +65,7 @@ public class UpdateShowsTask extends TraktTask
 		//TODO remove it (or not ?)
 		//allow task to failed before creating notification if something is wrong (bad username, trakt server issue...)
 		//test if user account is ok
-		tm.accountService().test().fire();
+//		tm.accountService().test().fire();
 
 		//sort shows by name, not really necessary
 		Collections.sort(showsSelected);

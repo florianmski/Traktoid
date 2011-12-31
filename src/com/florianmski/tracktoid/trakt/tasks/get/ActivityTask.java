@@ -2,12 +2,15 @@ package com.florianmski.tracktoid.trakt.tasks.get;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.TreeSet;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
@@ -16,36 +19,44 @@ import com.jakewharton.trakt.entities.Activity;
 import com.jakewharton.trakt.entities.ActivityItemBase;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
+import com.jakewharton.trakt.enumerations.ActivityAction;
+import com.jakewharton.trakt.enumerations.ActivityType;
 
 public class ActivityTask extends TraktTask
 {
 	private TraktApiBuilder<?> builder;
-	private ActivityListener listener;
 	private Activity activities;
 	
 	private DatabaseWrapper dbw;
+	private SharedPreferences prefs;
 	//TODO save a timestamp (be careful with gmt !)
-	//TODO redo the checkintask
 
-	//shows we'll have to refresh (ex: show or an episode of a show is not in the db)
+	//shows we'll have to refresh (ex: show or an episode of a show which is not in the db)
 	private TreeSet<TvShow> refreshList = new TreeSet<TvShow>();
 	//shows we'll update (temp list)
 	private TreeSet<TvShow> updateList = new TreeSet<TvShow>();
 	//shows we'll update
 	private TreeSet<TvShow> finalUpdateList = new TreeSet<TvShow>();
 
-	public ActivityTask(TraktManager tm, Fragment fragment, ActivityListener listener, TraktApiBuilder<?> builder) 
+	public ActivityTask(TraktManager tm, Fragment fragment) 
 	{
 		super(tm, fragment);
-
-		this.builder = builder;
-		this.listener = listener;
+		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
 	@Override
 	protected boolean doTraktStuffInBackground()
 	{
-		activities = (Activity) builder.fire();
+		showToast("Starting Trakt -> Traktoid sync...", Toast.LENGTH_SHORT);
+		
+		activities = 
+				tm
+				.activityService()
+				.user(TraktManager.getUsername())
+				.timestamp(prefs.getLong("activity_timestamp", 0))
+				.types(ActivityType.Episode, ActivityType.Show)
+				.actions(ActivityAction.Checkin, ActivityAction.Rating, ActivityAction.Scrobble, ActivityAction.Seen)
+				.fire();
 
 		Collections.reverse(activities.activity);
 		
@@ -73,7 +84,13 @@ public class ActivityTask extends TraktTask
 				}
 				case Show :
 				{
-					updateShow(activity.show);
+					switch(activity.action)
+					{
+					case Rating :
+						activity.show.rating = activity.rating;
+						updateShow(activity.show);
+						break;
+					}
 				}
 			break;
 			}
@@ -90,6 +107,10 @@ public class ActivityTask extends TraktTask
 
 		dbw.close();
 
+		showToast("Sync over!", Toast.LENGTH_SHORT);
+		
+		prefs.edit().putLong("activity_timestamp", Utils.getPSTTimestamp(System.currentTimeMillis())).commit();
+		
 		return true;
 	}
 
@@ -130,10 +151,5 @@ public class ActivityTask extends TraktTask
 		else
 			//add to the refresh list
 			refreshList.add(show);
-	}
-
-	public interface ActivityListener
-	{
-		public void onActivity(ActivityItemBase activity);
 	}
 }

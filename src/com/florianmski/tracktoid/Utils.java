@@ -18,8 +18,12 @@ package com.florianmski.tracktoid;
 
 import java.io.IOException;
 import java.security.MessageDigest;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -203,5 +207,16 @@ public class Utils
 		//standard "seen" method
 		else
 			TraktManager.getInstance().addToQueue(task.init(false));
+	}
+	
+	public static long getPSTTimestamp(long timestamp)
+	{
+        TimeZone tz = TimeZone.getTimeZone("GMT-08:00");
+		int offsetFromUTC = tz.getOffset(timestamp);
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		c.setTimeInMillis(timestamp);
+		c.add(Calendar.MILLISECOND, offsetFromUTC);
+		Log.e("test", timestamp+"");
+		return c.getTimeInMillis()/1000;
 	}
 }

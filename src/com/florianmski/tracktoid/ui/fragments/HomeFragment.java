@@ -2,9 +2,6 @@ package com.florianmski.tracktoid.ui.fragments;
 
 import java.util.ArrayList;
 
-import org.acra.ACRA;
-import org.acra.ACRAConfigurationException;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,15 +30,13 @@ import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ActivityTask;
-import com.florianmski.tracktoid.trakt.tasks.get.ActivityTask.ActivityListener;
+import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask;
+import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask.CheckinListener;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
-import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
-import com.florianmski.tracktoid.ui.activities.phone.AboutActivity;
 import com.florianmski.tracktoid.ui.activities.phone.CalendarActivity;
 import com.florianmski.tracktoid.ui.activities.phone.RecommendationActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SearchActivity;
@@ -248,6 +243,7 @@ public class HomeFragment extends TraktFragment
 							{
 								if(success)
 								{
+									//unseen the episode we've canceled
 									DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
 									dbw.open();
 									dbw.markEpisodeAsWatched(false, tvdbId, episode.season, episode.number);
@@ -306,14 +302,7 @@ public class HomeFragment extends TraktFragment
 			return true;
 		case R.id.action_bar_about:
 //			startActivity(new Intent(getActivity(), AboutActivity.class));
-			new ActivityTask(tm, this, new ActivityListener() 
-			{
-				@Override
-				public void onActivity(ActivityItemBase activity) 
-				{
-					
-				}
-			}, tm.activityService().user(TraktManager.getUsername()).timestamp(0).types(ActivityType.Episode, ActivityType.Show).actions(ActivityAction.Checkin, ActivityAction.Rating, ActivityAction.Scrobble, ActivityAction.Seen)).execute();
+			new ActivityTask(tm, this).execute();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -325,27 +314,27 @@ public class HomeFragment extends TraktFragment
 	{
 		super.onResume();
 
-//		new ActivityTask(tm, this, new ActivityListener() 
-//		{
-//			@Override
-//			public void onActivity(ActivityItemBase activity) 
-//			{
-//				if(activity != null && activity.type == ActivityType.Episode && activity.action == ActivityAction.Checkin)
-//				{
-//					tvdbId = activity.show.tvdbId;
-//					episode = activity.episode;
-//					rlWatchingNow.setVisibility(View.VISIBLE);
-//					tvEpisodeTitle.setText(episode.title);
-//					tvEpisodeEpisode.setText(Utils.addZero(episode.number) + "x" + Utils.addZero(episode.season));
-//					Image i = new Image(activity.show.tvdbId, episode.images.screen, episode.season, episode.number);
-//					AQuery aq = new AQuery(getActivity());
-//					aq.id(ivScreen).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in, 9.0f / 16.0f);
-//				}
-//				else
-//				{
-//					rlWatchingNow.setVisibility(View.INVISIBLE);
-//				}
-//			}
-//		}, tm.userService().watching(TraktManager.getUsername())).silent(true).execute();
+		new CheckinTask(tm, this, new CheckinListener() 
+		{
+			@Override
+			public void onCheckin(ActivityItemBase checkin) 
+			{
+				if(checkin != null && checkin.type == ActivityType.Episode && checkin.action == ActivityAction.Checkin)
+				{
+					tvdbId = checkin.show.tvdbId;
+					episode = checkin.episode;
+					rlWatchingNow.setVisibility(View.VISIBLE);
+					tvEpisodeTitle.setText(episode.title);
+					tvEpisodeEpisode.setText(Utils.addZero(episode.number) + "x" + Utils.addZero(episode.season));
+					Image i = new Image(checkin.show.tvdbId, episode.images.screen, episode.season, episode.number);
+					AQuery aq = new AQuery(getActivity());
+					aq.id(ivScreen).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in, 9.0f / 16.0f);
+				}
+				else
+				{
+					rlWatchingNow.setVisibility(View.INVISIBLE);
+				}
+			}
+		}).silent(true).execute();
 	}
 }
