@@ -38,6 +38,7 @@ import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.ui.activities.phone.CalendarActivity;
+import com.florianmski.tracktoid.ui.activities.phone.LoginActivity;
 import com.florianmski.tracktoid.ui.activities.phone.RecommendationActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SearchActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SettingsActivity;
@@ -302,7 +303,8 @@ public class HomeFragment extends TraktFragment
 			return true;
 		case R.id.action_bar_about:
 //			startActivity(new Intent(getActivity(), AboutActivity.class));
-			new ActivityTask(tm, this).execute();
+//			new ActivityTask(tm, this).execute();
+			startActivity(new Intent(getActivity(), LoginActivity.class));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

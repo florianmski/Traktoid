@@ -73,7 +73,16 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 		username = prefs.getString("editTextUsername", "test1").trim();
 		password = prefs.getString("editTextPassword", "test1").trim();
 
-		setAuthentication(username, Utils.SHA1(password));
+		//in Traktoid <= 0.6, password was stored non encrypted (I know...)
+		//so store it encrypted now!
+		if(!prefs.getBoolean("sha1", false))
+		{
+			password = Utils.SHA1(password);
+			prefs.edit().putString("editTextPassword", password);
+			prefs.edit().putBoolean("sha1", true);
+		}
+
+		setAuthentication(username, password);
 
 		prefs.registerOnSharedPreferenceChangeListener(this);
 	}
@@ -91,7 +100,7 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 		else if(key.equals("editTextPassword"))
 			password = sharedPreferences.getString("editTextPassword", "test1").trim();
 
-		setAuthentication(username, Utils.SHA1(password));
+		setAuthentication(username, password);
 	}
 
 	public void addObserver(TraktListener listener)

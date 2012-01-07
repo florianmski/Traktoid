@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.florianmski.tracktoid.R;
 
-public class FragmentModel extends Fragment
+public class FragmentModel extends TraktFragment
 {
 	@Override
 	public void onCreate(Bundle savedInstanceState) 

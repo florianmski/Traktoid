@@ -121,6 +121,8 @@ public class Utils
 
 	public static String SHA1(String text) 
 	{ 
+		if(text.equals(""))
+			return "";
 		try
 		{
 			MessageDigest md;
