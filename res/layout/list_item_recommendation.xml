@@ -25,4 +25,14 @@
         android:textStyle="bold" >
     </TextView>
 
+    <ImageView
+        android:id="@+id/imageViewDismiss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="#8F000000"
+        android:padding="10dp"
+        android:src="@drawable/ab_icon_delete" />
+
 </RelativeLayout>
