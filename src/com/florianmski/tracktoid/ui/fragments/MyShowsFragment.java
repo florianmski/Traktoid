@@ -84,7 +84,6 @@ public class MyShowsFragment extends TraktFragment
 		super.onActivityCreated(savedInstanceState);
 				
 		TraktTask updateTask = tm.getCurrentTask();
-		Log.e("test1","test1 : " + (updateTask == null));
 		if(updateTask != null && updateTask instanceof UpdateShowsTask)
 			updateTask.reconnect(this);
 		
