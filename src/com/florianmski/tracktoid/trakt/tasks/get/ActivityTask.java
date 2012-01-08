@@ -127,7 +127,6 @@ public class ActivityTask extends TraktTask
 			if(!refreshList.isEmpty())
 				tm.addToQueue(new UpdateShowsTask(tm, fragment, new ArrayList<TvShow>(refreshList)));
 		}
-//			listener.onActivity(activity);
 	}
 	
 	private void updateEpisode(TvShow show, TvShowEpisode episode)

@@ -1,4 +1,4 @@
-package com.florianmski.tracktoid.adapters;
+package com.florianmski.tracktoid.adapters.lists;
 
 import java.text.SimpleDateFormat;
 import java.util.List;

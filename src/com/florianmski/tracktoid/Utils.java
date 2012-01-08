@@ -46,6 +46,8 @@ import android.widget.RelativeLayout;
 
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
+import com.jakewharton.trakt.entities.CalendarDate;
+import com.jakewharton.trakt.entities.TvShowEpisode;
 
 public class Utils 
 {
@@ -220,5 +222,14 @@ public class Utils
 		c.add(Calendar.MILLISECOND, offsetFromUTC);
 		Log.e("test", timestamp+"");
 		return c.getTimeInMillis()/1000;
+	}
+	
+	
+	public static boolean isSameDay(Date d1, Date d2)
+	{
+		if(d1.getTime()/(100*60*60*24) == d2.getTime()/(100*60*60*24))
+			return true;
+		
+		return false;
 	}
 }

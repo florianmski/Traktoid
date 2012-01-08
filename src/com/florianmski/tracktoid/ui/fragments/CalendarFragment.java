@@ -2,7 +2,7 @@ package com.florianmski.tracktoid.ui.fragments;
 
 import android.os.Bundle;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.PagerCalendarAdapter;
+import com.florianmski.tracktoid.adapters.pagers.PagerCalendarAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.CalendarTask;
 import com.florianmski.tracktoid.trakt.tasks.get.CalendarTask.CalendarListener;
 

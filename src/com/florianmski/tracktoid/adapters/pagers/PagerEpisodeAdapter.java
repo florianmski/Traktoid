@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.florianmski.tracktoid.adapters;
+package com.florianmski.tracktoid.adapters.pagers;
 
 import java.text.SimpleDateFormat;
 import java.util.List;

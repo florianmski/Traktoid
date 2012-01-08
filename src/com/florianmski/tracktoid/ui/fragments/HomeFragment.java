@@ -39,11 +39,11 @@ import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.ui.activities.phone.CalendarActivity;
 import com.florianmski.tracktoid.ui.activities.phone.LoginActivity;
+import com.florianmski.tracktoid.ui.activities.phone.MyShowsActivity;
 import com.florianmski.tracktoid.ui.activities.phone.RecommendationActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SearchActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SettingsActivity;
 import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
-import com.florianmski.tracktoid.ui.activities.tablet.MyShowsTabletActivity;
 import com.florianmski.tracktoid.widgets.AppRater;
 import com.florianmski.tracktoid.widgets.Panel;
 import com.florianmski.tracktoid.widgets.Panel.OnPanelListener;
@@ -143,7 +143,7 @@ public class HomeFragment extends TraktFragment
 			public void onClick(View v) 
 			{
 				//				if(Utils.isTabletDevice(getActivity()))
-				startActivity(new Intent(getActivity(), MyShowsTabletActivity.class));
+				startActivity(new Intent(getActivity(), MyShowsActivity.class));
 				//				else
 				//					startActivity(new Intent(getActivity(), MyShowsActivity.class));
 			}

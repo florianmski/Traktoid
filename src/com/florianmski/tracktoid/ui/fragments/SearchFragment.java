@@ -16,7 +16,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.ListSearchAdapter;
+import com.florianmski.tracktoid.adapters.lists.ListSearchAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
 import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;

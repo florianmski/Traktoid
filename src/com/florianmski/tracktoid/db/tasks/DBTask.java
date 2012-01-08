@@ -26,7 +26,7 @@ import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
-public class DBTask extends AsyncTask<Void, String, Boolean>
+public abstract class DBTask extends AsyncTask<Void, String, Boolean>
 {
 	protected DBListener listener;
 	protected Context context;
@@ -58,7 +58,7 @@ public class DBTask extends AsyncTask<Void, String, Boolean>
 		return true;
 	}
 	
-	protected void doDBStuff() {}
+	protected abstract void doDBStuff();
 	
 	public interface DBListener
 	{

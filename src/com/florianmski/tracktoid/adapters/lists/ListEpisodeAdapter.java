@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.florianmski.tracktoid.adapters;
+package com.florianmski.tracktoid.adapters.lists;
 
 import java.util.HashMap;
 import java.util.List;

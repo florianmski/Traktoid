@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.florianmski.tracktoid.adapters;
+package com.florianmski.tracktoid.adapters.pagers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,7 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
 import com.jakewharton.trakt.entities.TvShowSeason;
 import com.viewpagerindicator.TitleProvider;

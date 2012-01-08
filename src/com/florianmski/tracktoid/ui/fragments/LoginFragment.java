@@ -1,7 +1,8 @@
 package com.florianmski.tracktoid.ui.fragments;
 
 import android.os.Bundle;
-import com.florianmski.tracktoid.adapters.PagerLoginAdapter;
+
+import com.florianmski.tracktoid.adapters.pagers.PagerLoginAdapter;
 
 public class LoginFragment extends PagerFragment
 {

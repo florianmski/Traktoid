@@ -16,8 +16,8 @@ import android.widget.ListView;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.ListRecommendationAdapter;
-import com.florianmski.tracktoid.adapters.ListRecommendationAdapter.DismissListener;
+import com.florianmski.tracktoid.adapters.lists.ListRecommendationAdapter;
+import com.florianmski.tracktoid.adapters.lists.ListRecommendationAdapter.DismissListener;
 import com.florianmski.tracktoid.trakt.tasks.get.GenresTask;
 import com.florianmski.tracktoid.trakt.tasks.get.GenresTask.GenresListener;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;

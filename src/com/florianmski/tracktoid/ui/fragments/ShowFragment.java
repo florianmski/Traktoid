@@ -10,7 +10,7 @@ import android.support.v4.view.MenuItem;
 import android.view.MenuInflater;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.PagerShowAdapter;
+import com.florianmski.tracktoid.adapters.pagers.PagerShowAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
 import com.jakewharton.trakt.entities.TvShow;

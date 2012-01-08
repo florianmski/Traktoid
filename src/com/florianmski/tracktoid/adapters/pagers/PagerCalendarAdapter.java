@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.florianmski.tracktoid.adapters;
+package com.florianmski.tracktoid.adapters.pagers;
 
 import java.util.ArrayList;
 
@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.adapters.lists.ListCalendarAdapter;
 import com.viewpagerindicator.TitleProvider;
 
 public class PagerCalendarAdapter extends PagerAdapter implements TitleProvider

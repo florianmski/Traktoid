@@ -21,17 +21,18 @@ import java.util.Collections;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.ListCalendarAdapter;
-import com.florianmski.tracktoid.adapters.PagerCalendarAdapter;
+import com.florianmski.tracktoid.adapters.lists.ListCalendarAdapter;
+import com.florianmski.tracktoid.adapters.pagers.PagerCalendarAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.jakewharton.trakt.entities.CalendarDate;
-import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.CalendarDate.CalendarTvShowEpisode;
+import com.jakewharton.trakt.entities.TvShow;
 
 public class CalendarTask extends TraktTask
 {	
@@ -105,6 +106,23 @@ public class CalendarTask extends TraktTask
 		adapters.add(new ListCalendarAdapter(calendarListMyShows, context));
 		adapters.add(new ListCalendarAdapter(calendarListShows, context));
 		
+		adapter = new PagerCalendarAdapter(context, adapters);
+		
+		return true;
+	}
+	
+	@Override
+	protected boolean doOfflineTraktStuff()
+	{
+		DatabaseWrapper dbw = new DatabaseWrapper(context);
+		dbw.open();
+		
+		List<CalendarDate> episodes = dbw.getFutureEpisodes();
+			
+		dbw.close();
+		
+		ArrayList<ListCalendarAdapter> adapters = new ArrayList<ListCalendarAdapter>();
+		adapters.add(new ListCalendarAdapter(episodes, context));
 		adapter = new PagerCalendarAdapter(context, adapters);
 		
 		return true;

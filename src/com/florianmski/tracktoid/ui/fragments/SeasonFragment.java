@@ -11,8 +11,8 @@ import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.ListEpisodeAdapter;
-import com.florianmski.tracktoid.adapters.PagerListEpisodesAdapter;
+import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
+import com.florianmski.tracktoid.adapters.pagers.PagerListEpisodesAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;

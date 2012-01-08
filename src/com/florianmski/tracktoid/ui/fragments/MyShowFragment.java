@@ -34,7 +34,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.ListSeasonAdapter;
+import com.florianmski.tracktoid.adapters.lists.ListSeasonAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBSeasonsTask;

@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.ListShoutsAdapter;
+import com.florianmski.tracktoid.adapters.lists.ListShoutsAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask.ShoutsListener;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;

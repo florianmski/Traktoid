@@ -37,6 +37,7 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 	//this not will not display toast
 	protected boolean silent = false;
 	protected boolean inQueue = false;
+	protected Exception error;
 	
 	public TraktTask(TraktManager tm, Fragment fragment)
 	{
@@ -76,7 +77,7 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 				tm.onErrorTraktRequest(tListener, new Exception("Internet connection required!"));
 			
 			showToast("Internet connection required!", Toast.LENGTH_LONG);
-			return false;
+			return doOfflineTraktStuff();
 		}
 		try
 		{
@@ -104,6 +105,11 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 	
 	protected abstract boolean doTraktStuffInBackground();
 	
+	protected boolean doOfflineTraktStuff()
+	{
+		return false;
+	}
+	
 	protected void showToast(String message, int duration)
 	{
 		if(!silent)
@@ -123,15 +129,16 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 	{
 		if(values[0].equals("toast"))
 			Toast.makeText(context, values[2], Integer.parseInt(values[1])).show();
+		else if(values[0].equals("error"))
+			if(!Utils.isActivityFinished(fragment.getActivity()))
+				tm.onErrorTraktRequest(tListener, error);
 	}
 	
 	private void handleException(Exception e)
 	{
-		//TODO com.jakewharton.trakt.TraktException: com.jakewharton.apibuilder.ApiException: java.net.SocketTimeoutException
-		//TODO onErrorTraktRequest must be executed on UIThread
 		e.printStackTrace();
-		if(!Utils.isActivityFinished(fragment.getActivity()))
-			tm.onErrorTraktRequest(tListener, e);
+		this.error = e;
+		this.publishProgress("error");
 		showToast("Error : " + e, Toast.LENGTH_LONG);
 	}
 

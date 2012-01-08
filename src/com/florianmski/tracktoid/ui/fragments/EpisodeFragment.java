@@ -10,7 +10,7 @@ import android.support.v4.view.MenuItem;
 import android.view.MenuInflater;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.PagerEpisodeAdapter;
+import com.florianmski.tracktoid.adapters.pagers.PagerEpisodeAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBEpisodesTask;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;

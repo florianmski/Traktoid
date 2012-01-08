@@ -1,4 +1,4 @@
-package com.florianmski.tracktoid.adapters;
+package com.florianmski.tracktoid.adapters.pagers;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

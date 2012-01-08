@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.florianmski.tracktoid.adapters;
+package com.florianmski.tracktoid.adapters.lists;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -221,13 +222,27 @@ public class ListCalendarAdapter extends BaseAdapter
 				holder.tvTitle[i].setText(title);
 				holder.tvAirTime[i].setText(e.show.airTime + " on " + e.show.network);
 
-				Image image = new Image(e.show.tvdbId, episode.images.screen, Image.CALENDAR);
+				Image image;
+				File posterImage = null;
 				AQuery aq = new AQuery(holder.llEpisodes);
-
+				
+				if(episode.images.screen != null)
+					image = new Image(e.show.tvdbId, episode.images.screen, Image.CALENDAR);
+				else
+				{
+					image = new Image(e.show.tvdbId, e.show.images.poster, Image.POSTER);
+					posterImage = aq.getCachedFile(image.getUrl());
+				}
+				
 				if(aq.shouldDelay(holder.llEpisodes, parent, image.getUrl(), 0))
 					aq.id(holder.livScreen[i]).image(placeholder);
 				else
-					aq.id(holder.livScreen[i]).image(image.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
+				{
+					if(posterImage != null)
+						aq.id(holder.livScreen[i]).image(posterImage, 0);
+					else
+						aq.id(holder.livScreen[i]).image(image.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
+				}
 
 				holder.livScreen[i].setOnClickListener(new OnClickListener() 
 				{
