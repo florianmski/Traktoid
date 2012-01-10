@@ -1,4 +1,4 @@
-package com.florianmski.tracktoid.ui.fragments;
+package com.florianmski.tracktoid.ui.fragments.pagers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +15,15 @@ import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class ShowFragment extends PagerFragment
+public class ShowPagerFragment extends PagerFragment
 {
 	//TODO onShowUpdated()
 	private TvShow show;
 	private boolean isExist;
 	
-	public ShowFragment() {}
+	public ShowPagerFragment() {}
 	
-	public ShowFragment(FragmentListener listener) 
+	public ShowPagerFragment(FragmentListener listener) 
 	{
 		super(listener);
 	}
@@ -61,7 +61,7 @@ public class ShowFragment extends PagerFragment
 					public void run() 
 					{
 						Utils.removeLoading();
-						initPagerFragment(new PagerShowAdapter(shows, getActivity()));
+						initPagerFragment(new PagerShowAdapter(shows, getSupportFragmentManager(), getActivity()));
 					}
 				});
 			}
@@ -108,7 +108,7 @@ public class ShowFragment extends PagerFragment
 		super.onPageSelected(position);
 
 		//check if user has already this show in his lib. If so hide the "add" button
-		show = ((PagerShowAdapter)adapter).getItem(currentPagerPosition);
+		show = ((PagerShowAdapter)adapter).getTvShow(currentPagerPosition);
 		setTitle(show.title);
 		isExist = show.progress > 0;
 		getSupportActivity().invalidateOptionsMenu();

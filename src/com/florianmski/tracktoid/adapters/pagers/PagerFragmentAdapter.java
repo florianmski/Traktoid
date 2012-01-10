@@ -25,6 +25,4 @@ public class PagerFragmentAdapter extends FragmentPagerAdapter
     {
         return fragments[position];
     }
-
-
 }

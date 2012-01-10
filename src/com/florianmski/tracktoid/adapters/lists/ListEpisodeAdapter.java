@@ -16,6 +16,7 @@
 
 package com.florianmski.tracktoid.adapters.lists;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -38,8 +39,10 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class ListEpisodeAdapter extends BaseAdapter 
-{
+public class ListEpisodeAdapter extends BaseAdapter implements Serializable
+{	
+	private static final long serialVersionUID = 3085212680669200372L;
+	
 	private List<TvShowEpisode> episodes;
 	private Context context;
 	private boolean watchedMode = false;

@@ -159,4 +159,16 @@ public class RecommendationFragment extends TraktFragment
 			}
 		}, builder, false);
 	}
+
+	@Override
+	public void onRestoreState(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSaveState(Bundle toSave) {
+		// TODO Auto-generated method stub
+		
+	}
 }

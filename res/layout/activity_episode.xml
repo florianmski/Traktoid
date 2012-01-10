@@ -2,8 +2,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <fragment android:name="com.florianmski.tracktoid.ui.fragments.EpisodeFragment"
-        android:id="@+id/fragment_episode"
+    <fragment android:name="com.florianmski.tracktoid.ui.fragments.pagers.EpisodePagerFragment"
+        android:id="@+id/fragment_pager_episode"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>

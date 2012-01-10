@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.Utils;
@@ -36,7 +35,7 @@ import com.jakewharton.trakt.entities.TvShow;
 
 public class CalendarTask extends TraktTask
 {	
-	private PagerCalendarAdapter adapter;
+	ArrayList<ArrayList<CalendarDate>> calendars = new ArrayList<ArrayList<CalendarDate>>();
 	
 	private CalendarListener listener;
 
@@ -53,11 +52,11 @@ public class CalendarTask extends TraktTask
 	{	
 		showToast("Retrieving calendar...", Toast.LENGTH_SHORT);
 		
-		List<CalendarDate> calendarListShows;
-		List<CalendarDate> calendarListPremieres = new ArrayList<CalendarDate>();
-		List<CalendarDate> calendarListMyShows = new ArrayList<CalendarDate>();
+		ArrayList<CalendarDate> calendarListShows;
+		ArrayList<CalendarDate> calendarListPremieres = new ArrayList<CalendarDate>();
+		ArrayList<CalendarDate> calendarListMyShows = new ArrayList<CalendarDate>();
 		
-		calendarListShows = tm.calendarService().shows().fire();
+		calendarListShows = (ArrayList<CalendarDate>) tm.calendarService().shows().fire();
 		
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
 		dbw.open();
@@ -98,16 +97,12 @@ public class CalendarTask extends TraktTask
 				calendarMyShows.episodes = episodesMyShows;
 				calendarListMyShows.add(calendarMyShows);
 			}
-		}
+		}		
 		
-		ArrayList<ListCalendarAdapter> adapters = new ArrayList<ListCalendarAdapter>();
-
-		adapters.add(new ListCalendarAdapter(calendarListPremieres, context));
-		adapters.add(new ListCalendarAdapter(calendarListMyShows, context));
-		adapters.add(new ListCalendarAdapter(calendarListShows, context));
-		
-		adapter = new PagerCalendarAdapter(context, adapters);
-		
+		calendars.add(calendarListPremieres);
+		calendars.add(calendarListMyShows);
+		calendars.add(calendarListShows);
+				
 		return true;
 	}
 	
@@ -117,13 +112,11 @@ public class CalendarTask extends TraktTask
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
 		dbw.open();
 		
-		List<CalendarDate> episodes = dbw.getFutureEpisodes();
+		ArrayList<CalendarDate> episodes = dbw.getFutureEpisodes();
 			
 		dbw.close();
 		
-		ArrayList<ListCalendarAdapter> adapters = new ArrayList<ListCalendarAdapter>();
-		adapters.add(new ListCalendarAdapter(episodes, context));
-		adapter = new PagerCalendarAdapter(context, adapters);
+		calendars.add(episodes);
 		
 		return true;
 	}
@@ -134,12 +127,12 @@ public class CalendarTask extends TraktTask
 		super.onPostExecute(success);
 		
 		if(success && !Utils.isActivityFinished(fragment.getActivity()))
-			listener.onCalendar(adapter);
+			listener.onCalendar(calendars);
 	}
 	
 	public interface CalendarListener
 	{
-		public void onCalendar(PagerCalendarAdapter adapter);
+		public void onCalendar(ArrayList<ArrayList<CalendarDate>> calendars);
 	}
 
 }

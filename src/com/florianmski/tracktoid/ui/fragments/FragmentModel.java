@@ -1,7 +1,6 @@
 package com.florianmski.tracktoid.ui.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.view.LayoutInflater;
@@ -51,5 +50,17 @@ public class FragmentModel extends TraktFragment
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onRestoreState(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSaveState(Bundle toSave) {
+		// TODO Auto-generated method stub
+		
 	}
 }

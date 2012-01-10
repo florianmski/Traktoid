@@ -1,4 +1,4 @@
-package com.florianmski.tracktoid.ui.fragments;
+package com.florianmski.tracktoid.ui.fragments.pagers;
 
 import java.util.List;
 import java.util.Map;
@@ -12,22 +12,22 @@ import android.widget.Toast;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
-import com.florianmski.tracktoid.adapters.pagers.PagerListEpisodesAdapter;
+import com.florianmski.tracktoid.adapters.pagers.PagerSeasonAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
-public class SeasonFragment extends PagerFragment
+public class SeasonPagerFragment extends PagerFragment
 {
 	private boolean watchedMode = false;
 	private String tvdbId;
 	private List<TvShowSeason> seasons;
 	
-	public SeasonFragment() {}
+	public SeasonPagerFragment() {}
 	
-	public SeasonFragment(FragmentListener listener) 
+	public SeasonPagerFragment(FragmentListener listener) 
 	{
 		super(listener);
 	}
@@ -75,10 +75,10 @@ public class SeasonFragment extends PagerFragment
 				dbw.open();
 				String tvdb_id = getActivity().getIntent().getStringExtra("tvdb_id");
 				List<TvShowSeason> seasons = dbw.getSeasons(tvdb_id, true, true);
-				SeasonFragment.this.seasons = seasons;
+				SeasonPagerFragment.this.seasons = seasons;
 				dbw.close();
 
-				adapter = new PagerListEpisodesAdapter(seasons, tvdb_id, getActivity());
+				adapter = new PagerSeasonAdapter(seasons, tvdb_id, getSupportFragmentManager(), getActivity().getApplicationContext());
 
 				getActivity().runOnUiThread(new Runnable() 
 				{
@@ -125,13 +125,13 @@ public class SeasonFragment extends PagerFragment
 			{
 				watchedMode = !watchedMode;
 				getSupportActivity().invalidateOptionsMenu();
-				((PagerListEpisodesAdapter) adapter).setWatchedMode(watchedMode);
+				((PagerSeasonAdapter) adapter).setWatchedMode(watchedMode);
 			}
 			return true;
 		case R.id.action_bar_send :
 		{
-			List<Map<Integer, Boolean>> listWatched = ((PagerListEpisodesAdapter) adapter).getListWatched();
-			int[] seasons = ((PagerListEpisodesAdapter) adapter).getSeasons();
+			List<Map<Integer, Boolean>> listWatched = ((PagerSeasonAdapter) adapter).getListWatched();
+			int[] seasons = ((PagerSeasonAdapter) adapter).getSeasons();
 
 			boolean isEmpty = true;
 			for(int i = 0; i < listWatched.size(); i++)
@@ -144,7 +144,7 @@ public class SeasonFragment extends PagerFragment
 
 			watchedMode = !watchedMode;
 			getSupportActivity().invalidateOptionsMenu();
-			((PagerListEpisodesAdapter) adapter).setWatchedMode(watchedMode);
+			((PagerSeasonAdapter) adapter).setWatchedMode(watchedMode);
 		}
 		return true;
 		case R.id.menu_all :
@@ -161,7 +161,7 @@ public class SeasonFragment extends PagerFragment
 	public void onShowUpdated(TvShow show)
 	{
 		if(show.tvdbId.equals(tvdbId) && adapter != null && show.seasons != null)
-			((PagerListEpisodesAdapter) adapter).reloadData(show.seasons);
+			((PagerSeasonAdapter) adapter).reloadData(show.seasons);
 	}
 
 	@Override
@@ -180,7 +180,7 @@ public class SeasonFragment extends PagerFragment
 
 	public void checkBoxSelection(boolean checked)
 	{
-		ListEpisodeAdapter a = ((PagerListEpisodesAdapter) adapter).getAdapters().get(currentPagerPosition);
+		ListEpisodeAdapter a = ((PagerSeasonAdapter) adapter).getAdapters().get(currentPagerPosition);
 		a.checkBoxSelection(checked);
 		a.notifyDataSetChanged();
 	}

@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -46,8 +45,6 @@ import android.widget.RelativeLayout;
 
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
-import com.jakewharton.trakt.entities.CalendarDate;
-import com.jakewharton.trakt.entities.TvShowEpisode;
 
 public class Utils 
 {
@@ -201,6 +198,7 @@ public class Utils
 			builder.setTitle("Pick a method");
 			builder.setItems(items, new DialogInterface.OnClickListener() 
 			{
+				@Override
 				public void onClick(DialogInterface dialog, int item) 
 				{
 					TraktManager.getInstance().addToQueue(task.init(item == 1));

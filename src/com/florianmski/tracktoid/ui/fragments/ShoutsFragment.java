@@ -31,7 +31,6 @@ import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.Shout;
 import com.jakewharton.trakt.entities.TvShowEpisode;
-import com.jakewharton.trakt.services.ShoutService.ShowBuilder;
 
 public class ShoutsFragment extends TraktFragment
 {
@@ -189,5 +188,17 @@ public class ShoutsFragment extends TraktFragment
 		btnSend = (Button)v.findViewById(R.id.buttonSend);
 
 		return v;
+	}
+
+	@Override
+	public void onRestoreState(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSaveState(Bundle toSave) {
+		// TODO Auto-generated method stub
+		
 	}
 }

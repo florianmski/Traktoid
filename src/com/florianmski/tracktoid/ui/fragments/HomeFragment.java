@@ -29,8 +29,6 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
-import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.get.ActivityTask;
 import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask;
 import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask.CheckinListener;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
@@ -235,6 +233,7 @@ public class HomeFragment extends TraktFragment
 				builder.setMessage("Cancel the checkin ?")
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener() 
 				{
+					@Override
 					public void onClick(DialogInterface dialog, int id) 
 					{
 						new PostTask(tm, HomeFragment.this, tm.showService().cancelCheckin(), new PostListener() 
@@ -258,6 +257,7 @@ public class HomeFragment extends TraktFragment
 				})
 				.setNegativeButton("No", new DialogInterface.OnClickListener() 
 				{
+					@Override
 					public void onClick(DialogInterface dialog, int id) 
 					{
 						dialog.cancel();
@@ -338,5 +338,17 @@ public class HomeFragment extends TraktFragment
 				}
 			}
 		}).silent(true).execute();
+	}
+
+	@Override
+	public void onRestoreState(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSaveState(Bundle toSave) {
+		// TODO Auto-generated method stub
+		
 	}
 }

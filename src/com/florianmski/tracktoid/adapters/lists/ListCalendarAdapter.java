@@ -17,12 +17,14 @@
 package com.florianmski.tracktoid.adapters.lists;
 
 import java.io.File;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -48,15 +50,19 @@ import com.jakewharton.trakt.entities.CalendarDate;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.CalendarDate.CalendarTvShowEpisode;
 
-public class ListCalendarAdapter extends BaseAdapter
+public class ListCalendarAdapter extends BaseAdapter implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	public final static int TYPE_SEPARATOR = 0, TYPE_ROW = 1;
-	public final static int nbByRow = 2;
+	public final static int NB_BY_ROW_PORTRAIT = 2;
+	public final static int NB_BY_ROW_LANDSCAPE = 3;
 
 	private List<CalendarDate> calendarDates;
 	private List<Object> objects = new ArrayList<Object>();
 	private Context context;
 	private Bitmap placeholder;
+	private static int nbByRow;
 
 	public ListCalendarAdapter(List<CalendarDate> calendarDates, Context context)
 	{
@@ -64,6 +70,11 @@ public class ListCalendarAdapter extends BaseAdapter
 		this.context = context;
 
 		placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
+		int orientation = context.getResources().getConfiguration().orientation;
+		if(orientation == Configuration.ORIENTATION_PORTRAIT)
+			nbByRow = NB_BY_ROW_PORTRAIT;
+		else
+			nbByRow = NB_BY_ROW_LANDSCAPE;
 
 		if(calendarDates != null)
 		{
@@ -230,6 +241,7 @@ public class ListCalendarAdapter extends BaseAdapter
 					image = new Image(e.show.tvdbId, episode.images.screen, Image.CALENDAR);
 				else
 				{
+					//offline calendar (display show's poster)
 					image = new Image(e.show.tvdbId, e.show.images.poster, Image.POSTER);
 					posterImage = aq.getCachedFile(image.getUrl());
 				}
@@ -252,7 +264,10 @@ public class ListCalendarAdapter extends BaseAdapter
 						Intent i = new Intent(context, EpisodeActivity.class);
 						ArrayList<TvShowEpisode> episodes = new ArrayList<TvShowEpisode>();
 						//workaround to display image in the episode view
-						episode.images.screen = episode.images.screen.replace("-940","");
+						
+						if(episode.images.screen != null)
+							episode.images.screen = episode.images.screen.replace("-940","");
+						
 						episodes.add(episode);
 						i.putExtra("results", episodes);
 						i.putExtra("tvdb_id", e.show.tvdbId);

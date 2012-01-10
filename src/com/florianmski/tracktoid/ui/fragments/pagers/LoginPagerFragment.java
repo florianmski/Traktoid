@@ -1,10 +1,10 @@
-package com.florianmski.tracktoid.ui.fragments;
+package com.florianmski.tracktoid.ui.fragments.pagers;
 
 import android.os.Bundle;
 
 import com.florianmski.tracktoid.adapters.pagers.PagerLoginAdapter;
 
-public class LoginFragment extends PagerFragment
+public class LoginPagerFragment extends PagerFragment
 {
 	@Override
 	public void onCreate(Bundle savedInstanceState) 

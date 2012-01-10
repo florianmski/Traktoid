@@ -29,8 +29,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
 import com.florianmski.tracktoid.Utils;
 import com.jakewharton.trakt.entities.CalendarDate;
 import com.jakewharton.trakt.entities.CalendarDate.CalendarTvShowEpisode;
@@ -1075,7 +1073,7 @@ public class DatabaseWrapper
 		return realPercentage;
 	}
 
-	public List<CalendarDate> getFutureEpisodes()
+	public ArrayList<CalendarDate> getFutureEpisodes()
 	{
 		ArrayList<CalendarDate> episodes = new ArrayList<CalendarDate>();
 		String sql = 

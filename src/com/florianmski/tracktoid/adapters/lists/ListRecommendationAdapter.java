@@ -35,13 +35,6 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.Image;
-import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
-import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
-import com.florianmski.tracktoid.ui.fragments.RecommendationFragment;
-import com.jakewharton.trakt.entities.Genre;
-import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class ListRecommendationAdapter extends BaseAdapter

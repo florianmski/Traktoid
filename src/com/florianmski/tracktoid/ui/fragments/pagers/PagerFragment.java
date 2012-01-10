@@ -1,4 +1,4 @@
-package com.florianmski.tracktoid.ui.fragments;
+package com.florianmski.tracktoid.ui.fragments.pagers;
 
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -13,6 +13,7 @@ import android.widget.ImageView.ScaleType;
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TabPageIndicator;
@@ -167,5 +168,17 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 	public void onPageSelected(int position) 
 	{
 		currentPagerPosition = position;
+	}
+
+	@Override
+	public void onRestoreState(Bundle savedInstanceState) 
+	{
+//		adapter = (PagerAdapter) savedInstanceState.get("adapter");
+	}
+
+	@Override
+	public void onSaveState(Bundle toSave) 
+	{
+//		toSave.putSerializable("adapter", adapter);
 	}
 }

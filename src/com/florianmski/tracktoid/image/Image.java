@@ -121,6 +121,10 @@ public class Image
 	private String getTraktImage(String traktURL, int imageType)
 	{
 		String url = traktURL;
+		
+		if(url == null)
+			return null;
+		
 		if(smallSize)
 		{
 			switch(imageType)

@@ -18,41 +18,48 @@ package com.florianmski.tracktoid.adapters.pagers;
 
 import java.util.ArrayList;
 
-import android.content.Context;
-import android.os.Parcelable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ListView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
-import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.adapters.lists.ListCalendarAdapter;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.CalendarFragment;
+import com.jakewharton.trakt.entities.CalendarDate;
 import com.viewpagerindicator.TitleProvider;
 
-public class PagerCalendarAdapter extends PagerAdapter implements TitleProvider
+public class PagerCalendarAdapter extends FragmentPagerAdapter implements TitleProvider
 {
 	private final static String calendarTitles[] = new String[]{"Premieres","My shows","Shows"};
 
-	private Context context;
-	private ArrayList<ListCalendarAdapter> adapters;
-
-	public PagerCalendarAdapter(Context context, ArrayList<ListCalendarAdapter> adapters)
+	private ArrayList<ArrayList<CalendarDate>> calendars;
+	
+	public PagerCalendarAdapter(ArrayList<ArrayList<CalendarDate>> calendars, FragmentManager fm)
 	{
-		this.context = context;
-		this.adapters = adapters;
+		super(fm);
+		this.calendars = calendars;
+		Log.e("test", "size : "+getCount());
 	}
 
 	@Override
-	public int getCount()
+    public int getCount() 
 	{
-		return adapters.size();
-	}
+        return calendars.size();
+    }
+
+    @Override
+    public Fragment getItem(int position) 
+    {
+    	return new CalendarFragment(calendars.get(position));
+    }
 
 	@Override
 	public String getTitle(int position) 
 	{
-		return calendarTitles[position];
+		if(getCount() == 1)
+			return "Local Calendar";
+		else
+			return calendarTitles[position];
 	}
 	
 	@Override
@@ -61,44 +68,4 @@ public class PagerCalendarAdapter extends PagerAdapter implements TitleProvider
 	{
 	    return POSITION_NONE;
 	}
-
-	@Override
-	public void destroyItem(View pager, int position, Object view) 
-	{
-		((ViewPager)pager).removeView((View)view);
-	}
-
-	@Override
-	public void finishUpdate(View container) {}
-
-	@Override
-	public Object instantiateItem(View pager, int position) 
-	{
-		View v = LayoutInflater.from(context).inflate(R.layout.pager_item_season, null, false);
-		ListView lvEpisodes = (ListView)v.findViewById(R.id.listViewEpisodes);
-
-		lvEpisodes.setAdapter(adapters.get(position));
-
-		((ViewPager)pager).addView(v, 0);
-
-		return v;
-	}
-
-	@Override
-	public boolean isViewFromObject(View view, Object object) 
-	{
-		return view.equals(object);
-	}
-
-	@Override
-	public void restoreState(Parcelable state, ClassLoader loader) {}
-
-	@Override
-	public Parcelable saveState() 
-	{
-		return null;
-	}
-
-	@Override
-	public void startUpdate(View container) {}
 }

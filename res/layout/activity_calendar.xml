@@ -2,8 +2,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <fragment android:name="com.florianmski.tracktoid.ui.fragments.CalendarFragment"
-        android:id="@+id/fragment_calendar"
+    <fragment android:name="com.florianmski.tracktoid.ui.fragments.pagers.CalendarPagerFragment"
+        android:id="@+id/fragment_pager_calendar"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>

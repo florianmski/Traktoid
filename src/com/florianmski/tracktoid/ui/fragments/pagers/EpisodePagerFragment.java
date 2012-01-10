@@ -1,4 +1,4 @@
-package com.florianmski.tracktoid.ui.fragments;
+package com.florianmski.tracktoid.ui.fragments.pagers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
+import android.util.Log;
 import android.view.MenuInflater;
+
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.pagers.PagerEpisodeAdapter;
@@ -18,14 +20,20 @@ import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class EpisodeFragment extends PagerFragment
+public class EpisodePagerFragment extends PagerFragment
 {
 	private String tvdbId;
 	private String seasonId;
 	
-	public EpisodeFragment() {}
+	public EpisodePagerFragment() 
+	{
+//		Log.e("test","test");
+//		Bundle b = getActivity().getIntent().getExtras();
+//		if(b != null)
+//			setArguments(b);
+	}
 	
-	public EpisodeFragment(FragmentListener listener) 
+	public EpisodePagerFragment(FragmentListener listener) 
 	{
 		super(listener);
 	}
@@ -58,13 +66,13 @@ public class EpisodeFragment extends PagerFragment
 				public void onDBEpisodes(List<TvShowEpisode> episodes) 
 				{
 					Utils.removeLoading();
-					initPagerFragment(new PagerEpisodeAdapter(episodes, tvdbId, getActivity()));
+					initPagerFragment(new PagerEpisodeAdapter(episodes, tvdbId, getSupportFragmentManager()));
 				}
 			}, seasonId).execute();
 		else
 		{
 			Utils.removeLoading();
-			initPagerFragment(new PagerEpisodeAdapter(episodes, tvdbId, getActivity()));
+			initPagerFragment(new PagerEpisodeAdapter(episodes, tvdbId, getSupportFragmentManager()));
 		}
 	}
 

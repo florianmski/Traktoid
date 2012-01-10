@@ -8,7 +8,6 @@ import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.jakewharton.trakt.entities.Genre;
-import com.jakewharton.trakt.entities.TvShow;
 
 public class GenresTask extends TraktTask
 {
