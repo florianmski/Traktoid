@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
+import com.florianmski.tracktoid.adapters.pagers.PagerEpisodeAdapter;
 import com.florianmski.tracktoid.adapters.pagers.PagerSeasonAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
@@ -85,7 +86,7 @@ public class SeasonPagerFragment extends PagerFragment
 					@Override
 					public void run() 
 					{
-						if(adapter.getCount() == 0)
+						if(((PagerSeasonAdapter)adapter).isEmpty())
 							getStatusView().hide().text("No seasons, this is strange...");
 						else
 							getStatusView().hide().text(null);
@@ -174,13 +175,6 @@ public class SeasonPagerFragment extends PagerFragment
 		if(show.tvdbId.equals(tvdbId))
 			getActivity().finish();
 	}
-
-	//TODO
-//	@Override
-//	public boolean onPrepareOptionsMenu(Menu menu)
-//	{
-//		return watchedMode ? super.onPrepareOptionsMenu(menu) : false;
-//	}
 
 	public void checkBoxSelection(boolean checked)
 	{

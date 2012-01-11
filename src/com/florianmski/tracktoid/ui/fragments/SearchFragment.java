@@ -66,8 +66,12 @@ public class SearchFragment extends TraktFragment
 			@Override
 			public void onClick(View v)
 			{
+				if(adapter != null)
+					adapter.clear();
+				
 				String search = edtSearch.getText().toString().trim();
-				getStatusView().show().text("Searching for " + search + ", please wait...");
+				getStatusView().show().text("Searching for \"" + search + "\",\nPlease wait...");
+				
 				commonTask = new ShowsTask(tm, SearchFragment.this, new ShowsListener() 
 				{
 					@Override
@@ -75,12 +79,16 @@ public class SearchFragment extends TraktFragment
 					{
 						SearchFragment.this.shows = shows;
 						
-						//TODO reloadData in base class of adapter
-						adapter = new ListSearchAdapter(getActivity(), shows);
-						lvSearch.setAdapter(adapter);
+						if(adapter == null)
+						{
+							adapter = new ListSearchAdapter(getActivity(), shows);
+							lvSearch.setAdapter(adapter);
+						}
+						else
+							adapter.reloadData(shows);
 						
 						if(adapter.isEmpty())
-							getStatusView().hide().text("Nothing found sorry man...");
+							getStatusView().hide().text("Nothing found, sorry man...");
 						else
 							getStatusView().hide().text(null);
 					}
@@ -103,14 +111,14 @@ public class SearchFragment extends TraktFragment
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) {
+	public void onRestoreState(Bundle savedInstanceState) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void onSaveState(Bundle toSave) {
+	public void onSaveState(Bundle toSave) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 }

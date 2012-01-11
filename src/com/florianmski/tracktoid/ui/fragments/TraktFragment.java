@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.SupportActivity;
 
+import com.florianmski.tracktoid.StatusView;
+import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.TraktManager.TraktListener;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
@@ -12,7 +14,6 @@ import com.jakewharton.trakt.entities.TvShow;
 public abstract class TraktFragment extends BaseFragment implements TraktListener
 {
 	protected TraktManager tm = TraktManager.getInstance();
-//	protected FragmentListener listener;
 	protected TraktTask commonTask;
 
 	public TraktFragment() 
@@ -34,15 +35,6 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 	}
 
 	@Override
-	public void onAttach(SupportActivity activity)
-	{
-		super.onAttach(activity);
-//		Bundle b = activity.getIntent().getExtras();
-//		if(b != null)
-//			setArguments(b);
-	}
-
-	@Override
 	public void onDestroy()
 	{
 		//remove observer
@@ -51,11 +43,6 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 		if(commonTask != null)
 			commonTask.cancel(true);
 		super.onDestroy();
-	}
-
-	public void refreshFragment(Bundle bundle)
-	{
-
 	}
 
 	protected void setTitle(String title)
@@ -82,9 +69,14 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 	@Override
 	public void onErrorTraktRequest(Exception e) 
 	{
-		//TODO
-		//can't do this because onErrorTraktRequest is not executed in the ui thread
-		//Utils.removeLoading();
+		StatusView sv = getStatusView();
+		if(sv != null)
+		{
+			if(!Utils.isOnline(getActivity()))
+				sv.hide().text("Internet connection required!");
+			else
+				sv.hide().text("Something goes wrong :/\n" + e.getMessage());
+		}
 	}
 
 	@Override

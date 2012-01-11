@@ -54,7 +54,7 @@ public class RecommendationFragment extends TraktFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 		
-		getStatusView().show().text("Retrieving genres, please wait...");
+		getStatusView().show().text("Retrieving genres,\nPlease wait...");
 		
 		new GenresTask(tm, this, new GenresListener() 
 		{
@@ -127,7 +127,6 @@ public class RecommendationFragment extends TraktFragment
 			@Override
 			public void onShows(ArrayList<TvShow> shows) 
 			{
-//				Utils.removeLoading();
 				if(adapter == null)
 				{
 					adapter = new ListRecommendationAdapter(shows, getActivity());
@@ -163,14 +162,14 @@ public class RecommendationFragment extends TraktFragment
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) {
+	public void onRestoreState(Bundle savedInstanceState) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void onSaveState(Bundle toSave) {
+	public void onSaveState(Bundle toSave) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 }

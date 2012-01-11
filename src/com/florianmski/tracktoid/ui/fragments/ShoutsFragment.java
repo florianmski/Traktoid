@@ -154,7 +154,7 @@ public class ShoutsFragment extends TraktFragment
 
 	private void createGetShoutsTask()
 	{
-		getStatusView().show().text("Loading shouts, please wait...");
+		getStatusView().show().text("Loading shouts,\nPlease wait...");
 
 		commonTask = new ShoutsGetTask(tm, this, episode, tvdbId, new ShoutsListener() 
 		{
@@ -192,14 +192,14 @@ public class ShoutsFragment extends TraktFragment
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) {
+	public void onRestoreState(Bundle savedInstanceState) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void onSaveState(Bundle toSave) {
+	public void onSaveState(Bundle toSave) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 }

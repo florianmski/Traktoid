@@ -38,15 +38,4 @@ public class MyShowsActivity extends TraktActivity
 			// ft.commit();
 		}
 	}
-
-	@Override
-	public void onFragmentAction(Fragment f, Bundle bundle, int actionToPerformed)
-	{
-		switch(actionToPerformed)
-		{
-		case FRAGMENT_REFRESH_DATA :
-			myShowFragment.refreshFragment(bundle);
-			break;
-		}
-	}
 }

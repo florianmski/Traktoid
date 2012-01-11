@@ -49,6 +49,10 @@ public class JoinFragment extends TraktFragment
 					edtEmail.setError("Is your email a ninja?");
 				else if(password.equals(""))
 					edtPassword.setError("Is your password a ninja?");
+				else if(username.length() < 3 || username.length() > 20)
+					edtUsername.setError("Choose a username between 3 and 20 characters");
+				else if(password.length() < 4)
+					edtPassword.setError("Seriously? Come on! At least 4 characters please...");
 				else
 				{
 					tm.setAuthentication(username, password);
@@ -100,14 +104,14 @@ public class JoinFragment extends TraktFragment
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) {
+	public void onRestoreState(Bundle savedInstanceState) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void onSaveState(Bundle toSave) {
+	public void onSaveState(Bundle toSave) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 }

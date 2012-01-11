@@ -55,7 +55,7 @@ public class CalendarPagerFragment extends PagerFragment
 		getStatusView().hide().text(null);
 		adapter = new PagerCalendarAdapter(calendars, getFragmentManager());
 		
-		if(adapter.getCount() == 0)
+		if(((PagerCalendarAdapter)adapter).isEmpty())
 			getStatusView().hide().text("No calendar, this is strange...");
 		else
 			getStatusView().hide().text(null);

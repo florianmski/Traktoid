@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:gravity="center"
-    android:visibility="visible" >
+    android:visibility="gone" >
 
     <ProgressBar
         android:id="@+id/progressBarStatus"

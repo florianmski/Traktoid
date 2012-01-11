@@ -61,7 +61,7 @@ public class ShowPagerFragment extends PagerFragment
 					{
 						adapter = new PagerShowAdapter(shows, getSupportFragmentManager(), getActivity());
 						
-						if(adapter.getCount() == 0)
+						if(((PagerShowAdapter)adapter).isEmpty())
 							getStatusView().hide().text("No shows, this is strange...");
 						else
 							getStatusView().hide().text(null);

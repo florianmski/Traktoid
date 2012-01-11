@@ -54,37 +54,7 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
-
-		//if we don't set an adapter and user go back home, an exception is raised because view pager can't save its state
-		//(nullpointer exception)
-		//so I set a dummy adapter before the real one is ready to be displayed
-//		viewPager.setAdapter(new PagerAdapter() 
-//		{	
-//			@Override
-//			public void startUpdate(View container) {}
-//
-//			@Override
-//			public Parcelable saveState() {return null;}
-//
-//			@Override
-//			public void restoreState(Parcelable state, ClassLoader loader) {}
-//
-//			@Override
-//			public boolean isViewFromObject(View view, Object object) {return false;}
-//
-//			@Override
-//			public Object instantiateItem(View container, int position) {return null;}
-//
-//			@Override
-//			public int getCount() {return 0;}
-//
-//			@Override
-//			public void finishUpdate(View container) {}
-//
-//			@Override
-//			public void destroyItem(View container, int position, Object object) {}
-//		});
-
+		
 		aq = new AQuery(getActivity());
 	}
 
@@ -173,12 +143,12 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 	@Override
 	public void onRestoreState(Bundle savedInstanceState) 
 	{
-//		adapter = (PagerAdapter) savedInstanceState.get("adapter");
+		
 	}
 
 	@Override
 	public void onSaveState(Bundle toSave) 
 	{
-//		toSave.putSerializable("adapter", adapter);
+		
 	}
 }

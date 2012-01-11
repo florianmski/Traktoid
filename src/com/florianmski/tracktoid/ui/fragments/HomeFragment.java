@@ -77,6 +77,8 @@ public class HomeFragment extends TraktFragment
 	{
 		super(listener);
 	}
+	
+	//TODO pager stuff for buttons
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -103,7 +105,7 @@ public class HomeFragment extends TraktFragment
 
 		//Trying to set high definition image on high resolution
 		//does not seem to be a great idea, it's slow and I sometimes get an outOfMemoryError :/
-		//        Image.smallSize = (getWindowManager().getDefaultDisplay().getHeight() <= 960 && getWindowManager().getDefaultDisplay().getWidth() <= 540);
+//		        Image.smallSize = Utils.isTabletDevice(getActivity());
 	}
 
 	@Override
@@ -140,10 +142,7 @@ public class HomeFragment extends TraktFragment
 			@Override
 			public void onClick(View v) 
 			{
-				//				if(Utils.isTabletDevice(getActivity()))
 				startActivity(new Intent(getActivity(), MyShowsActivity.class));
-				//				else
-				//					startActivity(new Intent(getActivity(), MyShowsActivity.class));
 			}
 		});
 
@@ -341,14 +340,14 @@ public class HomeFragment extends TraktFragment
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) {
+	public void onRestoreState(Bundle savedInstanceState) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void onSaveState(Bundle toSave) {
+	public void onSaveState(Bundle toSave) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 }

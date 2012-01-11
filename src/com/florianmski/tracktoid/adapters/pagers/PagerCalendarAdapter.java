@@ -38,7 +38,6 @@ public class PagerCalendarAdapter extends FragmentStatePagerAdapter implements T
 	{
 		super(fm);
 		this.calendars = calendars;
-		Log.e("test", "size : "+getCount());
 	}
 	
 	@Override

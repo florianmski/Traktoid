@@ -82,7 +82,7 @@ public class MyShowsFragment extends TraktFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 		
-		getStatusView().show().text("Loading shows, please wait...");
+		getStatusView().show().text("Loading shows,\nPlease wait...");
 				
 		TraktTask updateTask = tm.getCurrentTask();
 		if(updateTask != null && updateTask instanceof UpdateShowsTask)
@@ -120,7 +120,6 @@ public class MyShowsFragment extends TraktFragment
 		refreshGridView();
 
 		adapter = new GridPosterAdapter(getActivity(), new ArrayList<TvShow>(), refreshGridView());
-//		Utils.setEmptyView(gd, getActivity());
 		gd.setAdapter(adapter);
 
 		if(isDBEmpty)
@@ -180,7 +179,6 @@ public class MyShowsFragment extends TraktFragment
 					startActivity(i);
 				}
 
-				//				listener.onFragmentAction(MyShowsFragment.this, i.getExtras(), MyShowsTabletActivity.FRAGMENT_REFRESH_DATA);
 			}
 		});
 
@@ -455,14 +453,14 @@ public class MyShowsFragment extends TraktFragment
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) {
+	public void onRestoreState(Bundle savedInstanceState) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void onSaveState(Bundle toSave) {
+	public void onSaveState(Bundle toSave) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 }

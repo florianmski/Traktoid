@@ -26,9 +26,7 @@ public class EpisodeFragment extends PagerItemFragment
 	
 	public EpisodeFragment() 
 	{
-//		Bundle b = getActivity().getIntent().getExtras();
-//		if(b != null)
-//			setArguments(b);
+
 	}
 	
 	public static EpisodeFragment newInstance(TvShowEpisode e, String tvdbId)

@@ -58,6 +58,12 @@ public class ListSearchAdapter extends BaseAdapter implements AdapterInterface
 		shows.clear();
 		notifyDataSetChanged();
 	}
+	
+	public void reloadData(List<TvShow> shows)
+	{
+		this.shows = shows;
+		notifyDataSetChanged();
+	}
 
 	@Override
 	public int getCount() 

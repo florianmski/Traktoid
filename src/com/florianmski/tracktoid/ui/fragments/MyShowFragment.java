@@ -85,10 +85,7 @@ public class MyShowFragment extends TraktFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		//		if(listener != null)
-		//			listener.onFragmentAction(this, null, MyShowsTabletActivity.FRAGMENT_REFRESH_GRID_VIEW);
-
-		getStatusView().show().text("Loading seasons, please wait...");
+		getStatusView().show().text("Loading seasons,\nPlease wait...");
 		
 		adapter = new ListSeasonAdapter(new ArrayList<TvShowSeason>(), getActivity());
 		lvSeasons.setAdapter(adapter);
@@ -126,30 +123,7 @@ public class MyShowFragment extends TraktFragment
 			}
 		});
 
-		//		Bundle b = getArguments();
-		//
-		//		if(b != null)
 		refreshFragment();
-		//		else
-		//		{
-		//			displayPercentage(42);
-		//			llNextEpisode.setVisibility(View.GONE);
-		//
-		//			//prepare nyan cat animation
-		//			final AnimationDrawable animation = Utils.getNyanCat(getActivity());
-		//
-		//			ivBackground.setImageDrawable(animation);
-		//
-		//			// run the start() method later on the UI thread
-		//			ivBackground.post(new Runnable() 
-		//			{
-		//				@Override
-		//				public void run() 
-		//				{
-		//					animation.start();
-		//				}
-		//			});
-		//		}
 	}
 
 	public void refreshFragment()
@@ -177,8 +151,9 @@ public class MyShowFragment extends TraktFragment
 					{
 						Collections.reverse(seasons);
 						adapter.reloadData(seasons);
-						if(adapter.getCount() == 0)
-							getStatusView().hide().text("This show has no season, wait... WTF ?");
+						
+						if(adapter.isEmpty())
+							getStatusView().hide().text("This show has no seasons, wait... WTF ?");
 						else
 							getStatusView().hide().text(null);
 					}
@@ -299,6 +274,7 @@ public class MyShowFragment extends TraktFragment
 		{
 			switch(show.rating)
 			{
+			//TODO go to res/color
 			case Love :
 				d.setColorFilter(Color.parseColor("#691909"), PorterDuff.Mode.MULTIPLY);
 				break;
@@ -450,14 +426,14 @@ public class MyShowFragment extends TraktFragment
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) {
+	public void onRestoreState(Bundle savedInstanceState) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void onSaveState(Bundle toSave) {
+	public void onSaveState(Bundle toSave) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 }

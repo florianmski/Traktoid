@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
+import com.florianmski.tracktoid.adapters.pagers.PagerCalendarAdapter;
 import com.florianmski.tracktoid.adapters.pagers.PagerEpisodeAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBEpisodesTask;
@@ -26,10 +27,7 @@ public class EpisodePagerFragment extends PagerFragment
 	
 	public EpisodePagerFragment() 
 	{
-//		Log.e("test","test");
-//		Bundle b = getActivity().getIntent().getExtras();
-//		if(b != null)
-//			setArguments(b);
+		
 	}
 	
 	public EpisodePagerFragment(FragmentListener listener) 
@@ -66,7 +64,7 @@ public class EpisodePagerFragment extends PagerFragment
 				{
 					adapter = new PagerEpisodeAdapter(episodes, tvdbId, getSupportFragmentManager());
 					
-					if(adapter.getCount() == 0)
+					if(((PagerEpisodeAdapter)adapter).isEmpty())
 						getStatusView().hide().text("No episodes, this is strange...");
 					else
 						getStatusView().hide().text(null);
@@ -78,7 +76,7 @@ public class EpisodePagerFragment extends PagerFragment
 		{
 			adapter = new PagerEpisodeAdapter(episodes, tvdbId, getSupportFragmentManager());
 			
-			if(adapter.getCount() == 0)
+			if(((PagerEpisodeAdapter)adapter).isEmpty())
 				getStatusView().hide().text("No episodes, this is strange...");
 			else
 				getStatusView().hide().text(null);
