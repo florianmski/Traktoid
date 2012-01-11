@@ -111,14 +111,8 @@ public class EpisodeFragment extends PagerItemFragment
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onRestoreState(Bundle savedInstanceState) {}
 
 	@Override
-	public void onSaveState(Bundle toSave) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onSaveState(Bundle toSave) {}
 }

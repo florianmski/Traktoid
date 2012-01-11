@@ -3,9 +3,6 @@ package com.florianmski.tracktoid.ui.fragments.pagers;
 import java.util.ArrayList;
 
 import android.os.Bundle;
-import android.util.Log;
-
-import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.pagers.PagerCalendarAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.CalendarTask;
 import com.florianmski.tracktoid.trakt.tasks.get.CalendarTask.CalendarListener;
@@ -35,7 +32,7 @@ public class CalendarPagerFragment extends PagerFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		Utils.showLoading(getActivity());
+		getStatusView().show().text("Retrieving calendar,\nPlease wait...");
 
 		commonTask = new CalendarTask(tm, this, new CalendarListener() 
 		{
@@ -55,8 +52,14 @@ public class CalendarPagerFragment extends PagerFragment
 	
 	public void createAdapter()
 	{
-		Utils.removeLoading();
+		getStatusView().hide().text(null);
 		adapter = new PagerCalendarAdapter(calendars, getFragmentManager());
+		
+		if(adapter.getCount() == 0)
+			getStatusView().hide().text("No calendar, this is strange...");
+		else
+			getStatusView().hide().text(null);
+		
 		initPagerFragment(adapter);
 	}
 	

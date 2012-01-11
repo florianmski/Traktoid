@@ -15,4 +15,6 @@
         android:stretchMode="columnWidth"
         android:verticalSpacing="2dp" />
 
+    <include layout="@layout/view_status" />
+
 </RelativeLayout>

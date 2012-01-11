@@ -36,10 +36,11 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class ListEpisodeAdapter extends BaseAdapter implements Serializable
+public class ListEpisodeAdapter extends BaseAdapter implements Serializable, AdapterInterface
 {	
 	private static final long serialVersionUID = 3085212680669200372L;
 	
@@ -57,6 +58,13 @@ public class ListEpisodeAdapter extends BaseAdapter implements Serializable
     	this.tvdb_id = tvdb_id;
     	placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
     }
+    
+	@Override
+	public void clear() 
+	{
+		episodes.clear();
+		notifyDataSetChanged();
+	}
 	
     //set or unset mode where user can check watched episodes
     public void setWatchedMode(boolean watchedMode)

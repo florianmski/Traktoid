@@ -44,13 +44,14 @@ import android.widget.TextView;
 import com.actionbarsherlock.internal.widget.ScrollingTextView;
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
 import com.jakewharton.trakt.entities.CalendarDate;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.CalendarDate.CalendarTvShowEpisode;
 
-public class ListCalendarAdapter extends BaseAdapter implements Serializable
+public class ListCalendarAdapter extends BaseAdapter implements Serializable, AdapterInterface
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -93,6 +94,13 @@ public class ListCalendarAdapter extends BaseAdapter implements Serializable
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void clear() 
+	{
+		calendarDates.clear();
+		notifyDataSetChanged();
 	}
 
 	@Override

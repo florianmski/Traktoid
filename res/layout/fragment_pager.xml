@@ -49,4 +49,6 @@
         android:layout_height="fill_parent"
         android:layout_below="@+id/relativeLayout1" />
 
+    <include layout="@layout/view_status" />
+
 </RelativeLayout>

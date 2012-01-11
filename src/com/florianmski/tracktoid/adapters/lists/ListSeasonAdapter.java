@@ -28,9 +28,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
-public class ListSeasonAdapter extends BaseAdapter
+public class ListSeasonAdapter extends BaseAdapter implements AdapterInterface
 {
 	private List<TvShowSeason> seasons;
 	private Context context;
@@ -39,6 +40,13 @@ public class ListSeasonAdapter extends BaseAdapter
 	{
 		this.seasons = seasons;
 		this.context = context;
+	}
+	
+	@Override
+	public void clear() 
+	{
+		seasons.clear();
+		notifyDataSetChanged();
 	}
 	
 	public void reloadData(List<TvShowSeason> seasons)

@@ -23,11 +23,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowFragment;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class PagerShowAdapter extends FragmentStatePagerAdapter
+public class PagerShowAdapter extends FragmentStatePagerAdapter implements AdapterInterface
 {
 	private List<TvShow> shows;
 
@@ -37,7 +38,7 @@ public class PagerShowAdapter extends FragmentStatePagerAdapter
 
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
 		dbw.open();
-				
+
 		//if a show on this list is in the db, get infos so we can display them (watched, loved...)
 		for(int i = 0; i < shows.size(); i++)
 		{
@@ -45,33 +46,46 @@ public class PagerShowAdapter extends FragmentStatePagerAdapter
 			if(dbw.showExist(s.tvdbId))
 				shows.set(i, dbw.getShow(s.tvdbId));
 		}
-		
+
 		dbw.close();
 
 		this.shows = shows;		
 	}
-	
-	@Override
-    public int getCount() 
-	{
-        return shows.size();
-    }
 
-    @Override
-    public Fragment getItem(int position) 
-    {
-        return ShowFragment.newInstance(shows.get(position));
-    }
-    
-    public TvShow getTvShow(int position)
-    {
-    	return shows.get(position);
-    }
-    
-    @Override
+	@Override
+	public void clear() 
+	{
+		shows.clear();
+		notifyDataSetChanged();
+	}
+
+	@Override
+	public int getCount() 
+	{
+		return shows.size();
+	}
+
+	@Override
+	public Fragment getItem(int position) 
+	{
+		return ShowFragment.newInstance(shows.get(position));
+	}
+
+	public TvShow getTvShow(int position)
+	{
+		return shows.get(position);
+	}
+
+	@Override
 	/** @see http://stackoverflow.com/questions/7263291/viewpager-pageradapter-not-updating-the-view */
 	public int getItemPosition(Object object) 
 	{
-	    return POSITION_NONE;
+		return POSITION_NONE;
+	}
+
+	@Override
+	public boolean isEmpty() 
+	{
+		return getCount() == 0;
 	}
 }

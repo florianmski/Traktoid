@@ -81,6 +81,8 @@ public class MyShowsFragment extends TraktFragment
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
+		
+		getStatusView().show().text("Loading shows, please wait...");
 				
 		TraktTask updateTask = tm.getCurrentTask();
 		if(updateTask != null && updateTask instanceof UpdateShowsTask)
@@ -118,7 +120,7 @@ public class MyShowsFragment extends TraktFragment
 		refreshGridView();
 
 		adapter = new GridPosterAdapter(getActivity(), new ArrayList<TvShow>(), refreshGridView());
-		Utils.setEmptyView(gd, getActivity());
+//		Utils.setEmptyView(gd, getActivity());
 		gd.setAdapter(adapter);
 
 		if(isDBEmpty)
@@ -140,16 +142,7 @@ public class MyShowsFragment extends TraktFragment
 				public void onDBShows(List<TvShow> shows)
 				{
 					adapter.updateShows(shows);
-
-
-					//					TvShow firstShow = getFirstShow();
-					//					
-					//					if(firstShow != null)
-					//					{
-					//						Bundle b = new Bundle();
-					//						b.putSerializable("show", firstShow);
-					//						listener.onFragmentAction(MyShowsFragment.this, b, MyShowsTabletActivity.FRAGMENT_REFRESH_DATA);
-					//					}
+					getStatusView().hide().text(null);
 				}
 			}).execute();
 

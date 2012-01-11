@@ -44,7 +44,7 @@ public class SeasonPagerFragment extends PagerFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 		
-		Utils.showLoading(getActivity());
+		getStatusView().show().text("Loading seasons,\nPlease wait...");
 		setTitle(getActivity().getIntent().getStringExtra("title"));
 		
 		tvdbId = getActivity().getIntent().getStringExtra("tvdb_id");
@@ -85,7 +85,11 @@ public class SeasonPagerFragment extends PagerFragment
 					@Override
 					public void run() 
 					{
-						Utils.removeLoading();
+						if(adapter.getCount() == 0)
+							getStatusView().hide().text("No seasons, this is strange...");
+						else
+							getStatusView().hide().text(null);
+						
 						initPagerFragment(adapter);
 					}
 				});

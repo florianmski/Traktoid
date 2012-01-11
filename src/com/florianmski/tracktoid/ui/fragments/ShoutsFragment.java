@@ -21,7 +21,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.lists.ListShoutsAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask.ShoutsListener;
@@ -66,8 +65,6 @@ public class ShoutsFragment extends TraktFragment
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
-
-		Utils.showLoading(getActivity());
 
 		tvdbId = getActivity().getIntent().getStringExtra("tvdbId");
 		episode = (TvShowEpisode)getActivity().getIntent().getExtras().get("episode");
@@ -135,7 +132,6 @@ public class ShoutsFragment extends TraktFragment
 						if(success)
 						{
 							adapter.clear();
-							Utils.showLoading(ShoutsFragment.this);
 							createGetShoutsTask();
 
 							//post the task 3sec later to let trakt the time to save the shout
@@ -158,13 +154,13 @@ public class ShoutsFragment extends TraktFragment
 
 	private void createGetShoutsTask()
 	{
+		getStatusView().show().text("Loading shouts, please wait...");
+
 		commonTask = new ShoutsGetTask(tm, this, episode, tvdbId, new ShoutsListener() 
 		{
 			@Override
 			public void onShouts(List<Shout> shouts) 
 			{
-				Utils.removeLoading();
-
 				if(adapter == null)
 				{
 					adapter = new ListShoutsAdapter(shouts, getActivity());
@@ -172,6 +168,11 @@ public class ShoutsFragment extends TraktFragment
 				}
 				else
 					adapter.reload(shouts);
+				
+				if(adapter.isEmpty())
+					getStatusView().hide().text("No shouts :(\nBe the first! Come on!");
+				else
+					getStatusView().hide().text(null);
 
 				edtShout.setText(null);
 			}

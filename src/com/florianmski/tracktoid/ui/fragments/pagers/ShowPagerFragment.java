@@ -9,7 +9,6 @@ import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.view.MenuInflater;
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.pagers.PagerShowAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
@@ -41,7 +40,7 @@ public class ShowPagerFragment extends PagerFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 		
-		Utils.showLoading(getActivity());
+		getStatusView().show().text("Loading shows,\nPlease wait...");
 		setData();
 	}
 	
@@ -60,8 +59,14 @@ public class ShowPagerFragment extends PagerFragment
 					@Override
 					public void run() 
 					{
-						Utils.removeLoading();
-						initPagerFragment(new PagerShowAdapter(shows, getSupportFragmentManager(), getActivity()));
+						adapter = new PagerShowAdapter(shows, getSupportFragmentManager(), getActivity());
+						
+						if(adapter.getCount() == 0)
+							getStatusView().hide().text("No shows, this is strange...");
+						else
+							getStatusView().hide().text(null);
+						
+						initPagerFragment(adapter);
 					}
 				});
 			}

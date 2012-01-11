@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
-import android.util.Log;
 import android.view.MenuInflater;
 
 import com.florianmski.tracktoid.R;
@@ -50,7 +49,7 @@ public class EpisodePagerFragment extends PagerFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 		
-		Utils.showLoading(getActivity());
+		getStatusView().show().text("Loading episodes,\nPlease wait...");
 
 		setSubtitle(getActivity().getIntent().getStringExtra("title"));
 
@@ -65,14 +64,26 @@ public class EpisodePagerFragment extends PagerFragment
 				@Override
 				public void onDBEpisodes(List<TvShowEpisode> episodes) 
 				{
-					Utils.removeLoading();
-					initPagerFragment(new PagerEpisodeAdapter(episodes, tvdbId, getSupportFragmentManager()));
+					adapter = new PagerEpisodeAdapter(episodes, tvdbId, getSupportFragmentManager());
+					
+					if(adapter.getCount() == 0)
+						getStatusView().hide().text("No episodes, this is strange...");
+					else
+						getStatusView().hide().text(null);
+					
+					initPagerFragment(adapter);
 				}
 			}, seasonId).execute();
 		else
 		{
-			Utils.removeLoading();
-			initPagerFragment(new PagerEpisodeAdapter(episodes, tvdbId, getSupportFragmentManager()));
+			adapter = new PagerEpisodeAdapter(episodes, tvdbId, getSupportFragmentManager());
+			
+			if(adapter.getCount() == 0)
+				getStatusView().hide().text("No episodes, this is strange...");
+			else
+				getStatusView().hide().text(null);
+			
+			initPagerFragment(adapter);
 		}
 	}
 

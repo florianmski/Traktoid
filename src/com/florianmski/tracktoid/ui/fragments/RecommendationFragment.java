@@ -15,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.lists.ListRecommendationAdapter;
 import com.florianmski.tracktoid.adapters.lists.ListRecommendationAdapter.DismissListener;
 import com.florianmski.tracktoid.trakt.tasks.get.GenresTask;
@@ -55,17 +54,13 @@ public class RecommendationFragment extends TraktFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 		
-		Utils.setEmptyView(lvRecommendations, getActivity());
-//		Utils.showLoading(getActivity());
-
-//		createGetRecommendationsTask(null);
-//		commonTask.execute();
+		getStatusView().show().text("Retrieving genres, please wait...");
 		
 		new GenresTask(tm, this, new GenresListener() 
 		{
 			@Override
 			public void onGenres(final ArrayList<Genre> genres) 
-			{
+			{				
 				getSupportActivity().getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
 				String[] items = new String[genres.size()+1];
@@ -120,6 +115,8 @@ public class RecommendationFragment extends TraktFragment
 	
 	private void createGetRecommendationsTask(final Genre genre)
 	{
+		getStatusView().show().text("Retrieving recommendations" + ((genre == null) ? "" : " in \"" + genre.name + "\"") + ", please wait...");
+
 		ShowsBuilder builder = tm.recommendationsService().shows();
 		
 		if(genre != null)
@@ -138,6 +135,11 @@ public class RecommendationFragment extends TraktFragment
 				}
 				else
 					adapter.refreshData(shows);
+				
+				if(adapter.getCount() == 0)
+					getStatusView().hide().text("No recommendations, strange...");
+				else
+					getStatusView().hide().text(null);
 				
 				adapter.setOnDismissListener(new DismissListener() 
 				{

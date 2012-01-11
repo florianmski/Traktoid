@@ -33,59 +33,14 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 
 public class Utils 
 {
-	private static ProgressBar pb;
-	private static LinearLayout ll;
-
-	public static void setEmptyView(AdapterView<?> av, Context context)
-	{
-		ProgressBar emptyView = new ProgressBar(context);
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(100, 100);
-		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
-		emptyView.setLayoutParams(lp);
-		emptyView.setIndeterminate(true);
-		((ViewGroup)av.getParent()).addView(emptyView);
-		av.setEmptyView(emptyView);
-	}
-
-	public static void showLoading(Activity a)
-	{
-		ll = new LinearLayout(a);
-		ll.setGravity(Gravity.CENTER);
-		pb = new ProgressBar(a);
-		ll.addView(pb);
-		a.addContentView(ll, new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-	}
-
-	public static void showLoading(Fragment f)
-	{
-		ll = new LinearLayout(f.getActivity());
-		ll.setGravity(Gravity.CENTER);
-		pb = new ProgressBar(f.getActivity());
-		ll.addView(pb);
-		((ViewGroup)f.getView()).addView(ll, new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-	}
-
-	public static void removeLoading()
-	{
-		if(ll != null)
-			ll.removeAllViews();
-	}
-
 	//check if device is connected to the internet or not
 	public static final boolean isOnline(Context context) 
 	{

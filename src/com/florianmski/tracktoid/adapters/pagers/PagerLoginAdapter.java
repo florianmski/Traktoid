@@ -37,5 +37,4 @@ public class PagerLoginAdapter extends FragmentPagerAdapter implements TitleProv
 	{
 		return titles.length;
 	}
-
 }

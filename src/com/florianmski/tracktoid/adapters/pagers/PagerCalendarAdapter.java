@@ -20,15 +20,15 @@ import java.util.ArrayList;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
+import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.CalendarFragment;
 import com.jakewharton.trakt.entities.CalendarDate;
 import com.viewpagerindicator.TitleProvider;
 
-public class PagerCalendarAdapter extends FragmentPagerAdapter implements TitleProvider
+public class PagerCalendarAdapter extends FragmentStatePagerAdapter implements TitleProvider, AdapterInterface
 {
 	private final static String calendarTitles[] = new String[]{"Premieres","My shows","Shows"};
 
@@ -39,6 +39,13 @@ public class PagerCalendarAdapter extends FragmentPagerAdapter implements TitleP
 		super(fm);
 		this.calendars = calendars;
 		Log.e("test", "size : "+getCount());
+	}
+	
+	@Override
+	public void clear() 
+	{
+		calendars.clear();
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -67,5 +74,11 @@ public class PagerCalendarAdapter extends FragmentPagerAdapter implements TitleP
 	public int getItemPosition(Object object) 
 	{
 	    return POSITION_NONE;
+	}
+
+	@Override
+	public boolean isEmpty() 
+	{
+		return getCount() == 0;
 	}
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="trakt_blue_1">#804DBCE9</color>
+    <color name="trakt_blue_2">#A0008FBB</color>
+    <color name="dark_transparent">#AA000000</color>
+    <color name="light_transparent">#11FFFFFF</color>
+</resources>

@@ -15,9 +15,10 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.jakewharton.trakt.entities.Shout;
 
-public class ListShoutsAdapter extends BaseAdapter
+public class ListShoutsAdapter extends BaseAdapter implements AdapterInterface
 {
 	private List<Shout> shouts;
 	private Context context;
@@ -30,6 +31,7 @@ public class ListShoutsAdapter extends BaseAdapter
 		placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
 	}
 	
+	@Override
 	public void clear()
 	{
 		this.shouts.clear();

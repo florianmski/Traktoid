@@ -21,18 +21,18 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.SeasonFragment;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.SeasonFragment.OnConstructionListener;
 import com.jakewharton.trakt.entities.TvShowSeason;
 import com.viewpagerindicator.TitleProvider;
 
-public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements TitleProvider, OnConstructionListener
+public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements TitleProvider, OnConstructionListener, AdapterInterface
 {
 	private List<TvShowSeason> seasons;
 	private List<ListEpisodeAdapter> adapters = new ArrayList<ListEpisodeAdapter>();
@@ -49,6 +49,14 @@ public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements Tit
 
 		for(TvShowSeason s : seasons)
 			adapters.add(new ListEpisodeAdapter(s.episodes.episodes, context, tvdbId));
+	}
+	
+	@Override
+	public void clear() 
+	{
+		seasons.clear();
+		adapters.clear();
+		notifyDataSetChanged();
 	}
 
 	public void reloadData(List<TvShowSeason> seasons)
@@ -130,60 +138,10 @@ public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements Tit
 		}
 		return null;
 	}
-
-//	@Override
-//	public void destroyItem(View pager, int position, Object view) 
-//	{
-//		((ViewPager)pager).removeView((View)view);
-//	}
-//
-//	@Override
-//	public void finishUpdate(View container) {}
-//
-//	@Override
-//	public Object instantiateItem(View pager, final int position) 
-//	{
-//		View v = LayoutInflater.from(context).inflate(R.layout.pager_item_season, null, false);
-//		ListView lvEpisodes = (ListView)v.findViewById(R.id.listViewEpisodes);
-//		ImageView ivBackground = (ImageView)v.findViewById(R.id.imageViewBackground);
-//
-//		lvEpisodes.setAdapter(adapters.get(position));
-//
-//		lvEpisodes.setOnItemClickListener(new OnItemClickListener() 
-//		{
-//			@Override
-//			public void onItemClick(AdapterView<?> arg0, View arg1, int episode, long arg3) 
-//			{
-//				Intent i = new Intent(context, EpisodeActivity.class);
-//				i.putExtra("seasonId", seasons.get(position).url);
-//				i.putExtra("tvdb_id", tvdbId);
-//				i.putExtra("title", context.getIntent().getStringExtra("title"));
-//				i.putExtra("position", episode);
-//				context.startActivity(i);
-//			}
-//		});
-//
-//		((ViewPager)pager).addView(v, 0);
-//
-//		return v;
-//	}
-//
-//	@Override
-//	public boolean isViewFromObject(View view, Object object) 
-//	{
-//		return view.equals(object);
-//	}
-//
-//	@Override
-//	public void restoreState(Parcelable state, ClassLoader loader) {}
-//
-//	@Override
-//	public Parcelable saveState() 
-//	{
-//		return null;
-//	}
-//
-//	@Override
-//	public void startUpdate(View container) {}
-
+	
+	@Override
+	public boolean isEmpty() 
+	{
+		return getCount() == 0;
+	}
 }

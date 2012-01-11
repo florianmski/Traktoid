@@ -48,6 +48,8 @@
             android:layout_height="fill_parent"
             android:background="#AF000000"
             android:cacheColorHint="#00000000" />
+
+        <include layout="@layout/view_status" />
     </RelativeLayout>
 
     <RelativeLayout

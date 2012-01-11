@@ -35,20 +35,28 @@ import android.widget.ImageView.ScaleType;
 
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class ListSearchAdapter extends BaseAdapter
+public class ListSearchAdapter extends BaseAdapter implements AdapterInterface
 {
 	private Context context;
 	private List<TvShow> shows;
 	private Bitmap placeholder;
 
-	public ListSearchAdapter(Context context, ArrayList<TvShow> shows2)
+	public ListSearchAdapter(Context context, ArrayList<TvShow> shows)
 	{
 		this.context = context;
-		this.shows = shows2;
+		this.shows = shows;
 		placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
+	}
+	
+	@Override
+	public void clear() 
+	{
+		shows.clear();
+		notifyDataSetChanged();
 	}
 
 	@Override

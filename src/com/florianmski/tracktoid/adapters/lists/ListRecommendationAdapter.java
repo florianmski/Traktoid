@@ -34,10 +34,11 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class ListRecommendationAdapter extends BaseAdapter
+public class ListRecommendationAdapter extends BaseAdapter implements AdapterInterface
 {
 	private List<TvShow> recommendations;
 	private Context context;
@@ -67,6 +68,7 @@ public class ListRecommendationAdapter extends BaseAdapter
 		return (ArrayList<TvShow>) recommendations;
 	}
 	
+	@Override
 	public void clear()
 	{
 		this.recommendations.clear();

@@ -15,7 +15,6 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.lists.ListSearchAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
@@ -29,6 +28,8 @@ public class SearchFragment extends TraktFragment
 	private ListView lvSearch;
 	private EditText edtSearch;
 	private Button btnSearch;
+	
+	private ListSearchAdapter adapter;
 	
 	public SearchFragment() {}
 	
@@ -65,17 +66,25 @@ public class SearchFragment extends TraktFragment
 			@Override
 			public void onClick(View v)
 			{
-				Utils.showLoading(getActivity());
+				String search = edtSearch.getText().toString().trim();
+				getStatusView().show().text("Searching for " + search + ", please wait...");
 				commonTask = new ShowsTask(tm, SearchFragment.this, new ShowsListener() 
 				{
 					@Override
 					public void onShows(ArrayList<TvShow> shows) 
 					{
 						SearchFragment.this.shows = shows;
-						Utils.removeLoading();
-						lvSearch.setAdapter(new ListSearchAdapter(getActivity(), shows));
+						
+						//TODO reloadData in base class of adapter
+						adapter = new ListSearchAdapter(getActivity(), shows);
+						lvSearch.setAdapter(adapter);
+						
+						if(adapter.isEmpty())
+							getStatusView().hide().text("Nothing found sorry man...");
+						else
+							getStatusView().hide().text(null);
 					}
-				}, tm.searchService().shows(edtSearch.getText().toString().trim()), false);
+				}, tm.searchService().shows(search), false);
         		commonTask.execute();
 			}
 		});

@@ -88,7 +88,8 @@ public class MyShowFragment extends TraktFragment
 		//		if(listener != null)
 		//			listener.onFragmentAction(this, null, MyShowsTabletActivity.FRAGMENT_REFRESH_GRID_VIEW);
 
-		Utils.setEmptyView(lvSeasons, getActivity());
+		getStatusView().show().text("Loading seasons, please wait...");
+		
 		adapter = new ListSeasonAdapter(new ArrayList<TvShowSeason>(), getActivity());
 		lvSeasons.setAdapter(adapter);
 
@@ -176,6 +177,10 @@ public class MyShowFragment extends TraktFragment
 					{
 						Collections.reverse(seasons);
 						adapter.reloadData(seasons);
+						if(adapter.getCount() == 0)
+							getStatusView().hide().text("This show has no season, wait... WTF ?");
+						else
+							getStatusView().hide().text(null);
 					}
 				}, show.tvdbId, false, false).execute();
 

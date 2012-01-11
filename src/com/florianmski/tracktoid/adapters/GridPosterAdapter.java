@@ -41,7 +41,7 @@ import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public class GridPosterAdapter extends BaseAdapter
+public class GridPosterAdapter extends BaseAdapter implements AdapterInterface
 {
 	private static final int FILTER_ALL = 0;
 	private static final int FILTER_UNWATCHED = 1;
@@ -59,6 +59,15 @@ public class GridPosterAdapter extends BaseAdapter
 		this.shows = shows;
 		this.filterShows.addAll(shows);
 		this.height = height;
+	}
+	
+	@Override
+	public void clear() 
+	{
+		shows.clear();
+		filterShows.clear();
+		currentFilter = 0;
+		notifyDataSetChanged();
 	}
 	
 	public void setHeight(int height)
@@ -147,8 +156,6 @@ public class GridPosterAdapter extends BaseAdapter
 	public View getView(final int position, View convertView, ViewGroup parent) 
 	{
 		final ViewHolder holder;
-		
-//		Log.e("test","test");
 
 		if (convertView == null)
 		{
@@ -211,24 +218,24 @@ public class GridPosterAdapter extends BaseAdapter
 			aq.id(holder.ivPoster).image(cb);
 		}
 
-		TransitionDrawable td = null;
-
-		if(show.rating == Rating.Love)
-			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_loved)});
-		else if(show.rating == Rating.Hate)
-			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_hated)});
-
-		if(td != null)
-			td.startTransition(2000);
-
-		holder.ivRating.setImageDrawable(td);
-
-		if(show.progress == 100)
-		{
-			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watched)});
-			td.startTransition(2000);
-			holder.ivWatched.setImageDrawable(td);
-		}
+//		TransitionDrawable td = null;
+//
+//		if(show.rating == Rating.Love)
+//			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_loved)});
+//		else if(show.rating == Rating.Hate)
+//			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_hated)});
+//
+//		if(td != null)
+//			td.startTransition(2000);
+//
+//		holder.ivRating.setImageDrawable(td);
+//
+//		if(show.progress == 100)
+//		{
+//			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watched)});
+//			td.startTransition(2000);
+//			holder.ivWatched.setImageDrawable(td);
+//		}
 
 		return convertView;
 	}
