@@ -24,6 +24,7 @@ import java.util.List;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +32,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.ImageView.ScaleType;
+import android.widget.RelativeLayout;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
@@ -52,6 +53,7 @@ public class GridPosterAdapter extends BaseAdapter implements AdapterInterface
 	private List<TvShow> filterShows = new ArrayList<TvShow>();
 	private int height;
 	private int currentFilter = 0;
+	private Handler h = new Handler();
 
 	public GridPosterAdapter(Activity context, List<TvShow> shows, int height) 
 	{
@@ -60,7 +62,7 @@ public class GridPosterAdapter extends BaseAdapter implements AdapterInterface
 		this.filterShows.addAll(shows);
 		this.height = height;
 	}
-	
+
 	@Override
 	public void clear() 
 	{
@@ -69,7 +71,7 @@ public class GridPosterAdapter extends BaseAdapter implements AdapterInterface
 		currentFilter = 0;
 		notifyDataSetChanged();
 	}
-	
+
 	public void setHeight(int height)
 	{
 		this.height = height;
@@ -164,9 +166,9 @@ public class GridPosterAdapter extends BaseAdapter implements AdapterInterface
 			convertView = LayoutInflater.from(context).inflate(R.layout.grid_item_show, null, false);
 
 			holder.rl = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutPoster);
-//			GridView.LayoutParams paramsRl = new GridView.LayoutParams(LayoutParams.FILL_PARENT, height);
-//			holder.rl.setLayoutParams(paramsRl);
-//			holder.rl.setPadding(PADDING, PADDING, PADDING, PADDING);
+			//			GridView.LayoutParams paramsRl = new GridView.LayoutParams(LayoutParams.FILL_PARENT, height);
+			//			holder.rl.setLayoutParams(paramsRl);
+			//			holder.rl.setPadding(PADDING, PADDING, PADDING, PADDING);
 
 			holder.ivPoster = (ImageView) convertView.findViewById(R.id.imageViewPoster);
 			holder.ivPoster.setScaleType(ScaleType.CENTER_CROP);
@@ -174,28 +176,28 @@ public class GridPosterAdapter extends BaseAdapter implements AdapterInterface
 			holder.ivRating = (ImageView) convertView.findViewById(R.id.imageViewRating);
 			holder.ivWatched = (ImageView) convertView.findViewById(R.id.imageViewWatched);
 
-//			RelativeLayout.LayoutParams paramsIvRating = new RelativeLayout.LayoutParams(height/8, height/8);
-//			paramsIvRating.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
-//			RelativeLayout.LayoutParams paramsIvWatched = new RelativeLayout.LayoutParams(height/4, height/4);
-//			paramsIvWatched.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
-//			holder.ivRating.setLayoutParams(paramsIvRating);
-//			holder.ivWatched.setLayoutParams(paramsIvWatched);
+			//			RelativeLayout.LayoutParams paramsIvRating = new RelativeLayout.LayoutParams(height/8, height/8);
+			//			paramsIvRating.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
+			//			RelativeLayout.LayoutParams paramsIvWatched = new RelativeLayout.LayoutParams(height/4, height/4);
+			//			paramsIvWatched.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
+			//			holder.ivRating.setLayoutParams(paramsIvRating);
+			//			holder.ivWatched.setLayoutParams(paramsIvWatched);
 
 			convertView.setTag(holder);
 		} 
 		else
 			holder = (ViewHolder) convertView.getTag();
-		
+
 		GridView.LayoutParams paramsRl = new GridView.LayoutParams(LayoutParams.FILL_PARENT, height);
 		holder.rl.setLayoutParams(paramsRl);
-		
+
 		RelativeLayout.LayoutParams paramsIvRating = new RelativeLayout.LayoutParams(height/8, height/8);
 		paramsIvRating.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
 		RelativeLayout.LayoutParams paramsIvWatched = new RelativeLayout.LayoutParams(height/4, height/4);
 		paramsIvWatched.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
 		holder.ivRating.setLayoutParams(paramsIvRating);
 		holder.ivWatched.setLayoutParams(paramsIvWatched);
-		
+
 		final TvShow show = filterShows.get(position);
 
 		holder.ivRating.setImageBitmap(null);
@@ -207,35 +209,35 @@ public class GridPosterAdapter extends BaseAdapter implements AdapterInterface
 		//create a bitmap ajax callback object
 		BitmapAjaxCallback cb = new BitmapAjaxCallback();
 
-		File posterImage = aq.getCachedFile(i.getUrl());
-		
-		//configure the callback
-		if(posterImage != null)
-			aq.id(holder.ivPoster).image(posterImage, 0);
+		if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
+			aq.id(holder.ivPoster).image(context.getResources().getDrawable(R.drawable.progress));
 		else
 		{
-			cb.url(i.getUrl()).animation(android.R.anim.fade_in).fileCache(true).memCache(true);
-			aq.id(holder.ivPoster).image(cb);
+			File posterImage = aq.getCachedFile(i.getUrl());
+
+			if(posterImage != null)
+				aq.id(holder.ivPoster).image(posterImage, true, 0, null);
+			else
+			{
+				cb.url(i.getUrl()).animation(android.R.anim.fade_in).fileCache(true).memCache(true);
+				aq.id(holder.ivPoster).image(cb);
+			}
 		}
 
-//		TransitionDrawable td = null;
-//
-//		if(show.rating == Rating.Love)
-//			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_loved)});
-//		else if(show.rating == Rating.Hate)
-//			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_hated)});
-//
-//		if(td != null)
-//			td.startTransition(2000);
-//
-//		holder.ivRating.setImageDrawable(td);
-//
-//		if(show.progress == 100)
-//		{
-//			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watched)});
-//			td.startTransition(2000);
-//			holder.ivWatched.setImageDrawable(td);
-//		}
+		TransitionDrawable td = null;
+
+		if(show.rating == Rating.Love)
+			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_loved)});
+		else if(show.rating == Rating.Hate)
+			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_hated)});
+
+		h.post(new TDRunnable(holder.ivRating, td));
+
+		if(show.progress == 100)
+		{
+			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watched)});
+			h.post(new TDRunnable(holder.ivWatched, td));
+		}
 
 		return convertView;
 	}
@@ -246,5 +248,26 @@ public class GridPosterAdapter extends BaseAdapter implements AdapterInterface
 		private ImageView ivPoster;
 		private ImageView ivRating;
 		private ImageView ivWatched;
+	}
+
+	private class TDRunnable implements Runnable
+	{
+		private ImageView iv;
+		private TransitionDrawable td;
+
+		public TDRunnable(ImageView iv, TransitionDrawable td)
+		{
+			this.iv = iv;
+			this.td = td;
+		}
+
+		@Override
+		public void run() 
+		{
+			if(td != null)
+				td.startTransition(2000);
+			iv.setImageDrawable(td);
+		}
+
 	}
 }
