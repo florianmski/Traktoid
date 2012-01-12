@@ -1,11 +1,8 @@
 package com.florianmski.tracktoid.ui.fragments;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
@@ -15,11 +12,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,8 +27,6 @@ import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask;
 import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask.CheckinListener;
-import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.ui.activities.phone.CalendarActivity;
@@ -44,15 +35,10 @@ import com.florianmski.tracktoid.ui.activities.phone.MyShowsActivity;
 import com.florianmski.tracktoid.ui.activities.phone.RecommendationActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SearchActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SettingsActivity;
-import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
+import com.florianmski.tracktoid.ui.activities.phone.TrendingActivity;
 import com.florianmski.tracktoid.widgets.AppRater;
-import com.florianmski.tracktoid.widgets.Panel;
-import com.florianmski.tracktoid.widgets.Panel.OnPanelListener;
-import com.florianmski.tracktoid.widgets.coverflow.CoverFlow;
-import com.florianmski.tracktoid.widgets.coverflow.CoverFlowImageAdapter;
 import com.jakewharton.trakt.entities.ActivityItemBase;
 import com.jakewharton.trakt.entities.Response;
-import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.enumerations.ActivityAction;
 import com.jakewharton.trakt.enumerations.ActivityType;
@@ -60,17 +46,10 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 public class HomeFragment extends TraktFragment implements onDashboardButtonClicked
 {
-	private CoverFlow cf;
-	private TextView tvPanelhandle;
-	private Panel panel;
-	private ProgressBar pb;
-
 	private RelativeLayout rlWatchingNow;
 	private TextView tvEpisodeTitle;
 	private TextView tvEpisodeEpisode;
 	private ImageView ivScreen;
-
-	private ArrayList<TvShow> shows;
 	
 	private TvShowEpisode episode;
 	private String tvdbId;
@@ -124,11 +103,6 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 	{
 		View v = inflater.inflate(R.layout.fragment_home, null);
 
-		panel = (Panel)v.findViewById(R.id.panel);
-		tvPanelhandle = (TextView)v.findViewById(R.id.panelHandle);
-		pb = (ProgressBar)v.findViewById(R.id.progressBar);
-		cf = (CoverFlow)v.findViewById(R.id.coverflow);
-
 		rlWatchingNow = (RelativeLayout)v.findViewById(R.id.relativeLayoutWatchingNow);
 		tvEpisodeTitle = (TextView)v.findViewById(R.id.textViewTitle);
 		tvEpisodeEpisode = (TextView)v.findViewById(R.id.textViewEpisode);
@@ -139,61 +113,6 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		
 		vp.setAdapter(new PagerDashboardAdapter(this));
 		pageIndicator.setViewPager(vp);
-
-		cf.setOnItemSelectedListener(new OnItemSelectedListener() 
-		{
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) 
-			{
-				tvPanelhandle.setText(shows.get(position).title);
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {}
-		});
-
-		cf.setOnItemClickListener(new OnItemClickListener() 
-		{
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) 
-			{
-				Intent i = new Intent(getActivity(), ShowActivity.class);
-				i.putExtra("results", shows);
-				i.putExtra("position", position);
-				startActivity(i);
-			}
-		});
-
-		panel.setOnPanelListener(new OnPanelListener() 
-		{
-			@Override
-			public void onPanelOpened(Panel panel) 
-			{
-				//if we don't already downloaded trending shows, do it
-				if(shows == null && (commonTask == null || commonTask.getStatus() != AsyncTask.Status.RUNNING))
-				{
-					commonTask = new ShowsTask(tm, HomeFragment.this, new ShowsListener() 
-					{
-						@Override
-						public void onShows(ArrayList<TvShow> shows) 
-						{
-							HomeFragment.this.shows = shows;
-							cf.setAdapter(new CoverFlowImageAdapter(shows));
-							pb.setVisibility(View.GONE);
-						}
-					}, tm.showService().trending(), false);
-					commonTask.execute();
-				}
-				else if(shows != null)
-					tvPanelhandle.setText(shows.get(cf.getSelectedItemPosition()).title);
-			}
-
-			@Override
-			public void onPanelClosed(Panel panel) 
-			{
-				tvPanelhandle.setText("Trending");
-			}
-		});
 
 		rlWatchingNow.setOnClickListener(new OnClickListener() 
 		{
@@ -239,15 +158,6 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		});
 
 		return v;
-	}
-
-	public void handlePanel()
-	{
-		//if panel is open and user press on back, close the panel (like menu)
-		if(panel.isOpen())
-			panel.setOpen(false, false);
-		else
-			getActivity().finish();
 	}
 
 	@Override
@@ -341,6 +251,9 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 			break;
 		case R.id.home_btn_search:
 			startActivity(new Intent(getActivity(), SearchActivity.class));
+			break;
+		case R.id.home_btn_trending:
+			startActivity(new Intent(getActivity(), TrendingActivity.class));
 			break;
 		}
 	}

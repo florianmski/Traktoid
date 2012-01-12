@@ -30,16 +30,4 @@ public class HomeActivity extends TraktActivity
 //        setContentView(R.layout.activity_home);
         setPrincipalFragment(HomeFragment.newInstance(getIntent().getExtras()));
     }
-    
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) 
-    {
-    	if ((keyCode == KeyEvent.KEYCODE_BACK))
-    	{
-    		((HomeFragment)getSupportFragmentManager().findFragmentById(android.R.id.content)).handlePanel();
-    		return true;
-    	}
-    	
-   		return super.onKeyDown(keyCode, event);
-    }
 }

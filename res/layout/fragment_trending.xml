@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:coverflow="http://schemas.android.com/apk/res/com.florianmski.tracktoid"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <com.florianmski.tracktoid.widgets.coverflow.CoverFlow
+        android:id="@+id/coverflow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        coverflow:imageHeight="150dp"
+        coverflow:imageReflectionRatio="0.2"
+        coverflow:reflectionGap="2dp"
+        coverflow:withReflection="true" />
+
+<!--     <TextView -->
+<!--         android:id="@+id/textViewShowTitle" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_below="@+id/coverflow" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:textAppearance="?android:attr/textAppearanceMedium" /> -->
+
+    <include layout="@layout/view_status" />
+
+</RelativeLayout>

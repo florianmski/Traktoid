@@ -64,56 +64,7 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/paged_view"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@+id/page_indicator_circle"
-        android:layout_above="@+id/panel" />
-
-    <com.florianmski.tracktoid.widgets.Panel
-        android:id="@+id/panel"
-        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        panel:animationDuration="1000"
-        panel:closedHandle="@drawable/actionbar_non_transparent"
-        panel:content="@+id/panelContent"
-        panel:handle="@+id/panelHandle"
-        panel:linearFlying="true"
-        panel:openedHandle="@drawable/actionbar_non_transparent"
-        panel:position="bottom" >
-
-        <TextView
-            android:id="@+id/panelHandle"
-            android:layout_width="fill_parent"
-            android:layout_height="35dp"
-            android:gravity="center"
-            android:text="Trending"
-            android:textColor="#FFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <RelativeLayout
-            android:id="@+id/panelContent"
-            android:layout_width="fill_parent"
-            android:layout_height="185dp"
-            android:background="@drawable/background"
-            android:orientation="vertical" >
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
-
-            <com.florianmski.tracktoid.widgets.coverflow.CoverFlow
-                android:id="@+id/coverflow"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                coverflow:imageHeight="150dp"
-                coverflow:imageReflectionRatio="0.2"
-                coverflow:reflectionGap="2dp"
-                coverflow:withReflection="true" />
-        </RelativeLayout>
-    </com.florianmski.tracktoid.widgets.Panel>
+        android:layout_below="@+id/page_indicator_circle" />
 
 </RelativeLayout>
