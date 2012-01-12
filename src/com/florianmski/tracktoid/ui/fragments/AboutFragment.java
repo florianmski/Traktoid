@@ -2,7 +2,6 @@ package com.florianmski.tracktoid.ui.fragments;
 
 import net.londatiga.android.ActionItem;
 import net.londatiga.android.QuickAction;
-import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

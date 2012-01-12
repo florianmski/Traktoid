@@ -19,8 +19,6 @@ package com.florianmski.tracktoid.ui.activities.phone;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
-import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.ui.fragments.AboutFragment;
 import com.florianmski.tracktoid.ui.fragments.HomeFragment;
 
 public class HomeActivity extends TraktActivity
@@ -38,7 +36,7 @@ public class HomeActivity extends TraktActivity
     {
     	if ((keyCode == KeyEvent.KEYCODE_BACK))
     	{
-    		((HomeFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_home)).handlePanel();
+    		((HomeFragment)getSupportFragmentManager().findFragmentById(android.R.id.content)).handlePanel();
     		return true;
     	}
     	

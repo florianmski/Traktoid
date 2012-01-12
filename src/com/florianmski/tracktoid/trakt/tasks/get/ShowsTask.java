@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import android.support.v4.app.Fragment;
-import android.widget.Toast;
-
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
@@ -48,7 +46,7 @@ public class ShowsTask extends TraktTask
 	@Override
 	protected boolean doTraktStuffInBackground()
 	{
-		showToast("Retrieving a list of shows...", Toast.LENGTH_SHORT);
+//		showToast("Retrieving a list of shows...", Toast.LENGTH_SHORT);
 		
 		shows = (ArrayList<TvShow>) builder.fire();
 		

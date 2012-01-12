@@ -3,8 +3,6 @@ package com.florianmski.tracktoid.trakt.tasks.get;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
-import android.widget.Toast;
-
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
@@ -38,7 +36,7 @@ public class ShoutsGetTask extends TraktTask
 	@Override
 	protected boolean doTraktStuffInBackground()
 	{
-		showToast("Retrieving shouts...", Toast.LENGTH_SHORT);
+//		showToast("Retrieving shouts...", Toast.LENGTH_SHORT);
 		
 		if(e != null)
 			shouts = tm.showService().episodeShouts(tvdbId, e.season, e.number).fire();

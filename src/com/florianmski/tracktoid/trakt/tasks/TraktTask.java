@@ -84,7 +84,7 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 			if(!Utils.isActivityFinished(fragment.getActivity()))
 				tm.onErrorTraktRequest(tListener, new Exception("Internet connection required!"));
 			
-			showToast("Internet connection required!", Toast.LENGTH_LONG);
+//			showToast("Internet connection required!", Toast.LENGTH_LONG);
 			return doOfflineTraktStuff();
 		}
 		try

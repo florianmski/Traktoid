@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
-
 import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.CalendarFragment;
 import com.jakewharton.trakt.entities.CalendarDate;

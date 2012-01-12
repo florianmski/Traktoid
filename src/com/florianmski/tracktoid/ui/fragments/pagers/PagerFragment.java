@@ -14,7 +14,6 @@ import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.image.Image;
-import com.florianmski.tracktoid.ui.fragments.ShoutsFragment;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;

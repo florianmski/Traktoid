@@ -13,12 +13,10 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
-import com.florianmski.tracktoid.adapters.pagers.PagerEpisodeAdapter;
 import com.florianmski.tracktoid.adapters.pagers.PagerSeasonAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
-import com.florianmski.tracktoid.ui.fragments.ShoutsFragment;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowSeason;
 

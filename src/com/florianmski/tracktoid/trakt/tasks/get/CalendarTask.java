@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
-import android.widget.Toast;
-
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
@@ -48,7 +46,7 @@ public class CalendarTask extends TraktTask
 	@Override
 	protected boolean doTraktStuffInBackground()
 	{	
-		showToast("Retrieving calendar...", Toast.LENGTH_SHORT);
+//		showToast("Retrieving calendar...", Toast.LENGTH_SHORT);
 		
 		ArrayList<CalendarDate> calendarListShows;
 		ArrayList<CalendarDate> calendarListPremieres = new ArrayList<CalendarDate>();

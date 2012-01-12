@@ -44,6 +44,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.internal.widget.ScrollingTextView;
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
@@ -277,8 +278,8 @@ public class ListCalendarAdapter extends BaseAdapter implements Serializable, Ad
 							episode.images.screen = episode.images.screen.replace("-940","");
 						
 						episodes.add(episode);
-						i.putExtra("results", episodes);
-						i.putExtra("tvdb_id", e.show.tvdbId);
+						i.putExtra(TraktoidConstants.BUNDLE_RESULTS, episodes);
+						i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, e.show.tvdbId);
 						context.startActivity(i);
 					}
 				});

@@ -13,7 +13,6 @@ import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.pagers.PagerShowAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
-import com.florianmski.tracktoid.ui.fragments.ShoutsFragment;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class ShowPagerFragment extends PagerFragment

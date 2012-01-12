@@ -53,6 +53,7 @@ public class CalendarFragment extends PagerItemFragment
 		
 		getStatusView().show().text("Creating calendar,\nPlease wait...");
 		
+		//offline calendar
 		if(calendar == null)
 		{
 			new DBCalendarTask(getActivity(), new DBAdapter() 
@@ -70,8 +71,12 @@ public class CalendarFragment extends PagerItemFragment
 				}
 			}).execute();
 		}
+		//online calendar
 		else
+		{
 			lvEpisodes.setAdapter(new ListCalendarAdapter(calendar, getActivity()));
+			getStatusView().hide().text(null);
+		}
 	}
 
 	@Override
