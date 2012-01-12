@@ -10,8 +10,8 @@ import android.support.v4.view.MenuItem;
 import android.view.MenuInflater;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.pagers.PagerCalendarAdapter;
 import com.florianmski.tracktoid.adapters.pagers.PagerEpisodeAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBEpisodesTask;
@@ -24,6 +24,13 @@ public class EpisodePagerFragment extends PagerFragment
 {
 	private String tvdbId;
 	private String seasonId;
+	
+	public static EpisodePagerFragment newInstance(Bundle args)
+	{
+		EpisodePagerFragment f = new EpisodePagerFragment();
+		f.setArguments(args);
+		return f;
+	}
 	
 	public EpisodePagerFragment() 
 	{
@@ -49,13 +56,13 @@ public class EpisodePagerFragment extends PagerFragment
 		
 		getStatusView().show().text("Loading episodes,\nPlease wait...");
 
-		setSubtitle(getActivity().getIntent().getStringExtra("title"));
+		setSubtitle(getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
 
-		tvdbId = getActivity().getIntent().getStringExtra("tvdb_id");
-		seasonId = getActivity().getIntent().getStringExtra("seasonId");
+		tvdbId = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
+		seasonId = getArguments().getString(TraktoidConstants.BUNDLE_SEASON_ID);
 
 		@SuppressWarnings("unchecked")
-		ArrayList<TvShowEpisode> episodes = (ArrayList<TvShowEpisode>)getActivity().getIntent().getSerializableExtra("results");
+		ArrayList<TvShowEpisode> episodes = (ArrayList<TvShowEpisode>)getArguments().getSerializable(TraktoidConstants.BUNDLE_RESULTS);
 		if(episodes == null)
 			new DBEpisodesTask(getActivity(), new DBAdapter() 
 			{

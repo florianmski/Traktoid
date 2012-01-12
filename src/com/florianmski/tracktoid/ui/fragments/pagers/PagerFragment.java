@@ -12,7 +12,9 @@ import android.widget.ImageView.ScaleType;
 
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.ui.fragments.ShoutsFragment;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
@@ -36,6 +38,13 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 
 	protected AQuery aq;
 
+	public static PagerFragment newInstance(Bundle args)
+	{
+		PagerFragment f = new PagerFragment();
+		f.setArguments(args);
+		return f;
+	}
+	
 	public PagerFragment() {}
 
 	public PagerFragment(FragmentListener listener) 
@@ -91,7 +100,7 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 	{
 		this.adapter = adapter;
 
-		currentPagerPosition = getActivity().getIntent().getIntExtra("position", 0);
+		currentPagerPosition = getArguments().getInt(TraktoidConstants.BUNDLE_POSITION, 0);
 
 		viewPager.setAdapter(adapter);
 

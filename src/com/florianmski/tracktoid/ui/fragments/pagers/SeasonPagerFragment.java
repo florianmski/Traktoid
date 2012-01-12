@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
 import com.florianmski.tracktoid.adapters.pagers.PagerEpisodeAdapter;
@@ -17,6 +18,7 @@ import com.florianmski.tracktoid.adapters.pagers.PagerSeasonAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
+import com.florianmski.tracktoid.ui.fragments.ShoutsFragment;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
@@ -25,6 +27,13 @@ public class SeasonPagerFragment extends PagerFragment
 	private boolean watchedMode = false;
 	private String tvdbId;
 	private List<TvShowSeason> seasons;
+	
+	public static SeasonPagerFragment newInstance(Bundle args)
+	{
+		SeasonPagerFragment f = new SeasonPagerFragment();
+		f.setArguments(args);
+		return f;
+	}
 	
 	public SeasonPagerFragment() {}
 	
@@ -46,9 +55,9 @@ public class SeasonPagerFragment extends PagerFragment
 		super.onActivityCreated(savedInstanceState);
 		
 		getStatusView().show().text("Loading seasons,\nPlease wait...");
-		setTitle(getActivity().getIntent().getStringExtra("title"));
+		setTitle(getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
 		
-		tvdbId = getActivity().getIntent().getStringExtra("tvdb_id");
+		tvdbId = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
 
 //		new DBSeasonsTask(this, new DBAdapter() 
 //		{
@@ -74,7 +83,7 @@ public class SeasonPagerFragment extends PagerFragment
 			{
 				DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
 				dbw.open();
-				String tvdb_id = getActivity().getIntent().getStringExtra("tvdb_id");
+				String tvdb_id = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
 				List<TvShowSeason> seasons = dbw.getSeasons(tvdb_id, true, true);
 				SeasonPagerFragment.this.seasons = seasons;
 				dbw.close();

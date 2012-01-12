@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.lists.ListSearchAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
@@ -30,6 +31,13 @@ public class SearchFragment extends TraktFragment
 	private Button btnSearch;
 	
 	private ListSearchAdapter adapter;
+	
+	public static SearchFragment newInstance(Bundle args)
+	{
+		SearchFragment f = new SearchFragment();
+		f.setArguments(args);
+		return f;
+	}
 	
 	public SearchFragment() {}
 	
@@ -55,8 +63,8 @@ public class SearchFragment extends TraktFragment
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 				Intent i = new Intent(getActivity(), ShowActivity.class);
-				i.putExtra("position", position);
-				i.putExtra("results", shows);
+				i.putExtra(TraktoidConstants.BUNDLE_POSITION, position);
+				i.putExtra(TraktoidConstants.BUNDLE_RESULTS, shows);
 				startActivity(i);
 			}
 		});

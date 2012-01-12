@@ -12,6 +12,13 @@ public class CalendarPagerFragment extends PagerFragment
 {
 	ArrayList<ArrayList<CalendarDate>> calendars;
 	
+	public static CalendarPagerFragment newInstance(Bundle args)
+	{
+		CalendarPagerFragment f = new CalendarPagerFragment();
+		f.setArguments(args);
+		return f;
+	}
+	
 	public CalendarPagerFragment() {}
 	
 	public CalendarPagerFragment(FragmentListener listener) 
@@ -47,7 +54,14 @@ public class CalendarPagerFragment extends PagerFragment
 		if(savedInstanceState == null)
 			commonTask.execute();
 		else
+		{
+			//create empty arraylist to create a pageradapter that will be filled by calendarfragment (they saved their states)
+			this.calendars = new ArrayList<ArrayList<CalendarDate>>();
+			for(int i = 0; i < savedInstanceState.getInt("size"); i++)
+				calendars.add(new ArrayList<CalendarDate>());
+			
 			createAdapter();
+		}
 	}
 	
 	public void createAdapter()
@@ -67,14 +81,14 @@ public class CalendarPagerFragment extends PagerFragment
 	public void onRestoreState(Bundle savedInstanceState) 
 	{
 		//create empty arraylist to create a pageradapter that will be filled by calendarfragment (they saved their states)
-		this.calendars = new ArrayList<ArrayList<CalendarDate>>();
-		for(int i = 0; i < savedInstanceState.getInt("size"); i++)
-			calendars.add(new ArrayList<CalendarDate>());
+//		this.calendars = new ArrayList<ArrayList<CalendarDate>>();
+//		for(int i = 0; i < savedInstanceState.getInt("size"); i++)
+//			calendars.add(new ArrayList<CalendarDate>());
 	}
 
 	@Override
 	public void onSaveState(Bundle toSave) 
 	{
-		toSave.putInt("size", calendars.size());
+//		toSave.putInt("size", calendars.size());
 	}
 }

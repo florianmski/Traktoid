@@ -2,14 +2,15 @@ package com.florianmski.tracktoid.ui.fragments;
 
 import net.londatiga.android.ActionItem;
 import net.londatiga.android.QuickAction;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItem;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -20,6 +21,13 @@ public class AboutFragment extends Fragment
 {
 	private QuickAction qa;
 	private ImageView ivNyan;
+	
+	public static AboutFragment newInstance(Bundle args)
+	{
+		AboutFragment f = new AboutFragment();
+		f.setArguments(args);
+		return f;
+	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 

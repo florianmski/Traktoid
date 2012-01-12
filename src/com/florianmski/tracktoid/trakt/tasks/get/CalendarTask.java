@@ -105,21 +105,6 @@ public class CalendarTask extends TraktTask
 	}
 	
 	@Override
-	protected boolean doOfflineTraktStuff()
-	{
-		DatabaseWrapper dbw = new DatabaseWrapper(context);
-		dbw.open();
-		
-		ArrayList<CalendarDate> episodes = dbw.getFutureEpisodes();
-			
-		dbw.close();
-		
-		calendars.add(episodes);
-		
-		return true;
-	}
-	
-	@Override
 	protected void onPostExecute(Boolean success)
 	{
 		super.onPostExecute(success);

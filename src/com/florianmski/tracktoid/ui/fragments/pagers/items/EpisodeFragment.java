@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
@@ -24,21 +25,23 @@ public class EpisodeFragment extends PagerItemFragment
 	private TvShowEpisode e;
 	private String tvdbId;
 	
-	public EpisodeFragment() 
+	public static EpisodeFragment newInstance(Bundle args)
 	{
-
+		EpisodeFragment f = new EpisodeFragment();
+		f.setArguments(args);
+		return f;
 	}
 	
 	public static EpisodeFragment newInstance(TvShowEpisode e, String tvdbId)
 	{
-		EpisodeFragment f = new EpisodeFragment();
 		Bundle args = new Bundle();
-		args.putSerializable("object", e);
-		args.putString("tvdbId", tvdbId);
-		f.setArguments(args);
+		args.putSerializable(TraktoidConstants.BUNDLE_EPISODE, e);
+		args.putString(TraktoidConstants.BUNDLE_TVDB_ID, tvdbId);
 
-		return f;
+		return newInstance(args);
 	}
+	
+	public EpisodeFragment() {}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -48,8 +51,8 @@ public class EpisodeFragment extends PagerItemFragment
 		
 		if(getArguments() != null)
 		{
-			e = (TvShowEpisode) getArguments().getSerializable("object");
-			tvdbId = getArguments().getString("tvdbId");
+			e = (TvShowEpisode) getArguments().getSerializable(TraktoidConstants.BUNDLE_EPISODE);
+			tvdbId = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
 		}
 	}
 

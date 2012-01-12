@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
 import com.jakewharton.trakt.entities.TvShowSeason;
@@ -21,15 +22,20 @@ public class SeasonFragment extends PagerItemFragment
 	private String tvdbId;
 	private static OnConstructionListener listener;
 	
+	public static SeasonFragment newInstance(Bundle args)
+	{
+		SeasonFragment f = new SeasonFragment();
+		f.setArguments(args);
+		return f;
+	}
+	
 	public static SeasonFragment newInstance(TvShowSeason season, String tvdbId)
 	{		
-		SeasonFragment f = new SeasonFragment();
 		Bundle args = new Bundle();
-		args.putSerializable("season", season);
-		args.putString("tvdbId", tvdbId);
-		f.setArguments(args);
+		args.putSerializable(TraktoidConstants.BUNDLE_SEASON, season);
+		args.putString(TraktoidConstants.BUNDLE_TVDB_ID, tvdbId);
 
-		return f;
+		return newInstance(args);
 	}
 	
 	public static void setListener(OnConstructionListener listener)
@@ -45,8 +51,8 @@ public class SeasonFragment extends PagerItemFragment
 		
 		if(getArguments() != null)
 		{
-			season = (TvShowSeason) getArguments().getSerializable("season");
-			tvdbId = getArguments().getString("tvdbId");
+			season = (TvShowSeason) getArguments().getSerializable(TraktoidConstants.BUNDLE_SEASON);
+			tvdbId = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
 		}
 	}
 
@@ -80,11 +86,11 @@ public class SeasonFragment extends PagerItemFragment
 			public void onItemClick(AdapterView<?> arg0, View arg1, int episode, long arg3) 
 			{
 				Intent i = new Intent(getActivity(), EpisodeActivity.class);
-				i.putExtra("seasonId", season.url);
-				i.putExtra("tvdb_id", tvdbId);
-				i.putExtra("title", getActivity().getIntent().getStringExtra("title"));
-				i.putExtra("position", episode);
-				Log.e("test","coucou");
+				i.putExtra(TraktoidConstants.BUNDLE_SEASON_ID, season.url);
+				i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, tvdbId);
+				i.putExtra(TraktoidConstants.BUNDLE_TITLE, getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
+				//TODO if episode is 0 something is wrong here
+				i.putExtra(TraktoidConstants.BUNDLE_POSITION, episode);
 				startActivity(i);
 			}
 		});

@@ -26,7 +26,7 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment.FragmentListener;
 import com.flurry.android.FlurryAgent;
 
-public class TraktActivity extends FragmentActivity implements FragmentListener
+public class TraktActivity extends BaseActivity implements FragmentListener
 {		
 	@Override
 	public void onStart()

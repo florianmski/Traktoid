@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
@@ -23,6 +24,13 @@ public class SignInFragment extends TraktFragment
 	private EditText edtPassword;
 	private Button btnGo;
 
+	public static SignInFragment newInstance(Bundle args)
+	{
+		SignInFragment f = new SignInFragment();
+		f.setArguments(args);
+		return f;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
@@ -60,9 +68,9 @@ public class SignInFragment extends TraktFragment
 							{
 								SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 								prefs.edit()
-								.putString("editTextUsername", username)
-								.putString("editTextPassword", password)
-								.putBoolean("sha1", true)
+								.putString(TraktoidConstants.PREF_USERNAME, username)
+								.putString(TraktoidConstants.PREF_PASSWORD, password)
+								.putBoolean(TraktoidConstants.PREF_SHA1, true)
 								.commit();
 							}
 							else

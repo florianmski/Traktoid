@@ -12,6 +12,13 @@ import com.florianmski.tracktoid.R;
 
 public class FragmentModel extends TraktFragment
 {
+	public static FragmentModel newInstance(Bundle args)
+	{
+		FragmentModel f = new FragmentModel();
+		f.setArguments(args);
+		return f;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{

@@ -13,18 +13,25 @@ public class StatusView
 
 	public static StatusView instantiate(View v)
 	{
-		return new StatusView(v);
+		try 
+		{
+			return new StatusView(v);
+		} 
+		catch (Exception e) 
+		{
+			return null;
+		}
 	}
 	
-	public StatusView(View v)
+	private StatusView(View v) throws Exception
 	{
 		this.rlStatus = (RelativeLayout)v.findViewById(R.id.relativeLayoutStatus);
 		
 		if(rlStatus == null)
-			return;
+			throw new Exception("There is no status view in this layout");
 		
-		this.tvStatus = (TextView)v.findViewById(R.id.textViewStatus);
-		this.pbStatus = (ProgressBar)v.findViewById(R.id.progressBarStatus);
+		this.tvStatus = (TextView)rlStatus.findViewById(R.id.textViewStatus);
+		this.pbStatus = (ProgressBar)rlStatus.findViewById(R.id.progressBarStatus);
 		
 		this.hide().text(null);
 		rlStatus.setVisibility(View.VISIBLE);

@@ -18,6 +18,8 @@ package com.florianmski.tracktoid.ui.activities.phone;
 
 import android.os.Bundle;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.ui.fragments.AboutFragment;
+import com.florianmski.tracktoid.ui.fragments.RecommendationFragment;
 
 public class RecommendationActivity extends TraktActivity
 {
@@ -25,6 +27,7 @@ public class RecommendationActivity extends TraktActivity
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_recommendation);
+//		setContentView(R.layout.activity_recommendation);
+		setPrincipalFragment(RecommendationFragment.newInstance(getIntent().getExtras()));
 	}
 }

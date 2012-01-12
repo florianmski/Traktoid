@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.ui.fragments.AboutFragment;
 import com.florianmski.tracktoid.ui.fragments.HomeFragment;
 
 public class HomeActivity extends TraktActivity
@@ -28,7 +29,8 @@ public class HomeActivity extends TraktActivity
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+//        setContentView(R.layout.activity_home);
+        setPrincipalFragment(HomeFragment.newInstance(getIntent().getExtras()));
     }
     
     @Override

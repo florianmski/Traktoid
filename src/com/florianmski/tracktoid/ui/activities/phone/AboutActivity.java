@@ -20,15 +20,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItem;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.ui.fragments.AboutFragment;
 
-public class AboutActivity extends TraktActivity
+public class AboutActivity extends BaseActivity
 {	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_about);		
+//		setContentView(R.layout.activity_about);
+		setPrincipalFragment(AboutFragment.newInstance(getIntent().getExtras()));
 	}
 	
 	@Override

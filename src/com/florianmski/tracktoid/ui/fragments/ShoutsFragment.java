@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.lists.ListShoutsAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask.ShoutsListener;
@@ -47,6 +48,13 @@ public class ShoutsFragment extends TraktFragment
 
 	private ListShoutsAdapter adapter;
 
+	public static ShoutsFragment newInstance(Bundle args)
+	{
+		ShoutsFragment f = new ShoutsFragment();
+		f.setArguments(args);
+		return f;
+	}
+	
 	public ShoutsFragment() {}
 
 	public ShoutsFragment(FragmentListener listener) 
@@ -66,8 +74,8 @@ public class ShoutsFragment extends TraktFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		tvdbId = getActivity().getIntent().getStringExtra("tvdbId");
-		episode = (TvShowEpisode)getActivity().getIntent().getExtras().get("episode");
+		tvdbId = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
+		episode = (TvShowEpisode)getArguments().get(TraktoidConstants.BUNDLE_EPISODE);
 
 		createGetShoutsTask();
 		commonTask.execute();

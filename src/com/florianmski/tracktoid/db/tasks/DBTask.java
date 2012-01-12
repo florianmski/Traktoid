@@ -22,6 +22,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
+import com.jakewharton.trakt.entities.CalendarDate;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
@@ -65,6 +66,7 @@ public abstract class DBTask extends AsyncTask<Void, String, Boolean>
 		public void onDBShows(List<TvShow> shows);
 		public void onDBSeasons(List<TvShowSeason> seasons);
 		public void onDBEpisodes(List<TvShowEpisode> episodes);
+		public void onDBCalendar(List<CalendarDate> calendar);
 	}
 
 }

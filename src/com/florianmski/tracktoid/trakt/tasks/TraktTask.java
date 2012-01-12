@@ -44,7 +44,15 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 		this.tm = tm;
 		this.fragment = fragment;
 		this.context = fragment.getActivity();
-		tListener = (TraktListener)fragment;
+		
+		try
+		{
+			tListener = (TraktListener)fragment;
+		}
+		catch(ClassCastException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public TraktTask inQueue()

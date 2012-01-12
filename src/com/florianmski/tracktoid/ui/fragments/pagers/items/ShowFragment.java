@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.enumerations.DayOfTheWeek;
@@ -25,14 +26,19 @@ public class ShowFragment extends PagerItemFragment
 {
 	private TvShow s;
 	
-	public static ShowFragment newInstance(TvShow s)
+	public static ShowFragment newInstance(Bundle args)
 	{
 		ShowFragment f = new ShowFragment();
-		Bundle args = new Bundle();
-		args.putSerializable("object", s);
 		f.setArguments(args);
-
 		return f;
+	}
+	
+	public static ShowFragment newInstance(TvShow s)
+	{
+		Bundle args = new Bundle();
+		args.putSerializable(TraktoidConstants.BUNDLE_TVSHOW, s);
+
+		return newInstance(args);
 	}
 	
 	@Override
@@ -41,7 +47,7 @@ public class ShowFragment extends PagerItemFragment
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		
-		s = (TvShow) (getArguments() != null ? getArguments().getSerializable("object") : null);
+		s = (TvShow) (getArguments() != null ? getArguments().getSerializable(TraktoidConstants.BUNDLE_TVSHOW) : null);
 	}
 
 	@Override

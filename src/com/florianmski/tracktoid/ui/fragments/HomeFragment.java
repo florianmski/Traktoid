@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 import com.androidquery.service.MarketService;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
@@ -71,6 +72,13 @@ public class HomeFragment extends TraktFragment
 	private TvShowEpisode episode;
 	private String tvdbId;
 
+	public static HomeFragment newInstance(Bundle args)
+	{
+		HomeFragment f = new HomeFragment();
+		f.setArguments(args);
+		return f;
+	}
+	
 	public HomeFragment() {}
 
 	public HomeFragment(FragmentListener listener) 
@@ -162,7 +170,7 @@ public class HomeFragment extends TraktFragment
 			public void onClick(View v) 
 			{
 				Intent i = new Intent(getActivity(), CalendarActivity.class);
-				i.putExtra("position", 1);
+				i.putExtra(TraktoidConstants.BUNDLE_POSITION, 1);
 				startActivity(i);
 			}
 		});

@@ -9,9 +9,11 @@ import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.view.MenuInflater;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.pagers.PagerShowAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
+import com.florianmski.tracktoid.ui.fragments.ShoutsFragment;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class ShowPagerFragment extends PagerFragment
@@ -19,6 +21,13 @@ public class ShowPagerFragment extends PagerFragment
 	//TODO onShowUpdated()
 	private TvShow show;
 	private boolean isExist;
+	
+	public static ShowPagerFragment newInstance(Bundle args)
+	{
+		ShowPagerFragment f = new ShowPagerFragment();
+		f.setArguments(args);
+		return f;
+	}
 	
 	public ShowPagerFragment() {}
 	
@@ -52,7 +61,7 @@ public class ShowPagerFragment extends PagerFragment
 			@SuppressWarnings("unchecked")
 			public void run()
 			{
-				final List<TvShow> shows = (List<TvShow>)getActivity().getIntent().getSerializableExtra("results");
+				final List<TvShow> shows = (List<TvShow>)getArguments().getSerializable(TraktoidConstants.BUNDLE_RESULTS);
 
 				getActivity().runOnUiThread(new Runnable() 
 				{

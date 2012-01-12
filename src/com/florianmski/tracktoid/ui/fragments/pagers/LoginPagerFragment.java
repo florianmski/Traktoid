@@ -3,9 +3,17 @@ package com.florianmski.tracktoid.ui.fragments.pagers;
 import android.os.Bundle;
 
 import com.florianmski.tracktoid.adapters.pagers.PagerLoginAdapter;
+import com.florianmski.tracktoid.ui.fragments.ShoutsFragment;
 
 public class LoginPagerFragment extends PagerFragment
 {
+	public static LoginPagerFragment newInstance(Bundle args)
+	{
+		LoginPagerFragment f = new LoginPagerFragment();
+		f.setArguments(args);
+		return f;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{

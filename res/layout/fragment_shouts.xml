@@ -11,11 +11,13 @@
         android:layout_above="@+id/relativeLayout1"
         android:cacheColorHint="#00000000" />
 
-    <include layout="@layout/view_status" />
+    <include
+        android:layout_above="@+id/relativeLayout1"
+        layout="@layout/view_status" />
 
     <LinearLayout
         android:id="@+id/relativeLayout1"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" >
 

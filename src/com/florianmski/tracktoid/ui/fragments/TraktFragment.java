@@ -15,7 +15,7 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 {
 	protected TraktManager tm = TraktManager.getInstance();
 	protected TraktTask commonTask;
-
+	
 	public TraktFragment() 
 	{
 

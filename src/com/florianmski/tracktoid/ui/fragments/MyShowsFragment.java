@@ -31,6 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
@@ -63,6 +64,13 @@ public class MyShowsFragment extends TraktFragment
 
 	private GridPosterAdapter adapter;
 
+	public static MyShowsFragment newInstance(Bundle args)
+	{
+		MyShowsFragment f = new MyShowsFragment();
+		f.setArguments(args);
+		return f;
+	}
+	
 	public MyShowsFragment() {}
 
 	public MyShowsFragment(FragmentListener listener) 
@@ -88,8 +96,8 @@ public class MyShowsFragment extends TraktFragment
 		if(updateTask != null && updateTask instanceof UpdateShowsTask)
 			updateTask.reconnect(this);
 		
-		if(savedInstanceState != null && savedInstanceState.containsKey("hasMyShowFragment"))
-			hasMyShowFragment = savedInstanceState.getBoolean("hasMyShowFragment");
+		if(savedInstanceState != null && savedInstanceState.containsKey(TraktoidConstants.BUNDLE_HAS_MY_SHOW_FRAGMENT))
+			hasMyShowFragment = savedInstanceState.getBoolean(TraktoidConstants.BUNDLE_HAS_MY_SHOW_FRAGMENT);
 		else
 		{
 			MyShowFragment myShowFragment = (MyShowFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_my_show);
@@ -151,7 +159,7 @@ public class MyShowsFragment extends TraktFragment
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
 			{
 				Intent i = new Intent(getActivity(), MyShowActivity.class);
-				i.putExtra("show", (TvShow)adapter.getItem(position));
+				i.putExtra(TraktoidConstants.BUNDLE_SHOW, (TvShow)adapter.getItem(position));
 				getActivity().setIntent(i);
 
 				if(Utils.isLandscape(getActivity()))
@@ -253,7 +261,7 @@ public class MyShowsFragment extends TraktFragment
 	{
 		super.onSaveInstanceState(toSave);
 
-		toSave.putBoolean("hasMyShowFragment", hasMyShowFragment);
+		toSave.putBoolean(TraktoidConstants.BUNDLE_HAS_MY_SHOW_FRAGMENT, hasMyShowFragment);
 	}
 
 	public TvShow getFirstShow()

@@ -17,6 +17,7 @@
 package com.florianmski.tracktoid.ui.activities.phone;
 
 import android.os.Bundle;
+
 import com.florianmski.tracktoid.ui.fragments.pagers.EpisodePagerFragment;
 
 public class EpisodeActivity extends TraktActivity
@@ -27,6 +28,6 @@ public class EpisodeActivity extends TraktActivity
 		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_episode);
 		
-		getSupportFragmentManager().beginTransaction().add(android.R.id.content, new EpisodePagerFragment()).commit();
+		setPrincipalFragment(EpisodePagerFragment.newInstance(getIntent().getExtras()));
 	}
 }

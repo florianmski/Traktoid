@@ -22,6 +22,13 @@ public class JoinFragment extends TraktFragment
 	private EditText edtPassword;
 	private Button btnGo;
 
+	public static JoinFragment newInstance(Bundle args)
+	{
+		JoinFragment f = new JoinFragment();
+		f.setArguments(args);
+		return f;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{

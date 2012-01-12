@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.lists.ListRecommendationAdapter;
 import com.florianmski.tracktoid.adapters.lists.ListRecommendationAdapter.DismissListener;
 import com.florianmski.tracktoid.trakt.tasks.get.GenresTask;
@@ -34,6 +35,13 @@ public class RecommendationFragment extends TraktFragment
 	private ListView lvRecommendations;
 	
 	private ListRecommendationAdapter adapter;
+	
+	public static RecommendationFragment newInstance(Bundle args)
+	{
+		RecommendationFragment f = new RecommendationFragment();
+		f.setArguments(args);
+		return f;
+	}
 	
 	public RecommendationFragment() {}
 	
@@ -95,8 +103,8 @@ public class RecommendationFragment extends TraktFragment
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) 
 			{
 				Intent intent = new Intent(getActivity(), ShowActivity.class);
-				intent.putExtra("results", adapter.getRecommendations());
-				intent.putExtra("position", position);
+				intent.putExtra(TraktoidConstants.BUNDLE_RESULTS, adapter.getRecommendations());
+				intent.putExtra(TraktoidConstants.BUNDLE_POSITION, position);
 				startActivity(intent);
 			}
 
@@ -115,7 +123,7 @@ public class RecommendationFragment extends TraktFragment
 	
 	private void createGetRecommendationsTask(final Genre genre)
 	{
-		getStatusView().show().text("Retrieving recommendations" + ((genre == null) ? "" : " in \"" + genre.name + "\"") + ", please wait...");
+		getStatusView().show().text("Retrieving recommendations" + ((genre == null) ? "" : " in \"" + genre.name + "\"") + ",\nPlease wait...");
 
 		ShowsBuilder builder = tm.recommendationsService().shows();
 		

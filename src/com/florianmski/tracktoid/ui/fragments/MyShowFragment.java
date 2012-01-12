@@ -32,6 +32,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.lists.ListSeasonAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
@@ -66,6 +67,13 @@ public class MyShowFragment extends TraktFragment
 
 	private QuickAction qa;
 
+	public static MyShowFragment newInstance(Bundle args)
+	{
+		MyShowFragment f = new MyShowFragment();
+		f.setArguments(args);
+		return f;
+	}
+	
 	public MyShowFragment() {}
 
 	public MyShowFragment(FragmentListener listener) 
@@ -96,9 +104,9 @@ public class MyShowFragment extends TraktFragment
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
 			{
 				Intent i = new Intent(getActivity(), SeasonActivity.class);
-				i.putExtra("tvdb_id", show.tvdbId);
-				i.putExtra("title", show.title);
-				i.putExtra("position", lvSeasons.getCount()-position-1);
+				i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, show.tvdbId);
+				i.putExtra(TraktoidConstants.BUNDLE_TITLE, show.title);
+				i.putExtra(TraktoidConstants.BUNDLE_POSITION, lvSeasons.getCount()-position-1);
 				startActivity(i);
 			}
 
@@ -128,11 +136,11 @@ public class MyShowFragment extends TraktFragment
 
 	public void refreshFragment()
 	{
-		Bundle bundle = getActivity().getIntent().getExtras();
+		Bundle bundle = getArguments();
 
 		if(bundle != null)
 		{
-			TvShow show = (TvShow)bundle.get("show");
+			TvShow show = (TvShow)bundle.get(TraktoidConstants.BUNDLE_SHOW);
 
 			if(this.show == null || !this.show.tvdbId.equals(show.tvdbId))
 			{
@@ -226,11 +234,11 @@ public class MyShowFragment extends TraktFragment
 					for(TvShowSeason s : adapter.getSeasons())
 					{
 						if(s.season == e.season)
-							i.putExtra("seasonId", s.url);
+							i.putExtra(TraktoidConstants.BUNDLE_SEASON_ID, s.url);
 					}
 					
-					i.putExtra("tvdb_id", show.tvdbId);
-					i.putExtra("position", e.number-1);
+					i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, show.tvdbId);
+					i.putExtra(TraktoidConstants.BUNDLE_POSITION, e.number-1);
 					startActivity(i);
 				}
 			});
@@ -362,7 +370,7 @@ public class MyShowFragment extends TraktFragment
 			Intent i = new Intent(getActivity(), ShowActivity.class);
 			ArrayList<TvShow> shows = new ArrayList<TvShow>();
 			shows.add(this.show);
-			i.putExtra("results", shows);
+			i.putExtra(TraktoidConstants.BUNDLE_RESULTS, shows);
 			startActivity(i);
 			return true;
 		}

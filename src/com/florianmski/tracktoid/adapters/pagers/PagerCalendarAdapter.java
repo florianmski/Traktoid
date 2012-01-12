@@ -62,10 +62,7 @@ public class PagerCalendarAdapter extends FragmentStatePagerAdapter implements T
 	@Override
 	public String getTitle(int position) 
 	{
-		if(getCount() == 1)
-			return "Local Calendar";
-		else
-			return calendarTitles[position];
+		return calendarTitles[position];
 	}
 	
 	@Override

@@ -19,6 +19,7 @@ package com.florianmski.tracktoid.ui.activities.phone;
 import android.os.Bundle;
 import android.support.v4.view.Window;
 import com.florianmski.tracktoid.Utils;
+import com.florianmski.tracktoid.ui.fragments.AboutFragment;
 import com.florianmski.tracktoid.ui.fragments.MyShowFragment;
 
 public class MyShowActivity extends TraktActivity
@@ -38,10 +39,11 @@ public class MyShowActivity extends TraktActivity
 		
 		if (savedInstanceState == null) 
 		{
-            getSupportFragmentManager()
-             .beginTransaction()
-             .add(android.R.id.content, new MyShowFragment())
-             .commit();
+//            getSupportFragmentManager()
+//             .beginTransaction()
+//             .add(android.R.id.content, new MyShowFragment())
+//             .commit();
+			setPrincipalFragment(MyShowFragment.newInstance(getIntent().getExtras()));
         }
 	}
 }
