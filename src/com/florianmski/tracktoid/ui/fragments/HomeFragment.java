@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -17,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -28,6 +28,8 @@ import com.androidquery.service.MarketService;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
+import com.florianmski.tracktoid.adapters.pagers.PagerDashboardAdapter;
+import com.florianmski.tracktoid.adapters.pagers.PagerDashboardAdapter.onDashboardButtonClicked;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask;
@@ -54,8 +56,9 @@ import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.enumerations.ActivityAction;
 import com.jakewharton.trakt.enumerations.ActivityType;
+import com.viewpagerindicator.CirclePageIndicator;
 
-public class HomeFragment extends TraktFragment
+public class HomeFragment extends TraktFragment implements onDashboardButtonClicked
 {
 	private CoverFlow cf;
 	private TextView tvPanelhandle;
@@ -121,11 +124,6 @@ public class HomeFragment extends TraktFragment
 	{
 		View v = inflater.inflate(R.layout.fragment_home, null);
 
-		Button btnSearch = (Button)v.findViewById(R.id.home_btn_search);
-		Button btnMyShows = (Button)v.findViewById(R.id.home_btn_myshows);
-		Button btnCalendar = (Button)v.findViewById(R.id.home_btn_calendar);
-		Button btnRecommendations = (Button)v.findViewById(R.id.home_btn_recommendations);
-
 		panel = (Panel)v.findViewById(R.id.panel);
 		tvPanelhandle = (TextView)v.findViewById(R.id.panelHandle);
 		pb = (ProgressBar)v.findViewById(R.id.progressBar);
@@ -135,46 +133,12 @@ public class HomeFragment extends TraktFragment
 		tvEpisodeTitle = (TextView)v.findViewById(R.id.textViewTitle);
 		tvEpisodeEpisode = (TextView)v.findViewById(R.id.textViewEpisode);
 		ivScreen = (ImageView)v.findViewById(R.id.imageViewScreen);
-
-		btnSearch.setOnClickListener(new OnClickListener() 
-		{
-			@Override
-			public void onClick(View v) 
-			{
-				startActivity(new Intent(getActivity(), SearchActivity.class));
-			}
-		});
-
-		btnMyShows.setOnClickListener(new OnClickListener() 
-		{
-			@Override
-			public void onClick(View v) 
-			{
-				startActivity(new Intent(getActivity(), MyShowsActivity.class));
-			}
-		});
-
-		btnRecommendations.setOnClickListener(new OnClickListener() 
-		{
-			@Override
-			public void onClick(View v) 
-			{
-				Intent i = new Intent(getActivity(), RecommendationActivity.class);
-				startActivity(i);
-			}
-		});
-
-		btnCalendar.setOnClickListener(new OnClickListener() 
-		{
-			@Override
-			public void onClick(View v) 
-			{
-				Intent i = new Intent(getActivity(), CalendarActivity.class);
-				i.putExtra(TraktoidConstants.BUNDLE_POSITION, 1);
-				startActivity(i);
-			}
-		});
-
+		
+		ViewPager vp = (ViewPager)v.findViewById(R.id.paged_view);
+		CirclePageIndicator pageIndicator = (CirclePageIndicator) v.findViewById(R.id.page_indicator_circle);
+		
+		vp.setAdapter(new PagerDashboardAdapter(this));
+		pageIndicator.setViewPager(vp);
 
 		cf.setOnItemSelectedListener(new OnItemSelectedListener() 
 		{
@@ -357,5 +321,27 @@ public class HomeFragment extends TraktFragment
 	public void onSaveState(Bundle toSave) 
 	{
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onClick(int buttonId) 
+	{
+		switch(buttonId)
+		{
+		case R.id.home_btn_calendar:
+			Intent i = new Intent(getActivity(), CalendarActivity.class);
+			i.putExtra(TraktoidConstants.BUNDLE_POSITION, 1);
+			startActivity(i);
+			break;
+		case R.id.home_btn_myshows:
+			startActivity(new Intent(getActivity(), MyShowsActivity.class));
+			break;
+		case R.id.home_btn_recommendations:
+			startActivity(new Intent(getActivity(), RecommendationActivity.class));
+			break;
+		case R.id.home_btn_search:
+			startActivity(new Intent(getActivity(), SearchActivity.class));
+			break;
+		}
 	}
 }

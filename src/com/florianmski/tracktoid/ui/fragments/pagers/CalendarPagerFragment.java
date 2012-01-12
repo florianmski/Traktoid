@@ -57,7 +57,7 @@ public class CalendarPagerFragment extends PagerFragment
 		{
 			//create empty arraylist to create a pageradapter that will be filled by calendarfragment (they saved their states)
 			this.calendars = new ArrayList<ArrayList<CalendarDate>>();
-			for(int i = 0; i < savedInstanceState.getInt("size"); i++)
+			for(int i = 0; i < PagerCalendarAdapter.calendarTitles.length; i++)
 				calendars.add(new ArrayList<CalendarDate>());
 			
 			createAdapter();

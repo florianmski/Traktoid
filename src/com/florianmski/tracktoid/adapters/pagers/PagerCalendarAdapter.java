@@ -20,15 +20,16 @@ import java.util.ArrayList;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.CalendarFragment;
 import com.jakewharton.trakt.entities.CalendarDate;
 import com.viewpagerindicator.TitleProvider;
 
-public class PagerCalendarAdapter extends FragmentStatePagerAdapter implements TitleProvider, AdapterInterface
+public class PagerCalendarAdapter extends FragmentPagerAdapter implements TitleProvider, AdapterInterface
 {
-	private final static String calendarTitles[] = new String[]{"Premieres","My shows","Shows"};
+	public final static String calendarTitles[] = new String[]{"Premieres","My shows","Shows"};
 
 	private ArrayList<ArrayList<CalendarDate>> calendars;
 	

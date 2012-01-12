@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<style name="Theme.Traktoid" parent="@style/Theme.Sherlock">
-		<item name="android:windowBackground">@drawable/background</item>
-	    <item name="abBackground">#AA222222</item>
+    <style name="Theme.Traktoid" parent="@style/Theme.Sherlock">
+        <item name="android:windowBackground">@drawable/background</item>
+        <item name="abBackground">#AA222222</item>
         <item name="abTitleTextStyle">@style/TextAppearance.Medium.White</item>
         <item name="abIcon">@drawable/ab_icon_home</item>
         <item name="selectableItemBackground">@drawable/abs__item_background_holo_dark</item>
         <item name="android:progressBarStyle">@style/TraktoidProgress</item>
-	</style>
-     
-     <style name="TextAppearance.Medium.White" parent="@android:style/TextAppearance.Large">
+    </style>
+
+    <style name="TextAppearance.Medium.White" parent="@android:style/TextAppearance.Large">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold</item>
-     </style>
-     
-     <style name="TraktoidProgress" parent="@android:style/Widget.ProgressBar">
+    </style>
+
+    <style name="TraktoidProgress" parent="@android:style/Widget.ProgressBar">
         <item name="android:indeterminateOnly">true</item>
         <item name="android:indeterminateDrawable">@drawable/progress</item>
         <item name="android:indeterminateBehavior">repeat</item>
@@ -25,5 +25,16 @@
         <item name="android:minHeight">48dip</item>
         <item name="android:maxHeight">48dip</item>
     </style>
-    
+
+    <style name="DashboardButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">#FFF</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

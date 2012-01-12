@@ -35,7 +35,7 @@ public class CalendarFragment extends PagerItemFragment
 	
 	public CalendarFragment(ArrayList<CalendarDate> calendar) 
 	{
-		super();
+		this();
 		this.calendar = calendar;
 	}
 

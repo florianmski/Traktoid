@@ -115,19 +115,19 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 			((TitlePageIndicator)pageIndicator).setVisibility(View.VISIBLE);
 			break;
 		case IT_TAB :
-			((TabPageIndicator)pageIndicator).setViewPager(viewPager);
+			((TabPageIndicator)pageIndicator).setViewPager(viewPager, currentPagerPosition);
 
 			((TabPageIndicator)pageIndicator).setVisibility(View.VISIBLE);
 			break;
 		case IT_CIRCLE :
-			((CirclePageIndicator)pageIndicator).setViewPager(viewPager);
+			((CirclePageIndicator)pageIndicator).setViewPager(viewPager, currentPagerPosition);
 
 			if(viewPager.getChildCount() > 1)
 				((CirclePageIndicator)pageIndicator).setVisibility(View.VISIBLE);
 			break;
 		}
 		
-		pageIndicator.setCurrentItem(currentPagerPosition);
+//		pageIndicator.setCurrentItem(currentPagerPosition);
 		pageIndicator.setOnPageChangeListener(this);
 	}
 

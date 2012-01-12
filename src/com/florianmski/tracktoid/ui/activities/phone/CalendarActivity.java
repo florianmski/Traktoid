@@ -28,11 +28,14 @@ public class CalendarActivity extends TraktActivity
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_calendar);
-		
-		if(Utils.isOnline(this))
-			setPrincipalFragment(CalendarPagerFragment.newInstance(getIntent().getExtras()));
-		else
-			setPrincipalFragment(new CalendarFragment());
+		//		setContentView(R.layout.activity_calendar);
+
+		if(savedInstanceState == null)
+		{
+			if(Utils.isOnline(this))
+				setPrincipalFragment(CalendarPagerFragment.newInstance(getIntent().getExtras()));
+			else
+				setPrincipalFragment(new CalendarFragment());
+		}
 	}
 }

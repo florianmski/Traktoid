@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:panel="http://schemas.android.com/apk/res/com.florianmski.tracktoid"
     xmlns:coverflow="http://schemas.android.com/apk/res/com.florianmski.tracktoid"
+    xmlns:app="http://schemas.android.com/apk/res/com.florianmski.tracktoid"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
@@ -25,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/imageViewScreen"
-            android:text="You're watching" />
+            android:text="You&apos;re watching" />
 
         <com.actionbarsherlock.internal.widget.ScrollingTextView
             android:id="@+id/textViewTitle"
@@ -52,68 +53,20 @@
             android:singleLine="true" />
     </RelativeLayout>
 
-    <com.google.android.apps.iosched.ui.widget.DashboardLayout
-        android:id="@+id/dashboardLayout"
+    <com.viewpagerindicator.CirclePageIndicator
+        android:id="@+id/page_indicator_circle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayoutWatchingNow"
+        android:padding="10dp"
+        android:visibility="visible" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/paged_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/relativeLayoutWatchingNow" >
-
-        <Button
-            android:id="@+id/home_btn_myshows"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#00000000"
-            android:drawableTop="@drawable/tv"
-            android:text="Library"
-            android:textColor="#FFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/home_btn_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#00000000"
-            android:drawableTop="@drawable/search"
-            android:text="Search"
-            android:textColor="#FFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/home_btn_recommendations"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#00000000"
-            android:drawableTop="@drawable/help"
-            android:text="Suggestions"
-            android:textColor="#FFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/home_btn_calendar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#00000000"
-            android:drawableTop="@drawable/calendar"
-            android:text="Calendar"
-            android:textColor="#FFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/home_btn_vendors"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible" />
-
-        <Button
-            android:id="@+id/home_btn_announcements"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible" />
-    </com.google.android.apps.iosched.ui.widget.DashboardLayout>
+        android:layout_below="@+id/page_indicator_circle"
+        android:layout_above="@+id/panel" />
 
     <com.florianmski.tracktoid.widgets.Panel
         android:id="@+id/panel"
