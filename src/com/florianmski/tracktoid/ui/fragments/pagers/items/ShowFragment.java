@@ -1,20 +1,29 @@
 package com.florianmski.tracktoid.ui.fragments.pagers.items;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
+import com.florianmski.tracktoid.adapters.pagers.PagerShowAdapter;
+import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
+import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.enumerations.DayOfTheWeek;
 import com.jakewharton.trakt.enumerations.Rating;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
+import android.support.v4.view.Menu;
+import android.support.v4.view.MenuItem;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -25,14 +34,15 @@ import android.widget.ImageView.ScaleType;
 public class ShowFragment extends PagerItemFragment
 {
 	private TvShow s;
-	
+	private boolean existsInDb = false;
+
 	public static ShowFragment newInstance(Bundle args)
 	{
 		ShowFragment f = new ShowFragment();
 		f.setArguments(args);
 		return f;
 	}
-	
+
 	public static ShowFragment newInstance(TvShow s)
 	{
 		Bundle args = new Bundle();
@@ -40,13 +50,13 @@ public class ShowFragment extends PagerItemFragment
 
 		return newInstance(args);
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		
+
 		s = (TvShow) (getArguments() != null ? getArguments().getSerializable(TraktoidConstants.BUNDLE_TVSHOW) : null);
 	}
 
@@ -54,13 +64,19 @@ public class ShowFragment extends PagerItemFragment
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
+
+		DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
+		dbw.open();
+		existsInDb = dbw.showExist(s.tvdbId);
+		dbw.close();
+		getSupportActivity().invalidateOptionsMenu();
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		View v = inflater.inflate(R.layout.pager_item_show, null);
-		
+
 		TextView tvAir = (TextView)v.findViewById(R.id.textViewAir);
 		TextView tvOverview = (TextView)v.findViewById(R.id.textViewOverview);
 		TextView tvPercentage = (TextView)v.findViewById(R.id.textViewPercentage);
@@ -70,7 +86,7 @@ public class ShowFragment extends PagerItemFragment
 
 		//sometimes pager.getWidth = 0, don't know why so I use this trick
 		int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-		
+
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, (int) (width*Image.RATIO_FANART));
 		ivFanart.setLayoutParams(params);
 		ivFanart.setScaleType(ScaleType.CENTER_CROP);
@@ -96,7 +112,7 @@ public class ShowFragment extends PagerItemFragment
 		//configure the callback
 		cb.url(i.getUrl()).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
 		aq.id(ivFanart).image(cb);
-		
+
 		TransitionDrawable td = null;
 
 		if(s.rating == Rating.Love)
@@ -124,6 +140,43 @@ public class ShowFragment extends PagerItemFragment
 			tvPercentage.setText("?%");
 
 		return v;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	{
+		super.onCreateOptionsMenu(menu, inflater);
+		
+		//check if user has already this show in his lib. If so hide the "add" button
+		if(!existsInDb)
+		{
+			menu.add(0, R.id.action_bar_add, 0, "Add")
+			.setIcon(R.drawable.ab_icon_add)
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		}
+
+		menu.add(0, R.id.action_bar_shouts, 0, "Shouts")
+		.setIcon(R.drawable.ab_icon_shouts)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{
+		switch(item.getItemId())
+		{
+		case R.id.action_bar_add :
+			ArrayList<TvShow> shows = new ArrayList<TvShow>();
+			shows.add(s);
+			tm.addToQueue(new UpdateShowsTask(tm, this, shows));
+			return true;
+		case R.id.action_bar_shouts :
+			Intent i = new Intent(getActivity(), ShoutsActivity.class);
+			i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, s.tvdbId);
+			startActivity(i);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

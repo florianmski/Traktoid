@@ -11,6 +11,7 @@ public class LoginActivity extends TraktActivity
 	{
 		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_login);
-		setPrincipalFragment(LoginPagerFragment.newInstance(getIntent().getExtras()));
+		if(savedInstanceState == null)
+			setPrincipalFragment(LoginPagerFragment.newInstance(getIntent().getExtras()));
 	}
 }

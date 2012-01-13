@@ -28,6 +28,7 @@ public class EpisodeActivity extends TraktActivity
 		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_episode);
 		
-		setPrincipalFragment(EpisodePagerFragment.newInstance(getIntent().getExtras()));
+		if(savedInstanceState == null)
+			setPrincipalFragment(EpisodePagerFragment.newInstance(getIntent().getExtras()));
 	}
 }

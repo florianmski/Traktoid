@@ -28,6 +28,7 @@ public class HomeActivity extends TraktActivity
     {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_home);
-        setPrincipalFragment(HomeFragment.newInstance(getIntent().getExtras()));
+        if(savedInstanceState == null)
+			setPrincipalFragment(HomeFragment.newInstance(getIntent().getExtras()));
     }
 }

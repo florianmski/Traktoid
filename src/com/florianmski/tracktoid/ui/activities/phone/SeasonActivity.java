@@ -27,6 +27,7 @@ public class SeasonActivity extends TraktActivity
 	{
 		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_season);
-		setPrincipalFragment(SeasonPagerFragment.newInstance(getIntent().getExtras()));
+		if(savedInstanceState == null)
+			setPrincipalFragment(SeasonPagerFragment.newInstance(getIntent().getExtras()));
 	}
 }

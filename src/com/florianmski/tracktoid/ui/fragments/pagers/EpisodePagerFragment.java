@@ -124,8 +124,8 @@ public class EpisodePagerFragment extends PagerFragment
 			return true;
 		case R.id.action_bar_shouts :
 			Intent i = new Intent(getActivity(), ShoutsActivity.class);
-			i.putExtra("tvdbId", tvdbId);
-			i.putExtra("episode", ((PagerEpisodeAdapter) adapter).getEpisode(currentPagerPosition));
+			i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, tvdbId);
+			i.putExtra(TraktoidConstants.BUNDLE_EPISODE, ((PagerEpisodeAdapter) adapter).getEpisode(currentPagerPosition));
 			startActivity(i);
 			return true;
 		}

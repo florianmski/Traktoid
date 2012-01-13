@@ -11,6 +11,7 @@ public class ShoutsActivity extends TraktActivity
 	{
 		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_shouts);
-		setPrincipalFragment(ShoutsFragment.newInstance(getIntent().getExtras()));
+		if(savedInstanceState == null)
+			setPrincipalFragment(ShoutsFragment.newInstance(getIntent().getExtras()));
 	}
 }

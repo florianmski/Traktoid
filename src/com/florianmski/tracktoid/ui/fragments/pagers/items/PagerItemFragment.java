@@ -1,8 +1,8 @@
 package com.florianmski.tracktoid.ui.fragments.pagers.items;
 
-import com.florianmski.tracktoid.ui.fragments.BaseFragment;
+import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 
-public abstract class PagerItemFragment extends BaseFragment
+public abstract class PagerItemFragment extends TraktFragment
 {
 	
 }

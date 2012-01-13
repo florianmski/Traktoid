@@ -110,7 +110,7 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 		switch(indicatorType)
 		{
 		case IT_TITLE :
-			pageIndicator.setViewPager(viewPager);
+			pageIndicator.setViewPager(viewPager, currentPagerPosition);
 
 			((TitlePageIndicator)pageIndicator).setVisibility(View.VISIBLE);
 			break;

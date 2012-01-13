@@ -26,6 +26,7 @@ public class SearchActivity extends TraktActivity
     {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_search);
-        setPrincipalFragment(SearchFragment.newInstance(getIntent().getExtras()));
+        if(savedInstanceState == null)
+			setPrincipalFragment(SearchFragment.newInstance(getIntent().getExtras()));
     }	
 }

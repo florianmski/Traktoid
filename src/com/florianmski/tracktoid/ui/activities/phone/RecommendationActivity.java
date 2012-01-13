@@ -26,6 +26,7 @@ public class RecommendationActivity extends TraktActivity
 	{
 		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_recommendation);
-		setPrincipalFragment(RecommendationFragment.newInstance(getIntent().getExtras()));
+		if(savedInstanceState == null)
+			setPrincipalFragment(RecommendationFragment.newInstance(getIntent().getExtras()));
 	}
 }

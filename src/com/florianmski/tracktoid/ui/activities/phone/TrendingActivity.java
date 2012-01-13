@@ -13,6 +13,7 @@ public class TrendingActivity extends TraktActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_trending);
 		
-		getSupportFragmentManager().beginTransaction().replace(R.id.fragment_trending, TrendingFragment.newInstance(getIntent().getExtras())).commit();
+		if(savedInstanceState == null)
+			getSupportFragmentManager().beginTransaction().replace(R.id.fragment_trending, TrendingFragment.newInstance(getIntent().getExtras())).commit();
 	}
 }

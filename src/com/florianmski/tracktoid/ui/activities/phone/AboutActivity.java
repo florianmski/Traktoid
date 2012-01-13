@@ -29,7 +29,8 @@ public class AboutActivity extends BaseActivity
 		super.onCreate(savedInstanceState);
 
 //		setContentView(R.layout.activity_about);
-		setPrincipalFragment(AboutFragment.newInstance(getIntent().getExtras()));
+		if(savedInstanceState == null)
+			setPrincipalFragment(AboutFragment.newInstance(getIntent().getExtras()));
 	}
 	
 	@Override

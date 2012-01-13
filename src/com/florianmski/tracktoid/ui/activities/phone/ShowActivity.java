@@ -27,6 +27,7 @@ public class ShowActivity extends TraktActivity
 	{
 		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_show);
-		setPrincipalFragment(ShowPagerFragment.newInstance(getIntent().getExtras()));
+		if(savedInstanceState == null)
+			setPrincipalFragment(ShowPagerFragment.newInstance(getIntent().getExtras()));
 	}
 }

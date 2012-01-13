@@ -65,6 +65,7 @@
         android:id="@+id/paged_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:gravity="top"
         android:layout_below="@+id/page_indicator_circle" />
 
 </RelativeLayout>
