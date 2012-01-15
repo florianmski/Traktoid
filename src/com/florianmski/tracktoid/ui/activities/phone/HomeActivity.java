@@ -17,8 +17,6 @@
 package com.florianmski.tracktoid.ui.activities.phone;
 
 import android.os.Bundle;
-import android.view.KeyEvent;
-
 import com.florianmski.tracktoid.ui.fragments.HomeFragment;
 
 public class HomeActivity extends TraktActivity

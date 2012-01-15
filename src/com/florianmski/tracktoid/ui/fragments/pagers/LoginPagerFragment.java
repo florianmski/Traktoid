@@ -16,7 +16,7 @@ public class LoginPagerFragment extends PagerFragment
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
-		setPageIndicatorType(PagerFragment.IT_TITLE);
+		setPageIndicatorType(PagerFragment.IT_TAB);
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		getSupportActivity().getSupportActionBar().setDisplayShowHomeEnabled(false);

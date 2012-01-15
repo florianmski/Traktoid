@@ -16,7 +16,7 @@
         android:layout_height="25dp"
         android:layout_alignBottom="@+id/imageViewBanner"
         android:layout_alignParentBottom="true"
-        android:background="#8F000000"
+        android:background="@drawable/selector_list_classic"
         android:gravity="left|center"
         android:paddingLeft="10dp"
         android:text="Show"
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:background="#8F000000"
+        android:background="@drawable/selector_list_classic"
         android:padding="10dp"
         android:src="@drawable/ab_icon_delete" />
 

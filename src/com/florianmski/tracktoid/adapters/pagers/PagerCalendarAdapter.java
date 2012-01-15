@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Florian Mierzejewski
+est * Copyright 2011 Florian Mierzejewski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
 import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.CalendarFragment;
 import com.jakewharton.trakt.entities.CalendarDate;

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- the list items are enabled, in focus but not being touched/pressed (idle) -->
+    <item 
+        android:state_window_focused="true"
+        android:state_pressed="false"
+        android:state_focused="false"
+        android:state_selected="false"
+        android:drawable="@color/list_background_color" />
+    
+    <!-- the catch-all -->
+    <item 
+        android:drawable="@android:color/transparent" />
+    
+</selector>

@@ -3,11 +3,17 @@
 
     <style name="Theme.Traktoid" parent="@style/Theme.Sherlock">
         <item name="android:windowBackground">@drawable/background</item>
-        <item name="abBackground">#AA222222</item>
+        <item name="abBackground">@color/action_bar_background_color</item>
         <item name="abTitleTextStyle">@style/TextAppearance.Medium.White</item>
         <item name="abIcon">@drawable/ab_icon_home</item>
-        <item name="selectableItemBackground">@drawable/abs__item_background_holo_dark</item>
-        <item name="android:progressBarStyle">@style/TraktoidProgress</item>
+        <item name="selectableItemBackground">@drawable/selector_no_background</item>
+        <item name="android:progressBarStyle">@style/TraktoidProgressBar</item>
+        <item name="android:listViewStyle">@style/TraktoidListView</item>
+        <item name="android:gridViewStyle">@style/TraktoidGridView</item>
+        <item name="vpiCirclePageIndicatorStyle">@style/CustomCirclePageIndicator</item>
+        <item name="vpiTitlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
+        <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
+        <item name="vpiTabTextStyle">@style/CustomTabPageIndicator.Text</item>
     </style>
 
     <style name="TextAppearance.Medium.White" parent="@android:style/TextAppearance.Large">
@@ -15,7 +21,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TraktoidProgress" parent="@android:style/Widget.ProgressBar">
+    <style name="TraktoidProgressBar" parent="@android:style/Widget.ProgressBar">
         <item name="android:indeterminateOnly">true</item>
         <item name="android:indeterminateDrawable">@drawable/progress</item>
         <item name="android:indeterminateBehavior">repeat</item>
@@ -24,6 +30,18 @@
         <item name="android:maxWidth">48dip</item>
         <item name="android:minHeight">48dip</item>
         <item name="android:maxHeight">48dip</item>
+    </style>
+
+    <style name="TraktoidListView" parent="@android:style/Widget.ListView">
+        <item name="android:listSelector">@drawable/selector_list</item>
+        <item name="android:cacheColorHint">@color/list_cache_color_hint_color</item>
+        <item name="android:divider">@color/list_divider_color</item>
+        <item name="android:dividerHeight">1px</item>
+    </style>
+    
+    <style name="TraktoidGridView" parent="@android:style/Widget.GridView">
+        <item name="android:listSelector">@drawable/selector_list</item>
+        <item name="android:cacheColorHint">@color/list_cache_color_hint_color</item>
     </style>
 
     <style name="DashboardButton">
@@ -35,6 +53,39 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CustomTitlePageIndicator">
+        <item name="android:background">#5F000000</item>
+        <item name="footerColor">@color/footer_color</item>
+        <item name="footerLineHeight">@dimen/default_title_indicator_footer_line_height</item>
+        <item name="footerIndicatorHeight">@dimen/default_title_indicator_footer_indicator_height</item>
+        <item name="footerIndicatorStyle">underline</item>
+        <item name="textColor">#AAFFFFFF</item>
+        <item name="selectedColor">#FFFFFF</item>
+        <item name="selectedBold">true</item>
+    </style>
+
+    <style name="CustomCirclePageIndicator"></style>
+
+    <style name="CustomTabPageIndicator" parent="Widget.TabPageIndicator">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:background">@drawable/custom_tab_indicator</item>
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:paddingRight">10dip</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="footerColor">@color/footer_color</item>
+        <item name="footerLineHeight">@dimen/default_title_indicator_footer_line_height</item>
+        <item name="footerIndicatorStyle">@integer/default_title_indicator_footer_indicator_style</item>
+        <item name="footerIndicatorHeight">@dimen/default_title_indicator_footer_indicator_height</item>
+        <item name="footerIndicatorUnderlinePadding">@dimen/default_title_indicator_footer_indicator_underline_padding</item>
+        <item name="selectedBold">@bool/default_title_indicator_selected_bold</item>
+    </style>
+
+    <style name="CustomTabPageIndicator.Text" parent="Widget.TabPageIndicator.Text">
+        <item name="android:textColor">#AAFFFFFF</item>
+        <item name="android:textSize">@dimen/default_title_indicator_text_size</item>
     </style>
 
 </resources>

@@ -1,6 +1,7 @@
 package com.florianmski.tracktoid.trakt.tasks.post;
 
 import android.support.v4.app.Fragment;
+
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.jakewharton.trakt.entities.TvShow;

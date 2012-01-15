@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/selector_list_classic"
     android:padding="10dp" >
 
     <ImageView
@@ -48,6 +49,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/imageViewAvatar"
-        android:src="@drawable/spoiler" android:padding="15dp"/>
+        android:padding="15dp"
+        android:src="@drawable/spoiler" />
 
 </RelativeLayout>

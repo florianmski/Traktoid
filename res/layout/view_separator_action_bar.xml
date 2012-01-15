@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/separator"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/default_title_indicator_footer_line_height"
+    android:background="@color/footer_color" />

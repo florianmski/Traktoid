@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Pressed -->
+    <item android:drawable="@color/list_pressed_color" android:state_pressed="true"/>
+    
+    <!-- Focused states -->
+    <item android:drawable="@drawable/shape_stroke_focused" android:state_selected="true"/>
+
+    <!-- Non focused states -->
+    <item android:drawable="@color/list_background_color"/>
+
+</selector>

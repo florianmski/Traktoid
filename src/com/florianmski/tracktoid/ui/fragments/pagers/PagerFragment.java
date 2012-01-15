@@ -99,7 +99,7 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 	{
 		this.adapter = adapter;
 
-		currentPagerPosition = getArguments().getInt(TraktoidConstants.BUNDLE_POSITION, 0);
+		currentPagerPosition = getArguments() == null ? 0 : getArguments().getInt(TraktoidConstants.BUNDLE_POSITION, 0);
 
 		viewPager.setAdapter(adapter);
 

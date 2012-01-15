@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
+
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;

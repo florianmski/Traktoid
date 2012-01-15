@@ -1,6 +1,7 @@
 package com.florianmski.tracktoid.trakt.tasks.get;
 
 import android.support.v4.app.Fragment;
+
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.jakewharton.trakt.entities.ActivityItemBase;

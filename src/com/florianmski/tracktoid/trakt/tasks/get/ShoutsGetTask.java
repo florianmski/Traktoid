@@ -3,6 +3,7 @@ package com.florianmski.tracktoid.trakt.tasks.get;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
+
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;

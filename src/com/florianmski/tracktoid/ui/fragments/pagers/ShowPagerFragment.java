@@ -1,18 +1,11 @@
 package com.florianmski.tracktoid.ui.fragments.pagers;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
-import android.view.MenuInflater;
-import com.florianmski.tracktoid.R;
+
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.pagers.PagerShowAdapter;
-import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
-import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class ShowPagerFragment extends PagerFragment
