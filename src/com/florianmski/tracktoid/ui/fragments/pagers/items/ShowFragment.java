@@ -4,9 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
+import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
@@ -16,6 +18,7 @@ import com.jakewharton.trakt.enumerations.DayOfTheWeek;
 import com.jakewharton.trakt.enumerations.Rating;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
@@ -104,12 +107,9 @@ public class ShowFragment extends PagerItemFragment
 		ivWatched.setImageBitmap(null);
 
 		Image i = new Image(s.tvdbId, s.images.screen, Image.FANART);
-		AQuery aq = new AQuery(v);
+		final AQuery aq = new AQuery(v);
 		//create a bitmap ajax callback object
-		BitmapAjaxCallback cb = new BitmapAjaxCallback();
-
-		//configure the callback
-		cb.url(i.getUrl()).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
+		BitmapAjaxCallback cb = new BitmapAjaxCallback().url(i.getUrl()).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
 		aq.id(ivFanart).image(cb);
 
 		TransitionDrawable td = null;

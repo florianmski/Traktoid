@@ -19,6 +19,7 @@ package com.florianmski.tracktoid.ui.activities.phone;
 import android.os.Bundle;
 import android.support.v4.view.Window;
 
+import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.ui.fragments.MyShowFragment;
 
@@ -30,6 +31,7 @@ public class MyShowActivity extends TraktActivity
 		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.activity_my_show);
+		setContentView(R.layout.activity_single_fragment);
 		
 		if(Utils.isLandscape(this))
 		{

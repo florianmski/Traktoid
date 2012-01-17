@@ -22,18 +22,20 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.trakt.tasks.get.ActivityTask;
 
 //currently not used
-public class SplashActivity extends Activity
+public class SplashActivity extends TraktActivity
 {		
 	private static final int STOPSPLASH = 0;
 	//time in milliseconds
-	private long SPLASHTIME = 2500;
+	private long SPLASHTIME = 2000;
 
 	//handler for splash screen
 	private Handler splashHandler = new Handler() 
@@ -73,7 +75,13 @@ public class SplashActivity extends Activity
 		} 
 		catch (NameNotFoundException e) {}
 		
-		ivLogo.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
+		Animation a = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+		a.setDuration(1500);
+		ivLogo.startAnimation(a);
+		ivLogo.setImageResource(R.drawable.logo_512);
+		
+		//TODO
+//		new ActivityTask(tm, fragment)
 		
 		Message msg = new Message();
 		msg.what = STOPSPLASH;

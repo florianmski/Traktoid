@@ -18,6 +18,7 @@ package com.florianmski.tracktoid.ui.activities.phone;
 
 import android.os.Bundle;
 
+import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.pagers.SeasonPagerFragment;
 
 public class SeasonActivity extends TraktActivity
@@ -27,6 +28,8 @@ public class SeasonActivity extends TraktActivity
 	{
 		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_season);
+		setContentView(R.layout.activity_single_fragment);
+		
 		if(savedInstanceState == null)
 			setPrincipalFragment(SeasonPagerFragment.newInstance(getIntent().getExtras()));
 	}

@@ -19,14 +19,14 @@
 		android:name=".TraktoidApplication"
         android:hardwareAccelerated="true">
 
-        <activity android:name=".ui.activities.phone.HomeActivity">
+        <activity android:name=".ui.activities.phone.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         
-        <activity android:name=".ui.activities.phone.SplashActivity"></activity>
+<!--         <activity android:name=".ui.activities.phone.SplashActivity"></activity> -->
         <activity android:name=".ui.activities.phone.SearchActivity" android:label="Search"></activity>
         <activity android:name=".ui.activities.phone.CalendarActivity" android:label="Calendar"></activity>
         <activity android:name=".ui.activities.phone.ShowActivity"></activity>
@@ -40,7 +40,7 @@
         <activity android:name=".ui.activities.phone.LoginActivity" android:label="Login"></activity>
         <activity android:name=".ui.activities.phone.ShoutsActivity" android:label="Shouts" android:windowSoftInputMode="stateAlwaysHidden"></activity>
         <activity android:name=".ui.activities.phone.TrendingActivity" android:label="Trending" ></activity>
-        
+        <activity android:name=".ui.activities.phone.HomeActivity"></activity>
         <activity android:name=".ui.activities.phone.MyShowsTabletActivity"></activity>
 
     </application>

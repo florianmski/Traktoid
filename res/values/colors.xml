@@ -14,6 +14,7 @@
     
     <!-- ActionBar colors -->
     <color name="action_bar_background_color">@color/grey_transparent</color>
+    <color name="action_bar_separator_color">@color/footer_color</color>
     
     <!-- Tab colors -->
     <color name="footer_color">@color/trakt_blue_1_transparent</color>

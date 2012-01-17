@@ -35,7 +35,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
+import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.TvShowEpisode;
@@ -143,12 +146,23 @@ public class ListEpisodeAdapter extends BaseAdapter implements Serializable, Ada
         TvShowEpisode e = episodes.get(position);
         
         Image i = new Image(tvdb_id, e.images.screen, e.season, e.number);
-        AQuery aq = new AQuery(convertView);
+        final AQuery aq = new AQuery(convertView);
+        BitmapAjaxCallback cb = new BitmapAjaxCallback()
+        {
+        	@Override
+            public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
+        	{     
+//                    aq.id(iv).image(Utils.shadowBitmap(Utils.borderBitmap(bm)), 9.0f / 16.0f);
+        		aq.id(iv).image(Utils.shadowBitmap(Utils.borderBitmap(bm, context))).animate(android.R.anim.fade_in);
+            }
+
+        }.url(i.getUrl()).fileCache(false).memCache(true).ratio(9.0f / 16.0f);
+        
         //in case user scroll the list fast, stop loading images from web
         if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
             aq.id(holder.ivScreen).image(placeholder);
         else
-        	aq.id(holder.ivScreen).image(i.getUrl(), true, false, 0, 0, placeholder, android.R.anim.fade_in, 9.0f / 16.0f);
+        	aq.id(holder.ivScreen).image(cb);
         
         holder.tvTitle.setText(e.title);
         holder.tvEpisode.setText("Episode " + e.number);

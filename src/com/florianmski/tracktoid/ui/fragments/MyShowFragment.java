@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -29,8 +30,11 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
+import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
@@ -131,13 +135,11 @@ public class MyShowFragment extends TraktFragment
 			}
 		});
 
-		refreshFragment();
+		refreshFragment(getArguments());
 	}
 
-	public void refreshFragment()
+	public void refreshFragment(Bundle bundle)
 	{
-		Bundle bundle = getArguments();
-
 		if(bundle != null)
 		{
 			TvShow show = (TvShow)bundle.get(TraktoidConstants.BUNDLE_SHOW);
@@ -222,8 +224,17 @@ public class MyShowFragment extends TraktFragment
 			tvEpisode.setText(Utils.addZero(e.season) + "x" + Utils.addZero(e.number));
 
 			Image i = new Image(show.tvdbId, e.images.screen, e.season, e.number);
-			AQuery aq = new AQuery(getActivity());
-			aq.id(ivScreen).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in, 9.0f / 16.0f);
+			final AQuery aq = new AQuery(getActivity());
+			BitmapAjaxCallback cb = new BitmapAjaxCallback()
+	        {
+	        	@Override
+	            public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
+	        	{     
+	        		aq.id(iv).image(Utils.shadowBitmap(Utils.borderBitmap(bm, getActivity()))).animate(android.R.anim.fade_in);
+	            }
+
+	        }.url(i.getUrl()).fileCache(false).memCache(true).ratio(9.0f / 16.0f);
+	        aq.id(ivScreen).image(cb);
 
 			rlNextEpisode.setOnClickListener(new OnClickListener() 
 			{
@@ -317,7 +328,7 @@ public class MyShowFragment extends TraktFragment
 				CharSequence[] items = new CharSequence[seasons.size()];
 
 				for(int i = 0; i < items.length; i++)
-					items[i] = seasons.get(i).season == 0 ? "Sepcials" : "Season " + seasons.get(i).season;
+					items[i] = seasons.get(i).season == 0 ? "Specials" : "Season " + seasons.get(i).season;
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 				builder.setMultiChoiceItems(items, null, new OnMultiChoiceClickListener() 
@@ -337,7 +348,10 @@ public class MyShowFragment extends TraktFragment
 					@Override
 					public void onClick(DialogInterface dialog, int which) 
 					{
-						tm.addToQueue(new WatchedEpisodesTask(tm, MyShowFragment.this, show.tvdbId, seasonsChecked, true));
+						if(!seasonsChecked.isEmpty())
+							tm.addToQueue(new WatchedEpisodesTask(tm, MyShowFragment.this, show.tvdbId, seasonsChecked, true));
+						else
+							Toast.makeText(getActivity(), "Nothing to send...", Toast.LENGTH_SHORT).show();
 					}
 				});
 
@@ -346,7 +360,10 @@ public class MyShowFragment extends TraktFragment
 					@Override
 					public void onClick(DialogInterface dialog, int which) 
 					{
-						tm.addToQueue(new WatchedEpisodesTask(tm, MyShowFragment.this, show.tvdbId, seasonsChecked, false));
+						if(!seasonsChecked.isEmpty())
+							tm.addToQueue(new WatchedEpisodesTask(tm, MyShowFragment.this, show.tvdbId, seasonsChecked, false));
+						else
+							Toast.makeText(getActivity(), "Nothing to send...", Toast.LENGTH_SHORT).show();
 					}
 				});
 

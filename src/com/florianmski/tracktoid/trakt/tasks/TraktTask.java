@@ -82,9 +82,9 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 		if(!Utils.isOnline(context))
 		{
 			if(!Utils.isActivityFinished(fragment.getActivity()))
-				tm.onErrorTraktRequest(tListener, new Exception("Internet connection required!"));
-			
-//			showToast("Internet connection required!", Toast.LENGTH_LONG);
+				handleException(new Exception("Internet connection required!"));
+
+//				showToast("Internet connection required!", Toast.LENGTH_LONG);
 			return doOfflineTraktStuff();
 		}
 		try
@@ -147,7 +147,7 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 		e.printStackTrace();
 		this.error = e;
 		this.publishProgress("error");
-		showToast("Error : " + e, Toast.LENGTH_LONG);
+		showToast("Error : " + e.getMessage(), Toast.LENGTH_LONG);
 	}
 
 	public TraktTask silent(boolean silent) 

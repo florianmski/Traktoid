@@ -5,6 +5,6 @@
     <solid
         android:color="@android:color/transparent" />
     <stroke
-        android:width="3px"
+        android:width="@dimen/default_title_indicator_footer_line_height"
         android:color="@color/list_focused_color" />
 </shape>

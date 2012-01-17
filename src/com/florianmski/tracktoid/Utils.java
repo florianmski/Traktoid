@@ -29,11 +29,23 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BlurMaskFilter;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 
@@ -129,11 +141,11 @@ public class Utils
 	public static void chooseBetweenSeenAndCheckin(final WatchedEpisodesTask task, Context context)
 	{
 		List<Map<Integer, Boolean>> listWatched = task.getListWatched();
-		
+
 		int size = 0;
 		int index = 0;
 		int i = 0;
-		
+
 		for(Map<Integer, Boolean> map : listWatched)
 		{
 			size += map.size();
@@ -141,7 +153,7 @@ public class Utils
 				index = i;
 			i++;
 		}
-		
+
 		//if there is only one episode selected and user want to mark it as watched
 		if(size == 1 && listWatched.get(index).containsValue(true))
 		{
@@ -163,24 +175,95 @@ public class Utils
 		else
 			TraktManager.getInstance().addToQueue(task.init(false));
 	}
-	
+
 	public static long getPSTTimestamp(long timestamp)
 	{
-        TimeZone tz = TimeZone.getTimeZone("GMT-08:00");
+		TimeZone tz = TimeZone.getTimeZone("GMT-08:00");
 		int offsetFromUTC = tz.getOffset(timestamp);
-        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 		c.setTimeInMillis(timestamp);
 		c.add(Calendar.MILLISECOND, offsetFromUTC);
 		Log.e("test", timestamp+"");
 		return c.getTimeInMillis()/1000;
 	}
-	
-	
+
+
 	public static boolean isSameDay(Date d1, Date d2)
 	{
 		if(d1.getTime()/(100*60*60*24) == d2.getTime()/(100*60*60*24))
 			return true;
-		
+
 		return false;
+	}
+
+	public static Bitmap roundBitmap(Bitmap bm)
+	{
+		if(bm == null)
+			return null;
+
+		Bitmap output = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(), Config.ARGB_8888);
+		Canvas canvas = new Canvas(output);
+
+		final int color = 0xff424242;
+		final Paint paint = new Paint();
+		final Rect rect = new Rect(0, 0, bm.getWidth(), bm.getHeight());
+		final RectF rectF = new RectF(rect);
+		final float roundPx = 20;
+
+		paint.setAntiAlias(true);
+		canvas.drawARGB(0, 0, 0, 0);
+		paint.setColor(color);
+		canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+		canvas.drawBitmap(bm, rect, rect, paint);
+
+		return output;
+	}
+
+	public static Bitmap shadowBitmap(Bitmap bm)
+	{
+		if(bm == null)
+			return null;
+
+		BlurMaskFilter blurFilter = new BlurMaskFilter(15, BlurMaskFilter.Blur.NORMAL);
+		Paint shadowPaint = new Paint();
+		shadowPaint.setMaskFilter(blurFilter);
+
+		int[] offsetXY = new int[2];
+		Bitmap shadowImage = bm.extractAlpha(shadowPaint, offsetXY);		
+		Bitmap shadowImage32 = shadowImage.copy(Bitmap.Config.ARGB_8888, true);
+
+		Canvas canvas = new Canvas(shadowImage32);
+//		int colour = (150 & 0xFF) << 24;
+//		canvas.drawColor(colour, PorterDuff.Mode.DST_IN);
+		canvas.drawBitmap(bm, -offsetXY[0], -offsetXY[1], null);
+
+		return shadowImage32;
+	}
+
+	public static Bitmap borderBitmap(Bitmap bm, Context context)
+	{
+		if(bm == null)
+			return null;
+		
+		int stroke = 5;
+		
+		Bitmap output = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(), Config.ARGB_8888);
+		Canvas canvas = new Canvas(output);
+
+		Paint paintStroke = new Paint();
+
+		paintStroke.setStrokeWidth(stroke);
+		paintStroke.setStyle(Paint.Style.STROKE);
+		paintStroke.setColor(context.getResources().getColor(R.color.list_divider_color));
+		paintStroke.setAntiAlias(true);
+
+		final Rect rect = new Rect(0, 0, bm.getWidth(), bm.getHeight());
+
+		canvas.drawBitmap(bm, 0, 0, null);
+		canvas.drawRect(rect, paintStroke);
+
+		return output;
 	}
 }

@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItem;
 
+import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.AboutFragment;
 
 public class AboutActivity extends BaseActivity
@@ -28,8 +29,9 @@ public class AboutActivity extends BaseActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
+		setContentView(R.layout.activity_single_fragment);
 //		setContentView(R.layout.activity_about);
+		
 		if(savedInstanceState == null)
 			setPrincipalFragment(AboutFragment.newInstance(getIntent().getExtras()));
 	}

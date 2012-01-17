@@ -2,6 +2,7 @@ package com.florianmski.tracktoid.ui.fragments.pagers.items;
 
 import java.text.SimpleDateFormat;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
@@ -14,9 +15,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
+import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
@@ -24,14 +27,14 @@ public class EpisodeFragment extends PagerItemFragment
 {
 	private TvShowEpisode e;
 	private String tvdbId;
-	
+
 	public static EpisodeFragment newInstance(Bundle args)
 	{
 		EpisodeFragment f = new EpisodeFragment();
 		f.setArguments(args);
 		return f;
 	}
-	
+
 	public static EpisodeFragment newInstance(TvShowEpisode e, String tvdbId)
 	{
 		Bundle args = new Bundle();
@@ -40,15 +43,15 @@ public class EpisodeFragment extends PagerItemFragment
 
 		return newInstance(args);
 	}
-	
+
 	public EpisodeFragment() {}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		
+
 		if(getArguments() != null)
 		{
 			e = (TvShowEpisode) getArguments().getSerializable(TraktoidConstants.BUNDLE_EPISODE);
@@ -61,12 +64,12 @@ public class EpisodeFragment extends PagerItemFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		View v = inflater.inflate(R.layout.pager_item_episode, null);
-		
+
 		TextView tvOverview = (TextView)v.findViewById(R.id.textViewOverview);
 		TextView tvAired = (TextView)v.findViewById(R.id.textViewAired);
 		TextView tvPercentage = (TextView)v.findViewById(R.id.textViewPercentage);
@@ -75,32 +78,29 @@ public class EpisodeFragment extends PagerItemFragment
 
 		//sometimes pager.getWidth = 0, don't know why so I use this trick
 		int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-		
+
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, (int) (width*Image.RATIO_SCREEN));
 		ivScreen.setLayoutParams(params);
 		ivScreen.setScaleType(ScaleType.CENTER_CROP);
-		
+
 		tvOverview.setText(e.overview);
-		
+
 		if(e.firstAired.getTime() == 0)
 			tvAired.setText("Never or date is not known");
 		else
 			tvAired.setText("First Aired : \n" + new SimpleDateFormat("MMMM d, y").format(e.firstAired));
-		
+
 		if(e.ratings != null)
 			tvPercentage.setText(e.ratings.percentage+"%");
-		
+
 		ivWatched.setImageBitmap(null);
 
 		Image i = new Image(tvdbId, e.images.screen, e.season, e.number);
-		AQuery aq = new AQuery(v);
+		final AQuery aq = new AQuery(v);
 		//create a bitmap ajax callback object
-		BitmapAjaxCallback cb = new BitmapAjaxCallback();
-
-		//configure the callback
-		cb.url(i.getUrl()).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
+		BitmapAjaxCallback cb = new BitmapAjaxCallback().url(i.getUrl()).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
 		aq.id(ivScreen).image(cb);
-		
+
 		if(e.watched)
 		{
 			TransitionDrawable td = new TransitionDrawable(new Drawable[]{getResources().getDrawable(R.drawable.empty), getResources().getDrawable(R.drawable.badge_watched)});

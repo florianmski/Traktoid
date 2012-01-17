@@ -3,7 +3,7 @@
 
     <style name="Theme.Traktoid" parent="@style/Theme.Sherlock">
         <item name="android:windowBackground">@drawable/background</item>
-        <item name="abBackground">@color/action_bar_background_color</item>
+        <item name="abBackground">@drawable/action_bar_background</item>
         <item name="abTitleTextStyle">@style/TextAppearance.Medium.White</item>
         <item name="abIcon">@drawable/ab_icon_home</item>
         <item name="selectableItemBackground">@drawable/selector_no_background</item>
@@ -14,6 +14,7 @@
         <item name="vpiTitlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
         <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
         <item name="vpiTabTextStyle">@style/CustomTabPageIndicator.Text</item>
+        <item name="android:scrollbarThumbVertical">@drawable/gradient_progress</item>
     </style>
 
     <style name="TextAppearance.Medium.White" parent="@android:style/TextAppearance.Large">
@@ -36,9 +37,9 @@
         <item name="android:listSelector">@drawable/selector_list</item>
         <item name="android:cacheColorHint">@color/list_cache_color_hint_color</item>
         <item name="android:divider">@color/list_divider_color</item>
-        <item name="android:dividerHeight">1px</item>
+        <item name="android:dividerHeight">@dimen/default_title_indicator_footer_line_height</item>
     </style>
-    
+
     <style name="TraktoidGridView" parent="@android:style/Widget.GridView">
         <item name="android:listSelector">@drawable/selector_list</item>
         <item name="android:cacheColorHint">@color/list_cache_color_hint_color</item>
@@ -47,12 +48,11 @@
     <style name="DashboardButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:textColor">#FFF</item>
+        <item name="android:background">@drawable/selector_home_btn</item>
+        <item name="android:textColor">@color/action_bar_background_color</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:padding">15dp</item>
     </style>
 
     <style name="CustomTitlePageIndicator">

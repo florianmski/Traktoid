@@ -166,11 +166,11 @@ public class MyShowsFragment extends TraktFragment
 				{
 					if(hasMyShowFragment)
 					{
-						((MyShowFragment)(getSupportFragmentManager().findFragmentById(R.id.fragment_my_show))).refreshFragment();
+						((MyShowFragment)(getSupportFragmentManager().findFragmentById(R.id.fragment_my_show))).refreshFragment(i.getExtras());
 					}
 					else
 					{
-						MyShowFragment msf = new MyShowFragment();
+						MyShowFragment msf = MyShowFragment.newInstance(i.getExtras());
 
 						getSupportFragmentManager()
 						.beginTransaction()
@@ -183,9 +183,7 @@ public class MyShowsFragment extends TraktFragment
 					}					
 				}
 				else
-				{
 					startActivity(i);
-				}
 
 			}
 		});
@@ -206,7 +204,8 @@ public class MyShowsFragment extends TraktFragment
 
 		quickAction.addActionItem(aiRefresh);
 		quickAction.addActionItem(aiDelete);
-		quickAction.addActionItem(aiRating);
+		//not necessary, disable it for the moment
+//		quickAction.addActionItem(aiRating);
 
 		quickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() 
 		{			

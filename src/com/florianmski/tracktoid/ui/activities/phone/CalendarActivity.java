@@ -18,6 +18,7 @@ package com.florianmski.tracktoid.ui.activities.phone;
 
 import android.os.Bundle;
 
+import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.ui.fragments.pagers.CalendarPagerFragment;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.CalendarFragment;
@@ -29,6 +30,7 @@ public class CalendarActivity extends TraktActivity
 	{
 		super.onCreate(savedInstanceState);
 		//		setContentView(R.layout.activity_calendar);
+		setContentView(R.layout.activity_single_fragment);
 
 		if(savedInstanceState == null)
 		{

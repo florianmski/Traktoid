@@ -33,6 +33,7 @@
         android:layout_alignParentTop="true"
         android:background="@drawable/selector_list_classic"
         android:padding="10dp"
-        android:src="@drawable/ab_icon_delete" />
+        android:src="@drawable/ab_icon_close"
+        android:duplicateParentState="false" />
 
 </RelativeLayout>

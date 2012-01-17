@@ -15,7 +15,8 @@
         android:id="@+id/textViewShow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#5F000000"
+        android:background="@drawable/selector_list_classic"
+        android:duplicateParentState="true"
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
         android:padding="5dp"
@@ -29,7 +30,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#5F000000"
+        android:background="@drawable/selector_list_classic"
+        android:duplicateParentState="true"
         android:orientation="vertical"
         android:padding="5dp" >
 

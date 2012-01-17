@@ -9,6 +9,7 @@ import com.florianmski.tracktoid.StatusView;
 public abstract class BaseFragment extends Fragment
 {
 	private StatusView sv;
+	private boolean restoreStateCalled = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -18,6 +19,20 @@ public abstract class BaseFragment extends Fragment
 		if(savedInstanceState != null)
 		{
 			onRestoreState(savedInstanceState);
+			restoreStateCalled = true;
+		}
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) 
+	{
+		super.onActivityCreated(savedInstanceState);
+		
+		//in case the fragment use setRetainInstance(true)
+		if(savedInstanceState != null && !restoreStateCalled)
+		{
+			onRestoreState(savedInstanceState);
+			restoreStateCalled = true;
 		}
 	}
 	

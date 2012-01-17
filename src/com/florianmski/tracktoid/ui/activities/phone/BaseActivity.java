@@ -9,7 +9,6 @@ public class BaseActivity extends FragmentActivity
 {
 	public void setPrincipalFragment(Fragment fragment)
 	{
-		setContentView(R.layout.activity_single_fragment);
 		getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment, null).commit();
 	}
 }

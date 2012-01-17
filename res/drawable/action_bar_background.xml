@@ -1,0 +1,17 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- This is the line -->
+    <item
+        android:left="-2dp"
+        android:right="-2dp"
+        android:top="-2dp">
+        <shape>
+            <solid android:color="@color/action_bar_background_color" />
+
+            <stroke
+                android:width="@dimen/default_title_indicator_footer_line_height"
+                android:color="@color/footer_color" />
+        </shape>
+    </item>
+
+</layer-list>

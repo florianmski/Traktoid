@@ -71,10 +71,11 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 		StatusView sv = getStatusView();
 		if(sv != null)
 		{
-			if(!Utils.isOnline(getActivity()))
-				sv.hide().text("Internet connection required!");
-			else
-				sv.hide().text("Something goes wrong :/\n" + e.getMessage());
+//			if(!Utils.isOnline(getActivity()))
+//				sv.hide().text("Internet connection required!");
+//			else
+//				sv.hide().text("Something goes wrong :/\n" + e.getMessage());
+			sv.hide().text(null);
 		}
 	}
 

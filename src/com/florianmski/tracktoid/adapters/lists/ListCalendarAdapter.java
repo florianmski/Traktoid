@@ -158,11 +158,11 @@ public class ListCalendarAdapter extends BaseAdapter implements Serializable, Ad
 				holder.llSeparator.setLayoutParams(params);
 				holder.llSeparator.setGravity(Gravity.CENTER_VERTICAL);
 				holder.llSeparator.setPadding(15, 0, 0, 0);
-				holder.llSeparator.setBackgroundColor(Color.parseColor("#D3C8B8"));
+				holder.llSeparator.setBackgroundColor(context.getResources().getColor(R.color.list_pressed_color));
 				holder.llSeparator.setClickable(false);
 				holder.tvDay = new TextView(context);
 				holder.tvDay.setTextSize(20);
-				holder.tvDay.setTextColor(Color.BLACK);
+				holder.tvDay.setTextColor(Color.WHITE);
 				holder.llSeparator.addView(holder.tvDay);
 				holder.llSeparator.setTag(holder);
 				break;
@@ -173,6 +173,8 @@ public class ListCalendarAdapter extends BaseAdapter implements Serializable, Ad
 				holder.llEpisodes.setOrientation(LinearLayout.HORIZONTAL);
 				ListView.LayoutParams params = new ListView.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 				holder.llEpisodes.setLayoutParams(params);
+//				holder.llEpisodes.setFocusable(false);
+//				holder.llEpisodes.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 
 				int width = parent.getWidth()/nbByRow;
 				int height = (int) (width*0.562893082);
@@ -186,7 +188,11 @@ public class ListCalendarAdapter extends BaseAdapter implements Serializable, Ad
 					holder.tvTitle[i] = (ScrollingTextView) holder.rlScreen[i].findViewById(R.id.textViewTitle);
 					holder.tvAirTime[i] = (ScrollingTextView) holder.rlScreen[i].findViewById(R.id.textViewAirTime);
 					holder.livScreen[i] = (ImageView) holder.rlScreen[i].findViewById(R.id.imageViewScreen);
-					holder.livScreen[i].setFocusable(true);
+					holder.llScreen[i] = (LinearLayout) holder.rlScreen[i].findViewById(R.id.linearLayoutScreen);
+//					holder.livScreen[i].setFocusable(true);
+					
+//					holder.rlScreen[i].setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+//					holder.tvShow[i].setDuplicateParentStateEnabled(true);
 
 					holder.llEpisodes.addView(holder.rlScreen[i]);
 				}
@@ -217,16 +223,14 @@ public class ListCalendarAdapter extends BaseAdapter implements Serializable, Ad
 			for(int i = 0; i < nbByRow; i++)
 			{
 				holder.tvShow[i].setVisibility(View.INVISIBLE);
-				holder.tvTitle[i].setVisibility(View.INVISIBLE);
-				holder.tvAirTime[i].setVisibility(View.INVISIBLE);
+				holder.llScreen[i].setVisibility(View.INVISIBLE);
 				holder.livScreen[i].setVisibility(View.INVISIBLE);
 			}
 
 			for(int i = 0; i < episodes.size(); i++)
 			{
 				holder.tvShow[i].setVisibility(View.VISIBLE);
-				holder.tvTitle[i].setVisibility(View.VISIBLE);
-				holder.tvAirTime[i].setVisibility(View.VISIBLE);
+				holder.llScreen[i].setVisibility(View.VISIBLE);
 				holder.livScreen[i].setVisibility(View.VISIBLE);
 
 				final CalendarTvShowEpisode e = episodes.get(i);
@@ -265,7 +269,7 @@ public class ListCalendarAdapter extends BaseAdapter implements Serializable, Ad
 						aq.id(holder.livScreen[i]).image(image.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
 				}
 
-				holder.livScreen[i].setOnClickListener(new OnClickListener() 
+				holder.rlScreen[i].setOnClickListener(new OnClickListener() 
 				{
 					@Override
 					public void onClick(View v) 
@@ -304,5 +308,6 @@ public class ListCalendarAdapter extends BaseAdapter implements Serializable, Ad
 		private ScrollingTextView[] tvAirTime = new ScrollingTextView[nbByRow];
 		private ImageView[] livScreen = new ImageView[nbByRow];
 		private RelativeLayout[] rlScreen = new RelativeLayout[nbByRow];
+		private LinearLayout[] llScreen = new LinearLayout[nbByRow];
 	}
 }

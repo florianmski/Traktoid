@@ -4,17 +4,18 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <include layout="@layout/view_status" />
+
     <GridView
         android:id="@+id/gridViewShows"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:clipToPadding="false"
+        android:fastScrollEnabled="true"
         android:horizontalSpacing="2dp"
         android:paddingTop="?actionBarSize"
         android:smoothScrollbar="true"
         android:stretchMode="columnWidth"
         android:verticalSpacing="2dp" />
-
-    <include layout="@layout/view_status" />
 
 </RelativeLayout>

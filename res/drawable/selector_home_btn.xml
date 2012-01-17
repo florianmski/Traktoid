@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Pressed -->
+    <item android:drawable="@drawable/shape_stroke_pressed_home_btn" android:state_pressed="true"/>
+    
+    <!-- Focused states -->
+    <item android:drawable="@drawable/shape_stroke_focused_home_btn" android:state_selected="true"/>
+    <item android:drawable="@drawable/shape_stroke_focused_home_btn" android:state_focused="true"/>
+
+    <!-- Non focused states -->
+    <item android:drawable="@android:color/transparent"/>
+
+</selector>

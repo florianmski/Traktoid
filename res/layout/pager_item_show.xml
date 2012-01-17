@@ -22,13 +22,14 @@
                 <ImageView
                     android:id="@+id/imageViewFanart"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/empty" />
                 <ImageView
                     android:id="@+id/imageViewRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignRight="@+id/imageViewBadge"
-                    android:layout_alignTop="@+id/imageViewFanart"
+                    android:layout_alignTop="@+id/imageViewBadge"
                     android:src="@drawable/badge_loved"
                     android:visibility="visible" />
                 <ImageView
