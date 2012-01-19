@@ -23,8 +23,7 @@ public final class TraktoidConstants
 		return PACKAGE_NAME + SEPARATOR + text;
 	}
 	
-	public final static String PREF_USERNAME = get("editTextUsername");
-	public final static String PREF_PASSWORD = get("editTextPassword");
-	public final static String PREF_SHA1 = get("sha1");
-	public final static String PREF_ = get("");
+	public final static String PREF_USERNAME = "editTextUsername";
+	public final static String PREF_PASSWORD = "editTextPassword";
+	public final static String PREF_SHA1 = "sha1";
 }

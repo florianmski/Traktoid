@@ -58,6 +58,12 @@ public class SearchFragment extends TraktFragment
 	{
 		super.onActivityCreated(savedInstanceState);
         
+		if(savedInstanceState != null)
+		{
+			adapter = new ListSearchAdapter(getActivity(), shows);
+			lvSearch.setAdapter(adapter);
+		}
+		
         lvSearch.setOnItemClickListener(new OnItemClickListener() 
         {	
 			@Override
@@ -118,15 +124,16 @@ public class SearchFragment extends TraktFragment
 		return v;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onRestoreState(Bundle savedInstanceState) 
 	{
-		// TODO Auto-generated method stub
+		shows = (ArrayList<TvShow>) savedInstanceState.getSerializable(TraktoidConstants.BUNDLE_RESULTS);
 	}
 
 	@Override
 	public void onSaveState(Bundle toSave) 
 	{
-		// TODO Auto-generated method stub
+		toSave.putSerializable(TraktoidConstants.BUNDLE_RESULTS, shows);
 	}
 }

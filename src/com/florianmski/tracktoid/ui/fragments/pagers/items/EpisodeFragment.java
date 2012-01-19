@@ -1,11 +1,9 @@
 package com.florianmski.tracktoid.ui.fragments.pagers.items;
 
-import java.text.SimpleDateFormat;
-
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +13,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
-import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
@@ -88,7 +84,7 @@ public class EpisodeFragment extends PagerItemFragment
 		if(e.firstAired.getTime() == 0)
 			tvAired.setText("Never or date is not known");
 		else
-			tvAired.setText("First Aired : \n" + new SimpleDateFormat("MMMM d, y").format(e.firstAired));
+			tvAired.setText("First Aired : \n" + DateFormat.getLongDateFormat(getActivity()).format(e.firstAired));
 
 		if(e.ratings != null)
 			tvPercentage.setText(e.ratings.percentage+"%");

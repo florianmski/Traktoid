@@ -75,6 +75,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		getSupportActivity().getSupportActionBar().setDisplayShowHomeEnabled(false);
 	}
 
 	@Override

@@ -4,11 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
-import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
@@ -18,7 +16,6 @@ import com.jakewharton.trakt.enumerations.DayOfTheWeek;
 import com.jakewharton.trakt.enumerations.Rating;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
@@ -172,6 +169,7 @@ public class ShowFragment extends PagerItemFragment
 		case R.id.action_bar_shouts :
 			Intent i = new Intent(getActivity(), ShoutsActivity.class);
 			i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, s.tvdbId);
+			i.putExtra(TraktoidConstants.BUNDLE_TITLE, s.title);
 			startActivity(i);
 			return true;
 		}

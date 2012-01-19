@@ -52,14 +52,12 @@ public class ListEpisodeAdapter extends BaseAdapter implements Serializable, Ada
 	private boolean watchedMode = false;
 	private String tvdb_id;
 	private Map<Integer, Boolean> listWatched = new HashMap<Integer, Boolean>();
-	private Bitmap placeholder;
 	
     public ListEpisodeAdapter(List<TvShowEpisode> episodes, Context context, String tvdb_id)
     {
     	this.episodes = episodes;
     	this.context = context;
     	this.tvdb_id = tvdb_id;
-    	placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
     }
     
 	@Override
@@ -159,9 +157,7 @@ public class ListEpisodeAdapter extends BaseAdapter implements Serializable, Ada
         }.url(i.getUrl()).fileCache(false).memCache(true).ratio(9.0f / 16.0f);
         
         //in case user scroll the list fast, stop loading images from web
-        if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
-            aq.id(holder.ivScreen).image(placeholder);
-        else
+        if(!aq.shouldDelay(convertView, parent, i.getUrl(), 0))
         	aq.id(holder.ivScreen).image(cb);
         
         holder.tvTitle.setText(e.title);

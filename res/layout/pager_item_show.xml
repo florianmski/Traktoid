@@ -1,88 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:greendroid="http://schemas.android.com/apk/res/com.florianmski.tracktoid"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
     android:padding="5dp" >
-    <ScrollView
-        android:id="@+id/scrollView1"
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-        <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-            <RelativeLayout
-                android:id="@+id/relativeLayout1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp" >
-                <ImageView
-                    android:id="@+id/imageViewFanart"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/empty" />
-                <ImageView
-                    android:id="@+id/imageViewRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignRight="@+id/imageViewBadge"
-                    android:layout_alignTop="@+id/imageViewBadge"
-                    android:src="@drawable/badge_loved"
-                    android:visibility="visible" />
-                <ImageView
-                    android:id="@+id/imageViewBadge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignRight="@+id/imageViewFanart"
-                    android:layout_alignTop="@+id/imageViewFanart"
-                    android:src="@drawable/badge_watched"
-                    android:visibility="visible" />
-            </RelativeLayout>
-            <LinearLayout
-                android:id="@+id/linearLayout2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp" >
-                <TextView
-                    android:id="@+id/textViewAir"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:lines="3"
-                    android:text="TextView" >
-                </TextView>
-                <TextView
-                    android:id="@+id/textViewPercentage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:gravity="center"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="91%"
-                    android:textColor="#FFF"
-                    android:textSize="25sp" >
-                </TextView>
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/love" >
-                </ImageView>
-            </LinearLayout>
-            <TextView
-                android:id="@+id/textViewOverview"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/imageViewFanart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="TextView"
+                android:src="@drawable/empty" />
+
+            <ImageView
+                android:id="@+id/imageViewRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/imageViewBadge"
+                android:layout_alignTop="@+id/imageViewBadge"
+                android:src="@drawable/badge_loved"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/imageViewBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/imageViewFanart"
+                android:layout_alignTop="@+id/imageViewFanart"
+                android:src="@drawable/badge_watched"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp" >
+
+            <TextView
+                android:id="@+id/textViewAir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/textViewPercentage"
+                android:gravity="center"
+                android:text="Aired" >
+            </TextView>
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/love" />
+
+            <TextView
+                android:id="@+id/textViewPercentage"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/imageView1"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="91%"
                 android:textColor="#FFF"
-                android:textSize="16sp" />
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+                android:textSize="25sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textViewOverview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="TextView"
+            android:textColor="#FFF"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</ScrollView>

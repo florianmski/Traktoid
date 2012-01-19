@@ -9,9 +9,7 @@
         android:id="@+id/relativeLayout1"
         android:layout_width="125dp"
         android:layout_height="fill_parent"
-        android:layout_gravity="center"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp" >
+        android:layout_gravity="center" >
 
         <ImageView
             android:id="@+id/imageViewScreen"

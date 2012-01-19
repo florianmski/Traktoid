@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,14 +43,12 @@ public class ListRecommendationAdapter extends BaseAdapter implements AdapterInt
 {
 	private List<TvShow> recommendations;
 	private Context context;
-	private Bitmap placeholder;
 	private DismissListener listener;
 	
 	public ListRecommendationAdapter(ArrayList<TvShow> recommendations, Context context)
 	{
 		this.recommendations = recommendations;
 		this.context = context;
-		placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
 	}
 	
 	public void setOnDismissListener(DismissListener listener)
@@ -134,7 +133,7 @@ public class ListRecommendationAdapter extends BaseAdapter implements AdapterInt
         Image i = new Image(s.tvdbId, s.images.fanart, Image.FANART);
         AQuery aq = new AQuery(convertView);
         if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
-            aq.id(holder.ivFanart).image(placeholder);
+            aq.id(holder.ivFanart).image(R.drawable.placeholder);
         else
         	aq.id(holder.ivFanart).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
                         

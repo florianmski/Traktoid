@@ -16,83 +16,19 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.trakt.tasks.get.ActivityTask;
+import com.florianmski.tracktoid.ui.fragments.SplashFragment;
 
-//currently not used
 public class SplashActivity extends TraktActivity
 {		
-	private static final int STOPSPLASH = 0;
-	//time in milliseconds
-	private long SPLASHTIME = 2000;
-
-	//handler for splash screen
-	private Handler splashHandler = new Handler() 
-	{
-		/* (non-Javadoc)
-		 * @see android.os.Handler#handleMessage(android.os.Message)
-		 */
-		@Override
-		public void handleMessage(Message msg) 
-		{
-			switch (msg.what) 
-			{
-				case STOPSPLASH:
-					//remove SplashScreen from view
-					finish();
-					Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-					startActivity(intent);
-					break;
-			}
-			super.handleMessage(msg);
-		}
-	};
-
-	/** Called when the activity is first created. */
 	@Override
-	public void onCreate(Bundle icicle) 
+	public void onCreate(Bundle savedInstanceState) 
 	{
-		super.onCreate(icicle);
-		setContentView(R.layout.activity_splashscreen);
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_single_fragment);
 		
-		TextView tvVersion = (TextView)findViewById(R.id.textViewVersion);
-		ImageView ivLogo = (ImageView)findViewById(R.id.imageViewLogo);
-		
-		try 
-		{
-			tvVersion.setText("v " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
-		} 
-		catch (NameNotFoundException e) {}
-		
-		Animation a = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
-		a.setDuration(1500);
-		ivLogo.startAnimation(a);
-		ivLogo.setImageResource(R.drawable.logo_512);
-		
-		//TODO
-//		new ActivityTask(tm, fragment)
-		
-		Message msg = new Message();
-		msg.what = STOPSPLASH;
-		splashHandler.sendMessageDelayed(msg, SPLASHTIME);
+		if(savedInstanceState == null)
+			setPrincipalFragment(SplashFragment.newInstance(getIntent().getExtras()));
 	}
-
-	@Override
-	public void onDestroy()
-	{
-		splashHandler.removeMessages(STOPSPLASH);
-		super.onDestroy();
-	}
-
 }

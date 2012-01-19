@@ -1,6 +1,5 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <!-- This is the line -->
     <item
         android:left="-2dp"
         android:right="-2dp"

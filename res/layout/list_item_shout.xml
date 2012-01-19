@@ -20,7 +20,7 @@
         android:layout_below="@+id/imageViewAvatar"
         android:layout_marginTop="10dp"
         android:text="test"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium" android:autoLink="web"/>
 
     <TextView
         android:id="@+id/textViewUsername"

@@ -1,5 +1,6 @@
 package com.florianmski.tracktoid.ui.fragments;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -9,10 +10,13 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
+import com.florianmski.tracktoid.ui.activities.phone.HomeActivity;
 import com.jakewharton.trakt.entities.Response;
 
 public class JoinFragment extends TraktFragment
@@ -77,6 +81,9 @@ public class JoinFragment extends TraktFragment
 								.putString("editTextPassword", password)
 								.putBoolean("sha1", true)
 								.commit();
+								
+								Toast.makeText(getActivity(), "Welcome home " + username + "!", Toast.LENGTH_LONG).show();
+								startActivity(new Intent(getActivity(), HomeActivity.class));
 							}
 							else
 							{

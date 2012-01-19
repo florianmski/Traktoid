@@ -61,8 +61,7 @@
         <ImageView
             android:id="@+id/imageViewScreen"
             android:layout_width="125dp"
-            android:layout_height="fill_parent"
-            android:layout_marginRight="10dp" />
+            android:layout_height="fill_parent" />
 
         <TextView
             android:id="@+id/textView1"

@@ -16,11 +16,8 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItem;
-
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment.FragmentListener;
 import com.flurry.android.FlurryAgent;
@@ -49,22 +46,6 @@ public class TraktActivity extends BaseActivity implements FragmentListener
 	protected void setSubtitle(String subtitle)
 	{
 		getSupportActionBar().setSubtitle(subtitle);
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) 
-	{
-	    switch (item.getItemId()) 
-	    {
-	        case android.R.id.home:
-	            // app icon in Action Bar clicked; go home
-	            Intent intent = new Intent(this, HomeActivity.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
-	            return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
 	}
 
 	@Override

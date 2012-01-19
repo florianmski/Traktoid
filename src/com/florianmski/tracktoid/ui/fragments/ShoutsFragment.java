@@ -1,5 +1,6 @@
 package com.florianmski.tracktoid.ui.fragments;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.londatiga.android.ActionItem;
@@ -47,6 +48,8 @@ public class ShoutsFragment extends TraktFragment
 	private QuickAction qa;
 
 	private ListShoutsAdapter adapter;
+	
+	private ArrayList<Shout> shouts;
 
 	public static ShoutsFragment newInstance(Bundle args)
 	{
@@ -54,7 +57,7 @@ public class ShoutsFragment extends TraktFragment
 		f.setArguments(args);
 		return f;
 	}
-	
+
 	public ShoutsFragment() {}
 
 	public ShoutsFragment(FragmentListener listener) 
@@ -77,8 +80,18 @@ public class ShoutsFragment extends TraktFragment
 		tvdbId = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
 		episode = (TvShowEpisode)getArguments().get(TraktoidConstants.BUNDLE_EPISODE);
 
-		createGetShoutsTask();
-		commonTask.execute();
+		if(episode == null)
+			setTitle("Shouts : " + getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
+		else
+			setTitle("Shouts : " + episode.title);
+
+		if(savedInstanceState != null)
+			setAdapter();
+		else
+		{
+			createGetShoutsTask();
+			commonTask.execute();
+		}
 
 		lvShouts.setOnItemClickListener(new OnItemClickListener() 
 		{
@@ -126,12 +139,12 @@ public class ShoutsFragment extends TraktFragment
 			public void onItemClick(QuickAction source, int pos, int actionId) 
 			{
 				TraktApiBuilder<Response> builder;
-				
+
 				if(episode == null)
 					builder = tm.shoutService().show(Integer.valueOf(tvdbId)).shout(edtShout.getText().toString().trim()).spoiler(actionId == SPOILER);
 				else
 					builder = tm.shoutService().episode(Integer.valueOf(tvdbId)).season(episode.season).episode(episode.number).shout(edtShout.getText().toString().trim()).spoiler(actionId == SPOILER);
-				
+
 				new PostTask(tm, ShoutsFragment.this, builder, new PostListener() 
 				{
 					@Override
@@ -169,22 +182,28 @@ public class ShoutsFragment extends TraktFragment
 			@Override
 			public void onShouts(List<Shout> shouts) 
 			{
-				if(adapter == null)
-				{
-					adapter = new ListShoutsAdapter(shouts, getActivity());
-					lvShouts.setAdapter(adapter);
-				}
-				else
-					adapter.reload(shouts);
-				
-				if(adapter.isEmpty())
-					getStatusView().hide().text("No shouts :(\nBe the first! Come on!");
-				else
-					getStatusView().hide().text(null);
-
-				edtShout.setText(null);
+				ShoutsFragment.this.shouts = (ArrayList<Shout>) shouts;
+				setAdapter();
 			}
 		});
+	}
+	
+	private void setAdapter()
+	{		
+		if(adapter == null)
+		{
+			adapter = new ListShoutsAdapter(shouts, getActivity());
+			lvShouts.setAdapter(adapter);
+		}
+		else
+			adapter.reload(shouts);
+
+		if(adapter.isEmpty())
+			getStatusView().hide().text("No shouts :(\nBe the first! Come on!");
+		else
+			getStatusView().hide().text(null);
+
+		edtShout.setText(null);
 	}
 
 	@Override
@@ -202,12 +221,12 @@ public class ShoutsFragment extends TraktFragment
 	@Override
 	public void onRestoreState(Bundle savedInstanceState) 
 	{
-		// TODO Auto-generated method stub
+		shouts = (ArrayList<Shout>) savedInstanceState.get(TraktoidConstants.BUNDLE_RESULTS);
 	}
 
 	@Override
 	public void onSaveState(Bundle toSave) 
 	{
-		// TODO Auto-generated method stub
+		toSave.putSerializable(TraktoidConstants.BUNDLE_RESULTS, shouts);
 	}
 }

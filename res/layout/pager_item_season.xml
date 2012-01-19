@@ -7,8 +7,6 @@
      <ListView
           android:layout_width="fill_parent"
           android:layout_height="fill_parent"
-          android:id="@+id/listViewEpisodes"
-          android:cacheColorHint="#00000000"
-          android:background="#AF000000" />
+          android:id="@+id/listViewEpisodes" />
 
 </RelativeLayout>

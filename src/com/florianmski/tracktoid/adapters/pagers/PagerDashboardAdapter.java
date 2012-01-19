@@ -8,12 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.florianmski.tracktoid.R;
 
 public class PagerDashboardAdapter extends PagerAdapter
 {
-	private final static int layoutIds[] = {R.layout.pager_item_dashboard_1, R.layout.pager_item_dashboard_2};
+	private final static int layoutIds[] = {R.layout.pager_item_dashboard_1};
 	private final static int buttonsIds[] = {R.id.home_btn_calendar, R.id.home_btn_myshows, R.id.home_btn_recommendations, R.id.home_btn_search, R.id.home_btn_trending};
 	private onDashboardButtonClicked listener;	
 	private OnClickListener dashboardButtonListener = new OnClickListener() 
