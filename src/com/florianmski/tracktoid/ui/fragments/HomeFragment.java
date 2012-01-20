@@ -3,6 +3,7 @@ package com.florianmski.tracktoid.ui.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
@@ -17,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
+import com.androidquery.callback.BitmapAjaxCallback;
 import com.androidquery.service.MarketService;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
@@ -29,8 +32,8 @@ import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask;
 import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask.CheckinListener;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
+import com.florianmski.tracktoid.ui.activities.phone.AboutActivity;
 import com.florianmski.tracktoid.ui.activities.phone.CalendarActivity;
-import com.florianmski.tracktoid.ui.activities.phone.LoginActivity;
 import com.florianmski.tracktoid.ui.activities.phone.MyShowsActivity;
 import com.florianmski.tracktoid.ui.activities.phone.RecommendationActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SearchActivity;
@@ -169,9 +172,9 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		menu.add(0, R.id.action_bar_about, 0, "About")
 		.setIcon(R.drawable.ab_icon_info)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		menu.add(0, R.id.action_bar_settings, 0, "Settings")
-		.setIcon(R.drawable.ab_icon_settings)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//		menu.add(0, R.id.action_bar_settings, 0, "Settings")
+//		.setIcon(R.drawable.ab_icon_settings)
+//		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 	}
 
 	@Override
@@ -184,9 +187,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 			startActivity(new Intent(getActivity(), SettingsActivity.class));
 			return true;
 		case R.id.action_bar_about:
-//			startActivity(new Intent(getActivity(), AboutActivity.class));
-//			new ActivityTask(tm, this).execute();
-			startActivity(new Intent(getActivity(), LoginActivity.class));
+			startActivity(new Intent(getActivity(), AboutActivity.class));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -211,8 +212,17 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 					tvEpisodeTitle.setText(episode.title);
 					tvEpisodeEpisode.setText(Utils.addZero(episode.number) + "x" + Utils.addZero(episode.season));
 					Image i = new Image(checkin.show.tvdbId, episode.images.screen, episode.season, episode.number);
-					AQuery aq = new AQuery(getActivity());
-					aq.id(ivScreen).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in, 9.0f / 16.0f);
+					final AQuery aq = new AQuery(getActivity());
+					BitmapAjaxCallback cb = new BitmapAjaxCallback()
+			        {
+			        	@Override
+			            public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
+			        	{     
+			        		aq.id(ivScreen).image(Utils.shadowBitmap(Utils.borderBitmap(bm, getActivity()))).animate(android.R.anim.fade_in);
+			            }
+
+			        }.url(i.getUrl()).fileCache(false).memCache(true).ratio(9.0f / 16.0f);
+			        aq.id(ivScreen).image(cb);
 				}
 				else
 				{

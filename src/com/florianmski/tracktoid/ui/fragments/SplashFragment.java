@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
+import com.florianmski.tracktoid.trakt.tasks.get.ActivityTask;
 import com.florianmski.tracktoid.ui.activities.phone.HomeActivity;
 import com.florianmski.tracktoid.ui.activities.phone.LoginActivity;
 
@@ -28,6 +29,8 @@ public class SplashFragment extends TraktFragment
 	private static final int STOPSPLASH = 0;
 	//time in milliseconds
 	private long SPLASHTIME = 2000;
+	
+	private Intent intent;
 
 	//handler for splash screen
 	private Handler splashHandler = new Handler();
@@ -38,14 +41,6 @@ public class SplashFragment extends TraktFragment
 		{
 			getActivity().finish();
 			getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-			Intent intent;
-			
-			//if we don't have user pass or username, go to login activity
-			if(prefs.getString(TraktoidConstants.PREF_PASSWORD, null) == null || prefs.getString(TraktoidConstants.PREF_USERNAME, null) == null)
-				intent = new Intent(getActivity(), LoginActivity.class);
-			else
-				intent = new Intent(getActivity(), HomeActivity.class);
 			
 			startActivity(intent);
 			getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -71,9 +66,18 @@ public class SplashFragment extends TraktFragment
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
-
-		//TODO
-		//		new ActivityTask(tm, fragment)
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		//if we don't have user pass or username, go to login activity
+		if(prefs.getString(TraktoidConstants.PREF_PASSWORD, null) == null || prefs.getString(TraktoidConstants.PREF_USERNAME, null) == null)
+			intent = new Intent(getActivity(), LoginActivity.class);
+		//if user is logged in
+		else
+		{
+			//go to home and sync with Trakt
+			intent = new Intent(getActivity(), HomeActivity.class);
+			new ActivityTask(tm, this).silentConnectionError(true).execute();
+		}
 
 		splashHandler.postDelayed(splasRunnable, SPLASHTIME);		
 	}

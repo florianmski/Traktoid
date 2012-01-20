@@ -17,3 +17,4 @@ local.properties
 
 # other
 res/values/secret.xml
+src/com/florianmski/tracktoid/TraktoidConstants.java

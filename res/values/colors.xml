@@ -10,7 +10,9 @@
     <color name="light_transparent">#11FFFFFF</color>
     <color name="grey_transparent">#AA222222</color>
     
-    <color name="grey">#444444</color>
+    <color name="grey">#444</color>
+    <color name="light_grey">#bebebe</color>
+    <color name="white">#FFF</color>
     
     <!-- ActionBar colors -->
     <color name="action_bar_background_color">@color/grey_transparent</color>
@@ -28,4 +30,8 @@
     <color name="list_pressed_color">@color/trakt_blue_1_transparent</color>
     <color name="list_divider_color">@color/grey</color>
     <color name="list_cache_color_hint_color">@android:color/transparent</color>
+    
+    <!-- Text colors -->
+    <color name="primary_text_color">@color/white</color>
+    <color name="secondary_text_color">@color/light_grey</color>
 </resources>

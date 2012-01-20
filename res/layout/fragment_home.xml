@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:panel="http://schemas.android.com/apk/res/com.florianmski.tracktoid"
-    xmlns:coverflow="http://schemas.android.com/apk/res/com.florianmski.tracktoid"
     xmlns:app="http://schemas.android.com/apk/res/com.florianmski.tracktoid"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -11,7 +9,8 @@
         android:id="@+id/relativeLayoutWatchingNow"
         android:layout_width="fill_parent"
         android:layout_height="75dp"
-        android:background="@drawable/default_state"
+        android:background="@drawable/selector_invert"
+        android:focusable="true"
         android:padding="5dp"
         android:visibility="invisible" >
 
@@ -23,6 +22,7 @@
 
         <TextView
             android:id="@+id/textView1"
+            style="@style/Traktoid.SecondaryText.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/imageViewScreen"
@@ -30,6 +30,7 @@
 
         <com.actionbarsherlock.internal.widget.ScrollingTextView
             android:id="@+id/textViewTitle"
+            style="@style/Traktoid.PrimaryText.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/textView1"
@@ -37,12 +38,11 @@
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textColor="#FFF"
-            android:textSize="16sp" />
+            android:singleLine="true" />
 
         <com.actionbarsherlock.internal.widget.ScrollingTextView
             android:id="@+id/textViewEpisode"
+            style="@style/Traktoid.SecondaryText.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/textView1"
@@ -65,7 +65,7 @@
         android:id="@+id/paged_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="top"
-        android:layout_below="@+id/page_indicator_circle" />
+        android:layout_below="@+id/page_indicator_circle"
+        android:gravity="top" />
 
 </RelativeLayout>

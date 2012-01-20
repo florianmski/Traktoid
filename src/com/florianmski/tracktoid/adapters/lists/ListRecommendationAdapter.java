@@ -44,6 +44,7 @@ public class ListRecommendationAdapter extends BaseAdapter implements AdapterInt
 	private List<TvShow> recommendations;
 	private Context context;
 	private DismissListener listener;
+	private Bitmap placeholder = null;
 	
 	public ListRecommendationAdapter(ArrayList<TvShow> recommendations, Context context)
 	{
@@ -133,7 +134,7 @@ public class ListRecommendationAdapter extends BaseAdapter implements AdapterInt
         Image i = new Image(s.tvdbId, s.images.fanart, Image.FANART);
         AQuery aq = new AQuery(convertView);
         if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
-            aq.id(holder.ivFanart).image(R.drawable.placeholder);
+            aq.id(holder.ivFanart).image(placeholder);
         else
         	aq.id(holder.ivFanart).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
                         

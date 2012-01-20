@@ -43,7 +43,7 @@ public class ListSearchAdapter extends BaseAdapter implements AdapterInterface
 {
 	private Context context;
 	private List<TvShow> shows;
-	private Bitmap placeholder;
+	private Bitmap placeholder = null;
 
 	public ListSearchAdapter(Context context, ArrayList<TvShow> shows)
 	{

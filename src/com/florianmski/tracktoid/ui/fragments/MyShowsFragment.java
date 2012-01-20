@@ -16,18 +16,20 @@ import android.support.v4.app.ActionBar.OnNavigationListener;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
@@ -339,13 +341,17 @@ public class MyShowsFragment extends TraktFragment
 		}
 		else
 		{
-			int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
+//			int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
+			int value = getSupportActivity().getSupportActionBar().getHeight();
 			ProgressBar pbRefresh = new ProgressBar(getActivity());
 			pbRefresh.setIndeterminate(true);
-			pbRefresh.setLayoutParams(new LinearLayout.LayoutParams(value, value));
+			RelativeLayout rl = new RelativeLayout(getActivity());
+			Log.e("test","value : "+value);
+			pbRefresh.setLayoutParams(new RelativeLayout.LayoutParams(value, value));
+			rl.addView(pbRefresh);
 
 			menu.add(0, R.id.action_bar_refresh, 0, "Refresh")
-			.setActionView(pbRefresh)
+			.setActionView(rl)
 			.setEnabled(false)
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}

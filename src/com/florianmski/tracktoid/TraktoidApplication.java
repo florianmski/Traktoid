@@ -16,11 +16,6 @@
 
 package com.florianmski.tracktoid;
 
-import static org.acra.ReportField.ANDROID_VERSION;
-import static org.acra.ReportField.APP_VERSION_NAME;
-import static org.acra.ReportField.PHONE_MODEL;
-import static org.acra.ReportField.STACK_TRACE;
-
 import java.io.File;
 
 import org.acra.annotation.ReportsCrashes;
@@ -32,8 +27,7 @@ import com.androidquery.callback.BitmapAjaxCallback;
 import com.androidquery.util.AQUtility;
 import com.florianmski.tracktoid.trakt.TraktManager;
 
-@ReportsCrashes(formKey = "dGlwaUVySktzbEJuVlBKUjBMeUNfYXc6MQ",
-customReportContent = { APP_VERSION_NAME, ANDROID_VERSION, PHONE_MODEL, STACK_TRACE })
+@ReportsCrashes(formUri = "http://www.bugsense.com/api/acra?api_key=386949cc", formKey="") 
 public class TraktoidApplication extends Application
 {
 	@Override

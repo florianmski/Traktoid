@@ -13,6 +13,7 @@
         android:src="@drawable/icon" />
 
     <TextView
+        style="@style/Traktoid.PrimaryText.Medium"
         android:id="@+id/textViewShout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,9 +21,10 @@
         android:layout_below="@+id/imageViewAvatar"
         android:layout_marginTop="10dp"
         android:text="test"
-        android:textAppearance="?android:attr/textAppearanceMedium" android:autoLink="web"/>
+        android:autoLink="web"/>
 
     <TextView
+        style="@style/Traktoid.PrimaryText.Small"
         android:id="@+id/textViewUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,6 +36,7 @@
         android:textStyle="bold" />
 
     <TextView
+        style="@style/Traktoid.SecondaryText.Small"
         android:id="@+id/textViewDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

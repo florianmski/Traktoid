@@ -12,6 +12,7 @@
     </ImageView>
 
     <com.actionbarsherlock.internal.widget.ScrollingTextView
+        style="@style/Traktoid.PrimaryText.Small.Bold"
         android:id="@+id/textViewShow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,9 +22,7 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:padding="5dp"
         android:scrollHorizontally="true"
-        android:singleLine="true"
-        android:textColor="#FFF"
-        android:textStyle="bold" />
+        android:singleLine="true" />
 
     <LinearLayout
         android:id="@+id/linearLayoutScreen"
@@ -36,16 +35,17 @@
         android:padding="5dp" >
 
         <com.actionbarsherlock.internal.widget.ScrollingTextView
+            style="@style/Traktoid.PrimaryText.Small"
             android:id="@+id/textViewTitle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textColor="#FFF" />
+            android:singleLine="true" />
 
         <com.actionbarsherlock.internal.widget.ScrollingTextView
+            style="@style/Traktoid.SecondaryText.Small"
             android:id="@+id/textViewAirTime"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

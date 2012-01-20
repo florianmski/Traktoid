@@ -29,7 +29,6 @@ public class ActivityTask extends TraktTask
 	
 	private DatabaseWrapper dbw;
 	private SharedPreferences prefs;
-	//TODO save a timestamp (be careful with gmt !)
 
 	//shows we'll have to refresh (ex: show or an episode of a show which is not in the db)
 	private TreeSet<TvShow> refreshList = new TreeSet<TvShow>();
@@ -65,7 +64,7 @@ public class ActivityTask extends TraktTask
 
 		for(ActivityItemBase activity : activities.activity)
 		{
-			Log.e("test", "type : " + activity.type + ", action : " + activity.action + ", show : " + activity.show.title);
+//			Log.e("test", "type : " + activity.type + ", action : " + activity.action + ", show : " + activity.show.title);
 			switch(activity.type)
 			{
 				case Episode :

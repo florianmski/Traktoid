@@ -44,52 +44,49 @@
         <RelativeLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp" >
+            android:layout_marginTop="10dp" 
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/textViewAir"
+                style="@style/Traktoid.SecondaryText.Small"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/textViewPercentage"
                 android:gravity="center"
                 android:text="Aired" >
+
             </TextView>
 
             <ImageView
                 android:id="@+id/imageView1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
                 android:src="@drawable/love" />
 
             <TextView
+                style="@style/Traktoid.PrimaryText.Big.Bold"
                 android:id="@+id/textViewPercentage"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_alignParentTop="true"
+                android:layout_height="match_parent"
                 android:layout_toLeftOf="@+id/imageView1"
                 android:gravity="center"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:text="91%"
-                android:textColor="#FFF"
-                android:textSize="25sp" />
+                android:text="91%" />
         </RelativeLayout>
 
         <TextView
+            style="@style/Traktoid.PrimaryText.Medium"
             android:id="@+id/textViewOverview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="TextView"
-            android:textColor="#FFF"
-            android:textSize="16sp" />
+            android:text="TextView" />
     </LinearLayout>
 
 </ScrollView>

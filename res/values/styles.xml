@@ -4,7 +4,7 @@
     <style name="Theme.Traktoid" parent="@style/Theme.Sherlock">
         <item name="android:windowBackground">@drawable/background</item>
         <item name="abBackground">@drawable/action_bar_background</item>
-        <item name="abTitleTextStyle">@style/TextAppearance.Medium.White</item>
+        <item name="abTitleTextStyle">@style/Traktoid.PrimaryText.Big.Bold</item>
         <item name="abIcon">@drawable/ab_icon_home</item>
         <item name="selectableItemBackground">@drawable/selector_no_background</item>
         <item name="android:progressBarStyle">@style/TraktoidProgressBar</item>
@@ -13,13 +13,8 @@
         <item name="vpiCirclePageIndicatorStyle">@style/CustomCirclePageIndicator</item>
         <item name="vpiTitlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
         <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
-        <item name="vpiTabTextStyle">@style/CustomTabPageIndicator.Text</item>
+        <item name="vpiTabTextStyle">@style/Traktoid.SecondaryText.Small</item>
         <item name="android:scrollbarThumbVertical">@drawable/gradient_progress</item>
-    </style>
-
-    <style name="TextAppearance.Medium.White" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TraktoidProgressBar" parent="@android:style/Widget.ProgressBar">
@@ -45,16 +40,12 @@
         <item name="android:cacheColorHint">@color/list_cache_color_hint_color</item>
     </style>
 
-    <style name="DashboardButton">
+    <style name="DashboardButton" parent="@style/Traktoid.SecondaryText.Medium">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:background">@drawable/selector_home_btn</item>
-        <item name="android:textColor">@color/action_bar_background_color</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textStyle">bold</item>
-<!--         <item name="android:padding">15dp</item> -->
     </style>
 
     <style name="CustomTitlePageIndicator">
@@ -63,8 +54,8 @@
         <item name="footerLineHeight">@dimen/default_title_indicator_footer_line_height</item>
         <item name="footerIndicatorHeight">@dimen/default_title_indicator_footer_indicator_height</item>
         <item name="footerIndicatorStyle">underline</item>
-        <item name="textColor">#AAFFFFFF</item>
-        <item name="selectedColor">#FFFFFF</item>
+        <item name="textColor">@color/secondary_text_color</item>
+        <item name="selectedColor">@color/primary_text_color</item>
         <item name="selectedBold">true</item>
     </style>
 
@@ -85,9 +76,49 @@
         <item name="selectedBold">@bool/default_title_indicator_selected_bold</item>
     </style>
 
-    <style name="CustomTabPageIndicator.Text" parent="Widget.TabPageIndicator.Text">
-        <item name="android:textColor">#AAFFFFFF</item>
-        <item name="android:textSize">@dimen/default_title_indicator_text_size</item>
+<!--     <style name="CustomTabPageIndicator.Text" parent="Widget.TabPageIndicator.Text"> -->
+<!--         <item name="android:textColor">#AAFFFFFF</item> -->
+<!--         <item name="android:textSize">@dimen/default_title_indicator_text_size</item> -->
+<!--     </style> -->
+
+    <style name="Traktoid.PrimaryText.Big" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/primary_text_color</item>
+    </style>
+
+    <style name="Traktoid.PrimaryText.Big.Bold" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/primary_text_color</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Traktoid.PrimaryText.Medium" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/primary_text_color</item>
+    </style>
+
+    <style name="Traktoid.PrimaryText.Medium.Bold" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/primary_text_color</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Traktoid.PrimaryText.Small" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/primary_text_color</item>
+    </style>
+    
+    <style name="Traktoid.PrimaryText.Small.Bold" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/primary_text_color</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Traktoid.SecondaryText.Big" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/secondary_text_color</item>
+    </style>
+
+    <style name="Traktoid.SecondaryText.Medium" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/secondary_text_color</item>
+    </style>
+
+    <style name="Traktoid.SecondaryText.Small" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/secondary_text_color</item>
+        <item name="android:shadowColor">@color/primary_text_color</item>
     </style>
 
 </resources>

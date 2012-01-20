@@ -25,7 +25,7 @@ public class ListShoutsAdapter extends BaseAdapter implements AdapterInterface
 {
 	private List<Shout> shouts;
 	private Context context;
-	private Bitmap placeholder;
+	private Bitmap placeholder = null;
 
 	public ListShoutsAdapter(List<Shout> shouts, Context context)
 	{

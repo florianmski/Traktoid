@@ -39,22 +39,21 @@
         android:layout_height="fill_parent"
         android:layout_toLeftOf="@+id/imageViewBadge"
         android:layout_toRightOf="@+id/relativeLayout1"
-        android:layout_weight="1"
         android:gravity="center_vertical"
         android:orientation="vertical" >
 
         <com.actionbarsherlock.internal.widget.ScrollingTextView
+            style="@style/Traktoid.PrimaryText.Medium"
             android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textColor="#FFF"
-            android:textSize="16sp" />
+            android:singleLine="true" />
 
         <com.actionbarsherlock.internal.widget.ScrollingTextView
+            style="@style/Traktoid.SecondaryText.Small"
             android:id="@+id/textViewEpisode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

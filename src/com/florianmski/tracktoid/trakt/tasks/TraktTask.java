@@ -36,6 +36,7 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 	protected TraktListener tListener;
 	//this not will not display toast
 	protected boolean silent = false;
+	protected boolean silentConnectionError = false;
 	protected boolean inQueue = false;
 	protected Exception error;
 	
@@ -81,7 +82,7 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 	{
 		if(!Utils.isOnline(context))
 		{
-			if(!Utils.isActivityFinished(fragment.getActivity()))
+			if(!Utils.isActivityFinished(fragment.getActivity()) && !silentConnectionError)
 				handleException(new Exception("Internet connection required!"));
 
 //				showToast("Internet connection required!", Toast.LENGTH_LONG);
@@ -153,6 +154,13 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 	public TraktTask silent(boolean silent) 
 	{
 		this.silent = silent;
+		return this;
+	}
+	
+	//do nothin special in case of connection error (not even showing a toast)
+	public TraktTask silentConnectionError(boolean silentConnectionError) 
+	{
+		this.silentConnectionError = silentConnectionError;
 		return this;
 	}
 }
