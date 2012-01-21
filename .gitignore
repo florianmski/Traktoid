@@ -18,3 +18,10 @@ local.properties
 # other
 res/values/secret.xml
 src/com/florianmski/tracktoid/TraktoidConstants.java
+.settings/
+.classpath
+.gitignore
+.project
+lint.xml
+proguard.cfg
+project.properties
