@@ -7,6 +7,7 @@ A simple android app that works with the Trakt API http://trakt.tv/
 ![](https://lh6.ggpht.com/M4Hq4K4vCvrbMh8BXTMk58-TUro8asPqofONh1QkB1z6fYbE11_DOYBsEHbtPB_J7m4=h230)
 ![](https://lh4.ggpht.com/btKj-rl6689-ws1m9h6IzChmfqCGVaBzSUYtGrF9cuUrwdbYilRHu9J0QifUjPeEPgY=h230)
 ![](https://lh6.ggpht.com/qDochjwGy2HGFYpJNWSgf2RS4qVFsl3ML6YnPMiIWb-3NzjOaSUbrFJ34nEPXNdDXJ0h=h230)
+![](https://lh4.ggpht.com/UnILKnxqB_l4brCFCfaxifyqgNGAnHFaWiJ65aECfDsZoy_wXlpicl3ELA5yFQQe4bM=h230)
 
 I wrote this application in my spare time to test some android libraries I've heard about and also because I found Trakt great! 
 Feel free to contact me at florian.pub@gmail.com, on twitter @florianmski or even on Trakt : florianmski ;)
