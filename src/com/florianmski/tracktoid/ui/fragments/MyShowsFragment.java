@@ -17,7 +17,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -347,6 +346,7 @@ public class MyShowsFragment extends TraktFragment
 			pbRefresh.setIndeterminate(true);
 			RelativeLayout rl = new RelativeLayout(getActivity());
 			Log.e("test","value : "+value);
+			rl.setLayoutParams(new LayoutParams(value, value));
 			pbRefresh.setLayoutParams(new RelativeLayout.LayoutParams(value, value));
 			rl.addView(pbRefresh);
 

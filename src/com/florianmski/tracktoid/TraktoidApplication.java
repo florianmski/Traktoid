@@ -18,6 +18,7 @@ package com.florianmski.tracktoid;
 
 import java.io.File;
 
+import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
@@ -27,14 +28,14 @@ import com.androidquery.callback.BitmapAjaxCallback;
 import com.androidquery.util.AQUtility;
 import com.florianmski.tracktoid.trakt.TraktManager;
 
-@ReportsCrashes(formUri = "http://www.bugsense.com/api/acra?api_key=386949cc", formKey="") 
+@ReportsCrashes(formUri = TraktoidConstants.KEY_BUGSENSE, formKey="") 
 public class TraktoidApplication extends Application
 {
 	@Override
 	public void onCreate() 
 	{
 		// The following line triggers the initialization of ACRA
-		//        ACRA.init(this);
+		ACRA.init(this);
 
 		TraktManager.create(this);
 

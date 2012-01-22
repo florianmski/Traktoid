@@ -7,7 +7,6 @@ import java.util.TreeSet;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.Utils;

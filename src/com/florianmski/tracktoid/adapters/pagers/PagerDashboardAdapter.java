@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageButton;
-
 import com.florianmski.tracktoid.R;
 
 public class PagerDashboardAdapter extends PagerAdapter

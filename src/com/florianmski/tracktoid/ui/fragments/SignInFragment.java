@@ -77,6 +77,7 @@ public class SignInFragment extends TraktFragment
 								
 								Toast.makeText(getActivity(), "Welcome home " + username + "!", Toast.LENGTH_LONG).show();
 								startActivity(new Intent(getActivity(), HomeActivity.class));
+								getActivity().finish();
 							}
 							else
 							{

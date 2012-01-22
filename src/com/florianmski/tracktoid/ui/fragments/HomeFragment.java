@@ -70,8 +70,6 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 	{
 		super(listener);
 	}
-	
-	//TODO pager stuff for buttons
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -87,8 +85,8 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		super.onActivityCreated(savedInstanceState);
 
 		//check if db need an upgrade
-		DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
-		dbw.open();
+//		DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
+//		dbw.open();
 
 		//check if a new version of Traktoid is available and display a dialog if so
 		MarketService ms = new MarketService(getActivity());
@@ -99,7 +97,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 
 		//Trying to set high definition image on high resolution
 		//does not seem to be a great idea, it's slow and I sometimes get an outOfMemoryError :/
-//		        Image.smallSize = Utils.isTabletDevice(getActivity());
+//		Image.smallSize = !Utils.isTabletDevice(getActivity());
 	}
 
 	@Override

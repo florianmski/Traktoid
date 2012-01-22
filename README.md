@@ -1,36 +1,35 @@
 Traktoid
 ===================
 
-A simple android app that works with the Trakt API (Trakt account needed!) http://trakt.tv/
+A simple android app that works with the Trakt API http://trakt.tv/
+
+![https://lh6.ggpht.com/28NWKnVI39_8PFJj9RjDYStgGFtBKX_wdgrBqljw2TcKjn47u_hH7-xSu10HqRd_-S4]
 
 I wrote this application in my spare time to test some android libraries I've heard about and also because I found Trakt great! 
 Feel free to contact me at florian.pub@gmail.com, on twitter @florianmski or even on Trakt : florianmski ;)
 
-You can download it here for free and with no ads : https://market.android.com/details?id=com.florianmski.tracktoid
+You can download it here for free : https://market.android.com/details?id=com.florianmski.tracktoid
 
-If you want to help me correct bugs you have here an access to users stacktraces : 
-https://docs.google.com/spreadsheet/ccc?key=0Ao9tUGTycxg4dGlwaUVySktzbEJuVlBKUjBMeUNfYXc
+You are an android dev and want to help this project ?
+Just send me a pull request with a correction or a new functionnality ;)
+Contact me if you want to have an access to users stacktraces
 
 This app use the following libs, thanks to the authors !
 
-- trakt-java : https://github.com/JakeWharton/trakt-java/ (the fork I use is here : https://github.com/florianmski/trakt-java)
+- trakt-java : https://github.com/JakeWharton/trakt-java/ (my fork : https://github.com/florianmski/trakt-java)
 - ActionBarSherlock : https://github.com/JakeWharton/ActionBarSherlock
-- ViewPagerIndicator : https://github.com/JakeWharton/Android-ViewPagerIndicator
+- ViewPagerIndicator : https://github.com/JakeWharton/Android-ViewPagerIndicator (my fork : https://github.com/florianmski/Android-ViewPagerIndicator)
 - AndroidQuery : https://github.com/androidquery/androidquery
 - QuickAction : https://github.com/lorensiuswlt/NewQuickAction3D
 - ACRA : http://code.google.com/p/acra/
-- Panel widget : http://code.google.com/p/android-misc-widgets/
 - CoverFlow based on : http://code.google.com/p/android-coverflow/ which is based on : http://www.inter-fuser.com/2010/02/android-coverflow-widget-v2.html
-- icons are from here http://chrfb.deviantart.com/art/quot-ecqlipse-2-quot-PNG-59941546
+- icons http://thenounproject.com/
 
 
 
 TODO List
 =========
 
-(no specific order)
-- Use Fragment
-- Portrait Mode
 - Tablet interface
 - All Trakt functionnalities
 
