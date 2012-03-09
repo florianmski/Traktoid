@@ -73,11 +73,8 @@ public class SplashFragment extends TraktFragment
 			intent = new Intent(getActivity(), LoginActivity.class);
 		//if user is logged in
 		else
-		{
-			//go to home and sync with Trakt
+			//go to home
 			intent = new Intent(getActivity(), HomeActivity.class);
-			new ActivityTask(tm, this).silentConnectionError(true).execute();
-		}
 
 		splashHandler.postDelayed(splasRunnable, SPLASHTIME);		
 	}

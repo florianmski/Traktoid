@@ -25,7 +25,7 @@ public class ActivityTask extends TraktTask
 {
 	private TraktApiBuilder<?> builder;
 	private Activity activities;
-	
+
 	private DatabaseWrapper dbw;
 	private SharedPreferences prefs;
 
@@ -46,7 +46,7 @@ public class ActivityTask extends TraktTask
 	protected boolean doTraktStuffInBackground()
 	{
 		showToast("Starting Trakt -> Traktoid sync...", Toast.LENGTH_SHORT);
-		
+
 		activities = 
 				tm
 				.activityService()
@@ -56,16 +56,18 @@ public class ActivityTask extends TraktTask
 				.actions(ActivityAction.Checkin, ActivityAction.Rating, ActivityAction.Scrobble, ActivityAction.Seen)
 				.fire();
 
-		Collections.reverse(activities.activity);
-		
-		dbw = new DatabaseWrapper(context);
-		dbw.open();
-
-		for(ActivityItemBase activity : activities.activity)
+		if(activities != null && activities.activity != null)
 		{
-//			Log.e("test", "type : " + activity.type + ", action : " + activity.action + ", show : " + activity.show.title);
-			switch(activity.type)
+			Collections.reverse(activities.activity);
+
+			dbw = new DatabaseWrapper(context);
+			dbw.open();
+
+			for(ActivityItemBase activity : activities.activity)
 			{
+				//			Log.e("test", "type : " + activity.type + ", action : " + activity.action + ", show : " + activity.show.title);
+				switch(activity.type)
+				{
 				case Episode :
 				{
 					switch(activity.action)
@@ -90,25 +92,26 @@ public class ActivityTask extends TraktTask
 						break;
 					}
 				}
-			break;
+				break;
+				}
 			}
-		}
-		
-		for(TvShow show : updateList)
-		{
-			dbw.insertOrUpdateShow(show);
-			dbw.refreshPercentage(show.tvdbId);
-			show = dbw.getShow(show.tvdbId);
-			show.seasons = dbw.getSeasons(show.tvdbId, true, true);
-			finalUpdateList.add(show);
-		}
 
-		dbw.close();
+			for(TvShow show : updateList)
+			{
+				dbw.insertOrUpdateShow(show);
+				dbw.refreshPercentage(show.tvdbId);
+				show = dbw.getShow(show.tvdbId);
+				show.seasons = dbw.getSeasons(show.tvdbId, true, true);
+				finalUpdateList.add(show);
+			}
+
+			dbw.close();
+
+		}
 
 		showToast("Sync over!", Toast.LENGTH_SHORT);
-		
 		prefs.edit().putLong("activity_timestamp", Utils.getPSTTimestamp(System.currentTimeMillis())).commit();
-		
+
 		return true;
 	}
 
@@ -121,12 +124,12 @@ public class ActivityTask extends TraktTask
 		{
 			for(TvShow show : finalUpdateList)
 				tm.onShowUpdated(show);
-			
+
 			if(!refreshList.isEmpty())
 				tm.addToQueue(new UpdateShowsTask(tm, fragment, new ArrayList<TvShow>(refreshList)));
 		}
 	}
-	
+
 	private void updateEpisode(TvShow show, TvShowEpisode episode)
 	{
 		episode.watched = true;
@@ -138,7 +141,7 @@ public class ActivityTask extends TraktTask
 			//add to the refresh list
 			refreshList.add(show);
 	}
-	
+
 	private void updateShow(TvShow show)
 	{
 		//this show is in the db

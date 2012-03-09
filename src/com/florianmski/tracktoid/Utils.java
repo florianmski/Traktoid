@@ -52,6 +52,9 @@ public class Utils
 	//check if device is connected to the internet or not
 	public static final boolean isOnline(Context context) 
 	{
+		if(context == null)
+			return false;
+		
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 		if (netInfo != null && netInfo.isConnectedOrConnecting())

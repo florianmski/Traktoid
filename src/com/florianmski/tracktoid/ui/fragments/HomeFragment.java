@@ -28,6 +28,7 @@ import com.florianmski.tracktoid.adapters.pagers.PagerDashboardAdapter;
 import com.florianmski.tracktoid.adapters.pagers.PagerDashboardAdapter.onDashboardButtonClicked;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.trakt.tasks.get.ActivityTask;
 import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask;
 import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask.CheckinListener;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
@@ -94,6 +95,9 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 
 		//show sometimes a dialog to rate the app on the market 
 		AppRater.app_launched(getActivity());
+		
+		//sync with trakt
+		new ActivityTask(tm, this).silentConnectionError(true).execute();
 
 		//Trying to set high definition image on high resolution
 		//does not seem to be a great idea, it's slow and I sometimes get an outOfMemoryError :/
