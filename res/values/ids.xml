@@ -8,6 +8,9 @@
     <item type="id" name="action_bar_about" />
     <item type="id" name="action_bar_settings" />
     <item type="id" name="action_bar_rate" />
+    <item type="id" name="action_bar_rate_love" />
+    <item type="id" name="action_bar_rate_hate" />
+    <item type="id" name="action_bar_rate_unrate" />
     <item type="id" name="action_bar_shouts" />
     
     <item type="id" name="menu_none" />

@@ -6,10 +6,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -18,9 +15,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
-import com.florianmski.tracktoid.trakt.tasks.get.ActivityTask;
 import com.florianmski.tracktoid.ui.activities.phone.HomeActivity;
 import com.florianmski.tracktoid.ui.activities.phone.LoginActivity;
 
@@ -59,7 +58,7 @@ public class SplashFragment extends TraktFragment
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		getSupportActivity().getSupportActionBar().hide();
+		getSherlockActivity().getSupportActionBar().hide();
 	}
 
 	@Override

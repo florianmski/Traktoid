@@ -28,7 +28,7 @@
             android:layout_toRightOf="@+id/imageViewScreen"
             android:text="You&apos;re watching" />
 
-        <com.actionbarsherlock.internal.widget.ScrollingTextView
+        <com.florianmski.tracktoid.widgets.ScrollingTextView
             android:id="@+id/textViewTitle"
             style="@style/Traktoid.PrimaryText.Medium"
             android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true" />
 
-        <com.actionbarsherlock.internal.widget.ScrollingTextView
+        <com.florianmski.tracktoid.widgets.ScrollingTextView
             android:id="@+id/textViewEpisode"
             style="@style/Traktoid.SecondaryText.Small"
             android:layout_width="wrap_content"

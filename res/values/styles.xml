@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="background">@drawable/action_bar_background</item>
+        <item name="android:background">@drawable/action_bar_background</item>
+        <item name="titleTextStyle">@style/Traktoid.PrimaryText.Big.Bold</item>
+        <item name="android:titleTextStyle">@style/Traktoid.PrimaryText.Big.Bold</item>
+        <item name="icon">@drawable/ab_icon_home</item>
+        <item name="android:icon">@drawable/ab_icon_home</item>
+        <item name="actionBarItemBackground">@drawable/selector_no_background</item>
+        <item name="android:actionBarItemBackground">@drawable/selector_no_background</item>
+    </style>
+
     <style name="Theme.Traktoid" parent="@style/Theme.Sherlock">
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
         <item name="android:windowBackground">@drawable/background</item>
-        <item name="abBackground">@drawable/action_bar_background</item>
-        <item name="abTitleTextStyle">@style/Traktoid.PrimaryText.Big.Bold</item>
-        <item name="abIcon">@drawable/ab_icon_home</item>
-        <item name="selectableItemBackground">@drawable/selector_no_background</item>
         <item name="android:progressBarStyle">@style/TraktoidProgressBar</item>
         <item name="android:listViewStyle">@style/TraktoidListView</item>
         <item name="android:gridViewStyle">@style/TraktoidGridView</item>
@@ -76,10 +85,10 @@
         <item name="selectedBold">@bool/default_title_indicator_selected_bold</item>
     </style>
 
-<!--     <style name="CustomTabPageIndicator.Text" parent="Widget.TabPageIndicator.Text"> -->
-<!--         <item name="android:textColor">#AAFFFFFF</item> -->
-<!--         <item name="android:textSize">@dimen/default_title_indicator_text_size</item> -->
-<!--     </style> -->
+    <!-- <style name="CustomTabPageIndicator.Text" parent="Widget.TabPageIndicator.Text"> -->
+    <!-- <item name="android:textColor">#AAFFFFFF</item> -->
+    <!-- <item name="android:textSize">@dimen/default_title_indicator_text_size</item> -->
+    <!-- </style> -->
 
     <style name="Traktoid.PrimaryText.Big" parent="@android:style/TextAppearance.Large">
         <item name="android:textColor">@color/primary_text_color</item>
@@ -102,7 +111,7 @@
     <style name="Traktoid.PrimaryText.Small" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@color/primary_text_color</item>
     </style>
-    
+
     <style name="Traktoid.PrimaryText.Small.Bold" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@color/primary_text_color</item>
         <item name="android:textStyle">bold</item>

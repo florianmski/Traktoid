@@ -5,11 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -17,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
@@ -77,7 +77,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		getSupportActivity().getSupportActionBar().setDisplayShowHomeEnabled(false);
+		getSherlockActivity().getSupportActionBar().setDisplayShowHomeEnabled(false);
 	}
 
 	@Override

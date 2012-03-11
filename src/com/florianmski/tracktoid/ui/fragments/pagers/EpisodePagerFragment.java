@@ -5,10 +5,10 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
-import android.view.MenuInflater;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
@@ -69,7 +69,7 @@ public class EpisodePagerFragment extends PagerFragment
 				@Override
 				public void onDBEpisodes(List<TvShowEpisode> episodes) 
 				{
-					adapter = new PagerEpisodeAdapter(episodes, tvdbId, getSupportFragmentManager());
+					adapter = new PagerEpisodeAdapter(episodes, tvdbId, getFragmentManager());
 					
 					if(((PagerEpisodeAdapter)adapter).isEmpty())
 						getStatusView().hide().text("No episodes, this is strange...");
@@ -81,7 +81,7 @@ public class EpisodePagerFragment extends PagerFragment
 			}, seasonId).execute();
 		else
 		{
-			adapter = new PagerEpisodeAdapter(episodes, tvdbId, getSupportFragmentManager());
+			adapter = new PagerEpisodeAdapter(episodes, tvdbId, getFragmentManager());
 			
 			if(((PagerEpisodeAdapter)adapter).isEmpty())
 				getStatusView().hide().text("No episodes, this is strange...");
@@ -117,7 +117,7 @@ public class EpisodePagerFragment extends PagerFragment
 			//if adapter is not currently loading
 			if(adapter != null)
 			{
-				getSupportActivity().invalidateOptionsMenu();
+				getSherlockActivity().invalidateOptionsMenu();
 				TvShowEpisode e = ((PagerEpisodeAdapter) adapter).getEpisode(currentPagerPosition);
 				Utils.chooseBetweenSeenAndCheckin(new WatchedEpisodesTask(tm, this, tvdbId, e.season, e.number, !e.watched), getActivity());
 			}
@@ -142,7 +142,7 @@ public class EpisodePagerFragment extends PagerFragment
 				public void onDBEpisodes(List<TvShowEpisode> episodes) 
 				{
 					((PagerEpisodeAdapter)adapter).reloadData(episodes);
-					getSupportActivity().invalidateOptionsMenu();
+					getSherlockActivity().invalidateOptionsMenu();
 				}
 			}, seasonId).execute();
 	}
@@ -159,7 +159,7 @@ public class EpisodePagerFragment extends PagerFragment
 	{
 		super.onPageSelected(position);
 
-		getSupportActivity().invalidateOptionsMenu();
+		getSherlockActivity().invalidateOptionsMenu();
 		setTitle(((PagerEpisodeAdapter)adapter).getEpisode(position).title);
 	}
 }

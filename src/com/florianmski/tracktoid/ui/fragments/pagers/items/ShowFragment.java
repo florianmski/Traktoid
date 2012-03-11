@@ -3,6 +3,21 @@ package com.florianmski.tracktoid.ui.fragments.pagers.items;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
@@ -14,21 +29,6 @@ import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.enumerations.DayOfTheWeek;
 import com.jakewharton.trakt.enumerations.Rating;
-
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
-import android.os.Bundle;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.ImageView.ScaleType;
 
 public class ShowFragment extends PagerItemFragment
 {
@@ -68,7 +68,7 @@ public class ShowFragment extends PagerItemFragment
 		dbw.open();
 		existsInDb = dbw.showExist(s.tvdbId);
 		dbw.close();
-		getSupportActivity().invalidateOptionsMenu();
+		getSherlockActivity().invalidateOptionsMenu();
 	}
 
 	@Override

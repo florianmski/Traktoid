@@ -4,8 +4,6 @@ import net.londatiga.android.ActionItem;
 import net.londatiga.android.QuickAction;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItem;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,10 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 
-public class AboutFragment extends Fragment
+public class AboutFragment extends BaseFragment
 {
 	private QuickAction qa;
 	private ImageView ivNyan;
@@ -82,12 +81,24 @@ public class AboutFragment extends Fragment
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) 
+    public boolean onOptionsItemSelected(MenuItem item) 
 	{
 		if (item.getItemId() == 0) 
 		{	
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onRestoreState(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSaveState(Bundle toSave) {
+		// TODO Auto-generated method stub
+		
 	}
 }

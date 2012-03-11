@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import android.os.Bundle;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
-import android.view.MenuInflater;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
@@ -86,7 +86,7 @@ public class SeasonPagerFragment extends PagerFragment
 				SeasonPagerFragment.this.seasons = seasons;
 				dbw.close();
 
-				adapter = new PagerSeasonAdapter(seasons, tvdb_id, getSupportFragmentManager(), getActivity().getApplicationContext());
+				adapter = new PagerSeasonAdapter(seasons, tvdb_id, getFragmentManager(), getActivity().getApplicationContext());
 
 				getActivity().runOnUiThread(new Runnable() 
 				{
@@ -136,7 +136,7 @@ public class SeasonPagerFragment extends PagerFragment
 			if(adapter != null)
 			{
 				watchedMode = !watchedMode;
-				getSupportActivity().invalidateOptionsMenu();
+				getSherlockActivity().invalidateOptionsMenu();
 				((PagerSeasonAdapter) adapter).setWatchedMode(watchedMode);
 			}
 			return true;
@@ -155,7 +155,7 @@ public class SeasonPagerFragment extends PagerFragment
 				Utils.chooseBetweenSeenAndCheckin((new WatchedEpisodesTask(tm, this, tvdbId, seasons, listWatched)), getActivity());
 
 			watchedMode = !watchedMode;
-			getSupportActivity().invalidateOptionsMenu();
+			getSherlockActivity().invalidateOptionsMenu();
 			((PagerSeasonAdapter) adapter).setWatchedMode(watchedMode);
 		}
 		return true;

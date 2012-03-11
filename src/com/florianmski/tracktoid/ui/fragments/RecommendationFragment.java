@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.lists.ListRecommendationAdapter;
@@ -115,7 +115,7 @@ public class RecommendationFragment extends TraktFragment implements ActionBar.O
 
 	private void setListNavigationMode()
 	{
-		getSupportActivity().getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		getSherlockActivity().getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
 		String[] items = new String[genres.size()+1];
 		items[0] = "All Genres";
@@ -123,10 +123,10 @@ public class RecommendationFragment extends TraktFragment implements ActionBar.O
 		for(int i = 1; i < items.length; i++)
 			items[i] = genres.get(i-1).name;
 
-		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.abs__simple_spinner_item, items);
-		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, items);
+		spinnerAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
 
-		getSupportActivity().getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, this);
+		getSherlockActivity().getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, this);
 	}
 
 	private void setAdapter()
@@ -164,7 +164,7 @@ public class RecommendationFragment extends TraktFragment implements ActionBar.O
 
 	private TraktTask createGetRecommendationsTask()
 	{
-		int index = getSupportActivity().getSupportActionBar().getSelectedNavigationIndex();
+		int index = getSherlockActivity().getSupportActionBar().getSelectedNavigationIndex();
 		Genre genre = index <= 0 || index > genres.size() ? null : genres.get(index-1);
 		getStatusView().show().text("Retrieving recommendations" + ((genre == null) ? "" : " in \"" + genre.name + "\"") + ",\nPlease wait...");
 

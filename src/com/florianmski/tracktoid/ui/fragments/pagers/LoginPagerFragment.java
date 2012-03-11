@@ -19,7 +19,7 @@ public class LoginPagerFragment extends PagerFragment
 		setPageIndicatorType(PagerFragment.IT_TAB);
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		getSupportActivity().getSupportActionBar().setDisplayShowHomeEnabled(false);
+		getSherlockActivity().getSupportActionBar().setDisplayShowHomeEnabled(false);
 	}
 
 	@Override
@@ -27,6 +27,6 @@ public class LoginPagerFragment extends PagerFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 		
-		initPagerFragment(new PagerLoginAdapter(getSupportFragmentManager()));
+		initPagerFragment(new PagerLoginAdapter(getFragmentManager()));
 	}
 }

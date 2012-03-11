@@ -1,13 +1,13 @@
 package com.florianmski.tracktoid.ui.fragments;
 
 import android.os.Bundle;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.florianmski.tracktoid.R;
 
 public class FragmentModel extends TraktFragment

@@ -71,7 +71,7 @@
             android:layout_toRightOf="@+id/imageViewScreen"
             android:text="Next episode" />
 
-        <com.actionbarsherlock.internal.widget.ScrollingTextView
+        <com.florianmski.tracktoid.widgets.ScrollingTextView
             style="@style/Traktoid.PrimaryText.Medium"
             android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
@@ -83,7 +83,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true" />
 
-        <com.actionbarsherlock.internal.widget.ScrollingTextView
+        <com.florianmski.tracktoid.widgets.ScrollingTextView
             style="@style/Traktoid.SecondaryText.Small"
             android:id="@+id/textViewEpisode"
             android:layout_width="wrap_content"

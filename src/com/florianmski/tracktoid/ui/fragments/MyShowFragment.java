@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.londatiga.android.ActionItem;
-import net.londatiga.android.QuickAction;
-import net.londatiga.android.QuickAction.OnActionItemClickListener;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
@@ -16,10 +13,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -32,6 +26,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
@@ -68,8 +66,6 @@ public class MyShowFragment extends TraktFragment
 	private ListSeasonAdapter adapter;
 
 	private TvShow show = null;
-
-	private QuickAction qa;
 
 	public static MyShowFragment newInstance(Bundle args)
 	{
@@ -116,25 +112,6 @@ public class MyShowFragment extends TraktFragment
 
 		});
 
-		qa = new QuickAction(getActivity());
-		Drawable d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
-		d.setColorFilter(Color.parseColor("#691909"), PorterDuff.Mode.MULTIPLY);
-		qa.addActionItem(new ActionItem(Rating.Love.ordinal(), "Totally ninja!", d));
-		d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
-		d.setColorFilter(Color.parseColor("#333333"), PorterDuff.Mode.MULTIPLY);
-		qa.addActionItem(new ActionItem(Rating.Hate.ordinal(), "Week sauce :(", d));
-		d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
-		qa.addActionItem(new ActionItem(Rating.Unrate.ordinal(), "Unrate", d));
-
-		qa.setOnActionItemClickListener(new OnActionItemClickListener() 
-		{
-			@Override
-			public void onItemClick(QuickAction source, int pos, int actionId) 
-			{
-				tm.addToQueue(new RateTask(tm, MyShowFragment.this, show, Rating.values()[actionId]));
-			}
-		});
-
 		refreshFragment(getArguments());
 	}
 
@@ -150,7 +127,7 @@ public class MyShowFragment extends TraktFragment
 				ivBackground.setImageBitmap(null);
 
 				//in order to set the right heart color
-				getSupportActivity().invalidateOptionsMenu();
+				getSherlockActivity().invalidateOptionsMenu();
 
 				setTitle(show.title);
 
@@ -262,7 +239,7 @@ public class MyShowFragment extends TraktFragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		if (container == null) 
-			getSupportFragmentManager().beginTransaction().hide(this).commit();
+			getFragmentManager().beginTransaction().hide(this).commit();
 
 		View v = inflater.inflate(R.layout.fragment_my_show, null);
 
@@ -288,9 +265,25 @@ public class MyShowFragment extends TraktFragment
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		Drawable d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
-
+		
+		SubMenu rateMenu = menu.addSubMenu("Rate");
+		d.setColorFilter(Color.parseColor("#691909"), PorterDuff.Mode.MULTIPLY);
+		rateMenu.add(0, R.id.action_bar_rate_love, 0, "Totally ninja!")
+		.setIcon(d)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
+		d.setColorFilter(Color.parseColor("#333333"), PorterDuff.Mode.MULTIPLY);
+		rateMenu.add(0, R.id.action_bar_rate_hate, 0, "Week sauce :(")
+		.setIcon(d)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
+		rateMenu.add(0, R.id.action_bar_rate_unrate, 0, "Unrate")
+		.setIcon(d)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		
 		if(show != null && show.rating != null)
 		{
+			d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
 			switch(show.rating)
 			{
 			//TODO go to res/color
@@ -305,9 +298,9 @@ public class MyShowFragment extends TraktFragment
 			}
 		}
 		
-		menu.add(0, R.id.action_bar_rate, 0, "Rate")
-		.setIcon(d)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        MenuItem rateItem = rateMenu.getItem();
+        rateItem.setIcon(d);
+        rateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		
 		menu.add(0, R.id.action_bar_about, 0, "Info")
 		.setIcon(R.drawable.ab_icon_info)
@@ -380,8 +373,14 @@ public class MyShowFragment extends TraktFragment
 					alert.show();
 			}
 			return true;
-		case R.id.action_bar_rate :
-			qa.show(getActivity().findViewById(R.id.action_bar_rate));
+		case R.id.action_bar_rate_love :
+			tm.addToQueue(new RateTask(tm, MyShowFragment.this, show, Rating.Love));
+			return true;
+		case R.id.action_bar_rate_hate :
+			tm.addToQueue(new RateTask(tm, MyShowFragment.this, show, Rating.Hate));
+			return true;
+		case R.id.action_bar_rate_unrate :
+			tm.addToQueue(new RateTask(tm, MyShowFragment.this, show, Rating.Unrate));
 			return true;
 		case R.id.action_bar_about :
 			Intent i = new Intent(getActivity(), ShowActivity.class);
@@ -406,7 +405,7 @@ public class MyShowFragment extends TraktFragment
 				adapter.reloadData(show.seasons);
 
 			this.show = show;
-			getSupportActivity().invalidateOptionsMenu();
+			getSherlockActivity().invalidateOptionsMenu();
 		}
 	}
 

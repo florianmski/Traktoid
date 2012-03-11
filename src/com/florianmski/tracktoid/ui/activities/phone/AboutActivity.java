@@ -18,8 +18,8 @@ package com.florianmski.tracktoid.ui.activities.phone;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.MenuItem;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.AboutFragment;
 

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
+
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
@@ -63,7 +64,7 @@ public class TrendingFragment extends TraktFragment
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) 
 			{
-				getSupportFragmentManager().beginTransaction().replace(R.id.fragment_show, ShowFragment.newInstance(shows.get(position))).commit();
+				getFragmentManager().beginTransaction().replace(R.id.fragment_show, ShowFragment.newInstance(shows.get(position))).commit();
 			}
 		});
 

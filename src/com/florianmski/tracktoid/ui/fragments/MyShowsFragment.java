@@ -11,14 +11,9 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActionBar;
-import android.support.v4.app.ActionBar.OnNavigationListener;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -31,6 +26,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
@@ -101,17 +101,17 @@ public class MyShowsFragment extends TraktFragment
 			hasMyShowFragment = savedInstanceState.getBoolean(TraktoidConstants.BUNDLE_HAS_MY_SHOW_FRAGMENT);
 		else
 		{
-			MyShowFragment myShowFragment = (MyShowFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_my_show);
+			MyShowFragment myShowFragment = (MyShowFragment)getFragmentManager().findFragmentById(R.id.fragment_my_show);
 			hasMyShowFragment = (myShowFragment != null) && (myShowFragment.isVisible());
 		}
 
-		getSupportActivity().getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		getSherlockActivity().getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
 		String[] items = new String[] {"All shows", "Unwatched shows", "Loved shows"};
-		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.abs__simple_spinner_item, items);
-		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, items);
+		spinnerAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
 
-		getSupportActivity().getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, new OnNavigationListener() 
+		getSherlockActivity().getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, new OnNavigationListener() 
 		{
 			@Override
 			public boolean onNavigationItemSelected(int filter, long itemId) 
@@ -167,13 +167,13 @@ public class MyShowsFragment extends TraktFragment
 				{
 					if(hasMyShowFragment)
 					{
-						((MyShowFragment)(getSupportFragmentManager().findFragmentById(R.id.fragment_my_show))).refreshFragment(i.getExtras());
+						((MyShowFragment)(getFragmentManager().findFragmentById(R.id.fragment_my_show))).refreshFragment(i.getExtras());
 					}
 					else
 					{
 						MyShowFragment msf = MyShowFragment.newInstance(i.getExtras());
 
-						getSupportFragmentManager()
+						getFragmentManager()
 						.beginTransaction()
 						.replace(R.id.fragment_my_show, msf)
 						.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -341,7 +341,7 @@ public class MyShowsFragment extends TraktFragment
 		else
 		{
 //			int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
-			int value = getSupportActivity().getSupportActionBar().getHeight();
+			int value = getSherlockActivity().getSupportActionBar().getHeight();
 			ProgressBar pbRefresh = new ProgressBar(getActivity());
 			pbRefresh.setIndeterminate(true);
 			RelativeLayout rl = new RelativeLayout(getActivity());
@@ -378,13 +378,13 @@ public class MyShowsFragment extends TraktFragment
 	@Override
 	public void onBeforeTraktRequest()
 	{
-		getSupportActivity().invalidateOptionsMenu();
+		getSherlockActivity().invalidateOptionsMenu();
 	}
 
 	@Override
 	public void onAfterTraktRequest(boolean success) 
 	{
-		getSupportActivity().invalidateOptionsMenu();
+		getSherlockActivity().invalidateOptionsMenu();
 	}
 
 	@Override

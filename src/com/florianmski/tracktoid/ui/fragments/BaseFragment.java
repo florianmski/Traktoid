@@ -1,12 +1,12 @@
 package com.florianmski.tracktoid.ui.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.florianmski.tracktoid.StatusView;
 
-public abstract class BaseFragment extends Fragment
+public abstract class BaseFragment extends SherlockFragment
 {
 	private StatusView sv;
 	private boolean restoreStateCalled = false;
@@ -15,6 +15,7 @@ public abstract class BaseFragment extends Fragment
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
+		getSherlockActivity().getSupportActionBar().setHomeButtonEnabled(true);
 		
 		if(savedInstanceState != null)
 		{

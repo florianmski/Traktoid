@@ -45,12 +45,12 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 
 	protected void setTitle(String title)
 	{
-		getSupportActivity().getSupportActionBar().setTitle(title);
+		getSherlockActivity().getSupportActionBar().setTitle(title);
 	}
 
 	protected void setSubtitle(String subtitle)
 	{
-		getSupportActivity().getSupportActionBar().setSubtitle(subtitle);
+		getSherlockActivity().getSupportActionBar().setSubtitle(subtitle);
 	}
 
 	public interface FragmentListener

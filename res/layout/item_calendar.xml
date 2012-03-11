@@ -11,7 +11,7 @@
         android:scaleType="centerCrop" >
     </ImageView>
 
-    <com.actionbarsherlock.internal.widget.ScrollingTextView
+    <com.florianmski.tracktoid.widgets.ScrollingTextView
         style="@style/Traktoid.PrimaryText.Small.Bold"
         android:id="@+id/textViewShow"
         android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
         android:orientation="vertical"
         android:padding="5dp" >
 
-        <com.actionbarsherlock.internal.widget.ScrollingTextView
+        <com.florianmski.tracktoid.widgets.ScrollingTextView
             style="@style/Traktoid.PrimaryText.Small"
             android:id="@+id/textViewTitle"
             android:layout_width="fill_parent"
@@ -44,7 +44,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true" />
 
-        <com.actionbarsherlock.internal.widget.ScrollingTextView
+        <com.florianmski.tracktoid.widgets.ScrollingTextView
             style="@style/Traktoid.SecondaryText.Small"
             android:id="@+id/textViewAirTime"
             android:layout_width="fill_parent"

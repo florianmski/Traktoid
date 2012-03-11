@@ -31,8 +31,8 @@ import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -41,16 +41,16 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.internal.widget.ScrollingTextView;
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
+import com.florianmski.tracktoid.widgets.ScrollingTextView;
 import com.jakewharton.trakt.entities.CalendarDate;
-import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.CalendarDate.CalendarTvShowEpisode;
+import com.jakewharton.trakt.entities.TvShowEpisode;
 
 public class ListCalendarAdapter extends BaseAdapter implements Serializable, AdapterInterface
 {
