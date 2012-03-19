@@ -184,10 +184,8 @@ public class MyShowFragment extends TraktFragment
 
 	private void displayNextEpisode()
 	{
-		DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
-		dbw.open();
+		DatabaseWrapper dbw = getDBWrapper();
 		final TvShowEpisode e = dbw.getNextEpisode(show.tvdbId);
-		dbw.close();
 
 		if(e != null)
 		{

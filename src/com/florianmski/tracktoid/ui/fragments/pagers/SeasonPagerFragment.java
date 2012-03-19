@@ -79,12 +79,10 @@ public class SeasonPagerFragment extends PagerFragment
 			@Override
 			public void run()
 			{
-				DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
-				dbw.open();
+				DatabaseWrapper dbw = getDBWrapper();
 				String tvdb_id = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
 				List<TvShowSeason> seasons = dbw.getSeasons(tvdb_id, true, true);
 				SeasonPagerFragment.this.seasons = seasons;
-				dbw.close();
 
 				adapter = new PagerSeasonAdapter(seasons, tvdb_id, getFragmentManager(), getActivity().getApplicationContext());
 

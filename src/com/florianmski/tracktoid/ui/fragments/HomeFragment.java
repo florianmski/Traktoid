@@ -141,7 +141,6 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 								{
 									//unseen the episode we've canceled
 									DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
-									dbw.open();
 									dbw.markEpisodeAsWatched(false, tvdbId, episode.season, episode.number);
 									dbw.refreshPercentage(tvdbId);
 									dbw.close();

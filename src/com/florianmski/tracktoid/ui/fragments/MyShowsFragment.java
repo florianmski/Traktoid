@@ -121,10 +121,8 @@ public class MyShowsFragment extends TraktFragment
 			}
 		});
 
-		DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
-		dbw.open();
+		DatabaseWrapper dbw = getDBWrapper();
 		boolean isDBEmpty = dbw.isEmpty();
-		dbw.close();		
 
 		refreshGridView();
 

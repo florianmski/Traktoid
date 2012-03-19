@@ -37,7 +37,6 @@ public class PagerShowAdapter extends FragmentStatePagerAdapter implements Adapt
 		super(fm);
 
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
-		dbw.open();
 
 		//if a show on this list is in the db, get infos so we can display them (watched, loved...)
 		for(int i = 0; i < shows.size(); i++)

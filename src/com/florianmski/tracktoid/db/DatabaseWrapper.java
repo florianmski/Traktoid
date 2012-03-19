@@ -474,7 +474,6 @@ public class DatabaseWrapper
 			db.execSQL(EPISODES_INSERT_TRIGGER_CREATE);
 
 			DatabaseWrapper dbw = new DatabaseWrapper(context);
-			dbw.open();
 
 			for(TvShow s : dbw.getShows())
 				dbw.refreshPercentage(s.tvdbId);
@@ -491,6 +490,7 @@ public class DatabaseWrapper
 	public DatabaseWrapper(Context context) 
 	{
 		this.context = context;
+		this.open();
 	}
 
 	public void open() throws SQLException 

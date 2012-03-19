@@ -43,7 +43,6 @@ public abstract class DBTask extends AsyncTask<Void, String, Boolean>
 	protected Boolean doInBackground(Void... params) 
 	{		
 		dbw = new DatabaseWrapper(context);
-		dbw.open();
 		
 		try
 		{

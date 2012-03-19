@@ -43,7 +43,6 @@ public class RemoveShowTask extends TraktTask
 //		tm.showService().unlibrary(Integer.valueOf(show.getTvdbId())).fire();
 
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
-		dbw.open();
 
 		dbw.removeShow(show.tvdbId);
 		

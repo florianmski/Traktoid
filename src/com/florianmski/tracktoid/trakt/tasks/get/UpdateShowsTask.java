@@ -71,7 +71,6 @@ public class UpdateShowsTask extends TraktTask
 		createNotification();
 		
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
-		dbw.open();
 
 		int i = 0;
 		for(TvShow s : showsSelected)

@@ -56,7 +56,6 @@ public class CalendarTask extends TraktTask
 		calendarListShows = (ArrayList<CalendarDate>) tm.calendarService().shows().fire();
 		
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
-		dbw.open();
 		
 		List<TvShow> shows = dbw.getShows();
 			

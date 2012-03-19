@@ -64,10 +64,8 @@ public class ShowFragment extends PagerItemFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
-		dbw.open();
+		DatabaseWrapper dbw = getDBWrapper();
 		existsInDb = dbw.showExist(s.tvdbId);
-		dbw.close();
 		getSherlockActivity().invalidateOptionsMenu();
 	}
 

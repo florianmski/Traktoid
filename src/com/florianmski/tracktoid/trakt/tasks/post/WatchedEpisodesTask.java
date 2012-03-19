@@ -151,7 +151,6 @@ public class WatchedEpisodesTask extends TraktTask
 
 
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
-		dbw.open();
 
 		for(int i = 0; i < seasons.length; i++)
 		{

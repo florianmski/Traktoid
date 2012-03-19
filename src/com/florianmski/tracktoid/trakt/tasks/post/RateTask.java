@@ -26,7 +26,6 @@ public class RateTask extends PostTask
 		show.rating = rating;
 
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
-		dbw.open();
 		dbw.insertOrUpdateShow(show);
 		dbw.close();
 	}

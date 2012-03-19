@@ -61,7 +61,6 @@ public class ActivityTask extends TraktTask
 			Collections.reverse(activities.activity);
 
 			dbw = new DatabaseWrapper(context);
-			dbw.open();
 
 			for(ActivityItemBase activity : activities.activity)
 			{
