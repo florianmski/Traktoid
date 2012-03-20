@@ -35,7 +35,7 @@ import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.ui.activities.phone.AboutActivity;
 import com.florianmski.tracktoid.ui.activities.phone.CalendarActivity;
-import com.florianmski.tracktoid.ui.activities.phone.MyShowsActivity;
+import com.florianmski.tracktoid.ui.activities.phone.LibraryActivity;
 import com.florianmski.tracktoid.ui.activities.phone.RecommendationActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SearchActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SettingsActivity;
@@ -256,7 +256,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 			startActivity(i);
 			break;
 		case R.id.home_btn_myshows:
-			startActivity(new Intent(getActivity(), MyShowsActivity.class));
+			startActivity(new Intent(getActivity(), LibraryActivity.class));
 			break;
 		case R.id.home_btn_recommendations:
 			startActivity(new Intent(getActivity(), RecommendationActivity.class));

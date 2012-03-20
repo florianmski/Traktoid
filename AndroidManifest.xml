@@ -32,7 +32,7 @@
         <activity android:name=".ui.activities.phone.ShowActivity"></activity>
         <activity android:name=".ui.activities.phone.SeasonActivity"></activity>
         <activity android:name=".ui.activities.phone.EpisodeActivity"></activity>
-        <activity android:name=".ui.activities.phone.MyShowsActivity" android:label="Library"></activity>
+        <activity android:name=".ui.activities.phone.LibraryActivity" android:label="Library"></activity>
         <activity android:name=".ui.activities.phone.MyShowActivity"></activity>
         <activity android:name=".ui.activities.phone.SettingsActivity" android:label="Settings"></activity>
         <activity android:name=".ui.activities.phone.RecommendationActivity" android:label="Recommendation"></activity>

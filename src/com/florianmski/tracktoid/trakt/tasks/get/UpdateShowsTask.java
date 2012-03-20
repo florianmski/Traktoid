@@ -33,7 +33,7 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
-import com.florianmski.tracktoid.ui.activities.phone.MyShowsActivity;
+import com.florianmski.tracktoid.ui.activities.phone.LibraryActivity;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
@@ -147,7 +147,7 @@ public class UpdateShowsTask extends TraktTask
 		contentView = new RemoteViews(context.getPackageName(), R.layout.notification_progress);
 		notification.contentView = contentView;
 
-		Intent notificationIntent = new Intent(context, MyShowsActivity.class);
+		Intent notificationIntent = new Intent(context, LibraryActivity.class);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 		notification.contentIntent = contentIntent;

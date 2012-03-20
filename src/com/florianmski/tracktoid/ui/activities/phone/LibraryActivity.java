@@ -7,7 +7,7 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.MyShowFragment;
 import com.florianmski.tracktoid.ui.fragments.MyShowsFragment;
 
-public class MyShowsActivity extends TraktActivity
+public class LibraryActivity extends TraktActivity
 {
 	public final static int FRAGMENT_REFRESH_DATA = 0;
 	public final static int FRAGMENT_REFRESH_GRID_VIEW = 1;
