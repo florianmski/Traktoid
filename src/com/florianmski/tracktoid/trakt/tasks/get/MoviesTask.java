@@ -1,8 +1,6 @@
 package com.florianmski.tracktoid.trakt.tasks.get;
 
 import java.util.ArrayList;
-import java.util.Collections;
-
 import android.support.v4.app.Fragment;
 
 import com.florianmski.tracktoid.Utils;

@@ -21,7 +21,7 @@ import android.os.Bundle;
 import com.actionbarsherlock.view.Window;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.ui.fragments.MyShowFragment;
+import com.florianmski.tracktoid.ui.fragments.ShowFragment;
 
 public class MyShowActivity extends TraktActivity
 {
@@ -45,7 +45,7 @@ public class MyShowActivity extends TraktActivity
 //             .beginTransaction()
 //             .add(android.R.id.content, new MyShowFragment())
 //             .commit();
-			setPrincipalFragment(MyShowFragment.newInstance(getIntent().getExtras()));
+			setPrincipalFragment(ShowFragment.newInstance(getIntent().getExtras()));
         }
 	}
 }

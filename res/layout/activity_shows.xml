@@ -6,5 +6,5 @@
         android:id="@+id/fragment_my_shows"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.florianmski.tracktoid.ui.fragments.LibraryFragment" />
+        android:name="com.florianmski.tracktoid.ui.fragments.pagers.LibraryFragment" />
 </FrameLayout>

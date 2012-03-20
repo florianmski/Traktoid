@@ -4,16 +4,16 @@ import android.os.Bundle;
 
 import com.actionbarsherlock.view.Window;
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.ui.fragments.MyShowFragment;
-import com.florianmski.tracktoid.ui.fragments.MyShowsFragment;
+import com.florianmski.tracktoid.ui.fragments.ShowFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowsFragment;
 
 public class LibraryActivity extends TraktActivity
 {
 	public final static int FRAGMENT_REFRESH_DATA = 0;
 	public final static int FRAGMENT_REFRESH_GRID_VIEW = 1;
 
-	private MyShowsFragment myShowsFragment;
-	private MyShowFragment myShowFragment;
+	private ShowsFragment myShowsFragment;
+	private ShowFragment myShowFragment;
 
 	//TODO le plus simple est d'afficher le second fragment direct, ca évite toute ces merdes
 
@@ -23,7 +23,7 @@ public class LibraryActivity extends TraktActivity
 	{
 		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_my_shows);
+		setContentView(R.layout.activity_shows);
 
 		if (savedInstanceState == null)
 		{

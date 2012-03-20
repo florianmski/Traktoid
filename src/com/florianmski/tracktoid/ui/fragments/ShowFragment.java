@@ -52,7 +52,7 @@ import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public class MyShowFragment extends TraktFragment
+public class ShowFragment extends TraktFragment
 {
 	private final static int PERCENTAGE_STEP = 2;
 
@@ -67,16 +67,16 @@ public class MyShowFragment extends TraktFragment
 
 	private TvShow show = null;
 
-	public static MyShowFragment newInstance(Bundle args)
+	public static ShowFragment newInstance(Bundle args)
 	{
-		MyShowFragment f = new MyShowFragment();
+		ShowFragment f = new ShowFragment();
 		f.setArguments(args);
 		return f;
 	}
 	
-	public MyShowFragment() {}
+	public ShowFragment() {}
 
-	public MyShowFragment(FragmentListener listener) 
+	public ShowFragment(FragmentListener listener) 
 	{
 		super(listener);
 	}
@@ -340,7 +340,7 @@ public class MyShowFragment extends TraktFragment
 					public void onClick(DialogInterface dialog, int which) 
 					{
 						if(!seasonsChecked.isEmpty())
-							tm.addToQueue(new WatchedEpisodesTask(tm, MyShowFragment.this, show.tvdbId, seasonsChecked, true));
+							tm.addToQueue(new WatchedEpisodesTask(tm, ShowFragment.this, show.tvdbId, seasonsChecked, true));
 						else
 							Toast.makeText(getActivity(), "Nothing to send...", Toast.LENGTH_SHORT).show();
 					}
@@ -352,7 +352,7 @@ public class MyShowFragment extends TraktFragment
 					public void onClick(DialogInterface dialog, int which) 
 					{
 						if(!seasonsChecked.isEmpty())
-							tm.addToQueue(new WatchedEpisodesTask(tm, MyShowFragment.this, show.tvdbId, seasonsChecked, false));
+							tm.addToQueue(new WatchedEpisodesTask(tm, ShowFragment.this, show.tvdbId, seasonsChecked, false));
 						else
 							Toast.makeText(getActivity(), "Nothing to send...", Toast.LENGTH_SHORT).show();
 					}
@@ -372,13 +372,13 @@ public class MyShowFragment extends TraktFragment
 			}
 			return true;
 		case R.id.action_bar_rate_love :
-			tm.addToQueue(new RateTask(tm, MyShowFragment.this, show, Rating.Love));
+			tm.addToQueue(new RateTask(tm, ShowFragment.this, show, Rating.Love));
 			return true;
 		case R.id.action_bar_rate_hate :
-			tm.addToQueue(new RateTask(tm, MyShowFragment.this, show, Rating.Hate));
+			tm.addToQueue(new RateTask(tm, ShowFragment.this, show, Rating.Hate));
 			return true;
 		case R.id.action_bar_rate_unrate :
-			tm.addToQueue(new RateTask(tm, MyShowFragment.this, show, Rating.Unrate));
+			tm.addToQueue(new RateTask(tm, ShowFragment.this, show, Rating.Unrate));
 			return true;
 		case R.id.action_bar_about :
 			Intent i = new Intent(getActivity(), ShowActivity.class);

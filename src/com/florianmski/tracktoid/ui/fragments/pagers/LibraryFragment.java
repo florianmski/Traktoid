@@ -1,4 +1,4 @@
-package com.florianmski.tracktoid.ui.fragments;
+package com.florianmski.tracktoid.ui.fragments.pagers;
 
 
 import java.util.ArrayList;
@@ -16,6 +16,9 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.ui.fragments.TraktFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.MoviesFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowsFragment;
 
 
 public class LibraryFragment extends TraktFragment 
@@ -47,8 +50,8 @@ public class LibraryFragment extends TraktFragment
 
 		mTabsAdapter = new TabsAdapter(getActivity(), mTabHost, mViewPager);
 
-		mTabsAdapter.addTab(mTabHost.newTabSpec("shows").setIndicator("Shows"), MyShowsFragment.class, null);
-		mTabsAdapter.addTab(mTabHost.newTabSpec("movies").setIndicator("Movies"), MyShowsFragment.class, null);
+		mTabsAdapter.addTab(mTabHost.newTabSpec("shows").setIndicator("Shows"), ShowsFragment.class, null);
+		mTabsAdapter.addTab(mTabHost.newTabSpec("movies").setIndicator("Movies"), MoviesFragment.class, null);
 
 		if (savedInstanceState != null)
 			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));

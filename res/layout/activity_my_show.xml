@@ -2,7 +2,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <fragment android:name="com.florianmski.tracktoid.ui.fragments.MyShowFragment"
+    <fragment android:name="com.florianmski.tracktoid.ui.fragments.ShowFragment"
         android:id="@+id/fragment_my_show"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

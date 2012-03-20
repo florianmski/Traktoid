@@ -39,35 +39,27 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.Image;
-import com.jakewharton.trakt.entities.TvShow;
+import com.jakewharton.trakt.entities.MediaBase;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public class GridPosterAdapter extends BaseAdapter implements AdapterInterface
+public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter implements AdapterInterface
 {
-	private static final int FILTER_ALL = 0;
-	private static final int FILTER_UNWATCHED = 1;
-	private static final int FILTER_LOVED = 2;
+	protected static final int FILTER_ALL = 0;
+	protected static final int FILTER_UNWATCHED = 1;
+	protected static final int FILTER_LOVED = 2;
 
-	private Activity context;
-	private List<TvShow> shows;
-	private List<TvShow> filterShows = new ArrayList<TvShow>();
-	private int height;
-	private int currentFilter = 0;
-	private Handler h = new Handler();
-
-	public GridPosterAdapter(Activity context, List<TvShow> shows, int height) 
-	{
-		this.context = context;
-		this.shows = shows;
-		this.filterShows.addAll(shows);
-		this.height = height;
-	}
+	protected Activity context;
+	protected List<T> items;
+	protected List<T> filteredItems = new ArrayList<T>();
+	protected int height;
+	protected int currentFilter = 0;
+	protected Handler h = new Handler();
 
 	@Override
 	public void clear() 
 	{
-		shows.clear();
-		filterShows.clear();
+		items.clear();
+		filteredItems.clear();
 		currentFilter = 0;
 		notifyDataSetChanged();
 	}
@@ -78,74 +70,50 @@ public class GridPosterAdapter extends BaseAdapter implements AdapterInterface
 		notifyDataSetChanged();
 	}
 
-	public void setFilter(int filter)
-	{
-		currentFilter = filter;
-		switch(filter)
-		{
-		case FILTER_ALL :
-			filterShows.clear();
-			filterShows.addAll(shows);
-			break;
-		case FILTER_UNWATCHED :
-			filterShows.clear();
-			for(TvShow s : shows)
-			{
-				if(s.progress < 100)
-					filterShows.add(s);
-			}
-			break;
-		case FILTER_LOVED :
-			filterShows.clear();
-			for(TvShow s : shows)
-			{
-				if(s.rating == Rating.Love)
-					filterShows.add(s);
-			}
-			break;
-		}
+	public abstract void setFilter(int filter);
+	public abstract Rating getRating(Object item);
+	public abstract int getProgress(Object item);
+	public abstract String getUrl(Object item);
+	public abstract String getId(Object item);
 
-		this.notifyDataSetChanged();
-	}
-
-	public void updateShow(TvShow show)
+	public void updateItem(T item)
 	{
-		int index = Collections.binarySearch(shows, show);
-		if(index < 0 || index >= shows.size())
-			shows.add(show);
+		int index = Collections.binarySearch(items, item);
+		if(index < 0 || index >= items.size())
+			items.add(item);
 		else
-			shows.set(index, show);
+			items.set(index, item);
 
-		Collections.sort(shows);
-
-		setFilter(currentFilter);
-	}
-
-	public void removeShow(TvShow show)
-	{
-		int index = Collections.binarySearch(shows, show);
-		if(index >= 0 && index < shows.size())
-			shows.remove(index);
+		Collections.sort(items);
 
 		setFilter(currentFilter);
 	}
 
-	public void updateShows(List<TvShow> shows)
+	public void removeItem(T item)
 	{
-		this.shows = shows;
+		int index = Collections.binarySearch(items, item);
+		if(index >= 0 && index < items.size())
+			items.remove(index);
+
+		setFilter(currentFilter);
+	}
+
+	public void updateItems(List<T> items)
+	{
+		this.items = items;
 		setFilter(currentFilter);
 	}
 
 	@Override
 	public int getCount() 
 	{
-		return filterShows.size();
+		return filteredItems.size();
 	}
 
 	@Override
 	public Object getItem(int position) 
 	{
-		return filterShows.get(position);
+		return filteredItems.get(position);
 	}
 
 	@Override
@@ -198,13 +166,17 @@ public class GridPosterAdapter extends BaseAdapter implements AdapterInterface
 		holder.ivRating.setLayoutParams(paramsIvRating);
 		holder.ivWatched.setLayoutParams(paramsIvWatched);
 
-		final TvShow show = filterShows.get(position);
+		final Object item = getItem(position);
+		int progress = getProgress(item);
+		Rating rating = getRating(item);
+		String url = getUrl(item);
+		String id = getId(item);
 
 		holder.ivRating.setImageBitmap(null);
 		holder.ivWatched.setImageBitmap(null);
 		holder.ivPoster.setImageBitmap(null);
 
-		Image i = new Image(show.tvdbId, show.images.poster, Image.POSTER);
+		Image i = new Image(id, url, Image.POSTER);
 		AQuery aq = new AQuery(convertView);
 		//create a bitmap ajax callback object
 		BitmapAjaxCallback cb = new BitmapAjaxCallback();
@@ -226,14 +198,14 @@ public class GridPosterAdapter extends BaseAdapter implements AdapterInterface
 
 		TransitionDrawable td = null;
 
-		if(show.rating == Rating.Love)
+		if(rating == Rating.Love)
 			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_loved)});
-		else if(show.rating == Rating.Hate)
+		else if(rating == Rating.Hate)
 			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_hated)});
 
 		h.post(new TDRunnable(holder.ivRating, td));
 
-		if(show.progress == 100)
+		if(progress == 100)
 		{
 			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watched)});
 			h.post(new TDRunnable(holder.ivWatched, td));

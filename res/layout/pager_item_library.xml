@@ -7,7 +7,7 @@
     <include layout="@layout/view_status" />
 
     <GridView
-        android:id="@+id/gridViewShows"
+        android:id="@+id/gridViewLibrary"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:clipToPadding="false"
