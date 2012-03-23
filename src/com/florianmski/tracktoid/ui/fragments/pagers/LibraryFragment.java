@@ -2,17 +2,10 @@ package com.florianmski.tracktoid.ui.fragments.pagers;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.adapters.pagers.PagerLibraryAdapter;
-import com.florianmski.tracktoid.adapters.pagers.PagerShowAdapter;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.MoviesLibraryFragment;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowsLibraryFragment;
 

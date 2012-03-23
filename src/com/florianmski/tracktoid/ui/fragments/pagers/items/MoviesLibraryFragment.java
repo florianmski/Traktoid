@@ -21,13 +21,9 @@ import com.florianmski.tracktoid.db.tasks.DBMoviesTask;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.RemoveMovieTask;
 import com.florianmski.tracktoid.trakt.tasks.get.MoviesTask;
-import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.MoviesTask.MoviesListener;
-import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateMoviesTask;
 import com.jakewharton.trakt.entities.Movie;
-import com.jakewharton.trakt.entities.TvShow;
 
 public class MoviesLibraryFragment extends PagerItemLibraryFragment
 {

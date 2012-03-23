@@ -1,7 +1,5 @@
 package com.florianmski.tracktoid.adapters.pagers;
 
-import java.util.ArrayList;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -15,9 +13,7 @@ import com.viewpagerindicator.TitleProvider;
 public class PagerLibraryAdapter extends FragmentPagerAdapter implements TitleProvider
 {
 	private final static String titles[] = {"Shows", "Movies"};
-	
-	private ArrayList<OnFilterListener> filterListeners = new ArrayList<PagerLibraryAdapter.OnFilterListener>();
-	
+		
 	public PagerLibraryAdapter(FragmentManager fm) 
 	{
 		super(fm);
@@ -33,29 +29,13 @@ public class PagerLibraryAdapter extends FragmentPagerAdapter implements TitlePr
 	public Fragment getItem(int position) 
 	{
 		PagerItemLibraryFragment f = null;
+		
 		if(position == 0)
 			f = ShowsLibraryFragment.newInstance(null);
 		else
 			f = MoviesLibraryFragment.newInstance(null);
 		
-		if(position < filterListeners.size())
-			filterListeners.set(position, f);
-		else
-			filterListeners.add(position, f);
-		
 		return f;
-	}
-	
-	public void fireFilterEvent(int pagerPosition, int filter, long itemId)
-	{
-		if(pagerPosition < filterListeners.size())
-		{
-			OnFilterListener listener = filterListeners.get(pagerPosition);
-			if(listener != null)
-				listener.onFilterClicked(filter, itemId);
-			else
-				filterListeners.remove(pagerPosition);
-		}
 	}
 	
 	@Override
@@ -68,10 +48,5 @@ public class PagerLibraryAdapter extends FragmentPagerAdapter implements TitlePr
 	public int getCount() 
 	{
 		return titles.length;
-	}
-	
-	public interface OnFilterListener
-	{
-		public void onFilterClicked(int filter, long itemId);
 	}
 }

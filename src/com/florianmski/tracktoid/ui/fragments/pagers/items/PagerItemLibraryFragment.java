@@ -3,8 +3,6 @@ package com.florianmski.tracktoid.ui.fragments.pagers.items;
 import net.londatiga.android.ActionItem;
 import net.londatiga.android.QuickAction;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -13,15 +11,9 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
-import com.florianmski.tracktoid.adapters.pagers.PagerLibraryAdapter;
-import com.florianmski.tracktoid.adapters.pagers.PagerLibraryAdapter.OnFilterListener;
-import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.ui.fragments.ShowFragment;
-import com.jakewharton.trakt.entities.TvShow;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -30,14 +22,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-public abstract class PagerItemLibraryFragment extends PagerItemFragment implements OnFilterListener
+public abstract class PagerItemLibraryFragment extends PagerItemFragment
 {
 	protected final static int NB_COLUMNS_TABLET_PORTRAIT = 5;
 	protected final static int NB_COLUMNS_TABLET_LANDSCAPE = 7;
@@ -170,33 +161,7 @@ public abstract class PagerItemLibraryFragment extends PagerItemFragment impleme
 				return false;
 			}
 
-		});		
-//		
-//		String[] items = new String[] {"All", "Unwatched", "Loved"};
-//		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, items);
-//		spinnerAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-//		
-//		getSherlockActivity().getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, new OnNavigationListener() 
-//		{
-//			@Override
-//			public boolean onNavigationItemSelected(int filter, long itemId) 
-//			{
-//				adapter.setFilter(filter);
-//				return false;
-//			}
-//		});
-	}
-
-	@Override
-	public void onFilterClicked(int filter, long itemId) 
-	{
-		Log.e("test","test2");
-
-		if(adapter != null)
-		{
-			adapter.setFilter(filter);
-			Log.e("test","test");
-		}
+		});
 	}
 
 	@Override

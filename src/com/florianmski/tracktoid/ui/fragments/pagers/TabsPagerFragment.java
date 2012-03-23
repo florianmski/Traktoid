@@ -17,8 +17,6 @@ import android.widget.TabWidget;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.MoviesLibraryFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowsLibraryFragment;
 
 
 public abstract class TabsPagerFragment extends TraktFragment 

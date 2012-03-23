@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.jakewharton.trakt.entities.Movie;
-import com.jakewharton.trakt.entities.TvShow;
 
 public class RemoveMovieTask extends TraktTask
 {

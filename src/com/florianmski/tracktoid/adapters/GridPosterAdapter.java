@@ -40,7 +40,6 @@ import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.MediaBase;
-import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.enumerations.Rating;
 
 public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter implements AdapterInterface
