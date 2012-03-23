@@ -18,47 +18,17 @@ public class GridMoviePosterAdapter extends GridPosterAdapter<Movie> implements 
 	}
 
 	@Override
-	public void setFilter(int filter)
-	{
-		currentFilter = filter;
-		switch(filter)
-		{
-		case FILTER_ALL :
-			filteredItems.clear();
-			filteredItems.addAll(items);
-			break;
-		case FILTER_UNWATCHED :
-			filteredItems.clear();
-			//TODO
-			for(Movie m : items)
-			{
-				if(!m.watched)
-					filteredItems.add(m);
-			}
-			break;
-		case FILTER_LOVED :
-			filteredItems.clear();
-			for(Movie m : items)
-			{
-				if(m.rating == Rating.Love)
-					filteredItems.add(m);
-			}
-			break;
-		}
-
-		this.notifyDataSetChanged();
-	}
-
-	@Override
 	public Rating getRating(Object item) 
 	{
 		return ((Movie)item).rating;
 	}
 
 	@Override
-	public int getProgress(Object item) 
+	public boolean isWatched(Object item) 
 	{
-		return 0;
+//		return ((Movie)item).watched;
+		//TODO something is wrong here
+		return true;
 	}
 
 	@Override

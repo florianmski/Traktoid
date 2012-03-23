@@ -30,16 +30,16 @@ import com.florianmski.tracktoid.ui.activities.phone.MyShowActivity;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public class ShowsFragment extends PagerItemLibraryFragment
+public class ShowsLibraryFragment extends PagerItemLibraryFragment
 {
-	public static ShowsFragment newInstance(Bundle args)
+	public static ShowsLibraryFragment newInstance(Bundle args)
 	{
-		ShowsFragment f = new ShowsFragment();
+		ShowsLibraryFragment f = new ShowsLibraryFragment();
 		f.setArguments(args);
 		return f;
 	}
-	
-	public ShowsFragment() {}
+
+	public ShowsLibraryFragment() {}
 
 	@Override
 	public void checkUpdateTask() 
@@ -48,7 +48,7 @@ public class ShowsFragment extends PagerItemLibraryFragment
 		if(updateTask != null && updateTask instanceof UpdateShowsTask)
 			updateTask.reconnect(this);
 	}
-	
+
 	@Override
 	public GridPosterAdapter<TvShow> setupAdapter() 
 	{
@@ -56,31 +56,22 @@ public class ShowsFragment extends PagerItemLibraryFragment
 	}
 
 	@Override
-	public void onDBEmpty() 
+	public void displayContent() 
 	{
-		if(!tm.isUpdateTaskRunning())
-			tm.addToQueue(new ShowsTask(tm, this, new ShowsListener() 
+		if(!getDBWrapper().isThereShows())
+			onRefreshClick();
+		else
+		{
+			new DBShowsTask(getActivity(), new DBAdapter() 
 			{
 				@Override
-				public void onShows(ArrayList<TvShow> shows) 
+				public void onDBShows(List<TvShow> shows)
 				{
-					createShowsDialog(shows);						
+					adapter.updateItems(shows);
+					getStatusView().hide().text(null);
 				}
-			}, tm.userService().libraryShowsAll(TraktManager.getUsername()), true));
-	}
-
-	@Override
-	public void onDBNotEmpty() 
-	{
-		new DBShowsTask(getActivity(), new DBAdapter() 
-		{
-			@Override
-			public void onDBShows(List<TvShow> shows)
-			{
-				adapter.updateItems(shows);
-				getStatusView().hide().text(null);
-			}
-		}).execute();
+			}).execute();
+		}
 	}
 
 	@Override
@@ -89,7 +80,7 @@ public class ShowsFragment extends PagerItemLibraryFragment
 		Intent i = new Intent(getActivity(), MyShowActivity.class);
 		i.putExtra(TraktoidConstants.BUNDLE_SHOW, (TvShow)adapter.getItem(position));
 		getActivity().setIntent(i);
-		
+
 		return i;
 	}
 
@@ -98,13 +89,13 @@ public class ShowsFragment extends PagerItemLibraryFragment
 	{
 		ArrayList<TvShow> showsSelected = new ArrayList<TvShow>();
 		showsSelected.add((TvShow)adapter.getItem(posterClickedPosition));
-		tm.addToQueue(new UpdateShowsTask(tm, ShowsFragment.this, showsSelected));
+		tm.addToQueue(new UpdateShowsTask(tm, ShowsLibraryFragment.this, showsSelected));
 	}
 
 	@Override
 	public void onDeleteQAClick(QuickAction source, int pos, int actionId) 
 	{
-		tm.addToQueue(new RemoveShowTask(tm, ShowsFragment.this, (TvShow)adapter.getItem(posterClickedPosition)));
+		tm.addToQueue(new RemoveShowTask(tm, ShowsLibraryFragment.this, (TvShow)adapter.getItem(posterClickedPosition)));
 	}
 
 	@Override
@@ -120,7 +111,7 @@ public class ShowsFragment extends PagerItemLibraryFragment
 			@Override
 			public void onClick(DialogInterface dialog, int item) 
 			{
-				tm.addToQueue(new RateTask(tm, ShowsFragment.this, (TvShow)adapter.getItem(posterClickedPosition), ratings[item]));
+				tm.addToQueue(new RateTask(tm, ShowsLibraryFragment.this, (TvShow)adapter.getItem(posterClickedPosition), ratings[item]));
 			}
 		});
 		AlertDialog alert = builder.create();
@@ -138,15 +129,6 @@ public class ShowsFragment extends PagerItemLibraryFragment
 				createShowsDialog(shows);
 			}
 		}, tm.userService().libraryShowsAll(TraktManager.getUsername()), true));
-	}
-
-	@Override
-	public TvShow getFirstShow()
-	{
-		if(adapter.isEmpty())
-			return null;
-		else
-			return (TvShow) adapter.getItem(0);
 	}
 
 	@Override
@@ -192,7 +174,7 @@ public class ShowsFragment extends PagerItemLibraryFragment
 			public void onClick(DialogInterface dialog, int which) 
 			{
 				if(selectedShows.size() > 0)
-					tm.addToQueue(new UpdateShowsTask(tm, ShowsFragment.this, selectedShows));
+					tm.addToQueue(new UpdateShowsTask(tm, ShowsLibraryFragment.this, selectedShows));
 				else
 					Toast.makeText(getActivity(), "Nothing selected...", Toast.LENGTH_SHORT).show();
 			}
@@ -203,7 +185,7 @@ public class ShowsFragment extends PagerItemLibraryFragment
 			@Override
 			public void onClick(DialogInterface dialog, int which) 
 			{
-				tm.addToQueue(new UpdateShowsTask(tm, ShowsFragment.this, shows));
+				tm.addToQueue(new UpdateShowsTask(tm, ShowsLibraryFragment.this, shows));
 			}
 		});
 

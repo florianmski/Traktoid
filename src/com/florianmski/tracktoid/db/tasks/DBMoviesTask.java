@@ -18,23 +18,29 @@ package com.florianmski.tracktoid.db.tasks;
 
 import java.util.List;
 
-import com.florianmski.tracktoid.db.tasks.DBTask.DBListener;
-import com.jakewharton.trakt.entities.CalendarDate;
-import com.jakewharton.trakt.entities.Movie;
-import com.jakewharton.trakt.entities.TvShow;
-import com.jakewharton.trakt.entities.TvShowEpisode;
-import com.jakewharton.trakt.entities.TvShowSeason;
+import android.content.Context;
 
-public abstract class DBAdapter implements DBListener
+import com.jakewharton.trakt.entities.Movie;
+
+public class DBMoviesTask extends DBTask
 {
+	private List<Movie> movies;
+	
+	public DBMoviesTask(Context context, DBListener listener) 
+	{
+		super(context, listener);
+	}
+	
 	@Override
-	public void onDBShows(List<TvShow> shows) {}
+	protected void doDBStuff() 
+	{
+		movies = dbw.getMovies();		
+	}
+	
 	@Override
-	public void onDBMovies(List<Movie> movies) {}
-	@Override
-	public void onDBSeasons(List<TvShowSeason> seasons) {}
-	@Override
-	public void onDBEpisodes(List<TvShowEpisode> episodes) {}
-	@Override
-	public void onDBCalendar(List<CalendarDate> calendar) {}
+	protected void onPostExecute (Boolean success)
+	{
+		listener.onDBMovies(movies);
+	}
+	
 }

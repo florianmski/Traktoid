@@ -27,9 +27,9 @@ public class PagerLoginAdapter extends FragmentPagerAdapter implements TitleProv
 	public Fragment getItem(int position) 
 	{
 		if(position == 0)
-			return new SignInFragment();
+			return SignInFragment.newInstance(null);
 		else
-			return new JoinFragment();
+			return JoinFragment.newInstance(null);
 	}
 
 	@Override

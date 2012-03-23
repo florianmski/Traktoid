@@ -29,6 +29,7 @@ import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.jakewharton.trakt.ServiceManager;
+import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class TraktManager extends ServiceManager implements OnSharedPreferenceChangeListener
@@ -158,6 +159,18 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 		for(TraktListener l : listeners)
 			l.onShowRemoved(show);
 	}
+	
+	public void onMovieUpdated(Movie movie)
+	{
+		for(TraktListener l : listeners)
+			l.onMovieUpdated(movie);
+	}
+
+	public void onMovieRemoved(Movie movie)
+	{
+		for(TraktListener l : listeners)
+			l.onMovieRemoved(movie);
+	}
 
 	public interface TraktListener
 	{
@@ -166,6 +179,8 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 		public void onErrorTraktRequest(Exception e);
 		public void onShowUpdated(TvShow show);
 		public void onShowRemoved(TvShow show);
+		public void onMovieUpdated(Movie movie);
+		public void onMovieRemoved(Movie movie);
 	}
 
 	//add user action in a queue so actions are done one by one

@@ -40,13 +40,14 @@ import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.MediaBase;
+import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.enumerations.Rating;
 
 public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter implements AdapterInterface
 {
-	protected static final int FILTER_ALL = 0;
-	protected static final int FILTER_UNWATCHED = 1;
-	protected static final int FILTER_LOVED = 2;
+	public static final int FILTER_ALL = 0;
+	public static final int FILTER_UNWATCHED = 1;
+	public static final int FILTER_LOVED = 2;
 
 	protected Activity context;
 	protected List<T> items;
@@ -70,11 +71,39 @@ public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter
 		notifyDataSetChanged();
 	}
 
-	public abstract void setFilter(int filter);
 	public abstract Rating getRating(Object item);
-	public abstract int getProgress(Object item);
+	public abstract boolean isWatched(Object item);
 	public abstract String getUrl(Object item);
 	public abstract String getId(Object item);
+
+	public void setFilter(int filter)
+	{
+		currentFilter = filter;
+		switch(filter)
+		{
+		case FILTER_ALL :
+			filteredItems.clear();
+			filteredItems.addAll(items);
+			break;
+		case FILTER_UNWATCHED :
+			filteredItems.clear();
+			for(T item : items)
+			{
+				if(!isWatched(item))
+					filteredItems.add(item);
+			}
+			break;
+		case FILTER_LOVED :
+			filteredItems.clear();
+			for(T item : items)
+			{
+				if(getRating(item) == Rating.Love)
+					filteredItems.add(item);
+			}
+			break;
+		}
+		this.notifyDataSetChanged();
+	}
 
 	public void updateItem(T item)
 	{
@@ -167,7 +196,7 @@ public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter
 		holder.ivWatched.setLayoutParams(paramsIvWatched);
 
 		final Object item = getItem(position);
-		int progress = getProgress(item);
+		boolean progress = isWatched(item);
 		Rating rating = getRating(item);
 		String url = getUrl(item);
 		String id = getId(item);
@@ -205,7 +234,7 @@ public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter
 
 		h.post(new TDRunnable(holder.ivRating, td));
 
-		if(progress == 100)
+		if(progress)
 		{
 			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watched)});
 			h.post(new TDRunnable(holder.ivWatched, td));

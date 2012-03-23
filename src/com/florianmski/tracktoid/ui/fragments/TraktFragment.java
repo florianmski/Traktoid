@@ -7,6 +7,7 @@ import com.florianmski.tracktoid.StatusView;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.TraktManager.TraktListener;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
+import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 
 public abstract class TraktFragment extends BaseFragment implements TraktListener
@@ -83,4 +84,10 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 
 	@Override
 	public void onShowUpdated(TvShow show) {}
+	
+	@Override
+	public void onMovieRemoved(Movie movie) {}
+
+	@Override
+	public void onMovieUpdated(Movie movie) {}
 }

@@ -8,15 +8,20 @@ import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
+import com.florianmski.tracktoid.adapters.pagers.PagerLibraryAdapter;
+import com.florianmski.tracktoid.adapters.pagers.PagerLibraryAdapter.OnFilterListener;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.ui.fragments.ShowFragment;
 import com.jakewharton.trakt.entities.TvShow;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -32,7 +37,7 @@ import android.widget.RelativeLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-public abstract class PagerItemLibraryFragment extends PagerItemFragment
+public abstract class PagerItemLibraryFragment extends PagerItemFragment implements OnFilterListener
 {
 	protected final static int NB_COLUMNS_TABLET_PORTRAIT = 5;
 	protected final static int NB_COLUMNS_TABLET_LANDSCAPE = 7;
@@ -57,8 +62,7 @@ public abstract class PagerItemLibraryFragment extends PagerItemFragment
 	public abstract void checkUpdateTask();
 	public abstract GridPosterAdapter setupAdapter();
 	public abstract Intent onGridItemClick(AdapterView<?> arg0, View v, int position, long arg3);
-	public abstract void onDBEmpty();
-	public abstract void onDBNotEmpty();
+	public abstract void displayContent();
 	public abstract void onRefreshQAClick(QuickAction source, int pos, int actionId);
 	public abstract void onDeleteQAClick(QuickAction source, int pos, int actionId);
 	public abstract void onRateQAClick(QuickAction source, int pos, int actionId);
@@ -81,33 +85,12 @@ public abstract class PagerItemLibraryFragment extends PagerItemFragment
 			hasSecondFragment = (myShowFragment != null) && (myShowFragment.isVisible());
 		}
 
-		getSherlockActivity().getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-		String[] items = new String[] {"All", "Unwatched", "Loved"};
-		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, items);
-		spinnerAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-
-		getSherlockActivity().getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, new OnNavigationListener() 
-		{
-			@Override
-			public boolean onNavigationItemSelected(int filter, long itemId) 
-			{
-				adapter.setFilter(filter);
-				return false;
-			}
-		});
-
-		DatabaseWrapper dbw = getDBWrapper();
-		boolean isDBEmpty = dbw.isEmpty();
-
 		refreshGridView();
+		
+		adapter = setupAdapter();
+		gd.setAdapter(adapter);
 
-		gd.setAdapter(adapter = setupAdapter());
-
-		if(isDBEmpty)
-			onDBEmpty();
-		else
-			onDBNotEmpty();
+		displayContent();
 
 		gd.setOnItemClickListener(new OnItemClickListener() 
 		{
@@ -119,9 +102,7 @@ public abstract class PagerItemLibraryFragment extends PagerItemFragment
 				if(Utils.isLandscape(getActivity()))
 				{
 					if(hasSecondFragment)
-					{
 						((ShowFragment)(getFragmentManager().findFragmentById(R.id.fragment_my_show))).refreshFragment(i.getExtras());
-					}
 					else
 					{
 						ShowFragment msf = ShowFragment.newInstance(i.getExtras());
@@ -190,6 +171,32 @@ public abstract class PagerItemLibraryFragment extends PagerItemFragment
 			}
 
 		});		
+//		
+//		String[] items = new String[] {"All", "Unwatched", "Loved"};
+//		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, items);
+//		spinnerAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+//		
+//		getSherlockActivity().getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, new OnNavigationListener() 
+//		{
+//			@Override
+//			public boolean onNavigationItemSelected(int filter, long itemId) 
+//			{
+//				adapter.setFilter(filter);
+//				return false;
+//			}
+//		});
+	}
+
+	@Override
+	public void onFilterClicked(int filter, long itemId) 
+	{
+		Log.e("test","test2");
+
+		if(adapter != null)
+		{
+			adapter.setFilter(filter);
+			Log.e("test","test");
+		}
 	}
 
 	@Override
@@ -198,14 +205,6 @@ public abstract class PagerItemLibraryFragment extends PagerItemFragment
 		super.onSaveInstanceState(toSave);
 
 		toSave.putBoolean(TraktoidConstants.BUNDLE_HAS_MY_SHOW_FRAGMENT, hasSecondFragment);
-	}
-
-	public TvShow getFirstShow()
-	{
-		if(adapter.isEmpty())
-			return null;
-		else
-			return (TvShow) adapter.getItem(0);
 	}
 
 	@Override
@@ -268,6 +267,15 @@ public abstract class PagerItemLibraryFragment extends PagerItemFragment
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
 		super.onCreateOptionsMenu(menu, inflater);
+		
+		SubMenu rateMenu = menu.addSubMenu(0, R.id.action_bar_filter, 0, "Filter");
+		rateMenu.add(0, R.id.action_bar_filter_all, 0, "All");
+		rateMenu.add(0, R.id.action_bar_filter_unwatched, 0, "Unwatched");
+		rateMenu.add(0, R.id.action_bar_filter_loved, 0, "Loved");
+		
+		MenuItem rateItem = rateMenu.getItem();
+        rateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        
 		if(!tm.isUpdateTaskRunning())
 		{
 			menu.add(0, R.id.action_bar_refresh, 0, "Refresh")
@@ -296,10 +304,20 @@ public abstract class PagerItemLibraryFragment extends PagerItemFragment
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) 
 	{
-		if (item.getItemId() == R.id.action_bar_refresh) 
+		switch(item.getItemId())
 		{
+		case R.id.action_bar_refresh:
 			onRefreshClick();
-			return true;
+			break;
+		case R.id.action_bar_filter_all:
+			adapter.setFilter(GridPosterAdapter.FILTER_ALL);
+			break;
+		case R.id.action_bar_filter_loved:
+			adapter.setFilter(GridPosterAdapter.FILTER_LOVED);
+			break;
+		case R.id.action_bar_filter_unwatched:
+			adapter.setFilter(GridPosterAdapter.FILTER_UNWATCHED);
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
