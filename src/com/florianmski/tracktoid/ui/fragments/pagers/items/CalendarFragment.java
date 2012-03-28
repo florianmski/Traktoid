@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktListener;
+import com.florianmski.tracktoid.TraktoidConstants;
+import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.lists.ListCalendarAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBCalendarTask;
@@ -46,10 +49,13 @@ public class CalendarFragment extends PagerItemFragment
 		setHasOptionsMenu(true);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
+		
+		calendar = (ArrayList<CalendarDate>) (getArguments() == null ? null : getArguments().getSerializable(TraktoidConstants.BUNDLE_CALENDAR));
 		
 		getStatusView().show().text("Creating calendar,\nPlease wait...");
 		
@@ -84,7 +90,6 @@ public class CalendarFragment extends PagerItemFragment
 	{
 		View v = inflater.inflate(R.layout.pager_item_calendar, null);
 		lvEpisodes = (ListView)v.findViewById(R.id.listViewCalendar);
-		
 		return v;
 	}
 

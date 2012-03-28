@@ -22,9 +22,9 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.TraktManager.TraktListener;
 import com.jakewharton.apibuilder.ApiException;
 import com.jakewharton.trakt.TraktException;
 

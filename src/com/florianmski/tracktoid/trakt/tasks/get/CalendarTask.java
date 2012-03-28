@@ -33,14 +33,10 @@ import com.jakewharton.trakt.entities.TvShow;
 public class CalendarTask extends TraktTask
 {	
 	ArrayList<ArrayList<CalendarDate>> calendars = new ArrayList<ArrayList<CalendarDate>>();
-	
-	private CalendarListener listener;
 
-	public CalendarTask(TraktManager tm, Fragment fragment, CalendarListener listener) 
+	public CalendarTask(TraktManager tm, Fragment fragment) 
 	{
 		super(tm, fragment);
-		
-		this.listener = listener;
 	}
 	
 	//instead of doing 3 requests (user shows, premieres and all), we do only "all" and then sorts
@@ -108,12 +104,7 @@ public class CalendarTask extends TraktTask
 		super.onPostExecute(success);
 		
 		if(success && !Utils.isActivityFinished(fragment.getActivity()))
-			listener.onCalendar(calendars);
-	}
-	
-	public interface CalendarListener
-	{
-		public void onCalendar(ArrayList<ArrayList<CalendarDate>> calendars);
+			tm.onCalendar(calendars);
 	}
 
 }

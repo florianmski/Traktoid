@@ -1,12 +1,15 @@
 package com.florianmski.tracktoid.ui.fragments;
 
+import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.florianmski.tracktoid.StatusView;
+import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.TraktManager.TraktListener;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
+import com.jakewharton.trakt.entities.CalendarDate;
 import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 
@@ -90,4 +93,7 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 
 	@Override
 	public void onMovieUpdated(Movie movie) {}
+	
+	@Override
+	public void onCalendar(ArrayList<ArrayList<CalendarDate>> calendars) {}
 }

@@ -4,11 +4,13 @@ package com.florianmski.tracktoid.ui.fragments.pagers;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +23,12 @@ import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 
 public abstract class TabsPagerFragment extends TraktFragment 
 {
-	TabHost mTabHost;
-	ViewPager mViewPager;
-	TabsAdapter mTabsAdapter;
-	
-	public abstract void addTab(TabsAdapter mTabsAdapter);
+	protected TabHost mTabHost;
+	protected ViewPager mViewPager;
+	protected TabsAdapter mTabsAdapter;
+
 	public abstract View getView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
@@ -42,21 +43,23 @@ public abstract class TabsPagerFragment extends TraktFragment
 
 		mTabsAdapter = new TabsAdapter(getActivity(), mTabHost, mViewPager);
 
-		addTab(mTabsAdapter);
-
 		if (savedInstanceState != null)
 			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
 	}
-	
+
+//	public void initMoreViews(View v){}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		View v = getView(inflater, container, savedInstanceState);
-		
+
 		mTabHost = (TabHost)v.findViewById(android.R.id.tabhost);
 		mTabHost.setup();
 		mViewPager = (ViewPager)v.findViewById(R.id.pager);
-		
+
+//		initMoreViews(v);
+
 		return v;
 	}
 
@@ -107,7 +110,8 @@ public abstract class TabsPagerFragment extends TraktFragment
 			mTabHost = tabHost;
 			mViewPager = pager;
 			mTabHost.setOnTabChangedListener(this);
-			mViewPager.setAdapter(this);
+//			new setAdapterTask().execute();
+			mViewPager.setAdapter(TabsAdapter.this);
 			mViewPager.setOnPageChangeListener(this);
 		}
 
@@ -159,12 +163,27 @@ public abstract class TabsPagerFragment extends TraktFragment
 
 		@Override
 		public void onPageScrollStateChanged(int state) {}
+		
+
+		private class setAdapterTask extends AsyncTask<Void,Void,Void>
+		{
+			protected Void doInBackground(Void... params) 
+			{
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void result) 
+			{
+				mViewPager.setAdapter(TabsAdapter.this);
+			}
+		}
 	}
 
 	@Override
 	public void onRestoreState(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -172,4 +191,5 @@ public abstract class TabsPagerFragment extends TraktFragment
 	{
 		toSave.putString("tab", mTabHost.getCurrentTabTag());
 	}
+
 }

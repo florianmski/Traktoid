@@ -17,6 +17,8 @@ public final class TraktoidConstants
 	public final static String BUNDLE_EPISODE = get("Episode");
 	public final static String BUNDLE_SEASON = get("Season");
 	public final static String BUNDLE_TVSHOW = get("TvShow");
+	public final static String BUNDLE_MOVIE = get("Movie");
+	public final static String BUNDLE_CALENDAR = get("Calendar");
 	
 	private final static String get(String text)
 	{

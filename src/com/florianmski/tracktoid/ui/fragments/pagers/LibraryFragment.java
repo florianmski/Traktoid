@@ -31,11 +31,7 @@ public class LibraryFragment extends TabsPagerFragment
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
-	}
-
-	@Override
-	public void addTab(TabsAdapter mTabsAdapter) 
-	{
+		
 		mTabsAdapter.addTab(mTabHost.newTabSpec("shows").setIndicator("Shows"), ShowsLibraryFragment.class, null);
 		mTabsAdapter.addTab(mTabHost.newTabSpec("movies").setIndicator("Movies"), MoviesLibraryFragment.class, null);
 	}

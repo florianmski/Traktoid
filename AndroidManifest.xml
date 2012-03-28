@@ -30,6 +30,7 @@
         <activity android:name=".ui.activities.phone.SearchActivity" android:label="Search"></activity>
         <activity android:name=".ui.activities.phone.CalendarActivity" android:label="Calendar"></activity>
         <activity android:name=".ui.activities.phone.ShowActivity"></activity>
+        <activity android:name=".ui.activities.phone.MovieActivity"></activity>
         <activity android:name=".ui.activities.phone.SeasonActivity"></activity>
         <activity android:name=".ui.activities.phone.EpisodeActivity"></activity>
         <activity android:name=".ui.activities.phone.LibraryActivity" android:label="Library"></activity>

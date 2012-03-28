@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.GridMoviePosterAdapter;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
@@ -23,7 +24,10 @@ import com.florianmski.tracktoid.trakt.tasks.RemoveMovieTask;
 import com.florianmski.tracktoid.trakt.tasks.get.MoviesTask;
 import com.florianmski.tracktoid.trakt.tasks.get.MoviesTask.MoviesListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateMoviesTask;
+import com.florianmski.tracktoid.ui.activities.phone.MovieActivity;
+import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
 import com.jakewharton.trakt.entities.Movie;
+import com.jakewharton.trakt.entities.TvShow;
 
 public class MoviesLibraryFragment extends PagerItemLibraryFragment
 {
@@ -51,8 +55,11 @@ public class MoviesLibraryFragment extends PagerItemLibraryFragment
 	@Override
 	public Intent onGridItemClick(AdapterView<?> arg0, View v, int position, long arg3) 
 	{
-		//TODO
-		return null;
+		Intent i = new Intent(getActivity(), MovieActivity.class);
+		ArrayList<Movie> movies = new ArrayList<Movie>();
+		movies.add((Movie)adapter.getItem(position));
+		i.putExtra(TraktoidConstants.BUNDLE_RESULTS, movies);
+		return i;
 	}
 	
 	@Override

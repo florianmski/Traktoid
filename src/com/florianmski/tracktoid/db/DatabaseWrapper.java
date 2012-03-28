@@ -780,6 +780,8 @@ public class DatabaseWrapper
 		show.airTime = c.getString(COLUMN_TVSHOW_AIR_TIME);
 		show.certification = c.getString(COLUMN_TVSHOW_CERTIFICATION);
 		show.country = c.getString(COLUMN_TVSHOW_COUNTRY);
+		//TODO
+//		show.firstAired = new Date(c.getString(COLUMN_TVSHOW_FIRST_AIRED));
 		show.network = c.getString(COLUMN_TVSHOW_NETWORK);
 		show.overview = c.getString(COLUMN_TVSHOW_OVERVIEW);
 		show.runtime = c.getInt(COLUMN_TVSHOW_RUNTIME);

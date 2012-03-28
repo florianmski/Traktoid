@@ -52,9 +52,11 @@ public class Image
 		
 		switch(imageType)
 		{
+//			case BANNER : 
+//			case FANART : this.url = getTVDBImage(tvdb_id, imageType);
+//				break;
 			case BANNER : 
-			case FANART : this.url = getTVDBImage(tvdb_id, imageType);
-				break;
+			case FANART :
 			case CALENDAR :
 			case POSTER : this.url = getTraktImage(traktURL, imageType);
 				break;	
@@ -129,10 +131,10 @@ public class Image
 		{
 			switch(imageType)
 			{
-				case FANART : url = traktURL.replace(".jpg", "-940.jpg"); break;
+				case SCREEN :
+				case CALENDAR :
+				case FANART : url = traktURL.replace(".jpg", "-218.jpg"); break;
 				case POSTER : url = traktURL.replace(".jpg", "-138.jpg"); break;
-				case SCREEN : url = traktURL.replace(".jpg", "-218.jpg"); break;
-				case CALENDAR : url = traktURL.replace("-940.jpg", "-218.jpg"); break;
 			}
 		}
 		return url;

@@ -3,15 +3,19 @@ package com.florianmski.tracktoid.ui.fragments.pagers;
 import java.util.ArrayList;
 
 import android.os.Bundle;
-import com.florianmski.tracktoid.adapters.pagers.PagerCalendarAdapter;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
+import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.tasks.get.CalendarTask;
-import com.florianmski.tracktoid.trakt.tasks.get.CalendarTask.CalendarListener;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.CalendarFragment;
 import com.jakewharton.trakt.entities.CalendarDate;
 
-public class CalendarPagerFragment extends PagerFragment
-{
-	ArrayList<ArrayList<CalendarDate>> calendars;
-	
+public class CalendarPagerFragment extends TabsPagerFragment
+{	
 	public static CalendarPagerFragment newInstance(Bundle args)
 	{
 		CalendarPagerFragment f = new CalendarPagerFragment();
@@ -21,15 +25,9 @@ public class CalendarPagerFragment extends PagerFragment
 	
 	public CalendarPagerFragment() {}
 	
-	public CalendarPagerFragment(FragmentListener listener) 
-	{
-		super(listener);
-	}
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
-		setPageIndicatorType(PagerFragment.IT_TAB);
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
@@ -41,40 +39,48 @@ public class CalendarPagerFragment extends PagerFragment
 
 		getStatusView().show().text("Retrieving calendar,\nPlease wait...");
 
-		commonTask = new CalendarTask(tm, this, new CalendarListener() 
-		{
-			@Override
-			public void onCalendar(ArrayList<ArrayList<CalendarDate>> calendars) 
-			{
-				CalendarPagerFragment.this.calendars = calendars;
-				createAdapter();
-			}
-		});
+		commonTask = new CalendarTask(tm, this);
 		
 		if(savedInstanceState == null)
 			commonTask.execute();
 		else
-		{
-			//create empty arraylist to create a pageradapter that will be filled by calendarfragment (they saved their states)
-			this.calendars = new ArrayList<ArrayList<CalendarDate>>();
-			for(int i = 0; i < PagerCalendarAdapter.calendarTitles.length; i++)
-				calendars.add(new ArrayList<CalendarDate>());
-			
-			createAdapter();
-		}
+			addTabs(null);
 	}
 	
-	public void createAdapter()
+	public void addTabs(ArrayList<ArrayList<CalendarDate>> calendars) 
 	{
-		getStatusView().hide().text(null);
-		adapter = new PagerCalendarAdapter(calendars, getFragmentManager());
-		
-		if(((PagerCalendarAdapter)adapter).isEmpty())
-			getStatusView().hide().text("No calendar, this is strange...");
+		Bundle args = new Bundle();
+
+		if(Utils.isOnline(getActivity()))
+		{
+			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(0));
+			mTabsAdapter.addTab(mTabHost.newTabSpec("premieres").setIndicator("Premieres"), CalendarFragment.class, args);
+			args = new Bundle();
+			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(1));
+			mTabsAdapter.addTab(mTabHost.newTabSpec("my_shows").setIndicator("My shows"), CalendarFragment.class, args);
+			args = new Bundle();
+			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(2));
+			mTabsAdapter.addTab(mTabHost.newTabSpec("shows").setIndicator("Shows"), CalendarFragment.class, args);
+			
+		}
 		else
-			getStatusView().hide().text(null);
+			mTabsAdapter.addTab(mTabHost.newTabSpec("my_shows").setIndicator("My shows"), CalendarFragment.class, null);
 		
-		initPagerFragment(adapter);
+		mTabHost.setCurrentTab(1);
+		getStatusView().hide().text(null);
+	}
+
+	@Override
+	public View getView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
+	{
+		//TODO create layout
+		return inflater.inflate(R.layout.fragment_calendar, null);
+	}
+	
+	@Override
+	public void onCalendar(ArrayList<ArrayList<CalendarDate>> calendars) 
+	{
+		addTabs(calendars);
 	}
 	
 	@Override
