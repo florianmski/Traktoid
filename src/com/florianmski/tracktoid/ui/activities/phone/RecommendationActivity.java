@@ -18,19 +18,32 @@ package com.florianmski.tracktoid.ui.activities.phone;
 
 import android.os.Bundle;
 
-import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.ui.fragments.RecommendationFragment;
+import com.florianmski.tracktoid.ui.fragments.RecommendationMoviesFragment;
+import com.florianmski.tracktoid.ui.fragments.RecommendationShowsFragment;
+import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 
-public class RecommendationActivity extends TraktActivity
+public class RecommendationActivity extends MovieShowActivity
 {
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_recommendation);
-		setContentView(R.layout.activity_single_fragment);
-		
-		if(savedInstanceState == null)
-			setPrincipalFragment(RecommendationFragment.newInstance(getIntent().getExtras()));
+//		setContentView(R.layout.activity_single_fragment);
+//		
+//		if(savedInstanceState == null)
+//			setPrincipalFragment(RecommendationFragment.newInstance(getIntent().getExtras()));
+	}
+
+	@Override
+	public TraktFragment getMovieFragment() 
+	{
+		return RecommendationMoviesFragment.newInstance(getIntent().getExtras());
+	}
+
+	@Override
+	public TraktFragment getShowFragment() 
+	{
+		return RecommendationShowsFragment.newInstance(getIntent().getExtras());
 	}
 }

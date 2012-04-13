@@ -35,16 +35,17 @@ import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.image.Image;
+import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class ListRecommendationAdapter extends BaseAdapter implements AdapterInterface
+public class ListRecommendationAdapter<T extends TraktoidInterface> extends BaseAdapter implements AdapterInterface
 {
-	private List<TvShow> recommendations;
+	private List<T> recommendations;
 	private Context context;
 	private DismissListener listener;
 	private Bitmap placeholder = null;
 	
-	public ListRecommendationAdapter(ArrayList<TvShow> recommendations, Context context)
+	public ListRecommendationAdapter(ArrayList<T> recommendations, Context context)
 	{
 		this.recommendations = recommendations;
 		this.context = context;
@@ -55,15 +56,15 @@ public class ListRecommendationAdapter extends BaseAdapter implements AdapterInt
 		this.listener = listener;
 	}
 	
-	public void refreshData(List<TvShow> recommendations)
+	public void refreshData(List<T> recommendations)
 	{
 		this.recommendations = recommendations;
 		this.notifyDataSetChanged();
 	}
 	
-	public ArrayList<TvShow> getRecommendations()
+	public ArrayList<T> getRecommendations()
 	{
-		return (ArrayList<TvShow>) recommendations;
+		return (ArrayList<T>) recommendations;
 	}
 	
 	@Override
@@ -117,7 +118,7 @@ public class ListRecommendationAdapter extends BaseAdapter implements AdapterInt
         else
             holder = (ViewHolder) convertView.getTag();
         
-        final TvShow s = recommendations.get(position);
+        final T s = recommendations.get(position);
         
         holder.ivDismiss.setOnClickListener(new OnClickListener() 
         {	
@@ -125,18 +126,18 @@ public class ListRecommendationAdapter extends BaseAdapter implements AdapterInt
 			public void onClick(View v) 
 			{
 				if(listener != null)
-					listener.onDismiss(s.tvdbId);
+					listener.onDismiss(s.getId());
 			}
 		});
         
-        Image i = new Image(s.tvdbId, s.images.fanart, Image.FANART);
+        Image i = new Image(s.getId(), s.getImages().fanart, Image.FANART);
         AQuery aq = new AQuery(convertView);
         if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
             aq.id(holder.ivFanart).image(placeholder);
         else
         	aq.id(holder.ivFanart).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
                         
-        holder.tvShow.setText(s.title);
+        holder.tvShow.setText(s.getTitle());
 
         return convertView;
     }
@@ -150,6 +151,6 @@ public class ListRecommendationAdapter extends BaseAdapter implements AdapterInt
     
     public interface DismissListener
     {
-    	public void onDismiss(String tvdbId);
+    	public void onDismiss(String id);
     }
 }

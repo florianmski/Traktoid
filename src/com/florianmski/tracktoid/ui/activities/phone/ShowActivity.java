@@ -16,10 +16,15 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import android.os.Bundle;
+import java.util.ArrayList;
 
+import android.os.Bundle;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.ui.fragments.pagers.ShowPagerFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowFragment;
+import com.jakewharton.trakt.entities.TvShow;
 
 public class ShowActivity extends TraktActivity
 {
@@ -27,10 +32,21 @@ public class ShowActivity extends TraktActivity
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_show);
+		//		setContentView(R.layout.activity_show);
 		setContentView(R.layout.activity_single_fragment);
-		
+
 		if(savedInstanceState == null)
-			setPrincipalFragment(ShowPagerFragment.newInstance(getIntent().getExtras()));
+		{
+			Bundle b = getIntent().getExtras();
+			SherlockFragment f = ShowPagerFragment.newInstance(b);
+			if(b != null)
+			{
+				ArrayList<TvShow> result = (ArrayList<TvShow>) b.get(TraktoidConstants.BUNDLE_RESULTS);
+				if(result != null && result.size() == 1)
+					f = ShowFragment.newInstance(result.get(0));
+			}
+
+			setPrincipalFragment(f);
+		}
 	}
 }

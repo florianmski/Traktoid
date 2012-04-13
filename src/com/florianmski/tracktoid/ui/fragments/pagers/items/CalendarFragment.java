@@ -10,9 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.TraktoidConstants;
-import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.lists.ListCalendarAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBCalendarTask;

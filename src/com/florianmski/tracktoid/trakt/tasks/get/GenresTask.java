@@ -1,30 +1,34 @@
 package com.florianmski.tracktoid.trakt.tasks.get;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.support.v4.app.Fragment;
 
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
+import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Genre;
 
 public class GenresTask extends TraktTask
 {
-	private ArrayList<Genre> genres = new ArrayList<Genre>();
+	private List<Genre> genres = new ArrayList<Genre>();
 	private GenresListener listener;
+	private TraktApiBuilder<List<Genre>> builder;
 	
-	public GenresTask(TraktManager tm, Fragment fragment, GenresListener listener) 
+	public GenresTask(TraktManager tm, Fragment fragment, GenresListener listener, TraktApiBuilder<List<Genre>> builder) 
 	{
 		super(tm, fragment);
 		
 		this.listener = listener;
+		this.builder = builder;
 	}
 
 	@Override
 	protected boolean doTraktStuffInBackground() 
 	{
-		genres = (ArrayList<Genre>) tm.genreService().shows().fire();
+		genres = builder.fire();
 		
 		return true;
 	}
@@ -40,7 +44,7 @@ public class GenresTask extends TraktTask
 	
 	public interface GenresListener
 	{
-		public void onGenres(ArrayList<Genre> genres);
+		public void onGenres(List<Genre> genres);
 	}
 
 }

@@ -4,29 +4,28 @@ package com.florianmski.tracktoid.ui.fragments.pagers;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TabWidget;
-
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 
 
-public abstract class TabsPagerFragment extends TraktFragment 
+public abstract class TabsViewPagerFragment extends TraktFragment 
 {
 	protected TabHost mTabHost;
 	protected ViewPager mViewPager;
-	protected TabsAdapter mTabsAdapter;
+	protected TabsViewAdapter mTabsAdapter;
 
 	public abstract View getView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+	public abstract TabsViewAdapter getAdapter();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -40,7 +39,8 @@ public abstract class TabsPagerFragment extends TraktFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		mTabsAdapter = new TabsAdapter(getActivity(), mTabHost, mViewPager);
+//		mTabsAdapter = new TabsViewAdapter(getActivity(), mTabHost, mViewPager);
+		mTabsAdapter = getAdapter();
 
 		if (savedInstanceState != null)
 			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
@@ -58,23 +58,23 @@ public abstract class TabsPagerFragment extends TraktFragment
 		return v;
 	}
 
-	public static class TabsAdapter extends FragmentPagerAdapter implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener 
+	public static abstract class TabsViewAdapter extends PagerAdapter implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener 
 	{
-		private final Context mContext;
-		private final TabHost mTabHost;
-		private final ViewPager mViewPager;
-		private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+		protected final Context mContext;
+		protected final TabHost mTabHost;
+		protected final ViewPager mViewPager;
+		protected final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 
-		static final class TabInfo 
+		protected static final class TabInfo 
 		{
 			private final String tag;
-			private final Class<?> clss;
+			private final int layoutId;
 			private final Bundle args;
 
-			TabInfo(String _tag, Class<?> _class, Bundle _args) 
+			TabInfo(String _tag, int _layoutId, Bundle _args) 
 			{
 				tag = _tag;
-				clss = _class;
+				layoutId = _layoutId;
 				args = _args;
 			}
 		}
@@ -98,24 +98,23 @@ public abstract class TabsPagerFragment extends TraktFragment
 			}
 		}
 
-		public TabsAdapter(FragmentActivity activity, TabHost tabHost, ViewPager pager) 
+		public TabsViewAdapter(FragmentActivity activity, TabHost tabHost, ViewPager pager) 
 		{
-			super(activity.getSupportFragmentManager());
+			super();
 			mContext = activity;
 			mTabHost = tabHost;
 			mViewPager = pager;
 			mTabHost.setOnTabChangedListener(this);
-			new setAdapterTask().execute();
-//			mViewPager.setAdapter(TabsAdapter.this);
+			mViewPager.setAdapter(TabsViewAdapter.this);
 			mViewPager.setOnPageChangeListener(this);
 		}
 
-		public void addTab(TabHost.TabSpec tabSpec, Class<?> clss, Bundle args) 
+		public void addTab(TabHost.TabSpec tabSpec, int layoutId, Bundle args) 
 		{
 			tabSpec.setContent(new DummyTabFactory(mContext));
 			String tag = tabSpec.getTag();
 
-			TabInfo info = new TabInfo(tag, clss, args);
+			TabInfo info = new TabInfo(tag, layoutId, args);
 			mTabs.add(info);
 			mTabHost.addTab(tabSpec);
 			notifyDataSetChanged();
@@ -126,13 +125,48 @@ public abstract class TabsPagerFragment extends TraktFragment
 		{
 			return mTabs.size();
 		}
-
+		
+		public abstract void fillLayout(View v, int layoutId); 
+		
 		@Override
-		public Fragment getItem(int position) 
+		public Object instantiateItem(View pager, int position) 
 		{
 			TabInfo info = mTabs.get(position);
-			return Fragment.instantiate(mContext, info.clss.getName(), info.args);
+
+			View v = LayoutInflater.from(mContext).inflate(info.layoutId, null);
+			
+			fillLayout(v, info.layoutId);
+			
+			((ViewPager)pager).addView(v);
+			return v;
 		}
+
+		@Override
+		public void destroyItem(View pager, int position, Object v) 
+		{
+			((ViewPager) pager).removeView((View) v);
+		}
+
+		@Override
+		public boolean isViewFromObject(View view, Object object) 
+		{
+			return view == object;
+		}
+
+		@Override
+		public Parcelable saveState() 
+		{
+			return null;
+		}
+
+		@Override
+		public void restoreState(Parcelable arg0, ClassLoader arg1) {}
+
+		@Override
+		public void startUpdate(View arg0) {}
+
+		@Override
+		public void finishUpdate(View arg0) {}
 
 		@Override
 		public void onTabChanged(String tabId) 
@@ -142,9 +176,7 @@ public abstract class TabsPagerFragment extends TraktFragment
 		}
 
 		@Override
-		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) 
-		{
-		}
+		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
 		@Override
 		public void onPageSelected(int position) 
@@ -158,29 +190,10 @@ public abstract class TabsPagerFragment extends TraktFragment
 
 		@Override
 		public void onPageScrollStateChanged(int state) {}
-		
-
-		private class setAdapterTask extends AsyncTask<Void,Void,Void>
-		{
-			@Override
-			protected Void doInBackground(Void... params) 
-			{
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(Void result) 
-			{
-				mViewPager.setAdapter(TabsAdapter.this);
-			}
-		}
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-
-	}
+	public void onRestoreState(Bundle savedInstanceState) {}
 
 	@Override
 	public void onSaveState(Bundle toSave) 

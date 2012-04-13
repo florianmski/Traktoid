@@ -25,9 +25,7 @@ import com.florianmski.tracktoid.trakt.tasks.get.MoviesTask;
 import com.florianmski.tracktoid.trakt.tasks.get.MoviesTask.MoviesListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateMoviesTask;
 import com.florianmski.tracktoid.ui.activities.phone.MovieActivity;
-import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
 import com.jakewharton.trakt.entities.Movie;
-import com.jakewharton.trakt.entities.TvShow;
 
 public class MoviesLibraryFragment extends PagerItemLibraryFragment
 {

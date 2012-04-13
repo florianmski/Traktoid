@@ -26,9 +26,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.MovieFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowFragment;
 import com.jakewharton.trakt.entities.Movie;
-import com.jakewharton.trakt.entities.TvShow;
 
 public class PagerMovieAdapter extends FragmentStatePagerAdapter implements AdapterInterface
 {

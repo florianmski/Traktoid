@@ -22,6 +22,11 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 	{
 
 	}
+	
+//	public static TraktFragment newInstance(Bundle args)
+//	{
+//		return null;
+//	}
 
 	public TraktFragment(FragmentListener listener)
 	{

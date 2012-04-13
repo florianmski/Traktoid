@@ -11,7 +11,7 @@ public class GridMoviePosterAdapter extends GridPosterAdapter<Movie> implements 
 {
 	public GridMoviePosterAdapter(Activity context, List<Movie> movies, int height) 
 	{
-		this.context = context;
+		super(context);
 		this.items = movies;
 		this.filteredItems.addAll(movies);
 		this.height = height;

@@ -1,8 +1,6 @@
 package com.florianmski.tracktoid.ui.fragments.pagers.items;
 
 import java.util.ArrayList;
-import java.util.Date;
-
 import android.content.Intent;
 import android.os.Bundle;
 import com.actionbarsherlock.view.Menu;
@@ -11,16 +9,12 @@ import com.actionbarsherlock.view.MenuItem;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
-import com.jakewharton.trakt.entities.Ratings;
 import com.jakewharton.trakt.entities.TvShow;
-import com.jakewharton.trakt.enumerations.Rating;
 
-public class ShowFragment extends PagerItemTraktFragment
+public class ShowFragment extends PagerItemTraktFragment<TvShow>
 {
-	private TvShow s;
 	private boolean existsInDb = false;
 
 	public static ShowFragment newInstance(Bundle args)
@@ -44,7 +38,7 @@ public class ShowFragment extends PagerItemTraktFragment
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 
-		s = (TvShow) (getArguments() != null ? getArguments().getSerializable(TraktoidConstants.BUNDLE_TVSHOW) : null);
+		item = (TvShow) (getArguments() != null ? getArguments().getSerializable(TraktoidConstants.BUNDLE_TVSHOW) : null);
 	}
 
 	@Override
@@ -53,7 +47,7 @@ public class ShowFragment extends PagerItemTraktFragment
 		super.onActivityCreated(savedInstanceState);
 
 		DatabaseWrapper dbw = getDBWrapper();
-		existsInDb = dbw.showExist(s.tvdbId);
+		existsInDb = dbw.showExist(item.tvdbId);
 		getSherlockActivity().invalidateOptionsMenu();
 	}
 	
@@ -82,13 +76,13 @@ public class ShowFragment extends PagerItemTraktFragment
 		{
 		case R.id.action_bar_add :
 			ArrayList<TvShow> shows = new ArrayList<TvShow>();
-			shows.add(s);
+			shows.add(this.item);
 			tm.addToQueue(new UpdateShowsTask(tm, this, shows));
 			return true;
 		case R.id.action_bar_shouts :
 			Intent i = new Intent(getActivity(), ShoutsActivity.class);
-			i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, s.tvdbId);
-			i.putExtra(TraktoidConstants.BUNDLE_TITLE, s.title);
+			i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, this.item.tvdbId);
+			i.putExtra(TraktoidConstants.BUNDLE_TITLE, this.item.title);
 			startActivity(i);
 			return true;
 		}
@@ -100,40 +94,4 @@ public class ShowFragment extends PagerItemTraktFragment
 
 	@Override
 	public void onSaveState(Bundle toSave) {}
-
-	@Override
-	public Date getFirstAired() 
-	{
-		return s.firstAired;
-	}
-
-	@Override
-	public Ratings getRatings() 
-	{
-		return s.ratings;
-	}
-
-	@Override
-	public Rating getRating() 
-	{
-		return s.rating;
-	}
-
-	@Override
-	public boolean isWatched() 
-	{
-		return s.progress == 100;
-	}
-
-	@Override
-	public Image getImage() 
-	{
-		return new Image(s.tvdbId, s.images.fanart, Image.FANART);
-	}
-
-	@Override
-	public String getOverview() 
-	{
-		return s.overview;
-	}
 }

@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Handler;
@@ -54,7 +55,14 @@ public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter
 	protected int height;
 	protected int currentFilter = 0;
 	protected Handler h = new Handler();
+	protected AQuery listAq;
 
+	public GridPosterAdapter(Activity context)
+	{
+		this.context = context;
+		listAq = new AQuery(context);
+	}
+	
 	@Override
 	public void clear() 
 	{
@@ -205,38 +213,37 @@ public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter
 		holder.ivPoster.setImageBitmap(null);
 
 		Image i = new Image(id, url, Image.POSTER);
-		AQuery aq = new AQuery(convertView);
-		//create a bitmap ajax callback object
-		BitmapAjaxCallback cb = new BitmapAjaxCallback();
+		AQuery aq = listAq.recycle(convertView);
 
-		if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
+		if(aq.shouldDelay(position, convertView, parent, i.getUrl()))
 			aq.id(holder.ivPoster).image(context.getResources().getDrawable(R.drawable.progress));
 		else
 		{
-			File posterImage = aq.getCachedFile(i.getUrl());
+			aq.id(holder.ivPoster).image(i.getUrl(), true, true);
+//			File posterImage = aq.getCachedFile(i.getUrl());
+//
+//			if(posterImage != null)
+//				aq.id(holder.ivPoster).image(posterImage, true, 0, null);
+//			else
+//			{
+//				cb.url(i.getUrl()).animation(android.R.anim.fade_in).fileCache(true).memCache(true);
+//				aq.id(holder.ivPoster).image(cb);
+//			}
 
-			if(posterImage != null)
-				aq.id(holder.ivPoster).image(posterImage, true, 0, null);
-			else
+			TransitionDrawable td = null;
+
+			if(rating == Rating.Love)
+				td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_loved)});
+			else if(rating == Rating.Hate)
+				td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_hated)});
+
+			h.post(new TDRunnable(holder.ivRating, td));
+
+			if(progress)
 			{
-				cb.url(i.getUrl()).animation(android.R.anim.fade_in).fileCache(true).memCache(true);
-				aq.id(holder.ivPoster).image(cb);
+				td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watched)});
+				h.post(new TDRunnable(holder.ivWatched, td));
 			}
-		}
-
-		TransitionDrawable td = null;
-
-		if(rating == Rating.Love)
-			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_loved)});
-		else if(rating == Rating.Hate)
-			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_hated)});
-
-		h.post(new TDRunnable(holder.ivRating, td));
-
-		if(progress)
-		{
-			td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watched)});
-			h.post(new TDRunnable(holder.ivWatched, td));
 		}
 
 		return convertView;

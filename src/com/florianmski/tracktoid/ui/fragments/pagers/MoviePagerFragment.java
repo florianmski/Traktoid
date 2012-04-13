@@ -6,9 +6,7 @@ import android.os.Bundle;
 
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.pagers.PagerMovieAdapter;
-import com.florianmski.tracktoid.adapters.pagers.PagerShowAdapter;
 import com.jakewharton.trakt.entities.Movie;
-import com.jakewharton.trakt.entities.TvShow;
 
 public class MoviePagerFragment extends PagerFragment
 {

@@ -28,8 +28,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
 
-import com.florianmski.tracktoid.R;
-
 /**
  * This demonstrates how you can implement switching between the tabs of a
  * TabHost through fragments. It uses a trick (see the code below) to allow

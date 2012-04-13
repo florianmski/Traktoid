@@ -1,6 +1,7 @@
 package com.florianmski.tracktoid.ui.fragments;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,34 +20,21 @@ import com.florianmski.tracktoid.adapters.lists.ListRecommendationAdapter;
 import com.florianmski.tracktoid.adapters.lists.ListRecommendationAdapter.DismissListener;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.get.GenresTask;
-import com.florianmski.tracktoid.trakt.tasks.get.GenresTask.GenresListener;
-import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
-import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
+import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Genre;
-import com.jakewharton.trakt.entities.Response;
-import com.jakewharton.trakt.entities.TvShow;
-import com.jakewharton.trakt.services.RecommendationsService.ShowsBuilder;
 
-public class RecommendationFragment extends TraktFragment implements ActionBar.OnNavigationListener
+public abstract class RecommendationFragment<T extends TraktoidInterface> extends TraktFragment implements ActionBar.OnNavigationListener
 {	
-	private ListView lvRecommendations;
+	protected ListView lvRecommendations;
 
-	private ListRecommendationAdapter adapter;
+	protected ListRecommendationAdapter<T> adapter;
 
-	private ArrayList<Genre> genres;
-	private ArrayList<TvShow> shows;
+	protected List<Genre> genres;
+	protected ArrayList<T> items;
 
-	private int recreation;
-
-	public static RecommendationFragment newInstance(Bundle args)
-	{
-		RecommendationFragment f = new RecommendationFragment();
-		f.setArguments(args);
-		return f;
-	}
+	protected int recreation;
 
 	public RecommendationFragment() {}
 
@@ -54,14 +42,17 @@ public class RecommendationFragment extends TraktFragment implements ActionBar.O
 	{
 		super(listener);
 	}
+	
+	public abstract GenresTask getGenresTask();
+	public abstract PostTask getDismissTask(String id);
+	public abstract TraktTask getItemsTask(Genre genre);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-
-		recreation = (savedInstanceState != null) ? 2 : 0;
+		setRetainInstance(true);
 	}
 
 	@Override
@@ -69,19 +60,15 @@ public class RecommendationFragment extends TraktFragment implements ActionBar.O
 	{
 		super.onActivityCreated(savedInstanceState);
 
+		recreation = (items != null || savedInstanceState != null) ? 2 : 0;
+
+		getSherlockActivity().getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		
 		if(recreation == 0)
 		{
 			getStatusView().show().text("Retrieving genres,\nPlease wait...");
 
-			new GenresTask(tm, this, new GenresListener() 
-			{
-				@Override
-				public void onGenres(final ArrayList<Genre> genres) 
-				{				
-					RecommendationFragment.this.genres = genres;
-					setListNavigationMode();				
-				}
-			}).execute();
+			getGenresTask().execute();
 		}
 		else
 		{
@@ -113,7 +100,7 @@ public class RecommendationFragment extends TraktFragment implements ActionBar.O
 		return v;
 	}
 
-	private void setListNavigationMode()
+	protected void setListNavigationMode()
 	{
 		getSherlockActivity().getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
@@ -129,15 +116,19 @@ public class RecommendationFragment extends TraktFragment implements ActionBar.O
 		getSherlockActivity().getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, this);
 	}
 
-	private void setAdapter()
+	protected void setAdapter()
 	{
 		if(adapter == null)
 		{
-			adapter = new ListRecommendationAdapter(shows, getActivity());
+			adapter = new ListRecommendationAdapter<T>(items, getActivity());
 			lvRecommendations.setAdapter(adapter);
 		}
 		else
-			adapter.refreshData(shows);
+		{
+			adapter.refreshData(items);
+			if(lvRecommendations.getAdapter() == null)
+				lvRecommendations.setAdapter(adapter);
+		}
 
 		if(adapter.getCount() == 0)
 			getStatusView().hide().text("No recommendations, strange...");
@@ -147,56 +138,35 @@ public class RecommendationFragment extends TraktFragment implements ActionBar.O
 		adapter.setOnDismissListener(new DismissListener() 
 		{
 			@Override
-			public void onDismiss(String tvdbId) 
+			public void onDismiss(String id) 
 			{
-				new PostTask(tm, RecommendationFragment.this, tm.recommendationsService().dismissShow(Integer.valueOf(tvdbId)), new PostListener() 
-				{
-					@Override
-					public void onComplete(Response r, boolean success) 
-					{
-						adapter.clear();
-						createGetRecommendationsTask().execute();
-					}
-				}).execute();
+				getDismissTask(id).execute();
 			}
 		});
 	}
 
-	private TraktTask createGetRecommendationsTask()
+	protected TraktTask createGetRecommendationsTask()
 	{
 		int index = getSherlockActivity().getSupportActionBar().getSelectedNavigationIndex();
 		Genre genre = index <= 0 || index > genres.size() ? null : genres.get(index-1);
-		getStatusView().show().text("Retrieving recommendations" + ((genre == null) ? "" : " in \"" + genre.name + "\"") + ",\nPlease wait...");
+		getStatusView().show().text("Retrieving recommendations" + ((genre == null) ? "" : " in \"" + genre.name + "\"") + ",\nPlease wait...");	
 
-		ShowsBuilder builder = tm.recommendationsService().shows();
-
-		if(genre != null)
-			builder.genre(genre);			
-
-		return commonTask = new ShowsTask(tm, this, new ShowsListener() 
-		{
-			@Override
-			public void onShows(ArrayList<TvShow> shows) 
-			{
-				RecommendationFragment.this.shows = shows;
-				setAdapter();
-			}
-		}, builder, false);
+		return commonTask = getItemsTask(genre);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onRestoreState(Bundle savedInstanceState) 
-	{
-		shows = (ArrayList<TvShow>) savedInstanceState.get("shows");
-		genres = (ArrayList<Genre>) savedInstanceState.get("genres");
+	{		
+//		items = (ArrayList<T>) savedInstanceState.get("items");
+//		genres = (ArrayList<Genre>) savedInstanceState.get("genres");
 	}
 
 	@Override
 	public void onSaveState(Bundle toSave) 
 	{
-		toSave.putSerializable("shows", shows);
-		toSave.putSerializable("genres", genres);
+//		toSave.putSerializable("items", items);
+//		toSave.putSerializable("genres", (Serializable) genres);
 	}
 
 	@Override

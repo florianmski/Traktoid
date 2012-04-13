@@ -16,6 +16,8 @@
 
 package com.florianmski.tracktoid.image;
 
+import com.jakewharton.trakt.entities.Images;
+
 public class Image 
 {
 	private final static String tvdbUrl = "http://thetvdb.com/banners";
@@ -37,13 +39,62 @@ public class Image
 	public final static double RATIO_POSTER = 1.471014493;
 	public final static double RATIO_BANNER = 55.0/300.0;
 	
-	public static boolean smallSize = true;
+	private boolean smallSize = true;
 	
 	private String tvdb_id;
 	private int imageType;
 	private String url;
 	private int season = -1;
 	private int episode = -1;
+	
+	public static Image get(int type, Images images)
+	{
+		return new Image(type, images);
+	}
+	
+	public Image(int type, Images images)
+	{
+		this.imageType = type;
+		if(images != null)
+		{
+			switch(type)
+			{
+			case BANNER :
+				//TODO
+				this.url = getTraktImage(images.screen);
+				break;
+			case FANART :
+				this.url = getTraktImage(images.fanart);
+				break;
+			case POSTER :
+				this.url = getTraktImage(images.poster);
+				break;
+				//TODO
+			case SEASON :
+				this.url = getTraktImage(images.screen);
+				break;
+			case SCREEN :
+				this.url = getTraktImage(images.screen);
+				break;
+				//TODO
+			case CALENDAR :
+				this.url = images.screen;
+				break;
+			}
+		}
+	}
+	
+	public Image(int type, String url)
+	{
+		this.imageType = type;
+		this.url = url;
+	}
+	
+	public Image size(boolean small)
+	{
+		this.smallSize = small;
+		return this;
+	}
 	
 	public Image(String tvdb_id, String traktURL, int imageType)
 	{
@@ -121,6 +172,26 @@ public class Image
 	}
 	
 	private String getTraktImage(String traktURL, int imageType)
+	{
+		String url = traktURL;
+		
+		if(url == null)
+			return null;
+		
+		if(smallSize)
+		{
+			switch(imageType)
+			{
+				case SCREEN :
+				case CALENDAR :
+				case FANART : url = traktURL.replace(".jpg", "-218.jpg"); break;
+				case POSTER : url = traktURL.replace(".jpg", "-138.jpg"); break;
+			}
+		}
+		return url;
+	}
+	
+	private String getTraktImage(String traktURL)
 	{
 		String url = traktURL;
 		

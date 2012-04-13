@@ -10,7 +10,7 @@ public class GridShowPosterAdapter extends GridPosterAdapter<TvShow> implements 
 {
 	public GridShowPosterAdapter(Activity context, List<TvShow> shows, int height) 
 	{
-		this.context = context;
+		super(context);
 		this.items = shows;
 		this.filteredItems.addAll(shows);
 		this.height = height;
