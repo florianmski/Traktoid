@@ -70,7 +70,7 @@ public abstract class PagerItemTraktFragment<T extends TraktoidInterface> extend
 		ivScreen.setScaleType(ScaleType.CENTER_CROP);
 		
 		if(item.getFirstAired() == null || item.getFirstAired().getTime() == 0)
-			tvAired.setText("Never or date is not known");
+			tvAired.setText("Never, date is not known or try to refresh");
 		else
 			tvAired.setText("First Aired : " + DateFormat.getLongDateFormat(getActivity()).format(item.getFirstAired()));		
 		

@@ -6,8 +6,6 @@ import com.jakewharton.trakt.entities.TvShowEpisode;
 
 public class EpisodeFragment extends PagerItemTraktFragment<TvShowEpisode>
 {
-	private String tvdbId;
-
 	public static EpisodeFragment newInstance(Bundle args)
 	{
 		EpisodeFragment f = new EpisodeFragment();
@@ -35,7 +33,7 @@ public class EpisodeFragment extends PagerItemTraktFragment<TvShowEpisode>
 		if(getArguments() != null)
 		{
 			item = (TvShowEpisode) getArguments().getSerializable(TraktoidConstants.BUNDLE_EPISODE);
-			tvdbId = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
+			getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
 		}
 	}
 

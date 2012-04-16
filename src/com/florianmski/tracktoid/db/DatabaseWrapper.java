@@ -16,10 +16,13 @@
 
 package com.florianmski.tracktoid.db;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -335,96 +338,96 @@ public class DatabaseWrapper
 	         }
 	      ]
 	   },*/
-	
+
 	public static final String KEY_MOVIE_TITLE = "title";
 	public static final int COLUMN_MOVIE_TITLE = 1;
-	
+
 	public static final String KEY_MOVIE_YEAR = "year";
 	public static final int COLUMN_MOVIE_YEAR = 2;
-	
+
 	public static final String KEY_MOVIE_RELEASED = "realeased";
 	public static final int COLUMN_MOVIE_RELEASED = 3;
 
 	public static final String KEY_MOVIE_URL = "url";
 	public static final int COLUMN_MOVIE_URL = 4;
-	
+
 	public static final String KEY_MOVIE_TRAILER = "trailer";
 	public static final int COLUMN_MOVIE_TRAILER = 5;
-	
+
 	public static final String KEY_MOVIE_RUNTIME = "runtime";
 	public static final int COLUMN_MOVIE_RUNTIME = 6;
-	
+
 	public static final String KEY_MOVIE_TAGLINE = "tagline";
 	public static final int COLUMN_MOVIE_TAGLINE = 7;
-	
+
 	public static final String KEY_MOVIE_OVERVIEW = "overview";
 	public static final int COLUMN_MOVIE_OVERVIEW = 8;
-	
+
 	public static final String KEY_MOVIE_CERTIFICATION = "certification";
 	public static final int COLUMN_MOVIE_CERTIFICATION = 9;
-	
+
 	public static final String KEY_MOVIE_IMDB_ID = "imdb_id";
 	public static final int COLUMN_MOVIE_IMDB_ID = 10;
-	
+
 	public static final String KEY_MOVIE_TMDB_ID = "tmdb_id";
 	public static final int COLUMN_MOVIE_TMDB_ID = 11;
-	
+
 	public static final String KEY_MOVIE_RT_ID = "rt_id";
 	public static final int COLUMN_MOVIE_RT_ID = 12;
-	
+
 	public static final String KEY_MOVIE_LAST_UPDATED = "last_updated";
 	public static final int COLUMN_MOVIE_LAST_UPDATED = 13;
-	
+
 	public static final String KEY_MOVIE_POSTER = "poster";
 	public static final int COLUMN_MOVIE_POSTER = 14;
-	
+
 	public static final String KEY_MOVIE_FANART = "fanart";
 	public static final int COLUMN_MOVIE_FANART = 15;
-	
+
 	public static final String KEY_MOVIE_PERCENTAGE = "percentage";
 	public static final int COLUMN_MOVIE_PERCENTAGE = 16;
-	
+
 	public static final String KEY_MOVIE_WATCHED = "watched";
 	public static final int COLUMN_MOVIE_WATCHED = 17;
-	
+
 	public static final String KEY_MOVIE_RATING = "rating";
 	public static final int COLUMN_MOVIE_RATING = 18;
-	
+
 	public static final String KEY_MOVIE_IN_WATCHLIST = "in_watchlist";
 	public static final int COLUMN_MOVIE_IN_WATCHLIST = 19;
-	
+
 	public static final String KEY_MOVIE_IN_COLLECTION = "in_collection";
 	public static final int COLUMN_MOVIE_IN_COLLECTION = 20;
 
 	private final static String SELECT_MOVIE = 
 			KEY_ID + "," +
-			KEY_MOVIE_TITLE + "," +
-			KEY_MOVIE_YEAR + "," +
-			KEY_MOVIE_RELEASED + "," +
-			KEY_MOVIE_URL + "," +
-			KEY_MOVIE_TRAILER + "," +
-			KEY_MOVIE_RUNTIME + "," +
-			KEY_MOVIE_TAGLINE + "," +
-			KEY_MOVIE_OVERVIEW + "," +
-			KEY_MOVIE_CERTIFICATION + "," +
-			KEY_MOVIE_IMDB_ID + "," +
-			KEY_MOVIE_TMDB_ID + "," +
-			KEY_MOVIE_RT_ID + "," +
-			KEY_MOVIE_LAST_UPDATED + "," +
-			KEY_MOVIE_POSTER + "," +
-			KEY_MOVIE_FANART + "," +
-			KEY_MOVIE_PERCENTAGE + "," +
-			KEY_MOVIE_WATCHED + "," +
-			KEY_MOVIE_RATING + "," +
-			KEY_MOVIE_IN_WATCHLIST + "," +
-			KEY_MOVIE_IN_COLLECTION + ",";
+					KEY_MOVIE_TITLE + "," +
+					KEY_MOVIE_YEAR + "," +
+					KEY_MOVIE_RELEASED + "," +
+					KEY_MOVIE_URL + "," +
+					KEY_MOVIE_TRAILER + "," +
+					KEY_MOVIE_RUNTIME + "," +
+					KEY_MOVIE_TAGLINE + "," +
+					KEY_MOVIE_OVERVIEW + "," +
+					KEY_MOVIE_CERTIFICATION + "," +
+					KEY_MOVIE_IMDB_ID + "," +
+					KEY_MOVIE_TMDB_ID + "," +
+					KEY_MOVIE_RT_ID + "," +
+					KEY_MOVIE_LAST_UPDATED + "," +
+					KEY_MOVIE_POSTER + "," +
+					KEY_MOVIE_FANART + "," +
+					KEY_MOVIE_PERCENTAGE + "," +
+					KEY_MOVIE_WATCHED + "," +
+					KEY_MOVIE_RATING + "," +
+					KEY_MOVIE_IN_WATCHLIST + "," +
+					KEY_MOVIE_IN_COLLECTION + ",";
 
 	private static final String MOVIES_TABLE_CREATE = "create table " +
 			MOVIES_TABLE + " (" + 
 			KEY_ID + " integer primary key, " + 
 			KEY_MOVIE_TITLE + " text, " +
 			KEY_MOVIE_YEAR + " integer, " +
-			KEY_MOVIE_RELEASED + " text, " +
+			KEY_MOVIE_RELEASED + " integer, " +
 			KEY_MOVIE_URL + " text, " +
 			KEY_MOVIE_TRAILER + " text, " +
 			KEY_MOVIE_RUNTIME + " text, " +
@@ -543,7 +546,7 @@ public class DatabaseWrapper
 			db.execSQL(TVSHOWS_TABLE_CREATE);
 			db.execSQL(SEASONS_TABLE_CREATE);
 			db.execSQL(EPISODES_TABLE_CREATE);
-			
+
 			db.execSQL(MOVIES_TABLE_CREATE);
 
 			db.execSQL(EPISODES_WATCHED_INSERT_TRIGGER_CREATE);
@@ -559,22 +562,22 @@ public class DatabaseWrapper
 		public void onUpgrade(final SQLiteDatabase db, int oldVersion, final int newVersion) 
 		{
 			final ProgressDialog pd;
-//			pd = ProgressDialog.show(context, "", "Upgrading database from v" + oldVersion + " to v" + newVersion + "\nPlease wait...");
-//
-//			new Thread()
-//			{
-//				@Override
-//				public void run()
-//				{
-					if(newVersion <= 2)
-						upgradeFromV1ToV2(db);
-					
-					if(newVersion <= 3)
-						upgradeFromV2ToV3(db);
-//
-//					pd.dismiss();
-//				}
-//			}.start();
+			//			pd = ProgressDialog.show(context, "", "Upgrading database from v" + oldVersion + " to v" + newVersion + "\nPlease wait...");
+			//
+			//			new Thread()
+			//			{
+			//				@Override
+			//				public void run()
+			//				{
+			if(newVersion <= 2)
+				upgradeFromV1ToV2(db);
+
+			if(newVersion <= 3)
+				upgradeFromV2ToV3(db);
+			//
+			//					pd.dismiss();
+			//				}
+			//			}.start();
 		}
 
 		private void upgradeFromV1ToV2(SQLiteDatabase db)
@@ -624,7 +627,7 @@ public class DatabaseWrapper
 
 			dbw.close();
 		}
-		
+
 		private void upgradeFromV2ToV3(SQLiteDatabase db)
 		{
 			db.execSQL(MOVIES_TABLE_CREATE);
@@ -735,7 +738,7 @@ public class DatabaseWrapper
 		}
 
 		if(s.firstAired != null)
-			values.put(KEY_TVSHOW_FIRST_AIRED, s.firstAired.toString());
+			values.put(KEY_TVSHOW_FIRST_AIRED, String.valueOf(s.firstAired.getTime()));
 
 		values.put(KEY_TVSHOW_IMDB_ID, s.imdbId);
 		values.put(KEY_TVSHOW_IN_WATCHLIST, s.inWatchlist);
@@ -780,8 +783,26 @@ public class DatabaseWrapper
 		show.airTime = c.getString(COLUMN_TVSHOW_AIR_TIME);
 		show.certification = c.getString(COLUMN_TVSHOW_CERTIFICATION);
 		show.country = c.getString(COLUMN_TVSHOW_COUNTRY);
-		//TODO
-//		show.firstAired = new Date(c.getString(COLUMN_TVSHOW_FIRST_AIRED));
+		String date = c.getString(COLUMN_TVSHOW_FIRST_AIRED);
+		try
+		{
+			long intDate = Long.valueOf(date);
+			//new way
+			show.firstAired = new Date(intDate);
+		}
+		catch(Exception e)
+		{
+			//old way
+			//impossible to get a proper timestamp, there is a mess with the locale
+			//tell the user to refresh
+//			try 
+//			{
+//				show.firstAired = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ROOT).parse(date);
+//			} catch (ParseException e1) 
+//			{
+//				e1.printStackTrace();
+//			}
+		}
 		show.network = c.getString(COLUMN_TVSHOW_NETWORK);
 		show.overview = c.getString(COLUMN_TVSHOW_OVERVIEW);
 		show.runtime = c.getInt(COLUMN_TVSHOW_RUNTIME);
@@ -1159,7 +1180,7 @@ public class DatabaseWrapper
 		Cursor c = db.rawQuery(sql, null);
 		return c.moveToFirst();
 	}
-	
+
 	public boolean isThereMovies()
 	{
 		String sql = "SELECT * FROM " + MOVIES_TABLE;
@@ -1254,7 +1275,7 @@ public class DatabaseWrapper
 		{
 			TvShowEpisode e = getEpisodeFromCursor(c);
 			e.images.screen = null;
-			
+
 			if(cd == null || !Utils.isSameDay(cd.date, e.firstAired))
 			{
 				cd = new CalendarDate();
@@ -1271,7 +1292,7 @@ public class DatabaseWrapper
 			s.title = c.getString(c.getColumnIndex(KEY_TVSHOW_TITLE));
 			s.tvdbId = c.getString(c.getColumnIndex(KEY_TVSHOW_TVDB_ID));
 			s.network = c.getString(c.getColumnIndex(KEY_TVSHOW_NETWORK));
-			
+
 			s.images = new Images();
 			s.images.poster = c.getString(c.getColumnIndex(KEY_TVSHOW_POSTER));
 
@@ -1288,7 +1309,7 @@ public class DatabaseWrapper
 	}
 
 	/************************** Movies methods *******************************/
-	
+
 	/**
 	 *  Insert or update a movie
 	 */
@@ -1317,15 +1338,15 @@ public class DatabaseWrapper
 		values.put(KEY_MOVIE_TITLE, m.title);
 		values.put(KEY_MOVIE_URL, m.url);
 		values.put(KEY_MOVIE_YEAR, Integer.valueOf(m.year));
-		
+
 		values.put(KEY_MOVIE_IN_COLLECTION, m.inCollection);
 		values.put(KEY_MOVIE_IN_WATCHLIST, m.inWatchlist);
-		values.put(KEY_MOVIE_RELEASED, m.released.toString());
+		values.put(KEY_MOVIE_RELEASED, m.released.getTime());
 		values.put(KEY_MOVIE_TAGLINE, m.tagline);
 		values.put(KEY_MOVIE_TMDB_ID, m.tmdbId);
 		values.put(KEY_MOVIE_TRAILER, m.trailer);
 		values.put(KEY_MOVIE_WATCHED, m.watched);
-		
+
 		//TODO
 		//values.put(KEY_MOVIE_LAST_UPDATED, m.);
 		//values.put(KEY_MOVIE_RT_ID, m.);
@@ -1357,7 +1378,7 @@ public class DatabaseWrapper
 		movie.imdbId = c.getString(COLUMN_MOVIE_IMDB_ID);
 		movie.inCollection = c.getInt(COLUMN_MOVIE_IN_COLLECTION) != 0;
 		movie.inWatchlist = c.getInt(COLUMN_MOVIE_IN_WATCHLIST) != 0;
-//		movie. = c.getString(COLUMN_MOVIE_);
+		//		movie. = c.getString(COLUMN_MOVIE_);
 		movie.overview = c.getString(COLUMN_MOVIE_OVERVIEW);
 		movie.runtime = c.getInt(COLUMN_MOVIE_RUNTIME);
 		movie.rating = c.getString(COLUMN_MOVIE_RATING) == null ? null : Rating.fromValue(c.getString(COLUMN_MOVIE_RATING));
@@ -1365,8 +1386,7 @@ public class DatabaseWrapper
 		movie.images = i;
 		movie.imdbId = c.getString(COLUMN_MOVIE_IMDB_ID);
 		movie.ratings = r;		
-		//TODO
-//		movie.released = c.getString(COLUMN_MOVIE_RELEASED);
+		movie.released = new Date(c.getLong(COLUMN_MOVIE_RELEASED));
 		movie.tagline = c.getString(COLUMN_MOVIE_TAGLINE);
 		movie.title = c.getString(COLUMN_MOVIE_TITLE);
 		movie.tmdbId = c.getString(COLUMN_MOVIE_TMDB_ID);
@@ -1382,7 +1402,7 @@ public class DatabaseWrapper
 	{
 		List<Movie> movies = new ArrayList<Movie>();
 		Cursor c = db.rawQuery(
-						"SELECT * " +
+				"SELECT * " +
 						"FROM " + MOVIES_TABLE + " " +
 						"ORDER BY " + KEY_MOVIE_TITLE, 
 						null);
@@ -1437,7 +1457,7 @@ public class DatabaseWrapper
 		boolean exist = c.moveToFirst();
 
 		c.close();
-		
+
 		return exist;
 	}
 }
