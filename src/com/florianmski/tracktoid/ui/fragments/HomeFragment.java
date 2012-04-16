@@ -97,7 +97,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		AppRater.app_launched(getActivity());
 		
 		//sync with trakt
-		new ActivityTask(tm, this).silentConnectionError(true).execute();
+		new ActivityTask(tm, this).silentConnectionError(true).fire();
 
 		//Trying to set high definition image on high resolution
 		//does not seem to be a great idea, it's slow and I sometimes get an outOfMemoryError :/
@@ -147,7 +147,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 									rlWatchingNow.setVisibility(View.INVISIBLE);
 								}
 							}
-						}).execute();
+						}).fire();
 					}
 				})
 				.setNegativeButton("No", new DialogInterface.OnClickListener() 
@@ -230,7 +230,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 					rlWatchingNow.setVisibility(View.INVISIBLE);
 				}
 			}
-		}).silent(true).execute();
+		}).silent(true).fire();
 	}
 
 	@Override

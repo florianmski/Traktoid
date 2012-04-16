@@ -107,7 +107,7 @@ public class SearchFragment extends TraktFragment
 							getStatusView().hide().text(null);
 					}
 				}, tm.searchService().shows(search), false);
-        		commonTask.execute();
+        		commonTask.fire();
 			}
 		});
 	}

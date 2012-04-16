@@ -91,7 +91,7 @@ public class SignInFragment extends TraktFragment
 								}
 							}
 						}
-					}).execute();
+					}).fire();
 				}
 			}
 		});

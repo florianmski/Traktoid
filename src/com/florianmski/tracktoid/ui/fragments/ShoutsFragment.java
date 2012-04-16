@@ -90,7 +90,7 @@ public class ShoutsFragment extends TraktFragment
 		else
 		{
 			createGetShoutsTask();
-			commonTask.execute();
+			commonTask.fire();
 		}
 
 		lvShouts.setOnItemClickListener(new OnItemClickListener() 
@@ -161,12 +161,12 @@ public class ShoutsFragment extends TraktFragment
 								@Override
 								public void run() 
 								{
-									commonTask.execute();
+									commonTask.fire();
 								}
 							}, 3000);
 						}
 					}
-				}).execute();
+				}).fire();
 			}
 		});
 

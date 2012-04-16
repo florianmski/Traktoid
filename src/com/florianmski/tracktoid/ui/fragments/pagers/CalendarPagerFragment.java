@@ -42,7 +42,7 @@ public class CalendarPagerFragment extends TabsPagerFragment
 		commonTask = new CalendarTask(tm, this);
 		
 		if(savedInstanceState == null)
-			commonTask.execute();
+			commonTask.fire();
 		else
 			addTabs(null);
 	}

@@ -99,7 +99,7 @@ public class JoinFragment extends TraktFragment
 								}
 							}
 						}
-					}).execute();
+					}).fire();
 				}
 			}
 		});

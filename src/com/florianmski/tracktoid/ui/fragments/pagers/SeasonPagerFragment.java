@@ -66,7 +66,7 @@ public class SeasonPagerFragment extends PagerFragment
 //				Utils.removeLoading();
 //				initPagerActivity(new PagedListEpisodesAdapter(seasons, tvdbId, SeasonActivity.this));
 //			}
-//		}, tvdbId, true, true).execute();
+//		}, tvdbId, true, true).fire();
 
 		setData();
 	}

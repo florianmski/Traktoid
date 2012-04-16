@@ -144,7 +144,7 @@ public class ShowFragment extends TraktFragment
 						else
 							getStatusView().hide().text(null);
 					}
-				}, show.tvdbId, false, false).execute();
+				}, show.tvdbId, false, false).fire();
 
 				displayClearLogo();
 

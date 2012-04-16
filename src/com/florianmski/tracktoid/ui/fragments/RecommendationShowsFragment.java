@@ -57,7 +57,7 @@ public class RecommendationShowsFragment extends RecommendationFragment<TvShow> 
 			public void onComplete(Response r, boolean success) 
 			{
 				adapter.clear();
-				createGetRecommendationsTask().execute();
+				createGetRecommendationsTask().fire();
 			}
 		});
 	}

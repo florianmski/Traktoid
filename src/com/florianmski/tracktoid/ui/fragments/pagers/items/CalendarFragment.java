@@ -73,7 +73,7 @@ public class CalendarFragment extends PagerItemFragment
 					else
 						getStatusView().hide().text(null);
 				}
-			}).execute();
+			}).fire();
 		}
 		//online calendar
 		else

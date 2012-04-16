@@ -20,6 +20,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.jakewharton.trakt.entities.CalendarDate;
@@ -38,6 +39,14 @@ public abstract class DBTask extends AsyncTask<Void, String, Boolean>
 	{
 		this.listener = listener;
 		this.context = context;
+	}
+	
+	public void fire()
+	{
+		if(Build.VERSION.SDK_INT >= 11)
+			this.executeOnExecutor(THREAD_POOL_EXECUTOR);
+		else
+			this.execute();
 	}
 	
 	@Override

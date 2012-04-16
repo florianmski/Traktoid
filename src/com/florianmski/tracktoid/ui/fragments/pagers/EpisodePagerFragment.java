@@ -78,7 +78,7 @@ public class EpisodePagerFragment extends PagerFragment
 					
 					initPagerFragment(adapter);
 				}
-			}, seasonId).execute();
+			}, seasonId).fire();
 		else
 		{
 			adapter = new PagerEpisodeAdapter(episodes, tvdbId, getFragmentManager());
@@ -144,7 +144,7 @@ public class EpisodePagerFragment extends PagerFragment
 					((PagerEpisodeAdapter)adapter).reloadData(episodes);
 					getSherlockActivity().invalidateOptionsMenu();
 				}
-			}, seasonId).execute();
+			}, seasonId).fire();
 	}
 
 	@Override

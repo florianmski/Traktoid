@@ -79,7 +79,7 @@ public class TrendingFragment extends TraktFragment
 					setAdapter();
 				}
 			}, tm.showService().trending(), false);
-			commonTask.execute();
+			commonTask.fire();
 		}
 		else
 			setAdapter();

@@ -56,7 +56,7 @@ public class RecommendationMoviesFragment extends RecommendationFragment<Movie> 
 			public void onComplete(Response r, boolean success) 
 			{
 				adapter.clear();
-				createGetRecommendationsTask().execute();
+				createGetRecommendationsTask().fire();
 			}
 		});
 	}

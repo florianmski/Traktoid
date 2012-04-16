@@ -68,7 +68,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface> extend
 		{
 			getStatusView().show().text("Retrieving genres,\nPlease wait...");
 
-			getGenresTask().execute();
+			getGenresTask().fire();
 		}
 		else
 		{
@@ -140,7 +140,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface> extend
 			@Override
 			public void onDismiss(String id) 
 			{
-				getDismissTask(id).execute();
+				getDismissTask(id).fire();
 			}
 		});
 	}
@@ -177,7 +177,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface> extend
 		{
 			if(adapter != null)
 				adapter.clear();
-			createGetRecommendationsTask().execute();
+			createGetRecommendationsTask().fire();
 		}
 		else 
 			recreation--;

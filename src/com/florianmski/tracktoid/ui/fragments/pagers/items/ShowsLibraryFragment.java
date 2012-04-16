@@ -58,9 +58,10 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment
 	@Override
 	public void displayContent() 
 	{
-		if(!getDBWrapper().isThereShows())
-			onRefreshClick();
-		else
+//		if(!getDBWrapper().isThereShows())
+//			onRefreshClick();
+//		else
+		if(getDBWrapper().isThereShows())
 		{
 			new DBShowsTask(getActivity(), new DBAdapter() 
 			{
@@ -70,7 +71,7 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment
 					adapter.updateItems(shows);
 					getStatusView().hide().text(null);
 				}
-			}).execute();
+			}).fire();
 		}
 	}
 

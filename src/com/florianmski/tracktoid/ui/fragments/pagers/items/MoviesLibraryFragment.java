@@ -63,9 +63,10 @@ public class MoviesLibraryFragment extends PagerItemLibraryFragment
 	@Override
 	public void displayContent() 
 	{
-		if(!getDBWrapper().isThereMovies())
-			onRefreshClick();
-		else
+//		if(!getDBWrapper().isThereMovies())
+//			onRefreshClick();
+//		else
+		if(getDBWrapper().isThereMovies())
 		{
 			new DBMoviesTask(getActivity(), new DBAdapter() 
 			{
@@ -75,7 +76,7 @@ public class MoviesLibraryFragment extends PagerItemLibraryFragment
 					adapter.updateItems(movies);
 					getStatusView().hide().text(null);
 				}
-			}).execute();
+			}).fire();
 		}
 	}
 

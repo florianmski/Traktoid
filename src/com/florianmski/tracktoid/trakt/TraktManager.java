@@ -137,7 +137,7 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 			tasks.remove(0);
 
 			if(!tasks.isEmpty())
-				tasks.get(0).inQueue().execute();
+				tasks.get(0).inQueue().fire();
 		}
 
 		if(listeners.contains(listener))
@@ -201,7 +201,7 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 		tasks.add(task);
 
 		if(tasks.size() == 1)
-			task.inQueue().execute();
+			task.inQueue().fire();
 		else
 			Toast.makeText(context, "This action will be done later...", Toast.LENGTH_SHORT).show();
 	}

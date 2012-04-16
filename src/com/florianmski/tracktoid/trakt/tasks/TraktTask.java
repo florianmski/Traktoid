@@ -18,6 +18,7 @@ package com.florianmski.tracktoid.trakt.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
@@ -54,6 +55,14 @@ public abstract class TraktTask extends AsyncTask<Void, String, Boolean>
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public void fire()
+	{
+		if(Build.VERSION.SDK_INT >= 11)
+			this.executeOnExecutor(THREAD_POOL_EXECUTOR);
+		else
+			this.execute();
 	}
 	
 	public TraktTask inQueue()
