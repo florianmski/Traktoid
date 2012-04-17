@@ -16,14 +16,10 @@
 
 package com.florianmski.tracktoid.db;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -998,6 +994,28 @@ public class DatabaseWrapper
 
 		return tvSeason;
 	}
+	
+//	public ArrayList<Integer> getSeasonsNumber(String tvdbId, boolean orderByASC)
+//	{
+//		ArrayList<Integer> seasons = new ArrayList<Integer>();
+//		String sql = 
+//				"SELECT " + KEY_SEASON_SEASON +
+//						"FROM " + SEASONS_TABLE + " " +
+//						"WHERE " + KEY_SEASON_TVSHOW_ID	+ "=? " +
+//						"ORDER BY " + KEY_SEASON_SEASON + (orderByASC ? " ASC" : " DESC");
+//		Cursor c = db.rawQuery(sql, new String[]{tvdbId});
+//		c.moveToFirst();
+//
+//		for(int i = 0; i < c.getCount(); i++)
+//		{
+//			seasons.add(c.getInt(0));
+//			c.moveToNext();
+//		}
+//		
+//		c.close();
+//
+//		return seasons;
+//	}
 
 	/************************** Episodes methods *******************************/
 

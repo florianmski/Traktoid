@@ -36,7 +36,6 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.traktoid.TraktoidInterface;
-import com.jakewharton.trakt.entities.TvShow;
 
 public class ListRecommendationAdapter<T extends TraktoidInterface> extends BaseAdapter implements AdapterInterface
 {

@@ -12,7 +12,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
+import com.florianmski.tracktoid.WatchedModeManager;
 import com.florianmski.tracktoid.adapters.pagers.PagerSeasonAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.Image;
@@ -74,6 +74,33 @@ public class SeasonPagerFragment extends PagerFragment
 	//don't know why but using this thread is like 3 time faster than using an asynctask doing the same thing (???)
 	public void setData()
 	{
+//		new Thread()
+//		{
+//			@Override
+//			public void run()
+//			{
+//				DatabaseWrapper dbw = getDBWrapper();
+//				String tvdb_id = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
+//				List<TvShowSeason> seasons = dbw.getSeasons(tvdb_id, true, true);
+//
+//				adapter = new PagerSeasonAdapter(seasons, tvdb_id, getFragmentManager(), getActivity().getApplicationContext());
+//
+//				getActivity().runOnUiThread(new Runnable() 
+//				{
+//					@Override
+//					public void run() 
+//					{
+//						if(((PagerSeasonAdapter)adapter).isEmpty())
+//							getStatusView().hide().text("No seasons, this is strange...");
+//						else
+//							getStatusView().hide().text(null);
+//						
+//						initPagerFragment(adapter);
+//					}
+//				});
+//			}
+//		}.start();
+		//TODO proper task
 		new Thread()
 		{
 			@Override
@@ -81,8 +108,7 @@ public class SeasonPagerFragment extends PagerFragment
 			{
 				DatabaseWrapper dbw = getDBWrapper();
 				String tvdb_id = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
-				List<TvShowSeason> seasons = dbw.getSeasons(tvdb_id, true, true);
-				SeasonPagerFragment.this.seasons = seasons;
+				seasons = dbw.getSeasons(tvdb_id, false, true);
 
 				adapter = new PagerSeasonAdapter(seasons, tvdb_id, getFragmentManager(), getActivity().getApplicationContext());
 
@@ -112,12 +138,6 @@ public class SeasonPagerFragment extends PagerFragment
 			menu.add(0, R.id.action_bar_send, 0, "Send")
 				.setIcon(R.drawable.ab_icon_send)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-			menu.add(0, R.id.menu_all, 0, "All")
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-
-			menu.add(0, R.id.menu_none, 0, "None")
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		}
 		menu.add(0, R.id.action_bar_watched, 0, "Watched")
 			.setIcon(R.drawable.ab_icon_eye)
@@ -135,12 +155,12 @@ public class SeasonPagerFragment extends PagerFragment
 			{
 				watchedMode = !watchedMode;
 				getSherlockActivity().invalidateOptionsMenu();
-				((PagerSeasonAdapter) adapter).setWatchedMode(watchedMode);
+				WatchedModeManager.getInstance().setWatchedMode(watchedMode);
 			}
 			return true;
 		case R.id.action_bar_send :
 		{
-			List<Map<Integer, Boolean>> listWatched = ((PagerSeasonAdapter) adapter).getListWatched();
+			List<Map<Integer, Boolean>> listWatched = WatchedModeManager.getInstance().getWatchedList();
 			int[] seasons = ((PagerSeasonAdapter) adapter).getSeasons();
 
 			boolean isEmpty = true;
@@ -154,15 +174,9 @@ public class SeasonPagerFragment extends PagerFragment
 
 			watchedMode = !watchedMode;
 			getSherlockActivity().invalidateOptionsMenu();
-			((PagerSeasonAdapter) adapter).setWatchedMode(watchedMode);
+			WatchedModeManager.getInstance().setWatchedMode(watchedMode);
 		}
 		return true;
-		case R.id.menu_all :
-			checkBoxSelection(true);
-			return true;
-		case R.id.menu_none :
-			checkBoxSelection(false);
-			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -180,13 +194,6 @@ public class SeasonPagerFragment extends PagerFragment
 		if(show.tvdbId.equals(tvdbId))
 			getActivity().finish();
 	}
-
-	public void checkBoxSelection(boolean checked)
-	{
-		ListEpisodeAdapter a = ((PagerSeasonAdapter) adapter).getAdapters().get(currentPagerPosition);
-		a.checkBoxSelection(checked);
-		a.notifyDataSetChanged();
-	}
 	
 	@Override
 	public void onPageSelected(int position) 
@@ -194,5 +201,13 @@ public class SeasonPagerFragment extends PagerFragment
 		super.onPageSelected(position);
 		
 		setBackground(new Image(tvdbId, seasons.get(position).season));
+	}
+	
+	public interface OnWatchedModeListener
+	{
+		public void setWatchedMode(boolean on);
+		public Map<Integer, Boolean> getWatchedList();
+		public void checkAll(String url);
+		public void checkNone(String url);
 	}
 }

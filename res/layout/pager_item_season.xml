@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-     xmlns:android="http://schemas.android.com/apk/res/android"
-     xmlns:greendroid="http://schemas.android.com/apk/res/com.florianmski.tracktoid"
-     android:layout_width="fill_parent"
-     android:layout_height="fill_parent">
-     <ListView
-          android:layout_width="fill_parent"
-          android:layout_height="fill_parent"
-          android:id="@+id/listViewEpisodes" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:greendroid="http://schemas.android.com/apk/res/com.florianmski.tracktoid"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <include layout="@layout/view_status" />
+
+    <ListView
+        android:id="@+id/listViewEpisodes"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
 </RelativeLayout>

@@ -16,13 +16,11 @@
 
 package com.florianmski.tracktoid.adapters;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Handler;
@@ -37,7 +35,6 @@ import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 
 import com.androidquery.AQuery;
-import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.MediaBase;
@@ -216,9 +213,13 @@ public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter
 		AQuery aq = listAq.recycle(convertView);
 
 		if(aq.shouldDelay(position, convertView, parent, i.getUrl()))
+		{
+			holder.ivPoster.setScaleType(ScaleType.CENTER);
 			aq.id(holder.ivPoster).image(context.getResources().getDrawable(R.drawable.progress));
+		}
 		else
 		{
+			holder.ivPoster.setScaleType(ScaleType.CENTER_CROP);
 			aq.id(holder.ivPoster).image(i.getUrl(), true, true);
 //			File posterImage = aq.getCachedFile(i.getUrl());
 //

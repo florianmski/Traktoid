@@ -53,6 +53,10 @@ public class ListEpisodeAdapter extends BaseAdapter implements Serializable, Ada
 	private Map<Integer, Boolean> listWatched = new HashMap<Integer, Boolean>();
 	private Bitmap placeholder = null;
 	
+	//TODO test if this works or not
+	//take the orientation change into account
+	//maybe move the watched logic from adapter to the fragment ?
+	
     public ListEpisodeAdapter(List<TvShowEpisode> episodes, Context context, String tvdb_id)
     {
     	this.episodes = episodes;
@@ -74,6 +78,12 @@ public class ListEpisodeAdapter extends BaseAdapter implements Serializable, Ada
     	
     	if(watchedMode)
     		listWatched.clear();
+    	notifyDataSetChanged();
+    }
+    
+    public boolean getWatchedMode()
+    {
+    	return watchedMode;
     }
     
     //check or uncheck all episodes of a season
@@ -85,11 +95,13 @@ public class ListEpisodeAdapter extends BaseAdapter implements Serializable, Ada
     		if(e.watched != checked)
     			listWatched.put(e.number, checked);
     	}
+    	notifyDataSetChanged();
 	}
     
     public void reloadData(List<TvShowEpisode> episodes)
 	{
     	this.episodes = episodes;
+    	notifyDataSetChanged();
 	}
     
     public List<TvShowEpisode> getEpisodes()
@@ -157,7 +169,7 @@ public class ListEpisodeAdapter extends BaseAdapter implements Serializable, Ada
         }.url(i.getUrl()).fileCache(false).memCache(true).ratio(9.0f / 16.0f);
         
         //in case user scroll the list fast, stop loading images from web
-        if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
+        if(aq.shouldDelay(position, convertView, parent, i.getUrl()))
         	aq.id(holder.ivScreen).image(placeholder);
         else
         	aq.id(holder.ivScreen).image(cb);

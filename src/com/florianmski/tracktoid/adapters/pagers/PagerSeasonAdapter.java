@@ -16,81 +16,41 @@
 
 package com.florianmski.tracktoid.adapters.pagers;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.florianmski.tracktoid.adapters.AdapterInterface;
-import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.SeasonFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.SeasonFragment.OnConstructionListener;
 import com.jakewharton.trakt.entities.TvShowSeason;
 import com.viewpagerindicator.TitleProvider;
 
-public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements TitleProvider, OnConstructionListener, AdapterInterface
+public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements TitleProvider, AdapterInterface
 {
 	private List<TvShowSeason> seasons;
-	private List<ListEpisodeAdapter> adapters = new ArrayList<ListEpisodeAdapter>();
 	private String tvdbId;
 
 	public PagerSeasonAdapter(List<TvShowSeason> seasons, String tvdbId, FragmentManager fm, Context context)
 	{
 		super(fm);
-		
-		SeasonFragment.setListener(this);
-		
+				
 		this.seasons = seasons;
 		this.tvdbId = tvdbId;
-
-		for(TvShowSeason s : seasons)
-			adapters.add(new ListEpisodeAdapter(s.episodes.episodes, context, tvdbId));
 	}
 	
 	@Override
 	public void clear() 
 	{
 		seasons.clear();
-		adapters.clear();
 		notifyDataSetChanged();
 	}
 
 	public void reloadData(List<TvShowSeason> seasons)
 	{
 		this.seasons = seasons;
-				
-		for(int i = 0; i < seasons.size(); i++)
-		{
-			adapters.get(i).reloadData(seasons.get(i).episodes.episodes);
-			adapters.get(i).notifyDataSetChanged();
-		}
-	}
-
-	public void setWatchedMode(boolean watchedMode)
-	{
-		for(ListEpisodeAdapter a : adapters)
-		{
-			a.setWatchedMode(watchedMode);
-			a.notifyDataSetChanged();
-		}
-	}
-
-	public List<ListEpisodeAdapter> getAdapters()
-	{
-		return adapters;
-	}
-
-	public List<Map<Integer, Boolean>> getListWatched()
-	{
-		List<Map<Integer, Boolean>> listWatched = new ArrayList<Map<Integer,Boolean>>();
-		for(int i = 0; i < adapters.size(); i++)
-			listWatched.add(adapters.get(i).getListWatched());
-		
-		return listWatched;
+		notifyDataSetChanged();
 	}
 
 	public int[] getSeasons()
@@ -126,17 +86,6 @@ public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements Tit
 	public int getItemPosition(Object object) 
 	{
 	    return POSITION_NONE;
-	}
-	
-	@Override
-	public ListEpisodeAdapter iNeedAdapter(int season) 
-	{
-		for(int i = 0; i < seasons.size(); i++)
-		{
-			if(season == seasons.get(i).season)
-				return adapters.get(i);
-		}
-		return null;
 	}
 	
 	@Override
