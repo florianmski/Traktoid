@@ -205,7 +205,7 @@ public class ShowFragment extends TraktFragment
 	        	@Override
 	            public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
 	        	{     
-	        		aq.id(iv).image(Utils.shadowBitmap(Utils.borderBitmap(bm, getActivity()))).animate(android.R.anim.fade_in);
+	        		aq.id(iv).image(Utils.borderBitmap(bm, getActivity())).animate(android.R.anim.fade_in);
 	            }
 
 	        }.url(i.getUrl()).fileCache(false).memCache(true).ratio(9.0f / 16.0f);

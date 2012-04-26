@@ -68,7 +68,7 @@ public class ListShoutsAdapter extends RootAdapter<Shout>
 			public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
 			{     
 				//                    iv.setImageBitmap(Utils.shadowBitmap(Utils.roundBitmap(bm)));
-				aq.id(iv).image(Utils.shadowBitmap(Utils.roundBitmap(bm))).animate(android.R.anim.fade_in);
+				aq.id(iv).image(Utils.roundBitmap(bm)).animate(android.R.anim.fade_in);
 			}
 
 		}.url(s.user.avatar).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
