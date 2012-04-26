@@ -18,16 +18,9 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 	protected TraktManager tm = TraktManager.getInstance();
 	protected TraktTask commonTask;
 	
-	public TraktFragment() 
-	{
+	public TraktFragment() {}
 
-	}
-	
-//	public static TraktFragment newInstance(Bundle args)
-//	{
-//		return null;
-//	}
-
+	//TODO keep it ?
 	public TraktFragment(FragmentListener listener)
 	{
 		super();
@@ -76,6 +69,7 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 	@Override
 	public void onErrorTraktRequest(Exception e) 
 	{
+		//TODO
 		StatusView sv = getStatusView();
 		if(sv != null)
 		{

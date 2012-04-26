@@ -154,20 +154,11 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 		return commonTask = getItemsTask(genre);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) 
-	{		
-//		items = (ArrayList<T>) savedInstanceState.get("items");
-//		genres = (ArrayList<Genre>) savedInstanceState.get("genres");
-	}
+	public void onRestoreState(Bundle savedInstanceState) {}
 
 	@Override
-	public void onSaveState(Bundle toSave) 
-	{
-//		toSave.putSerializable("items", items);
-//		toSave.putSerializable("genres", (Serializable) genres);
-	}
+	public void onSaveState(Bundle toSave) {}
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId)

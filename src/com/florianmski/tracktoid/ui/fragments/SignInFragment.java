@@ -22,6 +22,8 @@ import com.jakewharton.trakt.entities.Response;
 
 public class SignInFragment extends TraktFragment
 {
+	//TODO when click on "ok" on the keyboard, send request
+	
 	private EditText edtUsername;
 	private EditText edtPassword;
 	private Button btnGo;
@@ -110,14 +112,8 @@ public class SignInFragment extends TraktFragment
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) 
-	{
-		// TODO Auto-generated method stub
-	}
+	public void onRestoreState(Bundle savedInstanceState) {}
 
 	@Override
-	public void onSaveState(Bundle toSave) 
-	{
-		// TODO Auto-generated method stub
-	}
+	public void onSaveState(Bundle toSave) {}
 }

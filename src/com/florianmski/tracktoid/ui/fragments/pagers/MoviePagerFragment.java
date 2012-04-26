@@ -10,9 +10,8 @@ import com.jakewharton.trakt.entities.Movie;
 
 public class MoviePagerFragment extends PagerFragment
 {
-	//TODO onShowUpdated()
+	//TODO onMovieUpdated()
 	private Movie movie;
-	private boolean isExist;
 	
 	public static MoviePagerFragment newInstance(Bundle args)
 	{
@@ -74,40 +73,6 @@ public class MoviePagerFragment extends PagerFragment
 		}.start();
 	}
 
-//	@Override
-//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-//	{
-//		super.onCreateOptionsMenu(menu, inflater);
-//		if(!isExist)
-//		{
-//			menu.add(0, R.id.action_bar_add, 0, "Add")
-//			.setIcon(R.drawable.ab_icon_add)
-//			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//		}
-//		menu.add(0, R.id.action_bar_shouts, 0, "Shouts")
-//		.setIcon(R.drawable.ab_icon_shouts)
-//		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//	}
-//
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) 
-//	{
-//		switch(item.getItemId())
-//		{
-//		case R.id.action_bar_add :
-//			ArrayList<TvShow> shows = new ArrayList<TvShow>();
-//			shows.add(show);
-//			tm.addToQueue(new UpdateShowsTask(tm, this, shows));
-//			return true;
-//		case R.id.action_bar_shouts :
-//			Intent i = new Intent(getActivity(), ShoutsActivity.class);
-//			i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, show.tvdbId);
-//			startActivity(i);
-//			return true;
-//		}
-//		return super.onOptionsItemSelected(item);
-//	}
-//	
 	@Override
 	public void onPageSelected(int position) 
 	{

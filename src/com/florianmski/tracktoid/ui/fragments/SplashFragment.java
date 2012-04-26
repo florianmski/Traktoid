@@ -25,6 +25,8 @@ import com.florianmski.tracktoid.ui.activities.phone.LoginActivity;
 
 public class SplashFragment extends TraktFragment
 {
+	//TODO start sync here ?
+	
 	private static final int STOPSPLASH = 0;
 	//time in milliseconds
 	private long SPLASHTIME = 2000;
@@ -127,15 +129,9 @@ public class SplashFragment extends TraktFragment
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) 
-	{
-		// TODO Auto-generated method stub	
-	}
+	public void onRestoreState(Bundle savedInstanceState) {}
 
 	@Override
-	public void onSaveState(Bundle toSave) 
-	{
-		// TODO Auto-generated method stub	
-	}
+	public void onSaveState(Bundle toSave) {}
 
 }

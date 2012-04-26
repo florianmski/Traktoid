@@ -22,7 +22,6 @@ import com.jakewharton.trakt.entities.TvShow;
 public class TrendingFragment extends TraktFragment
 {
 	private CoverFlow cf;
-	//	private TextView tvShowTitle;
 	private ArrayList<TvShow> shows;
 
 	public static TrendingFragment newInstance(Bundle args)
@@ -51,7 +50,6 @@ public class TrendingFragment extends TraktFragment
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) 
 			{
-				//				tvShowTitle.setText(shows.get(position).title);
 				setTitle(shows.get(position).title);
 			}
 
@@ -102,7 +100,6 @@ public class TrendingFragment extends TraktFragment
 		View v = inflater.inflate(R.layout.fragment_trending, null);
 
 		cf = (CoverFlow)v.findViewById(R.id.coverflow);
-		//		tvShowTitle = (TextView)v.findViewById(R.id.textViewShowTitle);
 
 		return v;
 	}

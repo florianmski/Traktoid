@@ -53,7 +53,6 @@ public abstract class PagerItemTraktFragment<T extends TraktoidInterface<T>> ext
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
-//		View v = inflater.inflate(R.layout.pager_item_trakt, null);
 		View v = super.onCreateView(inflater, container, savedInstanceState);
 
 		ScrollingTextView tvAired = (ScrollingTextView)v.findViewById(R.id.textViewAired);

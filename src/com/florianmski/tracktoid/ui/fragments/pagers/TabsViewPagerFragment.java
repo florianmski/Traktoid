@@ -67,15 +67,11 @@ public abstract class TabsViewPagerFragment extends TraktFragment
 
 		protected static final class TabInfo 
 		{
-			private final String tag;
 			private final int layoutId;
-			private final Bundle args;
-
+			
 			TabInfo(String _tag, int _layoutId, Bundle _args) 
 			{
-				tag = _tag;
 				layoutId = _layoutId;
-				args = _args;
 			}
 		}
 

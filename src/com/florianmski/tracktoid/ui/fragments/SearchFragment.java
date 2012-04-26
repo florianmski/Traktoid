@@ -67,7 +67,8 @@ public class SearchFragment extends TraktFragment
         lvSearch.setOnItemClickListener(new OnItemClickListener() 
         {	
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) 
+			{
 				Intent i = new Intent(getActivity(), ShowActivity.class);
 				i.putExtra(TraktoidConstants.BUNDLE_POSITION, position);
 				i.putExtra(TraktoidConstants.BUNDLE_RESULTS, shows);

@@ -21,6 +21,9 @@ import com.jakewharton.trakt.entities.Response;
 
 public class JoinFragment extends TraktFragment
 {
+	//TODO when click on "ok" on the keyboard, send request
+	//TODO this is the same code as signinfragment, make only one fragment for both ?
+	
 	private EditText edtUsername;
 	private EditText edtEmail;
 	private EditText edtPassword;
@@ -119,14 +122,8 @@ public class JoinFragment extends TraktFragment
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) 
-	{
-		// TODO Auto-generated method stub
-	}
+	public void onRestoreState(Bundle savedInstanceState) {}
 
 	@Override
-	public void onSaveState(Bundle toSave) 
-	{
-		// TODO Auto-generated method stub
-	}
+	public void onSaveState(Bundle toSave) {}
 }

@@ -128,7 +128,6 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 			break;
 		}
 		
-//		pageIndicator.setCurrentItem(currentPagerPosition);
 		pageIndicator.setOnPageChangeListener(this);
 	}
 

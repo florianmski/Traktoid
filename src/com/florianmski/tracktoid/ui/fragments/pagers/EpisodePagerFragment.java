@@ -32,10 +32,7 @@ public class EpisodePagerFragment extends PagerFragment
 		return f;
 	}
 	
-	public EpisodePagerFragment() 
-	{
-		
-	}
+	public EpisodePagerFragment() {}
 	
 	public EpisodePagerFragment(FragmentListener listener) 
 	{

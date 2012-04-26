@@ -57,9 +57,6 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment<TvShow>
 	@Override
 	public void displayContent() 
 	{
-//		if(!getDBWrapper().isThereShows())
-//			onRefreshClick();
-//		else
 		if(getDBWrapper().isThereShows())
 		{
 			new DBShowsTask(getActivity(), new DBAdapter() 
@@ -203,14 +200,8 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment<TvShow>
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) 
-	{
-		// TODO Auto-generated method stub
-	}
+	public void onRestoreState(Bundle savedInstanceState) {}
 
 	@Override
-	public void onSaveState(Bundle toSave) 
-	{
-		// TODO Auto-generated method stub
-	}
+	public void onSaveState(Bundle toSave) {}
 }

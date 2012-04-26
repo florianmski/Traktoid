@@ -85,6 +85,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 	{
 		super.onActivityCreated(savedInstanceState);
 
+		//TODO make something smart
 		//check if db need an upgrade
 //		DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
 //		dbw.open();
@@ -173,9 +174,6 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		menu.add(0, R.id.action_bar_about, 0, "About")
 		.setIcon(R.drawable.ab_icon_info)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//		menu.add(0, R.id.action_bar_settings, 0, "Settings")
-//		.setIcon(R.drawable.ab_icon_settings)
-//		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 	}
 
 	@Override
@@ -234,16 +232,10 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) 
-	{
-		// TODO Auto-generated method stub
-	}
+	public void onRestoreState(Bundle savedInstanceState) {}
 
 	@Override
-	public void onSaveState(Bundle toSave) 
-	{
-		// TODO Auto-generated method stub
-	}
+	public void onSaveState(Bundle toSave) {}
 
 	@Override
 	public void onClick(int buttonId) 

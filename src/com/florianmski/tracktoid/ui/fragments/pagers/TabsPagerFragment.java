@@ -67,13 +67,11 @@ public abstract class TabsPagerFragment extends TraktFragment
 
 		static final class TabInfo 
 		{
-			private final String tag;
 			private final Class<?> clss;
 			private final Bundle args;
 
 			TabInfo(String _tag, Class<?> _class, Bundle _args) 
 			{
-				tag = _tag;
 				clss = _class;
 				args = _args;
 			}
@@ -177,10 +175,7 @@ public abstract class TabsPagerFragment extends TraktFragment
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-
-	}
+	public void onRestoreState(Bundle savedInstanceState) {}
 
 	@Override
 	public void onSaveState(Bundle toSave) 

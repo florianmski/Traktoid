@@ -80,6 +80,7 @@ public class ShoutsFragment extends TraktFragment
 		tvdbId = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
 		episode = (TvShowEpisode)getArguments().get(TraktoidConstants.BUNDLE_EPISODE);
 
+		//TODO find a better title
 		if(episode == null)
 			setTitle("Shouts : " + getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
 		else
@@ -218,6 +219,7 @@ public class ShoutsFragment extends TraktFragment
 		return v;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onRestoreState(Bundle savedInstanceState) 
 	{

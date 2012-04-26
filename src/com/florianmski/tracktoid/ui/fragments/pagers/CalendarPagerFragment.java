@@ -73,7 +73,6 @@ public class CalendarPagerFragment extends TabsPagerFragment
 	@Override
 	public View getView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
-		//TODO create layout
 		return inflater.inflate(R.layout.fragment_calendar, null);
 	}
 	
@@ -84,17 +83,8 @@ public class CalendarPagerFragment extends TabsPagerFragment
 	}
 	
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) 
-	{
-		//create empty arraylist to create a pageradapter that will be filled by calendarfragment (they saved their states)
-//		this.calendars = new ArrayList<ArrayList<CalendarDate>>();
-//		for(int i = 0; i < savedInstanceState.getInt("size"); i++)
-//			calendars.add(new ArrayList<CalendarDate>());
-	}
+	public void onRestoreState(Bundle savedInstanceState) {}
 
 	@Override
-	public void onSaveState(Bundle toSave) 
-	{
-//		toSave.putInt("size", calendars.size());
-	}
+	public void onSaveState(Bundle toSave) {}
 }

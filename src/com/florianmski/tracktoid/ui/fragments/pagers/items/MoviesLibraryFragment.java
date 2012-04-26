@@ -62,9 +62,6 @@ public class MoviesLibraryFragment extends PagerItemLibraryFragment<Movie>
 	@Override
 	public void displayContent() 
 	{
-//		if(!getDBWrapper().isThereMovies())
-//			onRefreshClick();
-//		else
 		if(getDBWrapper().isThereMovies())
 		{
 			new DBMoviesTask(getActivity(), new DBAdapter() 

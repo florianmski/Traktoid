@@ -30,6 +30,9 @@ import com.jakewharton.trakt.entities.TvShow;
  */
 public class CoverFlowImageAdapter extends BaseAdapter 
 {
+	//TODO extends RootAdapter
+	//TODO placeholder
+	
 	/** The height. */
 	private float height = 0;
 
@@ -120,11 +123,11 @@ public class CoverFlowImageAdapter extends BaseAdapter
 
 		BitmapAjaxCallback cb = new BitmapAjaxCallback()
 		{
-
 			@Override
 			public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
 			{
-				iv.setImageBitmap(createReflectedImages(bm));
+				if(bm != null)
+					iv.setImageBitmap(createReflectedImages(bm));
 			}
 		};
 

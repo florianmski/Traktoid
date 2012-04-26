@@ -63,7 +63,8 @@ public abstract class BaseFragment extends SherlockFragment
 	public void onDestroy() 
 	{
 		super.onDestroy();
-		if (dbw != null) {
+		if (dbw != null) 
+		{
 			dbw.close();
 			dbw = null;
 		}

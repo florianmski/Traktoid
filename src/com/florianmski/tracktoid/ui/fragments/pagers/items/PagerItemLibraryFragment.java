@@ -251,7 +251,6 @@ public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> e
 		}
 		else
 		{
-//			int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
 			int value = getSherlockActivity().getSupportActionBar().getHeight();
 			ProgressBar pbRefresh = new ProgressBar(getActivity());
 			pbRefresh.setIndeterminate(true);
@@ -308,15 +307,9 @@ public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> e
 	}
 	
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) 
-	{
-		// TODO Auto-generated method stub
-	}
+	public void onRestoreState(Bundle savedInstanceState) {}
 
 	@Override
-	public void onSaveState(Bundle toSave) 
-	{
-		// TODO Auto-generated method stub
-	}
+	public void onSaveState(Bundle toSave) {}
 
 }
