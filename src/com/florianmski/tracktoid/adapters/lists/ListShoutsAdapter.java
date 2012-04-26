@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,76 +17,30 @@ import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.AdapterInterface;
+import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.jakewharton.trakt.entities.Shout;
 
-public class ListShoutsAdapter extends BaseAdapter implements AdapterInterface
+public class ListShoutsAdapter extends RootAdapter<Shout>
 {
-	private List<Shout> shouts;
-	private Context context;
 	private Bitmap placeholder = null;
 
 	public ListShoutsAdapter(List<Shout> shouts, Context context)
 	{
-		this.shouts = shouts;
-		this.context = context;
+		super(context, shouts);
 		placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
-	}
-
-	@Override
-	public void clear()
-	{
-		this.shouts.clear();
-		this.notifyDataSetChanged();
-	}
-
-	public void reload(List<Shout> shouts)
-	{
-		this.shouts = shouts;
-		this.notifyDataSetChanged();
-	}
-
-	public void addShout(Shout s)
-	{
-		shouts.add(0, s);
-		this.notifyDataSetChanged();
 	}
 
 	public void revealSpoiler(int position)
 	{
-		if(position < getCount() && shouts.get(position).spoiler)
+		if(position < getCount() && items.get(position).spoiler)
 		{
-			shouts.get(position).spoiler = false;
+			items.get(position).spoiler = false;
 			this.notifyDataSetChanged();
 		}
 	}
 
 	@Override
-	public int getCount() 
-	{
-		return shouts.size();
-	}
-
-	@Override
-	public Object getItem(int position) 
-	{
-		return shouts.get(position);
-	}
-
-	@Override
-	public long getItemId(int position) 
-	{
-		return 0;
-	}
-
-	@Override
-	public int getItemViewType(int position) 
-	{
-		return position;
-	}
-
-	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) 
+	public View doGetView(final int position, View convertView, ViewGroup parent) 
 	{
 		final ViewHolder holder;
 
@@ -106,7 +59,7 @@ public class ListShoutsAdapter extends BaseAdapter implements AdapterInterface
 		else
 			holder = (ViewHolder) convertView.getTag();
 
-		Shout s = shouts.get(position);
+		Shout s = getItem(position);
 
 		final AQuery aq = new AQuery(convertView);
 		BitmapAjaxCallback cb = new BitmapAjaxCallback()
@@ -120,7 +73,7 @@ public class ListShoutsAdapter extends BaseAdapter implements AdapterInterface
 
 		}.url(s.user.avatar).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
 
-		if(aq.shouldDelay(convertView, parent, s.user.avatar, 0))
+		if(aq.shouldDelay(position, convertView, parent, s.user.avatar))
 			aq.id(holder.ivAvatar).image(placeholder);
 		else
 			aq.id(holder.ivAvatar).image(cb);

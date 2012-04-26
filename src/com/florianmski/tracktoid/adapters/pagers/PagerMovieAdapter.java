@@ -23,12 +23,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.MovieFragment;
 import com.jakewharton.trakt.entities.Movie;
 
-public class PagerMovieAdapter extends FragmentStatePagerAdapter implements AdapterInterface
+public class PagerMovieAdapter extends FragmentStatePagerAdapter
 {
 	private List<Movie> movies;
 
@@ -51,7 +50,6 @@ public class PagerMovieAdapter extends FragmentStatePagerAdapter implements Adap
 		this.movies = movies;		
 	}
 
-	@Override
 	public void clear() 
 	{
 		movies.clear();
@@ -82,7 +80,6 @@ public class PagerMovieAdapter extends FragmentStatePagerAdapter implements Adap
 		return POSITION_NONE;
 	}
 
-	@Override
 	public boolean isEmpty() 
 	{
 		return getCount() == 0;

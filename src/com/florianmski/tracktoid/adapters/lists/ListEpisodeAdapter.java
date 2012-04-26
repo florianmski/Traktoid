@@ -27,7 +27,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,16 +37,14 @@ import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.AdapterInterface;
+import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class ListEpisodeAdapter extends BaseAdapter implements Serializable, AdapterInterface
+public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode> implements Serializable
 {	
 	private static final long serialVersionUID = 3085212680669200372L;
 	
-	private List<TvShowEpisode> episodes;
-	private Context context;
 	private boolean watchedMode = false;
 	private String tvdb_id;
 	private Map<Integer, Boolean> listWatched = new HashMap<Integer, Boolean>();
@@ -59,17 +56,9 @@ public class ListEpisodeAdapter extends BaseAdapter implements Serializable, Ada
 	
     public ListEpisodeAdapter(List<TvShowEpisode> episodes, Context context, String tvdb_id)
     {
-    	this.episodes = episodes;
-    	this.context = context;
+    	super(context, episodes);
     	this.tvdb_id = tvdb_id;
     }
-    
-	@Override
-	public void clear() 
-	{
-		episodes.clear();
-		notifyDataSetChanged();
-	}
 	
     //set or unset mode where user can check watched episodes
     public void setWatchedMode(boolean watchedMode)
@@ -90,7 +79,7 @@ public class ListEpisodeAdapter extends BaseAdapter implements Serializable, Ada
     public void checkBoxSelection(boolean checked)
 	{
     	listWatched.clear();
-    	for(TvShowEpisode e : episodes)
+    	for(TvShowEpisode e : items)
     	{
     		if(e.watched != checked)
     			listWatched.put(e.number, checked);
@@ -98,42 +87,13 @@ public class ListEpisodeAdapter extends BaseAdapter implements Serializable, Ada
     	notifyDataSetChanged();
 	}
     
-    public void reloadData(List<TvShowEpisode> episodes)
-	{
-    	this.episodes = episodes;
-    	notifyDataSetChanged();
-	}
-    
-    public List<TvShowEpisode> getEpisodes()
-    {
-    	return episodes;
-    }
-    
     public Map<Integer, Boolean> getListWatched()
     {
     	return listWatched;
     }
-    
-    @Override
-    public int getCount() 
-    {
-        return episodes.size();
-    }
 
     @Override
-    public Object getItem(int position) 
-    {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) 
-    {
-        return 0;
-    }
-
-    @Override
-	public View getView(final int position, View convertView, ViewGroup parent) 
+	public View doGetView(final int position, View convertView, ViewGroup parent) 
     {
     	final ViewHolder holder;
 
@@ -153,7 +113,7 @@ public class ListEpisodeAdapter extends BaseAdapter implements Serializable, Ada
         else
             holder = (ViewHolder) convertView.getTag();
         
-        TvShowEpisode e = episodes.get(position);
+        TvShowEpisode e = getItem(position);
         
         Image i = new Image(tvdb_id, e.images.screen, e.season, e.number);
         final AQuery aq = new AQuery(convertView);
@@ -187,8 +147,8 @@ public class ListEpisodeAdapter extends BaseAdapter implements Serializable, Ada
 				{
 					if(watchedMode)
 					{
-						int episode = episodes.get(position).number;
-						boolean watched = episodes.get(position).watched;
+						int episode = items.get(position).number;
+						boolean watched = items.get(position).watched;
 						//it means that episode has been checked twice so user has changed his mind
 						if(listWatched.containsKey(episode) || (watched == holder.cbWatched.isChecked()))
 							listWatched.remove(episode);

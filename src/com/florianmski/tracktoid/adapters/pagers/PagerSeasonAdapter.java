@@ -22,12 +22,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.SeasonFragment;
 import com.jakewharton.trakt.entities.TvShowSeason;
 import com.viewpagerindicator.TitleProvider;
 
-public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements TitleProvider, AdapterInterface
+public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements TitleProvider
 {
 	private List<TvShowSeason> seasons;
 	private String tvdbId;
@@ -40,7 +39,6 @@ public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements Tit
 		this.tvdbId = tvdbId;
 	}
 	
-	@Override
 	public void clear() 
 	{
 		seasons.clear();
@@ -88,7 +86,6 @@ public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements Tit
 	    return POSITION_NONE;
 	}
 	
-	@Override
 	public boolean isEmpty() 
 	{
 		return getCount() == 0;

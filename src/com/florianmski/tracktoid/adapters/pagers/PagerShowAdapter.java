@@ -23,12 +23,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowFragment;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class PagerShowAdapter extends FragmentStatePagerAdapter implements AdapterInterface
+public class PagerShowAdapter extends FragmentStatePagerAdapter
 {
 	private List<TvShow> shows;
 
@@ -51,7 +50,6 @@ public class PagerShowAdapter extends FragmentStatePagerAdapter implements Adapt
 		this.shows = shows;		
 	}
 
-	@Override
 	public void clear() 
 	{
 		shows.clear();
@@ -82,7 +80,6 @@ public class PagerShowAdapter extends FragmentStatePagerAdapter implements Adapt
 		return POSITION_NONE;
 	}
 
-	@Override
 	public boolean isEmpty() 
 	{
 		return getCount() == 0;

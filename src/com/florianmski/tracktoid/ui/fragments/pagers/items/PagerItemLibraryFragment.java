@@ -13,6 +13,8 @@ import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.ui.fragments.ShowFragment;
+import com.florianmski.traktoid.TraktoidInterface;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -28,7 +30,7 @@ import android.widget.RelativeLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-public abstract class PagerItemLibraryFragment extends PagerItemFragment
+public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> extends PagerItemFragment
 {
 	protected final static int NB_COLUMNS_TABLET_PORTRAIT = 5;
 	protected final static int NB_COLUMNS_TABLET_LANDSCAPE = 7;
@@ -41,7 +43,7 @@ public abstract class PagerItemLibraryFragment extends PagerItemFragment
 	protected int posterClickedPosition = -1;
 	protected boolean hasSecondFragment;
 
-	protected GridPosterAdapter adapter;
+	protected GridPosterAdapter<T> adapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -51,7 +53,7 @@ public abstract class PagerItemLibraryFragment extends PagerItemFragment
 	}
 	
 	public abstract void checkUpdateTask();
-	public abstract GridPosterAdapter setupAdapter();
+	public abstract GridPosterAdapter<T> setupAdapter();
 	public abstract Intent onGridItemClick(AdapterView<?> arg0, View v, int position, long arg3);
 	public abstract void displayContent();
 	public abstract void onRefreshQAClick(QuickAction source, int pos, int actionId);

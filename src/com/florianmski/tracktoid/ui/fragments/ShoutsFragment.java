@@ -196,7 +196,7 @@ public class ShoutsFragment extends TraktFragment
 			lvShouts.setAdapter(adapter);
 		}
 		else
-			adapter.reload(shouts);
+			adapter.updateItems(shouts);
 
 		if(adapter.isEmpty())
 			getStatusView().hide().text("No shouts :(\nBe the first! Come on!");

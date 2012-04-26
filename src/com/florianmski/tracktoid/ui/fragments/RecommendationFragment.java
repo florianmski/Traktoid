@@ -25,7 +25,7 @@ import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Genre;
 
-public abstract class RecommendationFragment<T extends TraktoidInterface> extends TraktFragment implements ActionBar.OnNavigationListener
+public abstract class RecommendationFragment<T extends TraktoidInterface<T>> extends TraktFragment implements ActionBar.OnNavigationListener
 {	
 	protected ListView lvRecommendations;
 
@@ -82,7 +82,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface> extend
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) 
 			{
 				Intent intent = new Intent(getActivity(), ShowActivity.class);
-				intent.putExtra(TraktoidConstants.BUNDLE_RESULTS, adapter.getRecommendations());
+				intent.putExtra(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<T>) adapter.getItems());
 				intent.putExtra(TraktoidConstants.BUNDLE_POSITION, position);
 				startActivity(intent);
 			}
@@ -125,7 +125,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface> extend
 		}
 		else
 		{
-			adapter.refreshData(items);
+			adapter.updateItems(items);
 			if(lvRecommendations.getAdapter() == null)
 				lvRecommendations.setAdapter(adapter);
 		}

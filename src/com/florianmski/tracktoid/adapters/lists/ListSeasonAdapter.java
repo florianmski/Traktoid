@@ -23,65 +23,31 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.adapters.AdapterInterface;
+import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
-public class ListSeasonAdapter extends BaseAdapter implements AdapterInterface
-{
-	private List<TvShowSeason> seasons;
-	private Context context;
-	
+public class ListSeasonAdapter extends RootAdapter<TvShowSeason>
+{	
 	public ListSeasonAdapter(List<TvShowSeason> seasons, Context context)
 	{
-		this.seasons = seasons;
-		this.context = context;
+		super(context, seasons);
 	}
 	
 	@Override
-	public void clear() 
+	public void updateItems(List<TvShowSeason> seasons)
 	{
-		seasons.clear();
-		notifyDataSetChanged();
-	}
-	
-	public void reloadData(List<TvShowSeason> seasons)
-	{
-		this.seasons.clear();
-		this.seasons.addAll(seasons);
-		Collections.reverse(this.seasons);
+		this.items.clear();
+		this.items.addAll(seasons);
+		Collections.reverse(this.items);
 		this.notifyDataSetChanged();
 	}
-	
-	public List<TvShowSeason> getSeasons()
-	{
-		return seasons;
-	}
-	
-	@Override
-	public int getCount() 
-	{
-		return seasons.size();
-	}
 
 	@Override
-	public Object getItem(int position) 
-	{
-		return null;
-	}
-
-	@Override
-	public long getItemId(int position) 
-	{
-		return 0;
-	}
-
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) 
+	public View doGetView(int position, View convertView, ViewGroup parent) 
 	{
 		final ViewHolder holder;
 
@@ -98,7 +64,7 @@ public class ListSeasonAdapter extends BaseAdapter implements AdapterInterface
         else
             holder = (ViewHolder) convertView.getTag();
         
-        TvShowSeason season = seasons.get(position);
+        TvShowSeason season = getItem(position);
         
         int episodes = season.episodes.count;
         int episodesWatched = season.episodesWatched;

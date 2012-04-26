@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.MoviesLibraryFragment;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.PagerItemLibraryFragment;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowsLibraryFragment;
+import com.florianmski.traktoid.TraktoidInterface;
 import com.viewpagerindicator.TitleProvider;
 
 public class PagerLibraryAdapter extends FragmentPagerAdapter implements TitleProvider
@@ -28,7 +29,7 @@ public class PagerLibraryAdapter extends FragmentPagerAdapter implements TitlePr
 	@Override
 	public Fragment getItem(int position) 
 	{
-		PagerItemLibraryFragment f = null;
+		PagerItemLibraryFragment<? extends TraktoidInterface<?>> f = null;
 		
 		if(position == 0)
 			f = ShowsLibraryFragment.newInstance(null);

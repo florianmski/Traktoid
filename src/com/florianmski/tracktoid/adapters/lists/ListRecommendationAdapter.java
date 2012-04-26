@@ -17,8 +17,6 @@
 package com.florianmski.tracktoid.adapters.lists;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -26,70 +24,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.adapters.AdapterInterface;
+import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.traktoid.TraktoidInterface;
 
-public class ListRecommendationAdapter<T extends TraktoidInterface> extends BaseAdapter implements AdapterInterface
+public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends RootAdapter<T> 
 {
-	private List<T> recommendations;
-	private Context context;
 	private DismissListener listener;
 	private Bitmap placeholder = null;
 	
 	public ListRecommendationAdapter(ArrayList<T> recommendations, Context context)
 	{
-		this.recommendations = recommendations;
-		this.context = context;
+		super(context, recommendations);
 	}
 	
 	public void setOnDismissListener(DismissListener listener)
 	{
 		this.listener = listener;
 	}
-	
-	public void refreshData(List<T> recommendations)
-	{
-		this.recommendations = recommendations;
-		this.notifyDataSetChanged();
-	}
-	
-	public ArrayList<T> getRecommendations()
-	{
-		return (ArrayList<T>) recommendations;
-	}
-	
-	@Override
-	public void clear()
-	{
-		this.recommendations.clear();
-		this.notifyDataSetChanged();
-	}
-	
-	@Override
-    public int getCount() 
-    {
-        return recommendations.size();
-    }
-
-    @Override
-    public Object getItem(int position) 
-    {
-        return null;
-    }
-    
-    @Override
-    public long getItemId(int position) 
-    {
-        return 0;
-    }
     
     @Override
     public int getItemViewType(int position) 
@@ -98,7 +56,7 @@ public class ListRecommendationAdapter<T extends TraktoidInterface> extends Base
     }
 
     @Override
-	public View getView(final int position, View convertView, ViewGroup parent) 
+	public View doGetView(final int position, View convertView, ViewGroup parent) 
     {
     	final ViewHolder holder;
 
@@ -117,7 +75,7 @@ public class ListRecommendationAdapter<T extends TraktoidInterface> extends Base
         else
             holder = (ViewHolder) convertView.getTag();
         
-        final T s = recommendations.get(position);
+        final T s = getItem(position);
         
         holder.ivDismiss.setOnClickListener(new OnClickListener() 
         {	
@@ -131,7 +89,7 @@ public class ListRecommendationAdapter<T extends TraktoidInterface> extends Base
         
         Image i = new Image(s.getId(), s.getImages().fanart, Image.FANART);
         AQuery aq = new AQuery(convertView);
-        if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
+        if(aq.shouldDelay(position, convertView, parent, i.getUrl()))
             aq.id(holder.ivFanart).image(placeholder);
         else
         	aq.id(holder.ivFanart).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);

@@ -23,12 +23,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.EpisodeFragment;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.viewpagerindicator.TitleProvider;
 
-public class PagerEpisodeAdapter extends FragmentStatePagerAdapter implements TitleProvider, AdapterInterface
+public class PagerEpisodeAdapter extends FragmentStatePagerAdapter implements TitleProvider
 {
 	private List<TvShowEpisode> episodes;
 	private String tvdbId;
@@ -39,20 +38,19 @@ public class PagerEpisodeAdapter extends FragmentStatePagerAdapter implements Ti
 		this.episodes = episodes;
 		this.tvdbId = tvdb_id;
 	}
-	
-	@Override
+
 	public void clear() 
 	{
 		episodes.clear();
 		notifyDataSetChanged();
 	}
-	
+
 	public void reloadData(List<TvShowEpisode> episodes)
 	{
 		this.episodes = episodes;
 		this.notifyDataSetChanged();
 	}
-	
+
 	public TvShowEpisode getEpisode(int position)
 	{
 		return episodes.get(position);
@@ -80,10 +78,9 @@ public class PagerEpisodeAdapter extends FragmentStatePagerAdapter implements Ti
 	/** @see http://stackoverflow.com/questions/7263291/viewpager-pageradapter-not-updating-the-view */
 	public int getItemPosition(Object object) 
 	{
-	    return POSITION_NONE;
+		return POSITION_NONE;
 	}
-	
-	@Override
+
 	public boolean isEmpty() 
 	{
 		return getCount() == 0;

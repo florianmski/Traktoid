@@ -43,8 +43,6 @@ import com.jakewharton.trakt.enumerations.Rating;
 
 public class DatabaseWrapper 
 {
-	private static final String TAG = "DatabaseWrapper";
-
 	// Begin constants:
 
 	private static final String DATABASE_NAME = "tvshows.db";

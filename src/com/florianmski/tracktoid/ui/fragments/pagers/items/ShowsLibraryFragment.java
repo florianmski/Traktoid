@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
-import com.florianmski.tracktoid.adapters.GridShowPosterAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBShowsTask;
 import com.florianmski.tracktoid.trakt.TraktManager;
@@ -30,7 +29,7 @@ import com.florianmski.tracktoid.ui.activities.phone.MyShowActivity;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public class ShowsLibraryFragment extends PagerItemLibraryFragment
+public class ShowsLibraryFragment extends PagerItemLibraryFragment<TvShow>
 {
 	public static ShowsLibraryFragment newInstance(Bundle args)
 	{
@@ -52,7 +51,7 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment
 	@Override
 	public GridPosterAdapter<TvShow> setupAdapter() 
 	{
-		return new GridShowPosterAdapter(getActivity(), new ArrayList<TvShow>(), refreshGridView());
+		return new GridPosterAdapter<TvShow>(getActivity(), new ArrayList<TvShow>(), refreshGridView());
 	}
 
 	@Override
@@ -79,7 +78,7 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment
 	public Intent onGridItemClick(AdapterView<?> arg0, View v, int position, long arg3) 
 	{
 		Intent i = new Intent(getActivity(), MyShowActivity.class);
-		i.putExtra(TraktoidConstants.BUNDLE_SHOW, (TvShow)adapter.getItem(position));
+		i.putExtra(TraktoidConstants.BUNDLE_SHOW, adapter.getItem(position));
 		getActivity().setIntent(i);
 
 		return i;
@@ -89,14 +88,14 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment
 	public void onRefreshQAClick(QuickAction source, int pos, int actionId) 
 	{
 		ArrayList<TvShow> showsSelected = new ArrayList<TvShow>();
-		showsSelected.add((TvShow)adapter.getItem(posterClickedPosition));
+		showsSelected.add(adapter.getItem(posterClickedPosition));
 		tm.addToQueue(new UpdateShowsTask(tm, ShowsLibraryFragment.this, showsSelected));
 	}
 
 	@Override
 	public void onDeleteQAClick(QuickAction source, int pos, int actionId) 
 	{
-		tm.addToQueue(new RemoveShowTask(tm, ShowsLibraryFragment.this, (TvShow)adapter.getItem(posterClickedPosition)));
+		tm.addToQueue(new RemoveShowTask(tm, ShowsLibraryFragment.this, adapter.getItem(posterClickedPosition)));
 	}
 
 	@Override
@@ -112,7 +111,7 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment
 			@Override
 			public void onClick(DialogInterface dialog, int item) 
 			{
-				tm.addToQueue(new RateTask(tm, ShowsLibraryFragment.this, (TvShow)adapter.getItem(posterClickedPosition), ratings[item]));
+				tm.addToQueue(new RateTask(tm, ShowsLibraryFragment.this, adapter.getItem(posterClickedPosition), ratings[item]));
 			}
 		});
 		AlertDialog alert = builder.create();
@@ -143,7 +142,7 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment
 	public void onShowRemoved(TvShow show)
 	{
 		if(adapter != null)
-			adapter.removeItem(show);
+			adapter.remove(show);
 	}
 
 	public void createShowsDialog(final ArrayList<TvShow> shows)

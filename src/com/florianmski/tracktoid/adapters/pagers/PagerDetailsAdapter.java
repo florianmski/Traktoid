@@ -10,7 +10,7 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.pagers.TabsViewPagerFragment.TabsViewAdapter;
 import com.florianmski.traktoid.TraktoidInterface;
 
-public class PagerDetailsAdapter<T extends TraktoidInterface> extends TabsViewAdapter
+public class PagerDetailsAdapter<T extends TraktoidInterface<T>> extends TabsViewAdapter
 {
 	private T item;
 	

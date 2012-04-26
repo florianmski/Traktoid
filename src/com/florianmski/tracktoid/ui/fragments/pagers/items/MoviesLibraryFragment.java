@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.TraktoidConstants;
-import com.florianmski.tracktoid.adapters.GridMoviePosterAdapter;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBMoviesTask;
@@ -27,7 +26,7 @@ import com.florianmski.tracktoid.trakt.tasks.get.UpdateMoviesTask;
 import com.florianmski.tracktoid.ui.activities.phone.MovieActivity;
 import com.jakewharton.trakt.entities.Movie;
 
-public class MoviesLibraryFragment extends PagerItemLibraryFragment
+public class MoviesLibraryFragment extends PagerItemLibraryFragment<Movie>
 {
 	public static MoviesLibraryFragment newInstance(Bundle args)
 	{
@@ -47,7 +46,7 @@ public class MoviesLibraryFragment extends PagerItemLibraryFragment
 	@Override
 	public GridPosterAdapter<Movie> setupAdapter() 
 	{
-		return new GridMoviePosterAdapter(getActivity(), new ArrayList<Movie>(), refreshGridView());
+		return new GridPosterAdapter<Movie>(getActivity(), new ArrayList<Movie>(), refreshGridView());
 	}
 
 	@Override
@@ -55,7 +54,7 @@ public class MoviesLibraryFragment extends PagerItemLibraryFragment
 	{
 		Intent i = new Intent(getActivity(), MovieActivity.class);
 		ArrayList<Movie> movies = new ArrayList<Movie>();
-		movies.add((Movie)adapter.getItem(position));
+		movies.add(adapter.getItem(position));
 		i.putExtra(TraktoidConstants.BUNDLE_RESULTS, movies);
 		return i;
 	}
@@ -84,14 +83,14 @@ public class MoviesLibraryFragment extends PagerItemLibraryFragment
 	public void onRefreshQAClick(QuickAction source, int pos, int actionId) 
 	{
 		ArrayList<Movie> moviesSelected = new ArrayList<Movie>();
-		moviesSelected.add((Movie)adapter.getItem(posterClickedPosition));
+		moviesSelected.add(adapter.getItem(posterClickedPosition));
 		tm.addToQueue(new UpdateMoviesTask(tm, MoviesLibraryFragment.this, moviesSelected));
 	}
 
 	@Override
 	public void onDeleteQAClick(QuickAction source, int pos, int actionId) 
 	{
-		tm.addToQueue(new RemoveMovieTask(tm, MoviesLibraryFragment.this, (Movie)adapter.getItem(posterClickedPosition)));
+		tm.addToQueue(new RemoveMovieTask(tm, MoviesLibraryFragment.this, adapter.getItem(posterClickedPosition)));
 	}
 
 	@Override
@@ -181,7 +180,7 @@ public class MoviesLibraryFragment extends PagerItemLibraryFragment
 	public void onMovieRemoved(Movie movie)
 	{
 		if(adapter != null)
-			adapter.removeItem(movie);
+			adapter.remove(movie);
 	}
 
 }

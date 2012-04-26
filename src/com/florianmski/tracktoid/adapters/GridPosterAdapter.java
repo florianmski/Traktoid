@@ -28,7 +28,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -37,26 +36,25 @@ import android.widget.RelativeLayout;
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.Image;
-import com.jakewharton.trakt.entities.MediaBase;
+import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter implements AdapterInterface
+public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapter<T>
 {
 	public static final int FILTER_ALL = 0;
 	public static final int FILTER_UNWATCHED = 1;
 	public static final int FILTER_LOVED = 2;
 
-	protected Activity context;
-	protected List<T> items;
 	protected List<T> filteredItems = new ArrayList<T>();
 	protected int height;
 	protected int currentFilter = 0;
 	protected Handler h = new Handler();
 	protected AQuery listAq;
 
-	public GridPosterAdapter(Activity context)
+	public GridPosterAdapter(Activity context, List<T> items, int height)
 	{
-		this.context = context;
+		super(context, items);
+		this.height = height;
 		listAq = new AQuery(context);
 	}
 	
@@ -75,11 +73,6 @@ public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter
 		notifyDataSetChanged();
 	}
 
-	public abstract Rating getRating(Object item);
-	public abstract boolean isWatched(Object item);
-	public abstract String getUrl(Object item);
-	public abstract String getId(Object item);
-
 	public void setFilter(int filter)
 	{
 		currentFilter = filter;
@@ -93,7 +86,7 @@ public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter
 			filteredItems.clear();
 			for(T item : items)
 			{
-				if(!isWatched(item))
+				if(!item.isWatched())
 					filteredItems.add(item);
 			}
 			break;
@@ -101,7 +94,7 @@ public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter
 			filteredItems.clear();
 			for(T item : items)
 			{
-				if(getRating(item) == Rating.Love)
+				if(item.getRating() == Rating.Love)
 					filteredItems.add(item);
 			}
 			break;
@@ -122,7 +115,8 @@ public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter
 		setFilter(currentFilter);
 	}
 
-	public void removeItem(T item)
+	@Override
+	public void remove(T item)
 	{
 		int index = Collections.binarySearch(items, item);
 		if(index >= 0 && index < items.size())
@@ -131,6 +125,7 @@ public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter
 		setFilter(currentFilter);
 	}
 
+	@Override
 	public void updateItems(List<T> items)
 	{
 		this.items = items;
@@ -144,19 +139,13 @@ public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter
 	}
 
 	@Override
-	public Object getItem(int position) 
+	public T getItem(int position) 
 	{
 		return filteredItems.get(position);
 	}
 
 	@Override
-	public long getItemId(int position) 
-	{
-		return position;
-	}
-
-	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) 
+	public View doGetView(int position, View convertView, ViewGroup parent) 
 	{
 		final ViewHolder holder;
 
@@ -199,11 +188,11 @@ public abstract class GridPosterAdapter<T extends MediaBase> extends BaseAdapter
 		holder.ivRating.setLayoutParams(paramsIvRating);
 		holder.ivWatched.setLayoutParams(paramsIvWatched);
 
-		final Object item = getItem(position);
-		boolean progress = isWatched(item);
-		Rating rating = getRating(item);
-		String url = getUrl(item);
-		String id = getId(item);
+		final T item = getItem(position);
+		boolean progress = item.isWatched();
+		Rating rating = item.getRating();
+		String url = item.getImages().poster;
+		String id = item.getId();
 
 		holder.ivRating.setImageBitmap(null);
 		holder.ivWatched.setImageBitmap(null);

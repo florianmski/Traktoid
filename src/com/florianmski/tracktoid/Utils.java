@@ -235,11 +235,13 @@ public class Utils
 		Bitmap shadowImage = bm.extractAlpha(shadowPaint, offsetXY);		
 		Bitmap shadowImage32 = shadowImage.copy(Bitmap.Config.ARGB_8888, true);
 
+		shadowImage.recycle();
+		
 		Canvas canvas = new Canvas(shadowImage32);
-//		int colour = (150 & 0xFF) << 24;
-//		canvas.drawColor(colour, PorterDuff.Mode.DST_IN);
 		canvas.drawBitmap(bm, -offsetXY[0], -offsetXY[1], null);
 
+		bm.recycle();
+		
 		return shadowImage32;
 	}
 
@@ -264,6 +266,8 @@ public class Utils
 
 		canvas.drawBitmap(bm, 0, 0, null);
 		canvas.drawRect(rect, paintStroke);
+		
+		bm.recycle();
 
 		return output;
 	}

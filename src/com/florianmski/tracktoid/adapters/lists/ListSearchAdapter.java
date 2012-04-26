@@ -17,8 +17,6 @@
 package com.florianmski.tracktoid.adapters.lists;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,65 +24,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.ImageView.ScaleType;
 
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.adapters.AdapterInterface;
+import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.image.Image;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class ListSearchAdapter extends BaseAdapter implements AdapterInterface
+public class ListSearchAdapter extends RootAdapter<TvShow>
 {
-	private Context context;
-	private List<TvShow> shows;
 	private Bitmap placeholder = null;
 
 	public ListSearchAdapter(Context context, ArrayList<TvShow> shows)
 	{
-		this.context = context;
-		this.shows = shows;
+		super(context, shows);
 		placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
 	}
-	
-	@Override
-	public void clear() 
-	{
-		shows.clear();
-		notifyDataSetChanged();
-	}
-	
-	public void reloadData(List<TvShow> shows)
-	{
-		this.shows = shows;
-		notifyDataSetChanged();
-	}
 
 	@Override
-	public int getCount() 
-	{
-		return shows.size();
-	}
-
-	@Override
-	public Object getItem(int position) 
-	{
-		return shows.get(position);
-	}
-
-	@Override
-	public long getItemId(int position) 
-	{
-		return position;
-	}
-
-	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) 
+	public View doGetView(final int position, View convertView, ViewGroup parent) 
 	{
 		final ViewHolder holder;
 
@@ -106,11 +69,11 @@ public class ListSearchAdapter extends BaseAdapter implements AdapterInterface
 		else
 			holder = (ViewHolder) convertView.getTag();
 
-		TvShow show = shows.get(position);
+		TvShow show = getItem(position);
 
 		Image i = new Image(show.tvdbId, null, Image.BANNER);
 		AQuery aq = new AQuery(convertView);
-		if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
+		if(aq.shouldDelay(position, convertView, parent, i.getUrl()))
 			aq.id(holder.ivBanner).image(placeholder);
 		else
 			aq.id(holder.ivBanner).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);

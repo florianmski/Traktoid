@@ -34,7 +34,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -44,7 +43,7 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
-import com.florianmski.tracktoid.adapters.AdapterInterface;
+import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
 import com.florianmski.tracktoid.widgets.ScrollingTextView;
@@ -52,7 +51,7 @@ import com.jakewharton.trakt.entities.CalendarDate;
 import com.jakewharton.trakt.entities.CalendarDate.CalendarTvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class ListCalendarAdapter extends BaseAdapter implements Serializable, AdapterInterface
+public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -60,16 +59,13 @@ public class ListCalendarAdapter extends BaseAdapter implements Serializable, Ad
 	public final static int NB_BY_ROW_PORTRAIT = 2;
 	public final static int NB_BY_ROW_LANDSCAPE = 3;
 
-	private List<CalendarDate> calendarDates;
 	private List<Object> objects = new ArrayList<Object>();
-	private Context context;
 	private Bitmap placeholder;
 	private static int nbByRow;
 
 	public ListCalendarAdapter(List<CalendarDate> calendarDates, Context context)
 	{
-		this.calendarDates = calendarDates;
-		this.context = context;
+		super(context, calendarDates);
 
 		placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
 		int orientation = context.getResources().getConfiguration().orientation;
@@ -96,33 +92,14 @@ public class ListCalendarAdapter extends BaseAdapter implements Serializable, Ad
 			}
 		}
 	}
-	
-	@Override
-	public void clear() 
-	{
-		calendarDates.clear();
-		notifyDataSetChanged();
-	}
 
 	@Override
 	public int getCount() 
 	{
 		int count = 0;
-		for(CalendarDate cd : calendarDates)
+		for(CalendarDate cd : items)
 			count += Math.ceil(cd.episodes.size()/(nbByRow*1.0));
-		return count + calendarDates.size();
-	}
-
-	@Override
-	public Object getItem(int position) 
-	{
-		return objects.get(position);
-	}
-
-	@Override
-	public long getItemId(int position) 
-	{
-		return 0;
+		return count + items.size();
 	}
 
 	@Override
@@ -142,7 +119,7 @@ public class ListCalendarAdapter extends BaseAdapter implements Serializable, Ad
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public View getView(final int position, View convertView, ViewGroup parent) 
+	public View doGetView(final int position, View convertView, ViewGroup parent) 
 	{
 		final ViewHolder holder;
 		int type = getItemViewType(position);
@@ -210,7 +187,7 @@ public class ListCalendarAdapter extends BaseAdapter implements Serializable, Ad
 		{
 		case TYPE_SEPARATOR :
 		{
-			CalendarDate cd = (CalendarDate) getItem(position);
+			CalendarDate cd = (CalendarDate) objects.get(position);
 
 			holder.tvDay.setText(new SimpleDateFormat("EEEE dd MMMM yyyy").format(cd.date));
 
@@ -218,7 +195,7 @@ public class ListCalendarAdapter extends BaseAdapter implements Serializable, Ad
 		}
 		case TYPE_ROW :
 		{	        	
-			List<CalendarTvShowEpisode> episodes = (List<CalendarTvShowEpisode>) getItem(position);
+			List<CalendarTvShowEpisode> episodes = (List<CalendarTvShowEpisode>) objects.get(position);
 
 			for(int i = 0; i < nbByRow; i++)
 			{
@@ -259,7 +236,7 @@ public class ListCalendarAdapter extends BaseAdapter implements Serializable, Ad
 					posterImage = aq.getCachedFile(image.getUrl());
 				}
 				
-				if(aq.shouldDelay(holder.llEpisodes, parent, image.getUrl(), 0))
+				if(aq.shouldDelay(position, holder.llEpisodes, parent, image.getUrl()))
 					aq.id(holder.livScreen[i]).image(placeholder);
 				else
 				{

@@ -99,7 +99,7 @@ public class SearchFragment extends TraktFragment
 							lvSearch.setAdapter(adapter);
 						}
 						else
-							adapter.reloadData(shows);
+							adapter.updateItems(shows);
 						
 						if(adapter.isEmpty())
 							getStatusView().hide().text("Nothing found, sorry man...");

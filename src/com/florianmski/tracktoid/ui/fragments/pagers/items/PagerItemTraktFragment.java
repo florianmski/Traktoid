@@ -22,7 +22,7 @@ import com.florianmski.tracktoid.widgets.ScrollingTextView;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public abstract class PagerItemTraktFragment<T extends TraktoidInterface> extends TabsViewPagerFragment
+public abstract class PagerItemTraktFragment<T extends TraktoidInterface<T>> extends TabsViewPagerFragment
 {
 	protected T item;
 

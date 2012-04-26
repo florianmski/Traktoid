@@ -137,7 +137,7 @@ public class ShowFragment extends TraktFragment
 					public void onDBSeasons(List<TvShowSeason> seasons) 
 					{
 						Collections.reverse(seasons);
-						adapter.reloadData(seasons);
+						adapter.updateItems(seasons);
 						
 						if(adapter.isEmpty())
 							getStatusView().hide().text("This show has no seasons, wait... WTF ?");
@@ -217,7 +217,7 @@ public class ShowFragment extends TraktFragment
 				public void onClick(View v) 
 				{
 					Intent i = new Intent(getActivity(), EpisodeActivity.class);
-					for(TvShowSeason s : adapter.getSeasons())
+					for(TvShowSeason s : adapter.getItems())
 					{
 						if(s.season == e.season)
 							i.putExtra(TraktoidConstants.BUNDLE_SEASON_ID, s.url);
@@ -314,7 +314,7 @@ public class ShowFragment extends TraktFragment
 			//if adapter is not currently loading
 			if(adapter != null)
 			{
-				final List<TvShowSeason> seasons = adapter.getSeasons();
+				final List<TvShowSeason> seasons = adapter.getItems();
 				final List<TvShowSeason> seasonsChecked = new ArrayList<TvShowSeason>();
 				CharSequence[] items = new CharSequence[seasons.size()];
 
@@ -400,7 +400,7 @@ public class ShowFragment extends TraktFragment
 			displayNextEpisode();
 
 			if(show.seasons != null)
-				adapter.reloadData(show.seasons);
+				adapter.updateItems(show.seasons);
 
 			this.show = show;
 			getSherlockActivity().invalidateOptionsMenu();
