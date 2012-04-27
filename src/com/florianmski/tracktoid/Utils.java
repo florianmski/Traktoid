@@ -201,8 +201,6 @@ public class Utils
 	{
 		if(bm == null)
 			return null;
-		else 
-			bm = shadowBitmap(bm);
 
 		Bitmap output = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(), Config.ARGB_8888);
 		Canvas canvas = new Canvas(output);
@@ -220,10 +218,8 @@ public class Utils
 
 		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 		canvas.drawBitmap(bm, rect, rect, paint);
-
-		bm.recycle();
 		
-		return output;
+		return shadowBitmap(output);
 	}
 
 	private static Bitmap shadowBitmap(Bitmap bm)
@@ -251,8 +247,6 @@ public class Utils
 	{
 		if(bm == null)
 			return null;
-		else 
-			bm = shadowBitmap(bm);
 		
 		int stroke = 5;
 		
@@ -270,9 +264,7 @@ public class Utils
 
 		canvas.drawBitmap(bm, 0, 0, null);
 		canvas.drawRect(rect, paintStroke);
-		
-		bm.recycle();
 
-		return output;
+		return shadowBitmap(output);
 	}
 }
