@@ -1,6 +1,7 @@
 package com.florianmski.tracktoid.ui.fragments;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,7 +23,7 @@ import com.jakewharton.trakt.entities.TvShow;
 public class TrendingFragment extends TraktFragment
 {
 	private CoverFlow cf;
-	private ArrayList<TvShow> shows;
+	private List<TvShow> shows;
 
 	public static TrendingFragment newInstance(Bundle args)
 	{
@@ -71,7 +72,7 @@ public class TrendingFragment extends TraktFragment
 			commonTask = new ShowsTask(tm, this, new ShowsListener() 
 			{
 				@Override
-				public void onShows(ArrayList<TvShow> shows) 
+				public void onShows(List<TvShow> shows) 
 				{
 					TrendingFragment.this.shows = shows;
 					setAdapter();
@@ -114,6 +115,6 @@ public class TrendingFragment extends TraktFragment
 	@Override
 	public void onSaveState(Bundle toSave) 
 	{
-		toSave.putSerializable(TraktoidConstants.BUNDLE_RESULTS, shows);
+		toSave.putSerializable(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<TvShow>) shows);
 	}
 }

@@ -1,11 +1,9 @@
 package com.florianmski.tracktoid.ui.fragments;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.get.GenresTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
@@ -18,7 +16,7 @@ import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.services.RecommendationsService.ShowsBuilder;
 
-public class RecommendationShowsFragment extends RecommendationFragment<TvShow> implements ActionBar.OnNavigationListener
+public class RecommendationShowsFragment extends RecommendationFragment<TvShow>
 {	
 	public static RecommendationShowsFragment newInstance(Bundle args)
 	{
@@ -43,7 +41,6 @@ public class RecommendationShowsFragment extends RecommendationFragment<TvShow> 
 			public void onGenres(final List<Genre> genres) 
 			{				
 				RecommendationShowsFragment.this.genres = genres;
-				setListNavigationMode();				
 			}
 		}, tm.genreService().shows());
 	}
@@ -70,10 +67,12 @@ public class RecommendationShowsFragment extends RecommendationFragment<TvShow> 
 		if(genre != null)
 			builder.genre(genre);
 		
+		builder.startYear(spStartYear.getSelectedItemPosition() + START_YEAR).endYear(END_YEAR - spEndYear.getSelectedItemPosition());
+		
 		return new ShowsTask(tm, this, new ShowsListener() 
 		{
 			@Override
-			public void onShows(ArrayList<TvShow> shows) 
+			public void onShows(List<TvShow> shows) 
 			{
 				RecommendationShowsFragment.this.items = shows;
 				setAdapter();

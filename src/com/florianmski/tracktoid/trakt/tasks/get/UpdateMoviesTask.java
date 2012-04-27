@@ -49,7 +49,7 @@ public class UpdateMoviesTask extends TraktTask
 	private NotificationManager nm;
 	private RemoteViews contentView;
 
-	public UpdateMoviesTask(TraktManager tm, Fragment fragment, ArrayList<Movie> selectedShows) 
+	public UpdateMoviesTask(TraktManager tm, Fragment fragment, List<Movie> selectedShows) 
 	{
 		super(tm, fragment);
 

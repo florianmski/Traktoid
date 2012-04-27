@@ -1,6 +1,8 @@
 package com.florianmski.tracktoid.trakt.tasks.get;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import android.support.v4.app.Fragment;
 
 import com.florianmski.tracktoid.Utils;
@@ -11,7 +13,7 @@ import com.jakewharton.trakt.entities.Movie;
 
 public class MoviesTask extends TraktTask
 {
-	private ArrayList<Movie> movies = new ArrayList<Movie>();
+	private List<Movie> movies = new ArrayList<Movie>();
 	private TraktApiBuilder<?> builder;
 	private boolean sort;
 	private MoviesListener listener;
@@ -29,7 +31,7 @@ public class MoviesTask extends TraktTask
 	@Override
 	protected boolean doTraktStuffInBackground()
 	{		
-		movies = (ArrayList<Movie>) builder.fire();
+		movies = (List<Movie>) builder.fire();
 		
 		//TODO
 //		if(sort)
@@ -49,6 +51,6 @@ public class MoviesTask extends TraktTask
 	
 	public interface MoviesListener
 	{
-		public void onMovies(ArrayList<Movie> movies);
+		public void onMovies(List<Movie> movies);
 	}
 }

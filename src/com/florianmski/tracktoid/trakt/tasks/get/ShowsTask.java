@@ -18,6 +18,7 @@ package com.florianmski.tracktoid.trakt.tasks.get;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import android.support.v4.app.Fragment;
 
@@ -29,7 +30,7 @@ import com.jakewharton.trakt.entities.TvShow;
 
 public class ShowsTask extends TraktTask
 {
-	private ArrayList<TvShow> shows = new ArrayList<TvShow>();
+	private List<TvShow> shows = new ArrayList<TvShow>();
 	private TraktApiBuilder<?> builder;
 	private boolean sort;
 	private ShowsListener listener;
@@ -49,7 +50,7 @@ public class ShowsTask extends TraktTask
 	{
 //		showToast("Retrieving a list of shows...", Toast.LENGTH_SHORT);
 		
-		shows = (ArrayList<TvShow>) builder.fire();
+		shows = (List<TvShow>) builder.fire();
 		
 		if(sort)
 			Collections.sort(shows);
@@ -68,6 +69,6 @@ public class ShowsTask extends TraktTask
 	
 	public interface ShowsListener
 	{
-		public void onShows(ArrayList<TvShow> shows);
+		public void onShows(List<TvShow> shows);
 	}
 }

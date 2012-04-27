@@ -7,13 +7,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.lists.ListRecommendationAdapter;
@@ -25,16 +27,19 @@ import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Genre;
 
-public abstract class RecommendationFragment<T extends TraktoidInterface<T>> extends TraktFragment implements ActionBar.OnNavigationListener
+public abstract class RecommendationFragment<T extends TraktoidInterface<T>> extends TraktFragment
 {	
+	protected final static int START_YEAR = 1919;
+	protected final static int END_YEAR = 2019;
+	
 	protected ListView lvRecommendations;
+	protected Spinner spGenre, spStartYear, spEndYear;
+	protected ImageView ivSend;
 
 	protected ListRecommendationAdapter<T> adapter;
 
 	protected List<Genre> genres;
-	protected ArrayList<T> items;
-
-	protected int recreation;
+	protected List<T> items;
 
 	public RecommendationFragment() {}
 
@@ -52,29 +57,21 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		setRetainInstance(true);
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
-
-		recreation = (items != null || savedInstanceState != null) ? 2 : 0;
-
-		getSherlockActivity().getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		
-		if(recreation == 0)
+		if(savedInstanceState == null)
 		{
 			getStatusView().show().text("Retrieving genres,\nPlease wait...");
 
 			getGenresTask().fire();
 		}
 		else
-		{
-			setListNavigationMode();
 			setAdapter();
-		}
 
 		lvRecommendations.setOnItemClickListener(new OnItemClickListener() 
 		{
@@ -86,7 +83,6 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 				intent.putExtra(TraktoidConstants.BUNDLE_POSITION, position);
 				startActivity(intent);
 			}
-
 		});
 	}
 
@@ -100,28 +96,50 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 		return v;
 	}
 
-	protected void setListNavigationMode()
-	{
-		getSherlockActivity().getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-		String[] items = new String[genres.size()+1];
-		items[0] = "All Genres";
-
-		for(int i = 1; i < items.length; i++)
-			items[i] = genres.get(i-1).name;
-
-		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, items);
-		spinnerAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-
-		getSherlockActivity().getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, this);
-	}
-
 	protected void setAdapter()
 	{
 		if(adapter == null)
 		{
 			adapter = new ListRecommendationAdapter<T>(items, getActivity());
+			View header = LayoutInflater.from(getActivity()).inflate(R.layout.view_recommendation_header_list, null);
+			spGenre = (Spinner) header.findViewById(R.id.spinnerGenre);
+			spStartYear = (Spinner) header.findViewById(R.id.spinnerStartYear);
+			spEndYear = (Spinner) header.findViewById(R.id.spinnerEndYear);
+			lvRecommendations.addHeaderView(header);
 			lvRecommendations.setAdapter(adapter);
+			
+			String[] itemsGenres = new String[genres.size()+1];
+			itemsGenres[0] = "All Genres";
+
+			for(int i = 1; i < itemsGenres.length; i++)
+				itemsGenres[i] = genres.get(i-1).name;
+
+			ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, itemsGenres);
+			spinnerAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+			spGenre.setAdapter(spinnerAdapter);
+			
+			String[] itemsStartYear = new String[END_YEAR - START_YEAR];
+			String[] itemsEndYear = new String[END_YEAR - START_YEAR];
+			for(int i = 0; i < itemsGenres.length; i++)
+			{
+				itemsStartYear[i] = String.valueOf(START_YEAR+i);
+				itemsEndYear[i] = String.valueOf(END_YEAR-i);
+			}
+			spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, itemsStartYear);
+			spinnerAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+			spStartYear.setAdapter(spinnerAdapter);
+			spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, itemsEndYear);
+			spinnerAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+			spEndYear.setAdapter(spinnerAdapter);
+			
+			ivSend.setOnClickListener(new OnClickListener() 
+			{
+				@Override
+				public void onClick(View v) 
+				{
+					createGetRecommendationsTask().fire();
+				}
+			});
 		}
 		else
 		{
@@ -159,19 +177,4 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 
 	@Override
 	public void onSaveState(Bundle toSave) {}
-
-	@Override
-	public boolean onNavigationItemSelected(int itemPosition, long itemId)
-	{
-		//don't know why but this event is fired two times when activity is recreated, strange...
-		if(recreation == 0)
-		{
-			if(adapter != null)
-				adapter.clear();
-			createGetRecommendationsTask().fire();
-		}
-		else 
-			recreation--;
-		return false;
-	}
 }

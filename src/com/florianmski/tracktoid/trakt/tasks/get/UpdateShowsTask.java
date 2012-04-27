@@ -50,7 +50,7 @@ public class UpdateShowsTask extends TraktTask
 	private NotificationManager nm;
 	private RemoteViews contentView;
 
-	public UpdateShowsTask(TraktManager tm, Fragment fragment, ArrayList<TvShow> selectedShows) 
+	public UpdateShowsTask(TraktManager tm, Fragment fragment, List<TvShow> selectedShows) 
 	{
 		super(tm, fragment);
 

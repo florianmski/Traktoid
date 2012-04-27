@@ -1,10 +1,8 @@
 package com.florianmski.tracktoid.ui.fragments;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
-import com.actionbarsherlock.app.ActionBar;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.get.GenresTask;
 import com.florianmski.tracktoid.trakt.tasks.get.GenresTask.GenresListener;
@@ -17,7 +15,7 @@ import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.services.RecommendationsService.MoviesBuilder;
 
-public class RecommendationMoviesFragment extends RecommendationFragment<Movie> implements ActionBar.OnNavigationListener
+public class RecommendationMoviesFragment extends RecommendationFragment<Movie>
 {	
 	public static RecommendationMoviesFragment newInstance(Bundle args)
 	{
@@ -42,7 +40,6 @@ public class RecommendationMoviesFragment extends RecommendationFragment<Movie> 
 			public void onGenres(final List<Genre> genres) 
 			{				
 				RecommendationMoviesFragment.this.genres = genres;
-				setListNavigationMode();				
 			}
 		}, tm.genreService().movies());
 	}
@@ -69,10 +66,12 @@ public class RecommendationMoviesFragment extends RecommendationFragment<Movie> 
 		if(genre != null)
 			builder.genre(genre);
 		
+		builder.startYear(spStartYear.getSelectedItemPosition() + START_YEAR).endYear(END_YEAR - spEndYear.getSelectedItemPosition());
+		
 		return new MoviesTask(tm, this, new MoviesListener() 
 		{
 			@Override
-			public void onMovies(ArrayList<Movie> movies) 
+			public void onMovies(List<Movie> movies) 
 			{
 				RecommendationMoviesFragment.this.items = movies;
 				setAdapter();

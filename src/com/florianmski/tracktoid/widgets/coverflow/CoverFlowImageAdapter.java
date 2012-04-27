@@ -1,6 +1,7 @@
 package com.florianmski.tracktoid.widgets.coverflow;
 
-import java.util.ArrayList;
+import java.util.List;
+
 import android.R.color;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -38,7 +39,7 @@ public class CoverFlowImageAdapter extends BaseAdapter
 
 	/** The bitmap map. */
 
-	private ArrayList<TvShow> shows;
+	private List<TvShow> shows;
 
 	/**
 	 * Gap between the image and its reflection.
@@ -70,7 +71,7 @@ public class CoverFlowImageAdapter extends BaseAdapter
 		this.reflectionGap = reflectionGap;
 	}
 
-	public CoverFlowImageAdapter(ArrayList<TvShow> shows) 
+	public CoverFlowImageAdapter(List<TvShow> shows) 
 	{
 		this.shows = shows;
 	}

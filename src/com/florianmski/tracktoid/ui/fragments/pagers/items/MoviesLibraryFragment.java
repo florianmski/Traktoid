@@ -102,14 +102,14 @@ public class MoviesLibraryFragment extends PagerItemLibraryFragment<Movie>
 		tm.addToQueue(new MoviesTask(tm, this, new MoviesListener() 
 		{
 			@Override
-			public void onMovies(ArrayList<Movie> movies) 
+			public void onMovies(List<Movie> movies) 
 			{
 				createMoviesDialog(movies);					
 			}
 		}, tm.userService().libraryMoviesAll(TraktManager.getUsername()), true));
 	}
 	
-	public void createMoviesDialog(final ArrayList<Movie> movies)
+	public void createMoviesDialog(final List<Movie> movies)
 	{
 		final ArrayList<Movie> selectedMovies = new ArrayList<Movie>();
 

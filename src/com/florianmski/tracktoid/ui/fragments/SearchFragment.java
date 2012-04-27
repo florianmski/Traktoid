@@ -1,18 +1,19 @@
 package com.florianmski.tracktoid.ui.fragments;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
@@ -24,7 +25,7 @@ import com.jakewharton.trakt.entities.TvShow;
 
 public class SearchFragment extends TraktFragment
 {
-	private ArrayList<TvShow> shows = new ArrayList<TvShow>();
+	private List<TvShow> shows = new ArrayList<TvShow>();
 	
 	private ListView lvSearch;
 	private EditText edtSearch;
@@ -71,7 +72,7 @@ public class SearchFragment extends TraktFragment
 			{
 				Intent i = new Intent(getActivity(), ShowActivity.class);
 				i.putExtra(TraktoidConstants.BUNDLE_POSITION, position);
-				i.putExtra(TraktoidConstants.BUNDLE_RESULTS, shows);
+				i.putExtra(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<TvShow>) shows);
 				startActivity(i);
 			}
 		});
@@ -90,7 +91,7 @@ public class SearchFragment extends TraktFragment
 				commonTask = new ShowsTask(tm, SearchFragment.this, new ShowsListener() 
 				{
 					@Override
-					public void onShows(ArrayList<TvShow> shows) 
+					public void onShows(List<TvShow> shows) 
 					{
 						SearchFragment.this.shows = shows;
 						
@@ -135,6 +136,6 @@ public class SearchFragment extends TraktFragment
 	@Override
 	public void onSaveState(Bundle toSave) 
 	{
-		toSave.putSerializable(TraktoidConstants.BUNDLE_RESULTS, shows);
+		toSave.putSerializable(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<TvShow>) shows);
 	}
 }

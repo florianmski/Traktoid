@@ -16,7 +16,8 @@
 
 package com.florianmski.tracktoid.adapters.lists;
 
-import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -39,7 +40,7 @@ public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends R
 	private DismissListener listener;
 	private Bitmap placeholder = null;
 	
-	public ListRecommendationAdapter(ArrayList<T> recommendations, Context context)
+	public ListRecommendationAdapter(List<T> recommendations, Context context)
 	{
 		super(context, recommendations);
 	}

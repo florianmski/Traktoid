@@ -121,7 +121,7 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment<TvShow>
 		tm.addToQueue(new ShowsTask(tm, this, new ShowsListener() 
 		{
 			@Override
-			public void onShows(ArrayList<TvShow> shows) 
+			public void onShows(List<TvShow> shows) 
 			{
 				createShowsDialog(shows);
 			}
@@ -142,7 +142,7 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment<TvShow>
 			adapter.remove(show);
 	}
 
-	public void createShowsDialog(final ArrayList<TvShow> shows)
+	public void createShowsDialog(final List<TvShow> shows)
 	{
 		final ArrayList<TvShow> selectedShows = new ArrayList<TvShow>();
 

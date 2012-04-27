@@ -16,7 +16,8 @@
 
 package com.florianmski.tracktoid.adapters.lists;
 
-import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -40,7 +41,7 @@ public class ListSearchAdapter extends RootAdapter<TvShow>
 {
 	private Bitmap placeholder = null;
 
-	public ListSearchAdapter(Context context, ArrayList<TvShow> shows)
+	public ListSearchAdapter(Context context, List<TvShow> shows)
 	{
 		super(context, shows);
 		placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
