@@ -41,6 +41,7 @@ public class RecommendationShowsFragment extends RecommendationFragment<TvShow>
 			public void onGenres(final List<Genre> genres) 
 			{				
 				RecommendationShowsFragment.this.genres = genres;
+				createGetRecommendationsTask().fire();
 			}
 		}, tm.genreService().shows());
 	}

@@ -8,16 +8,13 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.image.Image;
-import com.florianmski.tracktoid.ui.fragments.ShowFragment;
 import com.florianmski.traktoid.TraktoidInterface;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +38,6 @@ public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> e
 	protected QuickAction quickAction;
 
 	protected int posterClickedPosition = -1;
-	protected boolean hasSecondFragment;
 
 	protected GridPosterAdapter<T> adapter;
 
@@ -51,7 +47,7 @@ public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> e
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
-	
+
 	public abstract void checkUpdateTask();
 	public abstract GridPosterAdapter<T> setupAdapter();
 	public abstract Intent onGridItemClick(AdapterView<?> arg0, View v, int position, long arg3);
@@ -65,21 +61,13 @@ public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> e
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-		
+
 		getStatusView().show().text("Loading ,\nPlease wait...");
-				
+
 		checkUpdateTask();
-		
-		if(savedInstanceState != null && savedInstanceState.containsKey(TraktoidConstants.BUNDLE_HAS_MY_SHOW_FRAGMENT))
-			hasSecondFragment = savedInstanceState.getBoolean(TraktoidConstants.BUNDLE_HAS_MY_SHOW_FRAGMENT);
-		else
-		{
-			ShowFragment myShowFragment = (ShowFragment)getFragmentManager().findFragmentById(R.id.fragment_my_show);
-			hasSecondFragment = (myShowFragment != null) && (myShowFragment.isVisible());
-		}
 
 		refreshGridView();
-		
+
 		adapter = setupAdapter();
 		gd.setAdapter(adapter);
 
@@ -91,27 +79,7 @@ public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> e
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
 			{
 				Intent i = onGridItemClick(arg0, arg1, position, arg3);
-
-				if(Utils.isLandscape(getActivity()))
-				{
-					if(hasSecondFragment)
-						((ShowFragment)(getFragmentManager().findFragmentById(R.id.fragment_my_show))).refreshFragment(i.getExtras());
-					else
-					{
-						ShowFragment msf = ShowFragment.newInstance(i.getExtras());
-
-						getFragmentManager()
-						.beginTransaction()
-						.replace(R.id.fragment_my_show, msf)
-						.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-						.commit();
-
-						hasSecondFragment = true;
-						refreshGridView();
-					}					
-				}
-				else
-					startActivity(i);
+				startActivity(i);
 			}
 		});
 
@@ -132,7 +100,7 @@ public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> e
 		quickAction.addActionItem(aiRefresh);
 		quickAction.addActionItem(aiDelete);
 		//not necessary, disable it for the moment
-//		quickAction.addActionItem(aiRating);
+		//		quickAction.addActionItem(aiRating);
 
 		quickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() 
 		{			
@@ -167,12 +135,7 @@ public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> e
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle toSave) 
-	{
-		super.onSaveInstanceState(toSave);
-
-		toSave.putBoolean(TraktoidConstants.BUNDLE_HAS_MY_SHOW_FRAGMENT, hasSecondFragment);
-	}
+	public void onSaveInstanceState(Bundle toSave) {}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
@@ -186,24 +149,18 @@ public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> e
 
 	public int refreshGridView()
 	{
-		int coeffDivision;
 		int nbColumns;
-
-		if(hasSecondFragment && Utils.isLandscape(getActivity()))
-			coeffDivision = 2;
-		else
-			coeffDivision = 1;
 
 		if(Utils.isTabletDevice(getActivity()))
 		{
-			if(!hasSecondFragment && Utils.isLandscape(getActivity()))
+			if(Utils.isLandscape(getActivity()))
 				nbColumns = NB_COLUMNS_TABLET_LANDSCAPE;
 			else
 				nbColumns = NB_COLUMNS_TABLET_PORTRAIT;	
 		}
 		else
 		{
-			if(!hasSecondFragment && Utils.isLandscape(getActivity()))
+			if(Utils.isLandscape(getActivity()))
 				nbColumns = NB_COLUMNS_PHONE_LANDSCAPE;
 			else
 				nbColumns = NB_COLUMNS_PHONE_PORTRAIT;	
@@ -212,9 +169,9 @@ public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> e
 		gd.setNumColumns(nbColumns);
 
 		if(adapter != null)
-			adapter.setHeight(calculatePosterHeight(coeffDivision, nbColumns));
+			adapter.setHeight(calculatePosterHeight(nbColumns));
 
-		return calculatePosterHeight(coeffDivision, nbColumns);
+		return calculatePosterHeight(nbColumns);
 	}
 
 	public void onShowQuickAction(View v, int position) 
@@ -224,9 +181,9 @@ public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> e
 		quickAction.show(v);
 	}
 
-	private int calculatePosterHeight(int coeffDivision, int nbColumns)
+	private int calculatePosterHeight(int nbColumns)
 	{
-		int width = (getActivity().getWindowManager().getDefaultDisplay().getWidth()/(coeffDivision*nbColumns));
+		int width = (getActivity().getWindowManager().getDefaultDisplay().getWidth()/(nbColumns));
 		return (int) (width*Image.RATIO_POSTER);
 	}
 
@@ -234,15 +191,15 @@ public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> e
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
 		super.onCreateOptionsMenu(menu, inflater);
-		
+
 		SubMenu rateMenu = menu.addSubMenu(0, R.id.action_bar_filter, 0, "Filter");
 		rateMenu.add(0, R.id.action_bar_filter_all, 0, "All");
 		rateMenu.add(0, R.id.action_bar_filter_unwatched, 0, "Unwatched");
 		rateMenu.add(0, R.id.action_bar_filter_loved, 0, "Loved");
-		
+
 		MenuItem rateItem = rateMenu.getItem();
-        rateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        
+		rateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
 		if(!tm.isUpdateTaskRunning())
 		{
 			menu.add(0, R.id.action_bar_refresh, 0, "Refresh")
@@ -305,7 +262,7 @@ public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> e
 	{
 		super.onResume();
 	}
-	
+
 	@Override
 	public void onRestoreState(Bundle savedInstanceState) {}
 

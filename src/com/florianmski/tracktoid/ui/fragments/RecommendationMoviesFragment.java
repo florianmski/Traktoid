@@ -40,6 +40,7 @@ public class RecommendationMoviesFragment extends RecommendationFragment<Movie>
 			public void onGenres(final List<Genre> genres) 
 			{				
 				RecommendationMoviesFragment.this.genres = genres;
+				createGetRecommendationsTask().fire();
 			}
 		}, tm.genreService().movies());
 	}

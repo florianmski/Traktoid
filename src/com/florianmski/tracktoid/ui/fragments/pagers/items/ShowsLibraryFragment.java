@@ -76,8 +76,6 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment<TvShow>
 	{
 		Intent i = new Intent(getActivity(), MyShowActivity.class);
 		i.putExtra(TraktoidConstants.BUNDLE_SHOW, adapter.getItem(position));
-		getActivity().setIntent(i);
-
 		return i;
 	}
 
