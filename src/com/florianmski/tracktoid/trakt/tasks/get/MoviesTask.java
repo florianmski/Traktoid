@@ -1,6 +1,7 @@
 package com.florianmski.tracktoid.trakt.tasks.get;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
@@ -33,9 +34,8 @@ public class MoviesTask extends TraktTask
 	{		
 		movies = (List<Movie>) builder.fire();
 		
-		//TODO
-//		if(sort)
-//			Collections.sort(movies);
+		if(sort)
+			Collections.sort(movies);
 		
 		return true;
 	}

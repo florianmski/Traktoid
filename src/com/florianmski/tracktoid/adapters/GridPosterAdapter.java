@@ -202,10 +202,7 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 		AQuery aq = listAq.recycle(convertView);
 
 		if(aq.shouldDelay(position, convertView, parent, i.getUrl()))
-		{
-			holder.ivPoster.setScaleType(ScaleType.CENTER);
-			aq.id(holder.ivPoster).image(context.getResources().getDrawable(R.drawable.progress));
-		}
+			setPlaceholder(holder.ivPoster);
 		else
 		{
 			holder.ivPoster.setScaleType(ScaleType.CENTER_CROP);

@@ -48,7 +48,6 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode> implements Se
 	private boolean watchedMode = false;
 	private String tvdb_id;
 	private Map<Integer, Boolean> listWatched = new HashMap<Integer, Boolean>();
-	private Bitmap placeholder = null;
 	
 	//TODO test if this works or not
 	//take the orientation change into account
@@ -130,7 +129,7 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode> implements Se
         
         //in case user scroll the list fast, stop loading images from web
         if(aq.shouldDelay(position, convertView, parent, i.getUrl()))
-        	aq.id(holder.ivScreen).image(placeholder);
+        	setPlaceholder(holder.ivScreen);
         else
         	aq.id(holder.ivScreen).image(cb);
         

@@ -7,13 +7,13 @@
     <ImageView
         android:id="@+id/imageViewPoster"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"
+        android:src="@drawable/placeholder"/>
 
     <RelativeLayout
         android:id="@+id/relativeLayoutSelectorPurpose"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/selector_no_background" >
+        android:layout_height="fill_parent" >
     </RelativeLayout>
 
     <ImageView

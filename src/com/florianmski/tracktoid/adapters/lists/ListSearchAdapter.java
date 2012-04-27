@@ -19,8 +19,6 @@ package com.florianmski.tracktoid.adapters.lists;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,12 +37,9 @@ import com.jakewharton.trakt.entities.TvShow;
 
 public class ListSearchAdapter extends RootAdapter<TvShow>
 {
-	private Bitmap placeholder = null;
-
 	public ListSearchAdapter(Context context, List<TvShow> shows)
 	{
 		super(context, shows);
-		placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
 	}
 
 	@Override
@@ -75,7 +70,7 @@ public class ListSearchAdapter extends RootAdapter<TvShow>
 		Image i = new Image(show.tvdbId, null, Image.BANNER);
 		AQuery aq = new AQuery(convertView);
 		if(aq.shouldDelay(position, convertView, parent, i.getUrl()))
-			aq.id(holder.ivBanner).image(placeholder);
+			setPlaceholder(holder.ivBanner);
 		else
 			aq.id(holder.ivBanner).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
 

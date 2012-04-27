@@ -20,7 +20,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,7 +37,6 @@ import com.florianmski.traktoid.TraktoidInterface;
 public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends RootAdapter<T> 
 {
 	private DismissListener listener;
-	private Bitmap placeholder = null;
 	
 	public ListRecommendationAdapter(List<T> recommendations, Context context)
 	{
@@ -91,7 +89,7 @@ public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends R
         Image i = new Image(s.getId(), s.getImages().fanart, Image.FANART);
         AQuery aq = new AQuery(convertView);
         if(aq.shouldDelay(position, convertView, parent, i.getUrl()))
-            aq.id(holder.ivFanart).image(placeholder);
+        	setPlaceholder(holder.ivFanart);
         else
         	aq.id(holder.ivFanart).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
                         

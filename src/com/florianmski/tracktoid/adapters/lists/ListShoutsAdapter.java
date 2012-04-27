@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +21,9 @@ import com.jakewharton.trakt.entities.Shout;
 
 public class ListShoutsAdapter extends RootAdapter<Shout>
 {
-	private Bitmap placeholder = null;
-
 	public ListShoutsAdapter(List<Shout> shouts, Context context)
 	{
 		super(context, shouts);
-		placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
 	}
 
 	public void revealSpoiler(int position)
@@ -74,7 +70,7 @@ public class ListShoutsAdapter extends RootAdapter<Shout>
 		}.url(s.user.avatar).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
 
 		if(aq.shouldDelay(position, convertView, parent, s.user.avatar))
-			aq.id(holder.ivAvatar).image(placeholder);
+			setPlaceholder(holder.ivAvatar);
 		else
 			aq.id(holder.ivAvatar).image(cb);
 

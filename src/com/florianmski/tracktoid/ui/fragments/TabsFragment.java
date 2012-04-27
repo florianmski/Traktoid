@@ -168,8 +168,6 @@ public abstract class TabsFragment extends TraktFragment {
 
 				mLastTab = newTab;
 				ft.commit();
-				//TODO
-//				mActivity.getSupportFragmentManager().executePendingTransactions();
 			}
 		}
 	}

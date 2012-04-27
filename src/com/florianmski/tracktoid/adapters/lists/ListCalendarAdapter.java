@@ -25,8 +25,6 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -60,14 +58,12 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 	public final static int NB_BY_ROW_LANDSCAPE = 3;
 
 	private List<Object> objects = new ArrayList<Object>();
-	private Bitmap placeholder;
 	private static int nbByRow;
 
 	public ListCalendarAdapter(List<CalendarDate> calendarDates, Context context)
 	{
 		super(context, calendarDates);
 
-		placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty);
 		int orientation = context.getResources().getConfiguration().orientation;
 		if(orientation == Configuration.ORIENTATION_PORTRAIT)
 			nbByRow = NB_BY_ROW_PORTRAIT;
@@ -237,7 +233,7 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 				}
 				
 				if(aq.shouldDelay(position, holder.llEpisodes, parent, image.getUrl()))
-					aq.id(holder.livScreen[i]).image(placeholder);
+					setPlaceholder(holder.livScreen[i]);
 				else
 				{
 					if(posterImage != null)
