@@ -68,8 +68,8 @@ public class ListSearchAdapter extends RootAdapter<TvShow>
 		TvShow show = getItem(position);
 
 		Image i = new Image(show.tvdbId, null, Image.BANNER);
-		AQuery aq = new AQuery(convertView);
-		if(aq.shouldDelay(position, convertView, parent, i.getUrl()))
+		AQuery aq = listAq.recycle(convertView);
+		if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
 			setPlaceholder(holder.ivBanner);
 		else
 			aq.id(holder.ivBanner).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);

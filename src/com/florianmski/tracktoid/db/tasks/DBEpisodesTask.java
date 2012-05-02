@@ -10,18 +10,20 @@ public class DBEpisodesTask extends DBTask
 {
 	private List<TvShowEpisode> episodes;
 	private String seasonId;
+	private String tvdbId;
 	
-	public DBEpisodesTask(Context context, DBListener listener, String seasonId) 
+	public DBEpisodesTask(Context context, DBListener listener, String seasonId, String tvdbId) 
 	{
 		super(context, listener);
 		
 		this.seasonId = seasonId;
+		this.tvdbId = tvdbId;
 	}
 	
 	@Override
 	protected void doDBStuff() 
 	{
-		episodes = dbw.getEpisodes(seasonId);
+		episodes = dbw.getEpisodes(seasonId, tvdbId);
 	}
 	
 	@Override

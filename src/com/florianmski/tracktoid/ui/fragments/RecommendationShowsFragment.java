@@ -45,7 +45,7 @@ public class RecommendationShowsFragment extends RecommendationFragment<TvShow>
 			}
 		}, tm.genreService().shows());
 	}
-	
+
 	@Override
 	public PostTask getDismissTask(String id) 
 	{
@@ -68,8 +68,9 @@ public class RecommendationShowsFragment extends RecommendationFragment<TvShow>
 		if(genre != null)
 			builder.genre(genre);
 		
-		builder.startYear(spStartYear.getSelectedItemPosition() + START_YEAR).endYear(END_YEAR - spEndYear.getSelectedItemPosition());
-		
+		if(spStartYear != null && spEndYear != null)
+			builder.startYear(spStartYear.getSelectedItemPosition() + START_YEAR).endYear(END_YEAR - spEndYear.getSelectedItemPosition());
+
 		return new ShowsTask(tm, this, new ShowsListener() 
 		{
 			@Override

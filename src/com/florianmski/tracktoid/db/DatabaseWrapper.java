@@ -128,6 +128,9 @@ public class DatabaseWrapper
 
 	public static final String KEY_TVSHOW_PROGRESS = "progress";
 	public static final int COLUMN_TVSHOW_PROGRESS = 25;
+	
+	public static final String KEY_TVSHOW_IN_COLLECTION = "in_collection";
+	public static final int COLUMN_TVSHOW_IN_COLLECTION = 26;
 
 	private final static String SELECT_TVSHOW = 
 			KEY_ID + "," +
@@ -155,7 +158,8 @@ public class DatabaseWrapper
 					KEY_TVSHOW_IN_WATCHLIST + "," +
 					KEY_TVSHOW_EPISODES_WATCHED + "," +
 					KEY_TVSHOW_EPISODES + "," +
-					KEY_TVSHOW_PROGRESS;
+					KEY_TVSHOW_PROGRESS + "," +
+					KEY_TVSHOW_IN_COLLECTION;
 
 	private static final String TVSHOWS_TABLE_CREATE = "create table " +
 			TVSHOWS_TABLE + " (" + 
@@ -184,7 +188,8 @@ public class DatabaseWrapper
 			KEY_TVSHOW_IN_WATCHLIST + " boolean default 0, " + 
 			KEY_TVSHOW_EPISODES_WATCHED + " integer default 0, " + 
 			KEY_TVSHOW_EPISODES + " integer default 0, " + 
-			KEY_TVSHOW_PROGRESS + " integer default 0 " + // No comma in the end!
+			KEY_TVSHOW_PROGRESS + " integer default 0, " + 
+			KEY_TVSHOW_IN_COLLECTION + " boolean default 0 " + // No comma in the end!
 			");";
 
 
@@ -205,6 +210,9 @@ public class DatabaseWrapper
 
 	public static final String KEY_SEASON_TVSHOW_ID = "tvshow_id";
 	public static final int COLUMN_SEASON_TVSHOW_ID = 5;
+	
+	public static final String KEY_SEASON_IN_COLLECTION = "in_collection";
+	public static final int COLUMN_SEASON_IN_COLLECTION = 6;
 
 	private final static String SELECT_SEASON =
 			KEY_ID + "," +
@@ -212,7 +220,8 @@ public class DatabaseWrapper
 					KEY_SEASON_EPISODES + "," +
 					KEY_SEASON_EPISODES_WATCHED + "," +
 					KEY_SEASON_URL + "," +
-					KEY_SEASON_TVSHOW_ID;
+					KEY_SEASON_TVSHOW_ID + "," +
+					KEY_SEASON_IN_COLLECTION;
 
 	private static final String SEASONS_TABLE_CREATE = "create table " +
 			SEASONS_TABLE + " (" + 
@@ -221,7 +230,8 @@ public class DatabaseWrapper
 			KEY_SEASON_EPISODES + " integer, " +
 			KEY_SEASON_EPISODES_WATCHED + " integer default 0, " +
 			KEY_SEASON_URL + " text, " + 
-			KEY_SEASON_TVSHOW_ID + " integer REFERENCES " + TVSHOWS_TABLE + " (" + KEY_TVSHOW_TVDB_ID + ") " + // No comma in the end!
+			KEY_SEASON_TVSHOW_ID + " integer REFERENCES " + TVSHOWS_TABLE + " (" + KEY_TVSHOW_TVDB_ID + "), " +
+			KEY_SEASON_IN_COLLECTION + " boolean default 0 " + // No comma in the end! 
 			");";
 
 
@@ -266,6 +276,13 @@ public class DatabaseWrapper
 
 	public static final String KEY_EPISODE_SEASON_ID = "season_id";
 	public static final int COLUMN_EPISODE_SEASON_ID = 13;
+	
+	public static final String KEY_EPISODE_IN_WATCHLIST = "in_watchlist";
+	public static final int COLUMN_EPISODE_IN_WATCHLIST = 14;
+	
+	public static final String KEY_EPISODE_IN_COLLECTION = "in_collection";
+	public static final int COLUMN_EPISODE_IN_COLLECTION = 15;
+	
 
 	private final static String SELECT_EPISODE = 
 			EPISODES_TABLE+"."+KEY_ID + "," +
@@ -281,7 +298,9 @@ public class DatabaseWrapper
 					KEY_EPISODE_LOVED + "," +
 					KEY_EPISODE_HATED + "," +
 					KEY_EPISODE_WATCHED + "," +
-					KEY_EPISODE_SEASON_ID;
+					KEY_EPISODE_SEASON_ID + "," +
+					KEY_EPISODE_IN_WATCHLIST + "," +
+					KEY_EPISODE_IN_COLLECTION;
 
 	private static final String EPISODES_TABLE_CREATE = "create table " +
 			EPISODES_TABLE + " (" + 
@@ -298,7 +317,9 @@ public class DatabaseWrapper
 			KEY_EPISODE_LOVED + " integer, " +
 			KEY_EPISODE_HATED + " integer, " +
 			KEY_EPISODE_WATCHED + " boolean default 0, " +
-			KEY_EPISODE_SEASON_ID + "  REFERENCES " + SEASONS_TABLE + " (" + KEY_SEASON_URL + ")" +	// No comma in the end!
+			KEY_EPISODE_SEASON_ID + "  REFERENCES " + SEASONS_TABLE + " (" + KEY_SEASON_URL + "), " +	
+			KEY_EPISODE_IN_WATCHLIST + " boolean default 0, " + 
+			KEY_EPISODE_IN_COLLECTION + " boolean default 0 " + // No comma in the end!
 			");";
 
 	/************************** Movie table *******************************/
@@ -625,6 +646,23 @@ public class DatabaseWrapper
 		private void upgradeFromV2ToV3(SQLiteDatabase db)
 		{
 			db.execSQL(MOVIES_TABLE_CREATE);
+			
+			//adding new columns
+			db.execSQL(
+					"ALTER TABLE " + TVSHOWS_TABLE + " " +
+							"ADD COLUMN " + KEY_TVSHOW_IN_COLLECTION + " boolean default 0 " + ";");
+
+			db.execSQL(
+					"ALTER TABLE " + SEASONS_TABLE + " " +
+							"ADD COLUMN " + KEY_TVSHOW_IN_COLLECTION + " boolean default 0 " + ";");
+
+			db.execSQL(
+					"ALTER TABLE " + EPISODES_TABLE + " " +
+							"ADD COLUMN " + KEY_TVSHOW_IN_WATCHLIST + " boolean default 0 " + ";");
+			
+			db.execSQL(
+					"ALTER TABLE " + EPISODES_TABLE + " " +
+							"ADD COLUMN " + KEY_TVSHOW_IN_COLLECTION + " boolean default 0 " + ";");
 		}
 	}
 
@@ -736,6 +774,8 @@ public class DatabaseWrapper
 
 		values.put(KEY_TVSHOW_IMDB_ID, s.imdbId);
 		values.put(KEY_TVSHOW_IN_WATCHLIST, s.inWatchlist);
+		//TODO
+//		values.put(KEY_TVSHOW_IN_Collection, s.inCollection);
 		values.put(KEY_TVSHOW_NETWORK, s.network);
 		values.put(KEY_TVSHOW_OVERVIEW, s.overview);
 		values.put(KEY_TVSHOW_RUNTIME, s.runtime);
@@ -804,6 +844,8 @@ public class DatabaseWrapper
 		show.tvrageId = c.getString(COLUMN_TVSHOW_TVRAGE_ID);
 		show.rating = c.getString(COLUMN_TVSHOW_RATING) == null ? null : Rating.fromValue(c.getString(COLUMN_TVSHOW_RATING));
 		show.inWatchlist = c.getInt(COLUMN_TVSHOW_IN_WATCHLIST) != 0;
+		//TODO
+//		show.inC = c.getInt(COLUMN_TVSHOW_IN_COLLECTION) != 0;
 		show.images = i;
 		show.imdbId = c.getString(COLUMN_TVSHOW_IMDB_ID);
 		show.ratings = r;
@@ -922,6 +964,8 @@ public class DatabaseWrapper
 		values.put(KEY_SEASON_SEASON, season);
 		values.put(KEY_SEASON_URL, url);
 		values.put(KEY_SEASON_TVSHOW_ID, tvshowId);
+		//TODO
+//		values.put(KEY_SEASON_IN_COLLECTION, s.inCollection);
 
 		insertOrUpdate(SEASONS_TABLE, values, url);
 
@@ -936,13 +980,13 @@ public class DatabaseWrapper
 			insertOrUpdateSeason(s, tvshowId);
 	}
 
-	private TvShowSeason getSeasonFromCursor(Cursor c, boolean getEpisodesToo)
+	private TvShowSeason getSeasonFromCursor(Cursor c, String tvdbId, boolean getEpisodesToo)
 	{
 		TvShowSeason s = new TvShowSeason();
 		Episodes episodes = new Episodes();
 
 		if(getEpisodesToo)
-			episodes.episodes = getEpisodes(c.getString(COLUMN_SEASON_URL));
+			episodes.episodes = getEpisodes(c.getString(COLUMN_SEASON_URL), tvdbId);
 
 		s.episodes = episodes;
 
@@ -950,6 +994,8 @@ public class DatabaseWrapper
 		s.episodesWatched = c.getInt(COLUMN_SEASON_EPISODES_WATCHED);
 		s.episodes.count = (c.getInt(COLUMN_SEASON_EPISODES));
 		s.url = c.getString(COLUMN_SEASON_URL);
+		//TODO
+//		s.inCollection = c.getString(COLUMN_SEASON_IN_COLLECTION);
 
 		return s;
 	}
@@ -966,7 +1012,7 @@ public class DatabaseWrapper
 		c.moveToFirst();
 		for(int i = 0; i < c.getCount(); i++)
 		{
-			seasons.add(getSeasonFromCursor(c, getEpisodesToo));
+			seasons.add(getSeasonFromCursor(c, tvdbId, getEpisodesToo));
 			c.moveToNext();
 		}
 
@@ -986,7 +1032,7 @@ public class DatabaseWrapper
 		Cursor c = db.rawQuery(sql, new String[]{tvdbId, String.valueOf(season)});
 		c.moveToFirst();
 
-		TvShowSeason tvSeason = getSeasonFromCursor(c, getEpisodesToo);
+		TvShowSeason tvSeason = getSeasonFromCursor(c, tvdbId, getEpisodesToo);
 
 		c.close();
 
@@ -1038,6 +1084,9 @@ public class DatabaseWrapper
 		values.put(KEY_EPISODE_URL, url);
 		values.put(KEY_EPISODE_VOTES, e.ratings.votes);
 		values.put(KEY_EPISODE_WATCHED, e.watched);
+		values.put(KEY_EPISODE_IN_WATCHLIST, e.inWatchlist);
+		//TODO
+//		values.put(KEY_EPISODE_IN_COLLECTION, e.inCollection);
 		values.put(KEY_EPISODE_SEASON_ID, seasonId);
 
 		insertOrUpdate(EPISODES_TABLE, values, url);
@@ -1050,7 +1099,7 @@ public class DatabaseWrapper
 	public boolean insertOrUpdateEpisode(TvShowEpisode e) 
 	{
 		//this episode is not in db, cancel insertion
-		if(getEpisode(e.url) == null)
+		if(getEpisode(e.url, null) == null)
 			return false;
 
 		ContentValues values = new ContentValues();
@@ -1069,6 +1118,9 @@ public class DatabaseWrapper
 		values.put(KEY_EPISODE_URL, url);
 		values.put(KEY_EPISODE_VOTES, e.ratings.votes);
 		values.put(KEY_EPISODE_WATCHED, e.watched);
+		values.put(KEY_EPISODE_IN_WATCHLIST, e.inWatchlist);
+		//TODO
+//		values.put(KEY_EPISODE_IN_COLLECTION, e.inCollection);
 
 		insertOrUpdate(EPISODES_TABLE, values, url);
 
@@ -1084,7 +1136,7 @@ public class DatabaseWrapper
 			insertOrUpdateEpisode(e, seasonId);
 	}
 
-	private TvShowEpisode getEpisodeFromCursor(Cursor c)
+	private TvShowEpisode getEpisodeFromCursor(Cursor c, String tvdbId)
 	{
 		if(c.getCount() == 0)
 			return null;
@@ -1109,11 +1161,16 @@ public class DatabaseWrapper
 		e.title = c.getString(COLUMN_EPISODE_TITLE);
 		e.url = c.getString(COLUMN_EPISODE_URL);
 		e.watched = c.getInt(COLUMN_EPISODE_WATCHED) != 0;
+		e.inWatchlist = c.getInt(COLUMN_EPISODE_IN_WATCHLIST) != 0;
+		//TODO
+//		e.inCollection = c.getInt(COLUMN_EPISODE_IN_COLLECTION) != 0;
+		
+		e.tvdbId = tvdbId;
 
 		return e;
 	}
 
-	public List<TvShowEpisode> getEpisodes(String seasonId)
+	public List<TvShowEpisode> getEpisodes(String seasonId, String tvdbId)
 	{
 		ArrayList<TvShowEpisode> episodes = new ArrayList<TvShowEpisode>();
 		String sql = 
@@ -1125,7 +1182,7 @@ public class DatabaseWrapper
 		c.moveToFirst();
 		for(int i = 0; i < c.getCount(); i++)
 		{
-			episodes.add(getEpisodeFromCursor(c));
+			episodes.add(getEpisodeFromCursor(c, tvdbId));
 			c.moveToNext();
 		}
 
@@ -1134,25 +1191,25 @@ public class DatabaseWrapper
 		return episodes;
 	}
 
-	public TvShowEpisode getEpisode(String seasonId, int episode)
-	{
-		String sql = 
-				"SELECT * " + 
-						"FROM " + EPISODES_TABLE + " " +
-						"WHERE " + KEY_EPISODE_SEASON_ID + "=? " + 
-						"AND " + KEY_EPISODE_EPISODE + "=? " +
-						"ORDER BY " + KEY_EPISODE_EPISODE;
-		Cursor c = db.rawQuery(sql, new String[]{seasonId, String.valueOf(episode)});
-		c.moveToFirst();
+//	public TvShowEpisode getEpisode(String seasonId, int episode)
+//	{
+//		String sql = 
+//				"SELECT * " + 
+//						"FROM " + EPISODES_TABLE + " " +
+//						"WHERE " + KEY_EPISODE_SEASON_ID + "=? " + 
+//						"AND " + KEY_EPISODE_EPISODE + "=? " +
+//						"ORDER BY " + KEY_EPISODE_EPISODE;
+//		Cursor c = db.rawQuery(sql, new String[]{seasonId, String.valueOf(episode)});
+//		c.moveToFirst();
+//
+//		TvShowEpisode tvEpisode = getEpisodeFromCursor(c);
+//
+//		c.close();
+//
+//		return tvEpisode;
+//	}
 
-		TvShowEpisode tvEpisode = getEpisodeFromCursor(c);
-
-		c.close();
-
-		return tvEpisode;
-	}
-
-	public TvShowEpisode getEpisode(String url)
+	public TvShowEpisode getEpisode(String url, String tvdbId)
 	{
 		String sql = 
 				"SELECT * " + 
@@ -1164,7 +1221,7 @@ public class DatabaseWrapper
 		TvShowEpisode tvEpisode = null;
 
 		if(c.moveToFirst())
-			tvEpisode = getEpisodeFromCursor(c);
+			tvEpisode = getEpisodeFromCursor(c, tvdbId);
 
 		c.close();
 
@@ -1218,7 +1275,7 @@ public class DatabaseWrapper
 		Cursor c = db.rawQuery(sql, new String[]{String.valueOf(0), String.valueOf(0), tvdbId});
 		c.moveToFirst();
 
-		TvShowEpisode tvEpisode = getEpisodeFromCursor(c);
+		TvShowEpisode tvEpisode = getEpisodeFromCursor(c, tvdbId);
 
 		c.close();
 
@@ -1289,7 +1346,17 @@ public class DatabaseWrapper
 		CalendarDate cd = null;
 		for(int i = 0; i < c.getCount(); i++)
 		{
-			TvShowEpisode e = getEpisodeFromCursor(c);
+			TvShow s = new TvShow();
+
+			s.airTime = c.getString(c.getColumnIndex(KEY_TVSHOW_AIR_TIME));
+			s.title = c.getString(c.getColumnIndex(KEY_TVSHOW_TITLE));
+			s.tvdbId = c.getString(c.getColumnIndex(KEY_TVSHOW_TVDB_ID));
+			s.network = c.getString(c.getColumnIndex(KEY_TVSHOW_NETWORK));
+
+			s.images = new Images();
+			s.images.poster = c.getString(c.getColumnIndex(KEY_TVSHOW_POSTER));
+			
+			TvShowEpisode e = getEpisodeFromCursor(c, s.tvdbId);
 			e.images.screen = null;
 
 			if(cd == null || !Utils.isSameDay(cd.date, e.firstAired))
@@ -1301,16 +1368,6 @@ public class DatabaseWrapper
 			}
 
 			CalendarTvShowEpisode cde = new CalendarTvShowEpisode();
-
-			TvShow s = new TvShow();
-
-			s.airTime = c.getString(c.getColumnIndex(KEY_TVSHOW_AIR_TIME));
-			s.title = c.getString(c.getColumnIndex(KEY_TVSHOW_TITLE));
-			s.tvdbId = c.getString(c.getColumnIndex(KEY_TVSHOW_TVDB_ID));
-			s.network = c.getString(c.getColumnIndex(KEY_TVSHOW_NETWORK));
-
-			s.images = new Images();
-			s.images.poster = c.getString(c.getColumnIndex(KEY_TVSHOW_POSTER));
 
 			cde.show = s;
 			cde.episode = e;

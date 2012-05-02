@@ -55,7 +55,7 @@ public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends R
     }
 
     @Override
-	public View doGetView(final int position, View convertView, ViewGroup parent) 
+	public View doGetView(int position, View convertView, ViewGroup parent) 
     {
     	final ViewHolder holder;
 
@@ -87,8 +87,8 @@ public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends R
 		});
         
         Image i = new Image(s.getId(), s.getImages().fanart, Image.FANART);
-        AQuery aq = new AQuery(convertView);
-        if(aq.shouldDelay(position, convertView, parent, i.getUrl()))
+        AQuery aq = listAq.recycle(convertView);
+        if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
         	setPlaceholder(holder.ivFanart);
         else
         	aq.id(holder.ivFanart).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);

@@ -64,6 +64,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 	{
 		super.onActivityCreated(savedInstanceState);
 		
+		
 		if(savedInstanceState == null)
 		{
 			getStatusView().show().text("Retrieving genres,\nPlease wait...");
@@ -80,7 +81,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 			{
 				Intent intent = new Intent(getActivity(), ShowActivity.class);
 				intent.putExtra(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<T>) adapter.getItems());
-				intent.putExtra(TraktoidConstants.BUNDLE_POSITION, position);
+				intent.putExtra(TraktoidConstants.BUNDLE_POSITION, position-1);
 				startActivity(intent);
 			}
 		});
@@ -105,6 +106,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 			spGenre = (Spinner) header.findViewById(R.id.spinnerGenre);
 			spStartYear = (Spinner) header.findViewById(R.id.spinnerStartYear);
 			spEndYear = (Spinner) header.findViewById(R.id.spinnerEndYear);
+			ivSend = (ImageView) header.findViewById(R.id.imageViewSend);
 			lvRecommendations.addHeaderView(header);
 			lvRecommendations.setAdapter(adapter);
 			
@@ -114,29 +116,31 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 			for(int i = 1; i < itemsGenres.length; i++)
 				itemsGenres[i] = genres.get(i-1).name;
 
-			ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, itemsGenres);
-			spinnerAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-			spGenre.setAdapter(spinnerAdapter);
+			ArrayAdapter<String> spinnerAdapterGenres = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, itemsGenres);
+			spinnerAdapterGenres.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+			spGenre.setAdapter(spinnerAdapterGenres);
 			
-			String[] itemsStartYear = new String[END_YEAR - START_YEAR];
-			String[] itemsEndYear = new String[END_YEAR - START_YEAR];
-			for(int i = 0; i < itemsGenres.length; i++)
+			int size = END_YEAR - START_YEAR + 1;
+			String[] itemsStartYear = new String[size];
+			String[] itemsEndYear = new String[size];
+			for(int i = 0; i < size; i++)
 			{
 				itemsStartYear[i] = String.valueOf(START_YEAR+i);
 				itemsEndYear[i] = String.valueOf(END_YEAR-i);
 			}
-			spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, itemsStartYear);
-			spinnerAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-			spStartYear.setAdapter(spinnerAdapter);
-			spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, itemsEndYear);
-			spinnerAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-			spEndYear.setAdapter(spinnerAdapter);
+			ArrayAdapter<String> spinnerAdapterStartYear = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, itemsStartYear);
+			spinnerAdapterStartYear.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+			spStartYear.setAdapter(spinnerAdapterStartYear);
+			ArrayAdapter<String> spinnerAdapterEndYear = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, itemsEndYear);
+			spinnerAdapterEndYear.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+			spEndYear.setAdapter(spinnerAdapterEndYear);
 			
 			ivSend.setOnClickListener(new OnClickListener() 
 			{
 				@Override
 				public void onClick(View v) 
 				{
+					adapter.clear();
 					createGetRecommendationsTask().fire();
 				}
 			});
@@ -165,7 +169,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 
 	protected TraktTask createGetRecommendationsTask()
 	{
-		int index = getSherlockActivity().getSupportActionBar().getSelectedNavigationIndex();
+		int index = spGenre == null ? -1 : spGenre.getSelectedItemPosition();
 		Genre genre = index <= 0 || index > genres.size() ? null : genres.get(index-1);
 		getStatusView().show().text("Retrieving recommendations" + ((genre == null) ? "" : " in \"" + genre.name + "\"") + ",\nPlease wait...");	
 

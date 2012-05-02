@@ -30,7 +30,7 @@ public class RecommendationMoviesFragment extends RecommendationFragment<Movie>
 	{
 		super(listener);
 	}
-	
+
 	@Override
 	public GenresTask getGenresTask() 
 	{
@@ -44,7 +44,7 @@ public class RecommendationMoviesFragment extends RecommendationFragment<Movie>
 			}
 		}, tm.genreService().movies());
 	}
-	
+
 	@Override
 	public PostTask getDismissTask(String id) 
 	{
@@ -58,7 +58,7 @@ public class RecommendationMoviesFragment extends RecommendationFragment<Movie>
 			}
 		});
 	}
-	
+
 	@Override
 	public TraktTask getItemsTask(Genre genre) 
 	{
@@ -67,8 +67,9 @@ public class RecommendationMoviesFragment extends RecommendationFragment<Movie>
 		if(genre != null)
 			builder.genre(genre);
 		
-		builder.startYear(spStartYear.getSelectedItemPosition() + START_YEAR).endYear(END_YEAR - spEndYear.getSelectedItemPosition());
-		
+		if(spStartYear != null && spEndYear != null)
+			builder.startYear(spStartYear.getSelectedItemPosition() + START_YEAR).endYear(END_YEAR - spEndYear.getSelectedItemPosition());
+
 		return new MoviesTask(tm, this, new MoviesListener() 
 		{
 			@Override

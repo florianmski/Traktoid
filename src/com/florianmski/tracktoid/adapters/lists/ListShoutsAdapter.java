@@ -57,7 +57,7 @@ public class ListShoutsAdapter extends RootAdapter<Shout>
 
 		Shout s = getItem(position);
 
-		final AQuery aq = new AQuery(convertView);
+		final AQuery aq = listAq.recycle(convertView);
 		BitmapAjaxCallback cb = new BitmapAjaxCallback()
 		{
 			@Override
@@ -69,7 +69,7 @@ public class ListShoutsAdapter extends RootAdapter<Shout>
 
 		}.url(s.user.avatar).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
 
-		if(aq.shouldDelay(position, convertView, parent, s.user.avatar))
+		if(aq.shouldDelay(convertView, parent, s.user.avatar, 0))
 			setPlaceholder(holder.ivAvatar);
 		else
 			aq.id(holder.ivAvatar).image(cb);

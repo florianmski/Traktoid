@@ -33,6 +33,15 @@
             android:layout_alignTop="@+id/imageViewScreen"
             android:src="@drawable/badge_watched"
             android:visibility="visible" />
+        
+        <ImageView
+            android:id="@+id/imageViewCollection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/imageViewScreen"
+            android:layout_alignTop="@+id/imageViewScreen"
+            android:src="@drawable/badge_collection"
+            android:visibility="visible" />
 
         <RelativeLayout
             android:id="@+id/linearLayout2"

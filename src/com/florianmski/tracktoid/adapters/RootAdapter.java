@@ -2,6 +2,7 @@ package com.florianmski.tracktoid.adapters;
 
 import java.util.List;
 
+import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 
 import android.content.Context;
@@ -20,11 +21,14 @@ public abstract class RootAdapter<T> extends BaseAdapter
     
     protected static Drawable bmPlaceholder;
     protected static Drawable bmFallback;
+    
+    protected AQuery listAq;
 
     public RootAdapter(Context context, List<T> items) 
     {
         this.context = context;
         this.items = items;
+        listAq = new AQuery(context);
     }
 
     @Override

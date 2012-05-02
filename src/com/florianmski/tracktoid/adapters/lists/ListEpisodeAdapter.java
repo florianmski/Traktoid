@@ -115,7 +115,7 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode> implements Se
         TvShowEpisode e = getItem(position);
         
         Image i = new Image(tvdb_id, e.images.screen, e.season, e.number);
-        final AQuery aq = new AQuery(convertView);
+        final AQuery aq = listAq.recycle(convertView);
         BitmapAjaxCallback cb = new BitmapAjaxCallback()
         {
         	@Override
@@ -128,7 +128,7 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode> implements Se
         }.url(i.getUrl()).fileCache(false).memCache(true).ratio(9.0f / 16.0f);
         
         //in case user scroll the list fast, stop loading images from web
-        if(aq.shouldDelay(position, convertView, parent, i.getUrl()))
+        if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
         	setPlaceholder(holder.ivScreen);
         else
         	aq.id(holder.ivScreen).image(cb);

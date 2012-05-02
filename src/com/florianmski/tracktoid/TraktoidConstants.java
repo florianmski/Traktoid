@@ -13,12 +13,12 @@ public final class TraktoidConstants
 	public final static String BUNDLE_RESULTS = get("Results");
 	public final static String BUNDLE_POSITION = get("Position");
 	public final static String BUNDLE_TITLE = get("Title");
-	public final static String BUNDLE_HAS_MY_SHOW_FRAGMENT = get("HasMyShowFragment");
 	public final static String BUNDLE_EPISODE = get("Episode");
 	public final static String BUNDLE_SEASON = get("Season");
 	public final static String BUNDLE_TVSHOW = get("TvShow");
 	public final static String BUNDLE_MOVIE = get("Movie");
 	public final static String BUNDLE_CALENDAR = get("Calendar");
+	public final static String BUNDLE_TRAKT_ITEM = get("TraktItem");
 	
 	private final static String get(String text)
 	{

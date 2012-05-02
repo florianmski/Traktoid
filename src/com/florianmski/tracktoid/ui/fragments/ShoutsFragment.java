@@ -26,20 +26,19 @@ import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.lists.ListShoutsAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask.ShoutsListener;
-import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
-import com.jakewharton.trakt.TraktApiBuilder;
+import com.florianmski.tracktoid.trakt.tasks.post.ShoutsPostTask;
+import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.Shout;
-import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class ShoutsFragment extends TraktFragment
+public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragment
 {
 	private final static int SPOILER = 0;
 	private final static int NO_SPOILER = 1;
 
 	private String tvdbId;
-	private TvShowEpisode episode;
+	private T traktItem;
 
 	private ListView lvShouts;
 	private EditText edtShout;
@@ -78,13 +77,13 @@ public class ShoutsFragment extends TraktFragment
 		super.onActivityCreated(savedInstanceState);
 
 		tvdbId = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
-		episode = (TvShowEpisode)getArguments().get(TraktoidConstants.BUNDLE_EPISODE);
+		traktItem = (T)getArguments().get(TraktoidConstants.BUNDLE_TRAKT_ITEM);
 
 		//TODO find a better title
-		if(episode == null)
-			setTitle("Shouts : " + getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
-		else
-			setTitle("Shouts : " + episode.title);
+//		if(traktItem == null)
+//			setTitle("Shouts : " + getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
+//		else
+			setTitle("Shouts : " + traktItem.getTitle());
 
 		if(savedInstanceState != null)
 			setAdapter();
@@ -139,14 +138,7 @@ public class ShoutsFragment extends TraktFragment
 			@Override
 			public void onItemClick(QuickAction source, int pos, int actionId) 
 			{
-				TraktApiBuilder<Response> builder;
-
-				if(episode == null)
-					builder = tm.shoutService().show(Integer.valueOf(tvdbId)).shout(edtShout.getText().toString().trim()).spoiler(actionId == SPOILER);
-				else
-					builder = tm.shoutService().episode(Integer.valueOf(tvdbId)).season(episode.season).episode(episode.number).shout(edtShout.getText().toString().trim()).spoiler(actionId == SPOILER);
-
-				new PostTask(tm, ShoutsFragment.this, builder, new PostListener() 
+				new ShoutsPostTask<T>(tm, ShoutsFragment.this, traktItem, edtShout.getText().toString().trim(), actionId == SPOILER, new PostListener() 
 				{
 					@Override
 					public void onComplete(Response r, boolean success) 
@@ -178,7 +170,7 @@ public class ShoutsFragment extends TraktFragment
 	{
 		getStatusView().show().text("Loading shouts,\nPlease wait...");
 
-		commonTask = new ShoutsGetTask(tm, this, episode, tvdbId, new ShoutsListener() 
+		commonTask = new ShoutsGetTask<T>(tm, this, traktItem, tvdbId, new ShoutsListener() 
 		{
 			@Override
 			public void onShouts(List<Shout> shouts) 

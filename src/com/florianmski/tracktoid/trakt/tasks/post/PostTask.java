@@ -29,11 +29,25 @@ public class PostTask extends TraktTask
 
 		doPrePostStuff();
 
-		r = (Response) builder.fire();
-
-		if(r.error == null)
+		try
 		{
-//			showToast("Send to Trakt!", Toast.LENGTH_SHORT);
+			r = (Response) builder.fire();
+		}
+		catch(ClassCastException e)
+		{
+			e.printStackTrace();
+		}
+
+		if(r!= null && r.error == null)
+		{
+			//			showToast("Send to Trakt!", Toast.LENGTH_SHORT);
+			showToast(r.message, Toast.LENGTH_SHORT);
+			doAfterPostStuff();
+			return true;
+		}
+		//sometimes there is no response but the action was performed (ex : remove sthg from collection)
+		else if(r == null)
+		{
 			showToast(r.message, Toast.LENGTH_SHORT);
 			doAfterPostStuff();
 			return true;

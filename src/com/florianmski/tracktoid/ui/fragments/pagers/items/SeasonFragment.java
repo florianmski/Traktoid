@@ -76,7 +76,7 @@ public class SeasonFragment extends PagerItemFragment implements OnWatchedModeLi
 			public void run()
 			{
 				DatabaseWrapper dbw = getDBWrapper();
-				List<TvShowEpisode> episodes = dbw.getEpisodes(season.url);
+				List<TvShowEpisode> episodes = dbw.getEpisodes(season.url, tvdbId);
 
 				final ListEpisodeAdapter adapter = new ListEpisodeAdapter(episodes, getActivity(), tvdbId);
 

@@ -49,13 +49,11 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 	protected int height;
 	protected int currentFilter = 0;
 	protected Handler h = new Handler();
-	protected AQuery listAq;
 
 	public GridPosterAdapter(Activity context, List<T> items, int height)
 	{
 		super(context, items);
 		this.height = height;
-		listAq = new AQuery(context);
 	}
 	
 	@Override
@@ -165,6 +163,8 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 
 			holder.ivRating = (ImageView) convertView.findViewById(R.id.imageViewRating);
 			holder.ivWatched = (ImageView) convertView.findViewById(R.id.imageViewWatched);
+			holder.ivCollection = (ImageView) convertView.findViewById(R.id.imageViewCollection);
+			holder.ivWatchlist = (ImageView) convertView.findViewById(R.id.imageViewWatchlist);
 
 			//			RelativeLayout.LayoutParams paramsIvRating = new RelativeLayout.LayoutParams(height/8, height/8);
 			//			paramsIvRating.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
@@ -196,12 +196,14 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 
 		holder.ivRating.setImageBitmap(null);
 		holder.ivWatched.setImageBitmap(null);
+		holder.ivCollection.setImageBitmap(null);
+		holder.ivWatchlist.setImageBitmap(null);
 		holder.ivPoster.setImageBitmap(null);
 
 		Image i = new Image(id, url, Image.POSTER);
 		AQuery aq = listAq.recycle(convertView);
 
-		if(aq.shouldDelay(position, convertView, parent, i.getUrl()))
+		if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
 			setPlaceholder(holder.ivPoster);
 		else
 		{
@@ -231,6 +233,18 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 				td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watched)});
 				h.post(new TDRunnable(holder.ivWatched, td));
 			}
+			
+			if(item.isInCollection())
+			{
+				td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_collection)});
+				h.post(new TDRunnable(holder.ivCollection, td));
+			}
+			
+			if(item.isInWatchlist())
+			{
+				td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watchlist)});
+				h.post(new TDRunnable(holder.ivWatchlist, td));
+			}
 		}
 
 		return convertView;
@@ -242,6 +256,8 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 		private ImageView ivPoster;
 		private ImageView ivRating;
 		private ImageView ivWatched;
+		private ImageView ivCollection;
+		private ImageView ivWatchlist;
 	}
 
 	private class TDRunnable implements Runnable

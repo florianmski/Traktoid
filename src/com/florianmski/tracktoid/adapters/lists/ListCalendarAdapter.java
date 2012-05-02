@@ -221,7 +221,7 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 
 				Image image;
 				File posterImage = null;
-				AQuery aq = new AQuery(holder.llEpisodes);
+				AQuery aq = listAq.recycle(holder.llEpisodes);
 				
 				if(episode.images.screen != null)
 					image = new Image(e.show.tvdbId, episode.images.screen, Image.CALENDAR);
@@ -232,7 +232,7 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 					posterImage = aq.getCachedFile(image.getUrl());
 				}
 				
-				if(aq.shouldDelay(position, holder.llEpisodes, parent, image.getUrl()))
+				if(aq.shouldDelay(holder.llEpisodes, parent, image.getUrl(), 0))
 					setPlaceholder(holder.livScreen[i]);
 				else
 				{
