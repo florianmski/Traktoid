@@ -23,11 +23,11 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.adapters.RootAdapter;
+import com.florianmski.tracktoid.widgets.BadgesView;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
 public class ListSeasonAdapter extends RootAdapter<TvShowSeason>
@@ -57,7 +57,7 @@ public class ListSeasonAdapter extends RootAdapter<TvShowSeason>
             holder = new ViewHolder();
             holder.tvSeason = (TextView)convertView.findViewById(R.id.textViewSeason);
             holder.tvLeft = (TextView)convertView.findViewById(R.id.textViewLeft);
-            holder.ivBandeau = (ImageView)convertView.findViewById(R.id.imageViewBadge);
+            holder.bv = (BadgesView)convertView.findViewById(R.id.badgesLayout);
             
             convertView.setTag(holder);
         } 
@@ -71,7 +71,9 @@ public class ListSeasonAdapter extends RootAdapter<TvShowSeason>
         
         holder.tvSeason.setText(season.season == 0 ? "Specials" : "Season " + season.season);
         holder.tvLeft.setText(episodesWatched + "/" + episodes);
-        holder.ivBandeau.setVisibility(episodesWatched >= episodes ? View.VISIBLE : View.INVISIBLE);
+        
+        holder.bv.initialize();
+        holder.bv.toggleWatched(episodesWatched >= episodes);
 		
         return convertView;
     }
@@ -80,7 +82,7 @@ public class ListSeasonAdapter extends RootAdapter<TvShowSeason>
     {
     	private TextView tvSeason;
     	private TextView tvLeft;
-    	private ImageView ivBandeau;
+    	private BadgesView bv;
     }
 
 }

@@ -1,8 +1,6 @@
 package com.florianmski.tracktoid.ui.fragments.pagers.items;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -32,7 +30,6 @@ import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.tracktoid.widgets.ScrollingTextView;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Response;
-import com.jakewharton.trakt.enumerations.Rating;
 
 public abstract class PagerItemTraktFragment<T extends TraktoidInterface<T>> extends TabsViewPagerFragment
 {

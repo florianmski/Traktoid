@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relativeLayoutBanner"
+<com.florianmski.tracktoid.widgets.BadgesView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/badgesLayoutBanner"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
@@ -20,4 +20,4 @@
         android:padding="3dp"
         android:text="Show" />
 
-</RelativeLayout>
+</com.florianmski.tracktoid.widgets.BadgesView>

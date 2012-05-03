@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,8 +29,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.RelativeLayout;
-
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.Image;

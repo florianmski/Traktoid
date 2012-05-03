@@ -1,32 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.florianmski.tracktoid.widgets.BadgesView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/badgesLayout"
     android:layout_width="fill_parent"
     android:layout_height="75dp"
     android:background="@drawable/selector_list_classic" >
 
     <TextView
-        style="@style/Traktoid.PrimaryText.Medium.Bold"
         android:id="@+id/textViewSeason"
+        style="@style/Traktoid.PrimaryText.Medium.Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/textViewLeft"
         android:paddingLeft="10dp"
         android:text="TextView" />
 
     <TextView
-        style="@style/Traktoid.SecondaryText.Medium"
         android:id="@+id/textViewLeft"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="TextView" />
-
-    <ImageView
-        android:id="@+id/imageViewBadge"
+        style="@style/Traktoid.SecondaryText.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/badge_watched" />
+        android:layout_centerInParent="true"
+        android:text="TextView" />
 
-</LinearLayout>
+</com.florianmski.tracktoid.widgets.BadgesView>
