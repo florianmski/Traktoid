@@ -24,53 +24,64 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.MovieFragment;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowFragment;
+import com.florianmski.traktoid.TraktoidInterface;
+import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class PagerShowAdapter extends FragmentStatePagerAdapter
+public class PagerTraktItemAdapter<T extends TraktoidInterface<T>> extends FragmentStatePagerAdapter
 {
-	private List<TvShow> shows;
+	private List<T> items;
 
-	public PagerShowAdapter(List<TvShow> shows, FragmentManager fm, Context context)
+	public PagerTraktItemAdapter(List<T> items, FragmentManager fm, Context context)
 	{
 		super(fm);
 
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
 
 		//if a show on this list is in the db, get infos so we can display them (watched, loved...)
-		for(int i = 0; i < shows.size(); i++)
+		for(int i = 0; i < items.size(); i++)
 		{
-			TvShow s = shows.get(i);
-			if(dbw.showExist(s.tvdbId))
-				shows.set(i, dbw.getShow(s.tvdbId));
+			T item = items.get(i);
+			if(dbw.showExist(item.getId()))
+			{
+				if(item instanceof TvShow)
+					items.set(i, (T) dbw.getShow(item.getId()));
+				else if(item instanceof Movie)
+					items.set(i, (T) dbw.getMovie(((Movie) item).url));
+			}
 		}
 
 		dbw.close();
 
-		this.shows = shows;		
+		this.items = items;		
 	}
 
 	public void clear() 
 	{
-		shows.clear();
+		items.clear();
 		notifyDataSetChanged();
 	}
 
 	@Override
 	public int getCount() 
 	{
-		return shows.size();
+		return items.size();
 	}
 
 	@Override
 	public Fragment getItem(int position) 
 	{
-		return ShowFragment.newInstance(shows.get(position));
+		if(items.get(position) instanceof TvShow)
+			return ShowFragment.newInstance((TvShow)items.get(position));
+		else
+			return MovieFragment.newInstance((Movie)items.get(position));
 	}
-
-	public TvShow getTvShow(int position)
+	
+	public T getTraktItem(int position)
 	{
-		return shows.get(position);
+		return items.get(position);
 	}
 
 	@Override

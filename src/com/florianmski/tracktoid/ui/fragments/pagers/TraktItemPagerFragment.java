@@ -5,24 +5,25 @@ import java.util.List;
 import android.os.Bundle;
 
 import com.florianmski.tracktoid.TraktoidConstants;
-import com.florianmski.tracktoid.adapters.pagers.PagerShowAdapter;
+import com.florianmski.tracktoid.adapters.pagers.PagerTraktItemAdapter;
+import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class ShowPagerFragment extends PagerFragment
+public class TraktItemPagerFragment<T extends TraktoidInterface<T>> extends PagerFragment
 {
 	//TODO onShowUpdated()
-	private TvShow show;
+	private T traktItem;
 	
-	public static ShowPagerFragment newInstance(Bundle args)
+	public static TraktItemPagerFragment newInstance(Bundle args)
 	{
-		ShowPagerFragment f = new ShowPagerFragment();
+		TraktItemPagerFragment f = new TraktItemPagerFragment();
 		f.setArguments(args);
 		return f;
 	}
 	
-	public ShowPagerFragment() {}
+	public TraktItemPagerFragment() {}
 	
-	public ShowPagerFragment(FragmentListener listener) 
+	public TraktItemPagerFragment(FragmentListener listener) 
 	{
 		super(listener);
 	}
@@ -40,7 +41,7 @@ public class ShowPagerFragment extends PagerFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 		
-		getStatusView().show().text("Loading shows,\nPlease wait...");
+		getStatusView().show().text("Loading items,\nPlease wait...");
 		setData();
 	}
 	
@@ -59,10 +60,10 @@ public class ShowPagerFragment extends PagerFragment
 					@Override
 					public void run() 
 					{
-						adapter = new PagerShowAdapter(shows, getFragmentManager(), getActivity());
+						adapter = new PagerTraktItemAdapter(shows, getFragmentManager(), getActivity());
 						
-						if(((PagerShowAdapter)adapter).isEmpty())
-							getStatusView().hide().text("No shows, this is strange...");
+						if(((PagerTraktItemAdapter)adapter).isEmpty())
+							getStatusView().hide().text("No items, this is strange...");
 						else
 							getStatusView().hide().text(null);
 						
@@ -78,7 +79,7 @@ public class ShowPagerFragment extends PagerFragment
 	{
 		super.onPageSelected(position);
 
-		show = ((PagerShowAdapter)adapter).getTvShow(currentPagerPosition);
-		setTitle(show.title);
+		traktItem = (T) ((PagerTraktItemAdapter)adapter).getTraktItem(currentPagerPosition);
+		setTitle(traktItem.getTitle());
 	}
 }
