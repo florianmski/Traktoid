@@ -44,6 +44,7 @@ import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
+import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.tracktoid.widgets.ScrollingTextView;
 import com.jakewharton.trakt.entities.CalendarDate;
 import com.jakewharton.trakt.entities.CalendarDate.CalendarTvShowEpisode;
@@ -152,22 +153,22 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 				int width = parent.getWidth()/nbByRow;
 				int height = (int) (width*0.562893082);
 
-				for(int i = 0; i < holder.rlScreen.length; i++)
+				for(int i = 0; i < holder.bvScreen.length; i++)
 				{						
-					holder.rlScreen[i] = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.item_calendar, null);
-					holder.rlScreen[i].setLayoutParams(new LinearLayout.LayoutParams(width, height));
+					holder.bvScreen[i] = (BadgesView) LayoutInflater.from(context).inflate(R.layout.item_calendar, null);
+					holder.bvScreen[i].setLayoutParams(new LinearLayout.LayoutParams(width, height));
 
-					holder.tvShow[i] = (ScrollingTextView) holder.rlScreen[i].findViewById(R.id.textViewShow);
-					holder.tvTitle[i] = (ScrollingTextView) holder.rlScreen[i].findViewById(R.id.textViewTitle);
-					holder.tvAirTime[i] = (ScrollingTextView) holder.rlScreen[i].findViewById(R.id.textViewAirTime);
-					holder.livScreen[i] = (ImageView) holder.rlScreen[i].findViewById(R.id.imageViewScreen);
-					holder.llScreen[i] = (LinearLayout) holder.rlScreen[i].findViewById(R.id.linearLayoutScreen);
+					holder.tvShow[i] = (ScrollingTextView) holder.bvScreen[i].findViewById(R.id.textViewShow);
+					holder.tvTitle[i] = (ScrollingTextView) holder.bvScreen[i].findViewById(R.id.textViewTitle);
+					holder.tvAirTime[i] = (ScrollingTextView) holder.bvScreen[i].findViewById(R.id.textViewAirTime);
+					holder.livScreen[i] = (ImageView) holder.bvScreen[i].findViewById(R.id.imageViewScreen);
+					holder.llScreen[i] = (LinearLayout) holder.bvScreen[i].findViewById(R.id.linearLayoutScreen);
 //					holder.livScreen[i].setFocusable(true);
 					
 //					holder.rlScreen[i].setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 //					holder.tvShow[i].setDuplicateParentStateEnabled(true);
 
-					holder.llEpisodes.addView(holder.rlScreen[i]);
+					holder.llEpisodes.addView(holder.bvScreen[i]);
 				}
 
 				holder.llEpisodes.setTag(holder);
@@ -232,6 +233,11 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 					posterImage = aq.getCachedFile(image.getUrl());
 				}
 				
+				holder.bvScreen[i].initialize();
+				
+				//TODO image étirées
+				//faire la méthode opposée de setPlaceHolder()
+				//realeasePlaceholder()
 				if(aq.shouldDelay(holder.llEpisodes, parent, image.getUrl(), 0))
 					setPlaceholder(holder.livScreen[i]);
 				else
@@ -240,9 +246,11 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 						aq.id(holder.livScreen[i]).image(posterImage, 0);
 					else
 						aq.id(holder.livScreen[i]).image(image.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
+					
+					holder.bvScreen[i].setTraktItem(episode);
 				}
 
-				holder.rlScreen[i].setOnClickListener(new OnClickListener() 
+				holder.bvScreen[i].setOnClickListener(new OnClickListener() 
 				{
 					@Override
 					public void onClick(View v) 
@@ -280,7 +288,7 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 		private ScrollingTextView[] tvTitle = new ScrollingTextView[nbByRow];
 		private ScrollingTextView[] tvAirTime = new ScrollingTextView[nbByRow];
 		private ImageView[] livScreen = new ImageView[nbByRow];
-		private RelativeLayout[] rlScreen = new RelativeLayout[nbByRow];
+		private BadgesView[] bvScreen = new BadgesView[nbByRow];
 		private LinearLayout[] llScreen = new LinearLayout[nbByRow];
 	}
 }

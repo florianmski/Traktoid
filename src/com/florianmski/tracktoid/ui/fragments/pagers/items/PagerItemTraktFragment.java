@@ -28,6 +28,7 @@ import com.florianmski.tracktoid.trakt.tasks.post.InWatchlistTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
 import com.florianmski.tracktoid.ui.fragments.pagers.TabsViewPagerFragment;
+import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.tracktoid.widgets.ScrollingTextView;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Response;
@@ -71,9 +72,7 @@ public abstract class PagerItemTraktFragment<T extends TraktoidInterface<T>> ext
 		ScrollingTextView tvAired = (ScrollingTextView)v.findViewById(R.id.textViewAired);
 		TextView tvPercentage = (TextView)v.findViewById(R.id.textViewPercentage);
 		ImageView ivScreen = (ImageView)v.findViewById(R.id.imageViewScreen);
-		ImageView ivRating = (ImageView)v.findViewById(R.id.imageViewRating);
-		ImageView ivCollection = (ImageView)v.findViewById(R.id.imageViewCollection);
-		final ImageView ivWatched = (ImageView)v.findViewById(R.id.imageViewBadge);
+		BadgesView<T> bl = (BadgesView<T>)v.findViewById(R.id.badgesLayout);
 
 		//sometimes pager.getWidth = 0, don't know why so I use this trick
 		int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
@@ -87,45 +86,14 @@ public abstract class PagerItemTraktFragment<T extends TraktoidInterface<T>> ext
 		else
 			tvAired.setText("First Aired : " + DateFormat.getLongDateFormat(getActivity()).format(item.getFirstAired()));		
 
-		ivRating.setImageBitmap(null);
-		ivWatched.setImageBitmap(null);
-		ivCollection.setImageBitmap(null);
+		bl.initialize();
+		bl.setTraktItem(item);
 
 		//		Image i = new Image(item.getId(), item.getImages().fanart, Image.FANART);
 		final AQuery aq = new AQuery(v);
 		//create a bitmap ajax callback object
 		BitmapAjaxCallback cb = new BitmapAjaxCallback().url(Image.get(Image.FANART, item.getImages()).getUrl()).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
 		aq.id(ivScreen).image(cb);
-
-		TransitionDrawable td = null;
-
-		if(item.getRating() == Rating.Love)
-			td = new TransitionDrawable(new Drawable[]{getResources().getDrawable(R.drawable.empty), getResources().getDrawable(R.drawable.badge_loved)});
-		else if(item.getRating() == Rating.Hate)
-			td = new TransitionDrawable(new Drawable[]{getResources().getDrawable(R.drawable.empty), getResources().getDrawable(R.drawable.badge_hated)});
-
-		if(td != null)
-			td.startTransition(1000);
-
-		ivRating.setImageDrawable(td);
-
-		if(item.isWatched())
-		{
-			td = new TransitionDrawable(new Drawable[]{getResources().getDrawable(R.drawable.empty), getResources().getDrawable(R.drawable.badge_watched)});
-			td.startTransition(1000);
-			ivWatched.setImageDrawable(td);
-		}
-		else
-			ivWatched.setImageDrawable(null);
-		
-		if(item.isInCollection())
-		{
-			td = new TransitionDrawable(new Drawable[]{getResources().getDrawable(R.drawable.empty), getResources().getDrawable(R.drawable.badge_collection)});
-			td.startTransition(1000);
-			ivCollection.setImageDrawable(td);
-		}
-		else
-			ivCollection.setImageDrawable(null);
 
 		if(item.getRatings() != null)
 			tvPercentage.setText(item.getRatings().percentage+"%");

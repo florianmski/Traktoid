@@ -41,6 +41,7 @@ import com.florianmski.tracktoid.ui.activities.phone.SearchActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SettingsActivity;
 import com.florianmski.tracktoid.ui.activities.phone.TrendingActivity;
 import com.florianmski.tracktoid.widgets.AppRater;
+import com.florianmski.tracktoid.widgets.BadgesView;
 import com.jakewharton.trakt.entities.ActivityItemBase;
 import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShowEpisode;
@@ -50,7 +51,7 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 public class HomeFragment extends TraktFragment implements onDashboardButtonClicked
 {
-	private RelativeLayout rlWatchingNow;
+	private BadgesView bvWatchingNow;
 	private TextView tvEpisodeTitle;
 	private TextView tvEpisodeEpisode;
 	private ImageView ivScreen;
@@ -110,7 +111,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 	{
 		View v = inflater.inflate(R.layout.fragment_home, null);
 
-		rlWatchingNow = (RelativeLayout)v.findViewById(R.id.relativeLayoutWatchingNow);
+		bvWatchingNow = (BadgesView)v.findViewById(R.id.badgesLayoutWatchingNow);
 		tvEpisodeTitle = (TextView)v.findViewById(R.id.textViewTitle);
 		tvEpisodeEpisode = (TextView)v.findViewById(R.id.textViewEpisode);
 		ivScreen = (ImageView)v.findViewById(R.id.imageViewScreen);
@@ -121,7 +122,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		vp.setAdapter(new PagerDashboardAdapter(this));
 		pageIndicator.setViewPager(vp);
 
-		rlWatchingNow.setOnClickListener(new OnClickListener() 
+		bvWatchingNow.setOnClickListener(new OnClickListener() 
 		{
 			@Override
 			public void onClick(View v) 
@@ -145,7 +146,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 									dbw.markEpisodeAsWatched(false, tvdbId, episode.season, episode.number);
 									dbw.refreshPercentage(tvdbId);
 									dbw.close();
-									rlWatchingNow.setVisibility(View.INVISIBLE);
+									bvWatchingNow.setVisibility(View.INVISIBLE);
 								}
 							}
 						}).fire();
@@ -207,7 +208,9 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 				{
 					tvdbId = checkin.show.tvdbId;
 					episode = checkin.episode;
-					rlWatchingNow.setVisibility(View.VISIBLE);
+					bvWatchingNow.setVisibility(View.VISIBLE);
+					bvWatchingNow.initialize();
+					bvWatchingNow.setTraktItem(episode);
 					tvEpisodeTitle.setText(episode.title);
 					tvEpisodeEpisode.setText(Utils.addZero(episode.number) + "x" + Utils.addZero(episode.season));
 					Image i = new Image(checkin.show.tvdbId, episode.images.screen, episode.season, episode.number);
@@ -225,7 +228,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 				}
 				else
 				{
-					rlWatchingNow.setVisibility(View.INVISIBLE);
+					bvWatchingNow.setVisibility(View.INVISIBLE);
 				}
 			}
 		}).silent(true).fire();

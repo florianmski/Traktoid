@@ -5,43 +5,16 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
+    <com.florianmski.tracktoid.widgets.BadgesView
+        android:id="@+id/badgesLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <ImageView
             android:id="@+id/imageViewScreen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/empty" />
-
-        <ImageView
-            android:id="@+id/imageViewRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/imageViewBadge"
-            android:layout_alignTop="@+id/imageViewBadge"
-            android:src="@drawable/badge_loved"
-            android:visibility="visible" />
-
-        <ImageView
-            android:id="@+id/imageViewBadge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/imageViewScreen"
-            android:layout_alignTop="@+id/imageViewScreen"
-            android:src="@drawable/badge_watched"
-            android:visibility="visible" />
-        
-        <ImageView
-            android:id="@+id/imageViewCollection"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/imageViewScreen"
-            android:layout_alignTop="@+id/imageViewScreen"
-            android:src="@drawable/badge_collection"
-            android:visibility="visible" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/empty"/>
 
         <RelativeLayout
             android:id="@+id/linearLayout2"
@@ -86,7 +59,7 @@
                 android:paddingRight="5dp"
                 android:text="91%" />
         </RelativeLayout>
-    </RelativeLayout>
+    </com.florianmski.tracktoid.widgets.BadgesView>
 
     <TabHost
         android:id="@android:id/tabhost"

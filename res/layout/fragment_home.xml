@@ -5,8 +5,8 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutWatchingNow"
+    <com.florianmski.tracktoid.widgets.BadgesView
+        android:id="@+id/badgesLayoutWatchingNow"
         android:layout_width="fill_parent"
         android:layout_height="75dp"
         android:background="@drawable/selector_invert"
@@ -51,7 +51,7 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:singleLine="true" />
-    </RelativeLayout>
+    </com.florianmski.tracktoid.widgets.BadgesView>
 
     <com.viewpagerindicator.CirclePageIndicator
         android:id="@+id/page_indicator_circle"

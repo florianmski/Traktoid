@@ -49,8 +49,8 @@
         <include layout="@layout/view_status" />
     </RelativeLayout>
     
-    <RelativeLayout
-        android:id="@+id/RelativeLayoutLayoutNextEpisode"
+    <com.florianmski.tracktoid.widgets.BadgesView
+        android:id="@+id/badgesLayoutNextEpisode"
         android:layout_width="fill_parent"
         android:layout_height="75dp"
         android:background="@drawable/selector_invert"
@@ -93,6 +93,6 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:singleLine="true" />
-    </RelativeLayout>
+    </com.florianmski.tracktoid.widgets.BadgesView>
 
 </LinearLayout>

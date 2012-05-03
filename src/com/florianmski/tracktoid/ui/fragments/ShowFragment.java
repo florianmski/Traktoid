@@ -22,7 +22,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +46,7 @@ import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SeasonActivity;
 import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
+import com.florianmski.tracktoid.widgets.BadgesView;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
@@ -61,7 +61,7 @@ public class ShowFragment extends TraktFragment
 	private ListView lvSeasons;
 	private ImageView ivBackground;
 
-	private RelativeLayout rlNextEpisode;
+	private BadgesView bvNextEpisode;
 
 	private ListSeasonAdapter adapter;
 
@@ -189,12 +189,14 @@ public class ShowFragment extends TraktFragment
 
 		if(e != null)
 		{
-			rlNextEpisode.setVisibility(View.VISIBLE);
+			bvNextEpisode.setVisibility(View.VISIBLE);
 
-			TextView tvTitle = (TextView)rlNextEpisode.findViewById(R.id.textViewTitle);
-			TextView tvEpisode = (TextView)rlNextEpisode.findViewById(R.id.textViewEpisode);
-			ImageView ivScreen = (ImageView)rlNextEpisode.findViewById(R.id.imageViewScreen);
+			TextView tvTitle = (TextView)bvNextEpisode.findViewById(R.id.textViewTitle);
+			TextView tvEpisode = (TextView)bvNextEpisode.findViewById(R.id.textViewEpisode);
+			ImageView ivScreen = (ImageView)bvNextEpisode.findViewById(R.id.imageViewScreen);
 
+			bvNextEpisode.initialize();
+			bvNextEpisode.setTraktItem(e);
 			tvTitle.setText(e.title);
 			tvEpisode.setText(Utils.addZero(e.season) + "x" + Utils.addZero(e.number));
 
@@ -211,7 +213,7 @@ public class ShowFragment extends TraktFragment
 	        }.url(i.getUrl()).fileCache(false).memCache(true).ratio(9.0f / 16.0f);
 	        aq.id(ivScreen).image(cb);
 
-			rlNextEpisode.setOnClickListener(new OnClickListener() 
+			bvNextEpisode.setOnClickListener(new OnClickListener() 
 			{
 				@Override
 				public void onClick(View v) 
@@ -230,7 +232,7 @@ public class ShowFragment extends TraktFragment
 			});
 		}
 		else
-			rlNextEpisode.setVisibility(View.GONE);
+			bvNextEpisode.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -249,7 +251,7 @@ public class ShowFragment extends TraktFragment
 		sbProgress.setEnabled(false);
 		sbProgress.setProgressDrawable(getResources().getDrawable(R.drawable.gradient_progress));
 
-		rlNextEpisode = (RelativeLayout)v.findViewById(R.id.RelativeLayoutLayoutNextEpisode);
+		bvNextEpisode = (BadgesView)v.findViewById(R.id.badgesLayoutNextEpisode);
 
 		return v;
 	}

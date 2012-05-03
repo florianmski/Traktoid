@@ -300,7 +300,7 @@ public class DatabaseWrapper
 					KEY_EPISODE_WATCHED + "," +
 					KEY_EPISODE_SEASON_ID + "," +
 					KEY_EPISODE_IN_WATCHLIST + "," +
-					KEY_EPISODE_IN_COLLECTION;
+					EPISODES_TABLE+"."+KEY_EPISODE_IN_COLLECTION;
 
 	private static final String EPISODES_TABLE_CREATE = "create table " +
 			EPISODES_TABLE + " (" + 

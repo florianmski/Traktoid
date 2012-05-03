@@ -38,13 +38,17 @@ public class ShowActivity extends TraktActivity
 		if(savedInstanceState == null)
 		{
 			Bundle b = getIntent().getExtras();
-			SherlockFragment f = ShowPagerFragment.newInstance(b);
+			SherlockFragment f;
 			if(b != null)
 			{
 				ArrayList<TvShow> result = (ArrayList<TvShow>) b.get(TraktoidConstants.BUNDLE_RESULTS);
 				if(result != null && result.size() == 1)
 					f = ShowFragment.newInstance(result.get(0));
+				else
+					f = ShowPagerFragment.newInstance(b);
 			}
+			else
+				f = ShowPagerFragment.newInstance(b);
 
 			setPrincipalFragment(f);
 		}

@@ -39,108 +39,114 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.widgets.BadgesView;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
 public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode> implements Serializable
 {	
 	private static final long serialVersionUID = 3085212680669200372L;
-	
+
 	private boolean watchedMode = false;
 	private String tvdb_id;
 	private Map<Integer, Boolean> listWatched = new HashMap<Integer, Boolean>();
-	
+
 	//TODO test if this works or not
 	//take the orientation change into account
 	//maybe move the watched logic from adapter to the fragment ?
-	
-    public ListEpisodeAdapter(List<TvShowEpisode> episodes, Context context, String tvdb_id)
-    {
-    	super(context, episodes);
-    	this.tvdb_id = tvdb_id;
-    }
-	
-    //set or unset mode where user can check watched episodes
-    public void setWatchedMode(boolean watchedMode)
-    {
-    	this.watchedMode = watchedMode;
-    	
-    	if(watchedMode)
-    		listWatched.clear();
-    	notifyDataSetChanged();
-    }
-    
-    public boolean getWatchedMode()
-    {
-    	return watchedMode;
-    }
-    
-    //check or uncheck all episodes of a season
-    public void checkBoxSelection(boolean checked)
+
+	public ListEpisodeAdapter(List<TvShowEpisode> episodes, Context context, String tvdb_id)
 	{
-    	listWatched.clear();
-    	for(TvShowEpisode e : items)
-    	{
-    		if(e.watched != checked)
-    			listWatched.put(e.number, checked);
-    	}
-    	notifyDataSetChanged();
+		super(context, episodes);
+		this.tvdb_id = tvdb_id;
 	}
-    
-    public Map<Integer, Boolean> getListWatched()
-    {
-    	return listWatched;
-    }
 
-    @Override
+	//set or unset mode where user can check watched episodes
+	public void setWatchedMode(boolean watchedMode)
+	{
+		this.watchedMode = watchedMode;
+
+		if(watchedMode)
+			listWatched.clear();
+		notifyDataSetChanged();
+	}
+
+	public boolean getWatchedMode()
+	{
+		return watchedMode;
+	}
+
+	//check or uncheck all episodes of a season
+	public void checkBoxSelection(boolean checked)
+	{
+		listWatched.clear();
+		for(TvShowEpisode e : items)
+		{
+			if(e.watched != checked)
+				listWatched.put(e.number, checked);
+		}
+		notifyDataSetChanged();
+	}
+
+	public Map<Integer, Boolean> getListWatched()
+	{
+		return listWatched;
+	}
+
+	@Override
 	public View doGetView(final int position, View convertView, ViewGroup parent) 
-    {
-    	final ViewHolder holder;
+	{
+		final ViewHolder holder;
 
-        if (convertView == null) 
-        {
-            convertView = LayoutInflater.from(context).inflate(R.layout.list_item_episode, parent, false);
-            holder = new ViewHolder();
-            holder.ivScreen = (ImageView)convertView.findViewById(R.id.imageViewScreen);
-            holder.tvTitle = (TextView)convertView.findViewById(R.id.textViewTitle);
-            holder.tvEpisode = (TextView)convertView.findViewById(R.id.textViewEpisode);
-            holder.cbWatched = (CheckBox)convertView.findViewById(R.id.checkBoxWatched);
-            holder.llWatched = (LinearLayout)convertView.findViewById(R.id.linearLayoutWatched);
-            holder.ivBandeau = (ImageView)convertView.findViewById(R.id.imageViewBadge);
-            
-            convertView.setTag(holder);
-        } 
-        else
-            holder = (ViewHolder) convertView.getTag();
-        
-        TvShowEpisode e = getItem(position);
-        
-        Image i = new Image(tvdb_id, e.images.screen, e.season, e.number);
-        final AQuery aq = listAq.recycle(convertView);
-        BitmapAjaxCallback cb = new BitmapAjaxCallback()
-        {
-        	@Override
-            public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
-        	{     
-//                    aq.id(iv).image(Utils.shadowBitmap(Utils.borderBitmap(bm)), 9.0f / 16.0f);
-        		aq.id(iv).image(Utils.borderBitmap(bm, context)).animate(android.R.anim.fade_in);
-            }
+		if (convertView == null) 
+		{
+			convertView = LayoutInflater.from(context).inflate(R.layout.list_item_episode, parent, false);
+			holder = new ViewHolder();
+			holder.ivScreen = (ImageView)convertView.findViewById(R.id.imageViewScreen);
+			holder.tvTitle = (TextView)convertView.findViewById(R.id.textViewTitle);
+			holder.tvEpisode = (TextView)convertView.findViewById(R.id.textViewEpisode);
+			holder.cbWatched = (CheckBox)convertView.findViewById(R.id.checkBoxWatched);
+			holder.llWatched = (LinearLayout)convertView.findViewById(R.id.linearLayoutWatched);
+			holder.bv = (BadgesView)convertView.findViewById(R.id.badgesLayout);
 
-        }.url(i.getUrl()).fileCache(false).memCache(true).ratio(9.0f / 16.0f);
-        
-        //in case user scroll the list fast, stop loading images from web
-        if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
-        	setPlaceholder(holder.ivScreen);
-        else
-        	aq.id(holder.ivScreen).image(cb);
-        
-        holder.tvTitle.setText(e.title);
-        holder.tvEpisode.setText("Episode " + e.number);
-        
-        if(watchedMode)
-        {       	
-        	holder.llWatched.setVisibility(View.VISIBLE);
-        	holder.cbWatched.setOnClickListener(new OnClickListener() 
-        	{
+			convertView.setTag(holder);
+		} 
+		else
+			holder = (ViewHolder) convertView.getTag();
+
+		TvShowEpisode e = getItem(position);
+
+		Image i = new Image(tvdb_id, e.images.screen, e.season, e.number);
+		final AQuery aq = listAq.recycle(convertView);
+		BitmapAjaxCallback cb = new BitmapAjaxCallback()
+		{
+			@Override
+			public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
+			{     
+				//                    aq.id(iv).image(Utils.shadowBitmap(Utils.borderBitmap(bm)), 9.0f / 16.0f);
+				aq.id(iv).image(Utils.borderBitmap(bm, context)).animate(android.R.anim.fade_in);
+			}
+
+		}.url(i.getUrl()).fileCache(false).memCache(true).ratio(9.0f / 16.0f);
+
+		holder.bv.initialize();
+
+		//in case user scroll the list fast, stop loading images from web
+		if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
+			setPlaceholder(holder.ivScreen);
+		else
+		{
+			aq.id(holder.ivScreen).image(cb);        
+			holder.bv.setTraktItem(e);
+		}
+
+		holder.tvTitle.setText(e.title);
+		holder.tvEpisode.setText("Episode " + e.number);
+
+		if(watchedMode)
+		{       	
+			holder.llWatched.setVisibility(View.VISIBLE);
+			holder.cbWatched.setOnClickListener(new OnClickListener() 
+			{
 				@Override
 				public void onClick(View v)
 				{
@@ -156,36 +162,31 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode> implements Se
 					}
 				}
 			});
-            
-            if(listWatched.containsKey(e.number))
-        		holder.cbWatched.setChecked(listWatched.get(e.number));
-        	else
-        		holder.cbWatched.setChecked(e.watched);
-            
-        }
-        else
-        {
-        	holder.llWatched.setVisibility(View.GONE);
-        	
-            holder.cbWatched.setChecked(e.watched);
-        }
-        
-        if(e.watched)
-        	holder.ivBandeau.setVisibility(View.VISIBLE);
-        else
-        	holder.ivBandeau.setVisibility(View.GONE);
-		
-        return convertView;
-    }
-    
-    private static class ViewHolder 
-    {
-    	private ImageView ivScreen;
-    	private TextView tvTitle;
-    	private TextView tvEpisode;
-    	private CheckBox cbWatched;
-    	private LinearLayout llWatched;
-    	private ImageView ivBandeau;
-    }
+
+			if(listWatched.containsKey(e.number))
+				holder.cbWatched.setChecked(listWatched.get(e.number));
+			else
+				holder.cbWatched.setChecked(e.watched);
+
+		}
+		else
+		{
+			holder.llWatched.setVisibility(View.GONE);
+
+			holder.cbWatched.setChecked(e.watched);
+		}
+
+		return convertView;
+	}
+
+	private static class ViewHolder 
+	{
+		private ImageView ivScreen;
+		private TextView tvTitle;
+		private TextView tvEpisode;
+		private CheckBox cbWatched;
+		private LinearLayout llWatched;
+		private BadgesView bv;
+	}
 
 }

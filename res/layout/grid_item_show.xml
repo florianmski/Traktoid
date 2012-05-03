@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relativeLayoutPoster"
+<com.florianmski.tracktoid.widgets.BadgesView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/badgesLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
     <ImageView
         android:id="@+id/imageViewPoster"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
+        android:layout_height="fill_parent" />
 
     <RelativeLayout
         android:id="@+id/relativeLayoutSelectorPurpose"
@@ -16,29 +17,4 @@
         android:background="@drawable/selector_no_background" >
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/imageViewRating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true" />
-
-    <ImageView
-        android:id="@+id/imageViewWatched"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true" />
-    
-    <ImageView
-        android:id="@+id/imageViewCollection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true" />
-
-    <ImageView
-        android:id="@+id/imageViewWatchlist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="10dp" />
-
-</RelativeLayout>
+</com.florianmski.tracktoid.widgets.BadgesView>

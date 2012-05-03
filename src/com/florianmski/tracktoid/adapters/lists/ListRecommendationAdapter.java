@@ -32,6 +32,7 @@ import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.traktoid.TraktoidInterface;
 
 public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends RootAdapter<T> 
@@ -68,7 +69,8 @@ public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends R
             holder.tvShow = (TextView)convertView.findViewById(R.id.textViewShow);
             int width = ((Activity)context).getWindowManager().getDefaultDisplay().getWidth();
             int height = (int) (width * Image.RATIO_FANART);
-            holder.ivFanart.setLayoutParams(new RelativeLayout.LayoutParams(width, height));           
+            holder.ivFanart.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
+            holder.bv = (BadgesView)convertView.findViewById(R.id.badgesLayoutBanner);
             convertView.setTag(holder);
         } 
         else
@@ -86,12 +88,17 @@ public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends R
 			}
 		});
         
+        holder.bv.initialize();
+        
         Image i = new Image(s.getId(), s.getImages().fanart, Image.FANART);
         AQuery aq = listAq.recycle(convertView);
         if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
         	setPlaceholder(holder.ivFanart);
         else
+        {
         	aq.id(holder.ivFanart).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
+        	holder.bv.setTraktItem(s);
+        }
                         
         holder.tvShow.setText(s.getTitle());
 
@@ -103,6 +110,7 @@ public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends R
     	private ImageView ivFanart;
     	private ImageView ivDismiss;
     	private TextView tvShow;
+    	private BadgesView bv;
     }
     
     public interface DismissListener

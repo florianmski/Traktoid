@@ -36,6 +36,7 @@ import android.widget.RelativeLayout;
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.enumerations.Rating;
 
@@ -152,26 +153,11 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 			holder = new ViewHolder();
 
 			convertView = LayoutInflater.from(context).inflate(R.layout.grid_item_show, null, false);
-
-			holder.rl = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutPoster);
-			//			GridView.LayoutParams paramsRl = new GridView.LayoutParams(LayoutParams.FILL_PARENT, height);
-			//			holder.rl.setLayoutParams(paramsRl);
-			//			holder.rl.setPadding(PADDING, PADDING, PADDING, PADDING);
-
+			
 			holder.ivPoster = (ImageView) convertView.findViewById(R.id.imageViewPoster);
 			holder.ivPoster.setScaleType(ScaleType.CENTER_CROP);
-
-			holder.ivRating = (ImageView) convertView.findViewById(R.id.imageViewRating);
-			holder.ivWatched = (ImageView) convertView.findViewById(R.id.imageViewWatched);
-			holder.ivCollection = (ImageView) convertView.findViewById(R.id.imageViewCollection);
-			holder.ivWatchlist = (ImageView) convertView.findViewById(R.id.imageViewWatchlist);
-
-			//			RelativeLayout.LayoutParams paramsIvRating = new RelativeLayout.LayoutParams(height/8, height/8);
-			//			paramsIvRating.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
-			//			RelativeLayout.LayoutParams paramsIvWatched = new RelativeLayout.LayoutParams(height/4, height/4);
-			//			paramsIvWatched.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
-			//			holder.ivRating.setLayoutParams(paramsIvRating);
-			//			holder.ivWatched.setLayoutParams(paramsIvWatched);
+			
+			holder.bv = (BadgesView<T>) convertView.findViewById(R.id.badgesLayout);
 
 			convertView.setTag(holder);
 		} 
@@ -179,25 +165,13 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 			holder = (ViewHolder) convertView.getTag();
 
 		GridView.LayoutParams paramsRl = new GridView.LayoutParams(LayoutParams.FILL_PARENT, height);
-		holder.rl.setLayoutParams(paramsRl);
-
-		RelativeLayout.LayoutParams paramsIvRating = new RelativeLayout.LayoutParams(height/8, height/8);
-		paramsIvRating.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
-		RelativeLayout.LayoutParams paramsIvWatched = new RelativeLayout.LayoutParams(height/4, height/4);
-		paramsIvWatched.addRule(RelativeLayout.ALIGN_RIGHT, holder.ivPoster.getId());
-		holder.ivRating.setLayoutParams(paramsIvRating);
-		holder.ivWatched.setLayoutParams(paramsIvWatched);
+		holder.bv.setLayoutParams(paramsRl);
 
 		final T item = getItem(position);
-		boolean progress = item.isWatched();
-		Rating rating = item.getRating();
 		String url = item.getImages().poster;
 		String id = item.getId();
-
-		holder.ivRating.setImageBitmap(null);
-		holder.ivWatched.setImageBitmap(null);
-		holder.ivCollection.setImageBitmap(null);
-		holder.ivWatchlist.setImageBitmap(null);
+		
+		holder.bv.initialize();
 		holder.ivPoster.setImageBitmap(null);
 
 		Image i = new Image(id, url, Image.POSTER);
@@ -209,42 +183,8 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 		{
 			holder.ivPoster.setScaleType(ScaleType.CENTER_CROP);
 			aq.id(holder.ivPoster).image(i.getUrl(), true, true);
-//			File posterImage = aq.getCachedFile(i.getUrl());
-//
-//			if(posterImage != null)
-//				aq.id(holder.ivPoster).image(posterImage, true, 0, null);
-//			else
-//			{
-//				cb.url(i.getUrl()).animation(android.R.anim.fade_in).fileCache(true).memCache(true);
-//				aq.id(holder.ivPoster).image(cb);
-//			}
-
-			TransitionDrawable td = null;
-
-			if(rating == Rating.Love)
-				td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_loved)});
-			else if(rating == Rating.Hate)
-				td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_hated)});
-
-			h.post(new TDRunnable(holder.ivRating, td));
-
-			if(progress)
-			{
-				td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watched)});
-				h.post(new TDRunnable(holder.ivWatched, td));
-			}
 			
-			if(item.isInCollection())
-			{
-				td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_collection)});
-				h.post(new TDRunnable(holder.ivCollection, td));
-			}
-			
-			if(item.isInWatchlist())
-			{
-				td = new TransitionDrawable(new Drawable[]{context.getResources().getDrawable(R.drawable.empty), context.getResources().getDrawable(R.drawable.badge_watchlist)});
-				h.post(new TDRunnable(holder.ivWatchlist, td));
-			}
+			holder.bv.setTraktItem(item);
 		}
 
 		return convertView;
@@ -252,32 +192,7 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 
 	private static class ViewHolder 
 	{
-		private RelativeLayout rl;
 		private ImageView ivPoster;
-		private ImageView ivRating;
-		private ImageView ivWatched;
-		private ImageView ivCollection;
-		private ImageView ivWatchlist;
-	}
-
-	private class TDRunnable implements Runnable
-	{
-		private ImageView iv;
-		private TransitionDrawable td;
-
-		public TDRunnable(ImageView iv, TransitionDrawable td)
-		{
-			this.iv = iv;
-			this.td = td;
-		}
-
-		@Override
-		public void run() 
-		{
-			if(td != null)
-				td.startTransition(2000);
-			iv.setImageDrawable(td);
-		}
-
+		private BadgesView bv;
 	}
 }
