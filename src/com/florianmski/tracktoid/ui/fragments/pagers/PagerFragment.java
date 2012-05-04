@@ -13,7 +13,7 @@ import android.widget.ImageView.ScaleType;
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
-import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
@@ -90,7 +90,7 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 		return v;
 	}
 
-	protected void setBackground(Image i)
+	protected void setBackground(TraktImage i)
 	{
 		aq.id(ivBackground).image(i.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
 	}

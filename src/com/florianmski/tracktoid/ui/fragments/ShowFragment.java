@@ -40,7 +40,7 @@ import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBSeasonsTask;
 import com.florianmski.tracktoid.image.Fanart;
-import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.trakt.tasks.post.RateTask;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
@@ -200,7 +200,7 @@ public class ShowFragment extends TraktFragment
 			tvTitle.setText(e.title);
 			tvEpisode.setText(Utils.addZero(e.season) + "x" + Utils.addZero(e.number));
 
-			Image i = new Image(show.tvdbId, e.images.screen, e.season, e.number);
+			TraktImage i = TraktImage.getScreen(e);
 			final AQuery aq = new AQuery(getActivity());
 			BitmapAjaxCallback cb = new BitmapAjaxCallback()
 	        {

@@ -20,7 +20,7 @@ import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.pagers.PagerDetailsAdapter;
-import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.trakt.tasks.post.InCollectionTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InWatchlistTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
@@ -74,7 +74,7 @@ public abstract class PagerItemTraktFragment<T extends TraktoidInterface<T>> ext
 		//sometimes pager.getWidth = 0, don't know why so I use this trick
 		int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
 
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, (int) (width*Image.RATIO_SCREEN));
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, (int) (width*TraktImage.RATIO_SCREEN));
 		ivScreen.setLayoutParams(params);
 		ivScreen.setScaleType(ScaleType.CENTER_CROP);
 
@@ -89,7 +89,7 @@ public abstract class PagerItemTraktFragment<T extends TraktoidInterface<T>> ext
 		//		Image i = new Image(item.getId(), item.getImages().fanart, Image.FANART);
 		final AQuery aq = new AQuery(v);
 		//create a bitmap ajax callback object
-		BitmapAjaxCallback cb = new BitmapAjaxCallback().url(Image.get(Image.FANART, item.getImages()).getUrl()).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
+		BitmapAjaxCallback cb = new BitmapAjaxCallback().url(TraktImage.getFanart(item).getUrl()).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
 		aq.id(ivScreen).image(cb);
 
 		if(item.getRatings() != null)

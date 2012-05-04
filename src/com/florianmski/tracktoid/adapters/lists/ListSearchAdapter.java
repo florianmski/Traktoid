@@ -31,7 +31,7 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.adapters.RootAdapter;
-import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.jakewharton.trakt.entities.TvShow;
 
@@ -56,7 +56,7 @@ public class ListSearchAdapter extends RootAdapter<TvShow>
 			holder.ivBanner = (ImageView)convertView.findViewById(R.id.imageViewBanner);
 			holder.tvSeason = (TextView)convertView.findViewById(R.id.textViewShow);
 
-			int height = (int) (parent.getWidth()*Image.RATIO_BANNER);
+			int height = (int) (parent.getWidth()*TraktImage.RATIO_BANNER);
 			holder.bvBanner.setLayoutParams(new ListView.LayoutParams(LayoutParams.FILL_PARENT, height));
 			holder.ivBanner.setScaleType(ScaleType.FIT_CENTER);
 
@@ -69,7 +69,7 @@ public class ListSearchAdapter extends RootAdapter<TvShow>
 
 		holder.bvBanner.initialize();
 		
-		Image i = new Image(show.tvdbId, null, Image.BANNER);
+		TraktImage i = TraktImage.getBanner(show);
 		AQuery aq = listAq.recycle(convertView);
 		if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
 			setPlaceholder(holder.ivBanner);

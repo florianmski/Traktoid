@@ -26,7 +26,7 @@ import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.pagers.PagerDashboardAdapter;
 import com.florianmski.tracktoid.adapters.pagers.PagerDashboardAdapter.onDashboardButtonClicked;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.trakt.tasks.get.ActivityTask;
 import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask;
 import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask.CheckinListener;
@@ -212,7 +212,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 					bvWatchingNow.setTraktItem(episode);
 					tvEpisodeTitle.setText(episode.title);
 					tvEpisodeEpisode.setText(Utils.addZero(episode.number) + "x" + Utils.addZero(episode.season));
-					Image i = new Image(checkin.show.tvdbId, episode.images.screen, episode.season, episode.number);
+					TraktImage i = TraktImage.getScreen(checkin.show);
 					final AQuery aq = new AQuery(getActivity());
 					BitmapAjaxCallback cb = new BitmapAjaxCallback()
 			        {

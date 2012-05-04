@@ -5,13 +5,13 @@ import java.util.List;
 import android.R.color;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Bitmap.Config;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader.TileMode;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +19,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.androidquery.AQuery;
-import com.androidquery.callback.BitmapAjaxCallback;
 import com.androidquery.callback.AjaxStatus;
-import com.florianmski.tracktoid.image.Image;
+import com.androidquery.callback.BitmapAjaxCallback;
+import com.florianmski.tracktoid.image.TraktImage;
 import com.jakewharton.trakt.entities.TvShow;
 
 /**
@@ -113,7 +113,7 @@ public class CoverFlowImageAdapter extends BaseAdapter
 		{
 			final Context context = parent.getContext();
 			imageView = new ImageView(context);
-			imageView.setLayoutParams(new CoverFlow.LayoutParams((int) (height*1.0/Image.RATIO_POSTER), (int) height));
+			imageView.setLayoutParams(new CoverFlow.LayoutParams((int) (height*1.0/TraktImage.RATIO_POSTER), (int) height));
 		} 
 		else 
 			imageView = (ImageView) convertView;
@@ -132,7 +132,7 @@ public class CoverFlowImageAdapter extends BaseAdapter
 			}
 		};
 
-		Image i = new Image(show.tvdbId, show.images.poster, Image.POSTER);
+		TraktImage i = TraktImage.getPoster(show);
 		cb.url(i.getUrl()).fileCache(false).memCache(true);
 		aq.id(imageView).image(cb);
 

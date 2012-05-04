@@ -15,7 +15,6 @@ import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.WatchedModeManager;
 import com.florianmski.tracktoid.adapters.pagers.PagerSeasonAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.image.Image;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowSeason;
@@ -200,7 +199,8 @@ public class SeasonPagerFragment extends PagerFragment
 	{
 		super.onPageSelected(position);
 		
-		setBackground(new Image(tvdbId, seasons.get(position).season));
+		//TODO
+//		setBackground(TraktImage.getnew Image(tvdbId, seasons.get(position).season));
 	}
 	
 	public interface OnWatchedModeListener

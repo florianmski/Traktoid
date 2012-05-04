@@ -41,7 +41,7 @@ import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.RootAdapter;
-import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.tracktoid.widgets.ScrollingTextView;
@@ -219,16 +219,16 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 				holder.tvTitle[i].setText(title);
 				holder.tvAirTime[i].setText(e.show.airTime + " on " + e.show.network);
 
-				Image image;
+				TraktImage image;
 				File posterImage = null;
 				AQuery aq = listAq.recycle(holder.llEpisodes);
 				
-				if(episode.images.screen != null)
-					image = new Image(e.show.tvdbId, episode.images.screen, Image.CALENDAR);
+				if(episode.images.screen != null && episode.images.fanart != null)
+					image = TraktImage.getScreen(episode);
 				else
 				{
 					//offline calendar (display show's poster)
-					image = new Image(e.show.tvdbId, e.show.images.poster, Image.POSTER);
+					image = TraktImage.getPoster(e.show);
 					posterImage = aq.getCachedFile(image.getUrl());
 				}
 				

@@ -38,7 +38,7 @@ import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.RootAdapter;
-import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
@@ -115,7 +115,7 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode> implements Se
 
 		TvShowEpisode e = getItem(position);
 
-		Image i = new Image(tvdb_id, e.images.screen, e.season, e.number);
+		TraktImage i = TraktImage.getScreen(e);
 		final AQuery aq = listAq.recycle(convertView);
 		BitmapAjaxCallback cb = new BitmapAjaxCallback()
 		{

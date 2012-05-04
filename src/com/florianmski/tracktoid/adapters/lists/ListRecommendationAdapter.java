@@ -31,7 +31,7 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.adapters.RootAdapter;
-import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.traktoid.TraktoidInterface;
 
@@ -68,7 +68,7 @@ public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends R
             holder.ivDismiss = (ImageView)convertView.findViewById(R.id.imageViewDismiss);
             holder.tvShow = (TextView)convertView.findViewById(R.id.textViewShow);
             int width = ((Activity)context).getWindowManager().getDefaultDisplay().getWidth();
-            int height = (int) (width * Image.RATIO_FANART);
+            int height = (int) (width * TraktImage.RATIO_FANART);
             holder.ivFanart.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
             holder.bv = (BadgesView)convertView.findViewById(R.id.badgesLayoutBanner);
             convertView.setTag(holder);
@@ -90,7 +90,7 @@ public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends R
         
         holder.bv.initialize();
         
-        Image i = new Image(s.getId(), s.getImages().fanart, Image.FANART);
+        TraktImage i = TraktImage.getFanart(s);
         AQuery aq = listAq.recycle(convertView);
         if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
         	setPlaceholder(holder.ivFanart);

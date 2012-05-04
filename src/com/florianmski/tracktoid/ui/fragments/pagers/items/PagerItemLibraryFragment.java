@@ -2,17 +2,6 @@ package com.florianmski.tracktoid.ui.fragments.pagers.items;
 
 import net.londatiga.android.ActionItem;
 import net.londatiga.android.QuickAction;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
-import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.adapters.GridPosterAdapter;
-import com.florianmski.tracktoid.image.Image;
-import com.florianmski.traktoid.TraktoidInterface;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,11 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
+import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.Utils;
+import com.florianmski.tracktoid.adapters.GridPosterAdapter;
+import com.florianmski.tracktoid.image.TraktImage;
+import com.florianmski.traktoid.TraktoidInterface;
 
 public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> extends PagerItemFragment
 {
@@ -184,7 +183,7 @@ public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> e
 	private int calculatePosterHeight(int nbColumns)
 	{
 		int width = (getActivity().getWindowManager().getDefaultDisplay().getWidth()/(nbColumns));
-		return (int) (width*Image.RATIO_POSTER);
+		return (int) (width*TraktImage.RATIO_POSTER);
 	}
 
 	@Override

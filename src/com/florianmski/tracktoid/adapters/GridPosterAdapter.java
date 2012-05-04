@@ -31,7 +31,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.image.Image;
+import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.enumerations.Rating;
@@ -170,7 +170,7 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 		holder.bv.initialize();
 		holder.ivPoster.setImageBitmap(null);
 
-		Image i = new Image(id, url, Image.POSTER);
+		TraktImage i = TraktImage.getPoster(item);
 		AQuery aq = listAq.recycle(convertView);
 
 		if(aq.shouldDelay(convertView, parent, i.getUrl(), 0))
