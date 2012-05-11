@@ -2,17 +2,18 @@ package com.florianmski.tracktoid.trakt.tasks.post;
 
 import android.support.v4.app.Fragment;
 
+import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.traktoid.TraktoidInterface;
+import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Movie;
+import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class InCollectionTask<T extends TraktoidInterface<T>> extends PostTask
+public abstract class InCollectionTask<T extends TraktoidInterface<T>> extends PostTask
 {
-	//TODO send show, movie, episode to update other views
-	
-	private T traktItem;
-	private boolean addToCollection;
+	protected T traktItem;
+	protected boolean addToCollection;
 
 	public InCollectionTask(TraktManager tm, Fragment fragment, T traktItem, boolean addToCollection, PostListener pListener) 
 	{
@@ -21,47 +22,171 @@ public class InCollectionTask<T extends TraktoidInterface<T>> extends PostTask
 		this.traktItem = traktItem;
 		this.addToCollection = addToCollection;
 	}
+	
+	public static <T extends TraktoidInterface<T>> InCollectionTask<?> createTask(TraktManager tm, Fragment fragment, T traktItem, boolean addToCollection, PostListener pListener)
+	{
+		if(traktItem instanceof TvShow)
+			return new InCollectionShowTask(tm, fragment, (TvShow) traktItem, addToCollection, pListener);
+		else if(traktItem instanceof Movie)
+			return new InCollectionMovieTask(tm, fragment, (Movie) traktItem, addToCollection, pListener);
+		else if(traktItem instanceof TvShowEpisode)
+			return new InCollectionEpisodeTask(tm, fragment, (TvShowEpisode) traktItem, addToCollection, pListener);
+		else
+			return null;
+	}
 
+	protected abstract TraktApiBuilder<?> createLibraryBuilder(T traktItem);
+	protected abstract TraktApiBuilder<?> createUnlibraryBuilder(T traktItem);
+	protected abstract void insertInDb(T traktItem, boolean addToCollection);
+	protected abstract void sendEvent(T traktItem);
+	
 	@Override
 	protected void doPrePostStuff() 
 	{
 		if(addToCollection)
-		{
-			//TODO strange stuff here, have to modify trakt-java
-			//TODO add season support
-			//		if(traktItem instanceof TvShow)
-			//			builder = tm
-			//			.showService()
-			//			.library()
-			//			.tvdbId(Integer.valueOf(traktItem.getId()));
-			//		else if(traktItem instanceof Movie)
-			//			builder = tm
-			//			.movieService()
-			//			.library()
-			//			.movie(traktItem.getId());
-			if(traktItem instanceof TvShowEpisode)
-				builder = tm
-				.showService()
-				.episodeLibrary(Integer.valueOf(traktItem.getId()))
-				.episode(((TvShowEpisode)traktItem).season, ((TvShowEpisode)traktItem).number);
-		}
+			builders.add(createLibraryBuilder(traktItem));
 		else
+			builders.add(createUnlibraryBuilder(traktItem));
+	}
+	
+	@Override
+	protected void doAfterPostStuff()
+	{
+		insertInDb(traktItem, addToCollection);
+	}
+	
+	@Override
+	protected void onPostExecute(Boolean success)
+	{
+		super.onPostExecute(success);
+
+		if(success)
+			sendEvent(traktItem);
+//			tm.onTraktItemUpdated(traktItem);
+			
+	}
+	
+	public static final class InCollectionShowTask extends InCollectionTask<TvShow>
+	{
+		public InCollectionShowTask(TraktManager tm, Fragment fragment,	TvShow traktItem, boolean addToCollection, PostListener pListener) 
 		{
-//			if(traktItem instanceof TvShow)
-//				builder = tm
-//				.showService()
-//				.unlibrary()
-//				.tvdbId(Integer.valueOf(traktItem.getId()));
-			if(traktItem instanceof Movie)
-				builder = tm
-				.movieService()
-				.unlibrary()
-				.movie(traktItem.getId());
-			else if(traktItem instanceof TvShowEpisode)
-				builder = tm
-				.showService()
-				.episodeUnlibrary(Integer.valueOf(traktItem.getId()))
-				.episode(((TvShowEpisode)traktItem).season, ((TvShowEpisode)traktItem).number);
+			super(tm, fragment, traktItem, addToCollection, pListener);
+		}
+
+		@Override
+		protected TraktApiBuilder<?> createLibraryBuilder(TvShow traktItem) 
+		{
+			return tm
+					.showService()
+					.library()
+					.show(Integer.valueOf(traktItem.tvdbId));
+		}
+
+		@Override
+		protected TraktApiBuilder<?> createUnlibraryBuilder(TvShow traktItem) 
+		{
+			return tm
+					.showService()
+					.unlibrary(Integer.valueOf(traktItem.tvdbId));
+		}
+
+		@Override
+		protected void sendEvent(TvShow traktItem) 
+		{
+			tm.onShowUpdated(traktItem);
+		}
+
+		@Override
+		protected void insertInDb(TvShow traktItem, boolean addToCollection) 
+		{
+			//TODO
+//			traktItem.inCollection = addToCollection;
+			
+			DatabaseWrapper dbw = new DatabaseWrapper(context);
+			dbw.insertOrUpdateShow(traktItem);
+			dbw.close();
+		}
+		
+	}
+	
+	public static final class InCollectionMovieTask extends InCollectionTask<Movie>
+	{
+		public InCollectionMovieTask(TraktManager tm, Fragment fragment, Movie traktItem, boolean addToCollection, PostListener pListener) 
+		{
+			super(tm, fragment, traktItem, addToCollection, pListener);
+		}
+
+		@Override
+		protected TraktApiBuilder<?> createLibraryBuilder(Movie traktItem) 
+		{
+			return tm
+					.movieService()
+					.library()
+					.movie(traktItem.imdbId);
+		}
+
+		@Override
+		protected TraktApiBuilder<?> createUnlibraryBuilder(Movie traktItem) 
+		{
+			return tm
+					.movieService()
+					.unlibrary()
+					.movie(traktItem.imdbId);
+		}
+
+		@Override
+		protected void sendEvent(Movie traktItem) 
+		{
+			tm.onMovieUpdated(traktItem);
+		}
+		
+		@Override
+		protected void insertInDb(Movie traktItem, boolean addToCollection) 
+		{
+			traktItem.inCollection = addToCollection;
+			
+			DatabaseWrapper dbw = new DatabaseWrapper(context);
+			dbw.insertOrUpdateMovie(traktItem);
+			dbw.close();
+		}
+		
+	}
+	
+	public static final class InCollectionEpisodeTask extends InCollectionTask<TvShowEpisode>
+	{
+		public InCollectionEpisodeTask(TraktManager tm, Fragment fragment, TvShowEpisode traktItem, boolean addToCollection, PostListener pListener) 
+		{
+			super(tm, fragment, traktItem, addToCollection, pListener);
+		}
+
+		@Override
+		protected TraktApiBuilder<?> createLibraryBuilder(TvShowEpisode traktItem) 
+		{
+			return tm
+					.showService()
+					.episodeLibrary(Integer.valueOf((traktItem).tvdbId))
+					.episode(traktItem.season, traktItem.number);
+		}
+
+		@Override
+		protected TraktApiBuilder<?> createUnlibraryBuilder(TvShowEpisode traktItem) 
+		{
+			return tm
+					.showService()
+					.episodeUnlibrary(Integer.valueOf(traktItem.tvdbId))
+					.episode(traktItem.season, traktItem.number);
+		}
+
+		@Override
+		protected void sendEvent(TvShowEpisode traktItem)
+		{
+			// TODO Auto-generated method stub
+		}
+		
+		@Override
+		protected void insertInDb(TvShowEpisode traktItem, boolean addToCollection) 
+		{
+			// TODO Auto-generated method stub
 		}
 	}
 }

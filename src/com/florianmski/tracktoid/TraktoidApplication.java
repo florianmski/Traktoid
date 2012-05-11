@@ -35,7 +35,7 @@ public class TraktoidApplication extends Application
 	public void onCreate() 
 	{
 		// The following line triggers the initialization of ACRA
-		ACRA.init(this);
+//		ACRA.init(this);
 
 		TraktManager.create(this);
 

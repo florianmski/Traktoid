@@ -1,5 +1,8 @@
 package com.florianmski.tracktoid.trakt.tasks.post;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
@@ -10,7 +13,7 @@ import com.jakewharton.trakt.entities.Response;
 
 public class PostTask extends TraktTask
 {
-	protected TraktApiBuilder<?> builder;
+	protected List<TraktApiBuilder<?>> builders;
 	protected PostListener pListener;
 	protected Response r;
 
@@ -18,7 +21,9 @@ public class PostTask extends TraktTask
 	{
 		super(tm, fragment);
 
-		this.builder = builder;
+		this.builders = new ArrayList<TraktApiBuilder<?>>();
+		if(builder != null)
+			this.builders.add(builder);
 		this.pListener = pListener;
 	}
 
@@ -29,34 +34,40 @@ public class PostTask extends TraktTask
 
 		doPrePostStuff();
 
-		try
+		boolean ok = true;
+		for(TraktApiBuilder<?> builder : builders)
 		{
-			r = (Response) builder.fire();
-		}
-		catch(ClassCastException e)
-		{
-			e.printStackTrace();
-		}
+			try
+			{
+				r = (Response) builder.fire();
+			}
+			catch(ClassCastException e)
+			{
+				e.printStackTrace();
+			}
 
-		if(r!= null && r.error == null)
-		{
-			//			showToast("Send to Trakt!", Toast.LENGTH_SHORT);
-			showToast(r.message, Toast.LENGTH_SHORT);
-			doAfterPostStuff();
-			return true;
+			if(r!= null && r.error == null)
+			{
+				//			showToast("Send to Trakt!", Toast.LENGTH_SHORT);
+				showToast(r.message, Toast.LENGTH_SHORT);
+				doAfterPostStuff();
+				ok &= true;
+			}
+			//sometimes there is no response but the action was performed (ex : remove sthg from collection)
+			else if(r == null)
+			{
+				showToast("Send to Trakt!", Toast.LENGTH_SHORT);
+				doAfterPostStuff();
+				ok &= true;
+			}
+			else
+			{
+				showToast("Something goes wrong : " + r.error, Toast.LENGTH_SHORT);
+				ok &= false;
+			}
 		}
-		//sometimes there is no response but the action was performed (ex : remove sthg from collection)
-		else if(r == null)
-		{
-			showToast(r.message, Toast.LENGTH_SHORT);
-			doAfterPostStuff();
-			return true;
-		}
-		else
-		{
-			showToast("Something goes wrong : " + r.error, Toast.LENGTH_SHORT);
-			return false;
-		}			
+		
+		return ok;
 	}
 
 	protected void doPrePostStuff() {}

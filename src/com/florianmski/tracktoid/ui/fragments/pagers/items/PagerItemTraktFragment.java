@@ -21,15 +21,16 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.pagers.PagerDetailsAdapter;
 import com.florianmski.tracktoid.image.TraktImage;
+import com.florianmski.tracktoid.trakt.tasks.post.CheckinTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InCollectionTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InWatchlistTask;
-import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
+import com.florianmski.tracktoid.trakt.tasks.post.SeenTask;
 import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
 import com.florianmski.tracktoid.ui.fragments.pagers.TabsViewPagerFragment;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.tracktoid.widgets.ScrollingTextView;
 import com.florianmski.traktoid.TraktoidInterface;
-import com.jakewharton.trakt.entities.Response;
+import com.jakewharton.trakt.entities.TvShow;
 
 public abstract class PagerItemTraktFragment<T extends TraktoidInterface<T>> extends TabsViewPagerFragment
 {
@@ -39,7 +40,7 @@ public abstract class PagerItemTraktFragment<T extends TraktoidInterface<T>> ext
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
-		
+
 		getSherlockActivity().invalidateOptionsMenu();
 
 		mTabsAdapter.addTab(mTabHost.newTabSpec("summary").setIndicator("Summary"), R.layout.pager_item_details_summary, null);
@@ -121,9 +122,12 @@ public abstract class PagerItemTraktFragment<T extends TraktoidInterface<T>> ext
 		}
 
 		//it is always possible to do a checkin even if user has already seen it
-		watchMenu.add(0, R.id.action_bar_watched_checkin, 0, "Check in")
-		.setIcon(R.drawable.ab_icon_eye)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		if(!(this.item instanceof TvShow))
+		{
+			watchMenu.add(0, R.id.action_bar_watched_checkin, 0, "Check in")
+			.setIcon(R.drawable.ab_icon_eye)
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		}
 
 		MenuItem watchItem = watchMenu.getItem();
 		watchItem.setIcon(R.drawable.ab_icon_eye)
@@ -166,10 +170,11 @@ public abstract class PagerItemTraktFragment<T extends TraktoidInterface<T>> ext
 		switch(item.getItemId()) 
 		{	
 		case R.id.action_bar_watched_seen:
-			break;
 		case R.id.action_bar_watched_unseen:
+			SeenTask.createTask(tm, this, this.item, item.getItemId() == R.id.action_bar_watched_seen, null).fire();
 			break;
 		case R.id.action_bar_watched_checkin:
+			CheckinTask.createTask(tm, this, this.item, true, null).fire();
 			break;
 		case R.id.action_bar_shouts:
 			Intent i = new Intent(getActivity(), ShoutsActivity.class);
@@ -178,32 +183,11 @@ public abstract class PagerItemTraktFragment<T extends TraktoidInterface<T>> ext
 			break;
 		case R.id.action_bar_add_to_collection:
 		case R.id.action_bar_remove_from_collection:
-			new InCollectionTask<T>(tm, this, this.item, item.getItemId() == R.id.action_bar_add_to_collection, new PostListener() 
-			{
-				@Override
-				public void onComplete(Response r, boolean success) 
-				{
-					if(success)
-					{
-						
-					}
-				}
-			}).fire();
+			InCollectionTask.createTask(tm, this, this.item, item.getItemId() == R.id.action_bar_add_to_collection, null).fire();
 			break;
 		case R.id.action_bar_add_to_watchlist:
 		case R.id.action_bar_remove_from_watchlist:
-			new InWatchlistTask<T>(tm, this, this.item, item.getItemId() == R.id.action_bar_add_to_watchlist, new PostListener() 
-			{
-				@Override
-				public void onComplete(Response r, boolean success) 
-				{
-					if(success)
-					{
-						
-					}
-				}
-			}).fire();
-			break;
+			InWatchlistTask.createTask(tm, this, this.item, item.getItemId() == R.id.action_bar_add_to_watchlist, null).fire();
 		}
 		return super.onOptionsItemSelected(item);
 	}

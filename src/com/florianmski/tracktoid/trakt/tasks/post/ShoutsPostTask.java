@@ -27,24 +27,24 @@ public class ShoutsPostTask<T extends TraktoidInterface<T>> extends PostTask
 	protected void doPrePostStuff() 
 	{
 		if(traktItem instanceof TvShow)
-			builder = tm
+			builders.add(tm
 			.shoutService()
 			.show(Integer.valueOf(traktItem.getId()))
 			.shout(shout)
-			.spoiler(spoiler);
+			.spoiler(spoiler));
 		else if(traktItem instanceof Movie)
-			builder = tm
+			builders.add(tm
 			.shoutService()
 			.movie(Integer.valueOf(traktItem.getId()))
 			.shout(shout)
-			.spoiler(spoiler);
+			.spoiler(spoiler));
 		else if(traktItem instanceof TvShowEpisode)
-			builder = tm
+			builders.add(tm
 			.shoutService()
 			.episode(Integer.valueOf(((TvShowEpisode)traktItem).tvdbId))
 			.season(((TvShowEpisode)traktItem).season)
 			.episode(((TvShowEpisode)traktItem).number)
 			.shout(shout)
-			.spoiler(spoiler);
+			.spoiler(spoiler));
 	}
 }
