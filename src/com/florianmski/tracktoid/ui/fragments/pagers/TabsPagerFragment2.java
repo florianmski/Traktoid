@@ -9,19 +9,20 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
+import android.widget.TabHost;
+import android.widget.TabWidget;
+
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 
 
-public abstract class TabsPagerFragment extends TraktFragment 
+public abstract class TabsPagerFragment2 extends TraktFragment 
 {
+	protected TabHost mTabHost;
 	protected ViewPager mViewPager;
 	protected TabsAdapter mTabsAdapter;
 
@@ -32,17 +33,17 @@ public abstract class TabsPagerFragment extends TraktFragment
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		
-		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
-		
+
+		mTabsAdapter = new TabsAdapter(getActivity(), mTabHost, mViewPager);
+
 		if (savedInstanceState != null)
-			getActionBar().setSelectedNavigationItem(savedInstanceState.getInt("tab"));
+			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
 	}
 
 	@Override
@@ -50,28 +51,21 @@ public abstract class TabsPagerFragment extends TraktFragment
 	{
 		View v = getView(inflater, container, savedInstanceState);
 
+		mTabHost = (TabHost)v.findViewById(android.R.id.tabhost);
+		mTabHost.setup();
 		mViewPager = (ViewPager)v.findViewById(R.id.pager);
-		mTabsAdapter = new TabsAdapter(getActivity(), mViewPager);
 
 		return v;
 	}
-	
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
 
-	@Override
-	public void onSaveState(Bundle toSave) 
-	{
-		toSave.putInt("tab", getActionBar().getSelectedTab().getPosition());
-	}
-
-	public class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener, ViewPager.OnPageChangeListener 
+	public static class TabsAdapter extends FragmentPagerAdapter implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener 
 	{
 		private final Context mContext;
+		private final TabHost mTabHost;
 		private final ViewPager mViewPager;
 		private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 
-		final class TabInfo 
+		static final class TabInfo 
 		{
 			private final Class<?> clss;
 			private final Bundle args;
@@ -83,23 +77,45 @@ public abstract class TabsPagerFragment extends TraktFragment
 			}
 		}
 
-		public TabsAdapter(FragmentActivity activity, ViewPager pager) 
+		static class DummyTabFactory implements TabHost.TabContentFactory 
+		{
+			private final Context mContext;
+
+			public DummyTabFactory(Context context) 
+			{
+				mContext = context;
+			}
+
+			@Override
+			public View createTabContent(String tag) 
+			{
+				View v = new View(mContext);
+				v.setMinimumWidth(0);
+				v.setMinimumHeight(0);
+				return v;
+			}
+		}
+
+		public TabsAdapter(FragmentActivity activity, TabHost tabHost, ViewPager pager) 
 		{
 			super(activity.getSupportFragmentManager());
 			mContext = activity;
+			mTabHost = tabHost;
 			mViewPager = pager;
-			mViewPager.setOnPageChangeListener(this);
+			mTabHost.setOnTabChangedListener(this);
 			new setAdapterTask().execute();
+//			mViewPager.setAdapter(TabsAdapter.this);
+			mViewPager.setOnPageChangeListener(this);
 		}
 
-		public void addTab(String name, Class<?> clss, Bundle args) 
+		public void addTab(TabHost.TabSpec tabSpec, Class<?> clss, Bundle args) 
 		{
-			TabInfo info = new TabInfo(name, clss, args);
+			tabSpec.setContent(new DummyTabFactory(mContext));
+			String tag = tabSpec.getTag();
+
+			TabInfo info = new TabInfo(tag, clss, args);
 			mTabs.add(info);
-			ActionBar.Tab tab = TabsPagerFragment.this.getActionBar().newTab();
-            tab.setText(name);
-            tab.setTabListener(this);
-            TabsPagerFragment.this.getActionBar().addTab(tab);
+			mTabHost.addTab(tabSpec);
 			notifyDataSetChanged();
 		}
 
@@ -116,30 +132,31 @@ public abstract class TabsPagerFragment extends TraktFragment
 			return Fragment.instantiate(mContext, info.clss.getName(), info.args);
 		}
 
-	    @Override
-	    public void onTabSelected(Tab tab, FragmentTransaction transaction) 
-	    {
-	    	int position = TabsPagerFragment.this.getActionBar().getSelectedTab().getPosition();
+		@Override
+		public void onTabChanged(String tabId) 
+		{
+			int position = mTabHost.getCurrentTab();
 			mViewPager.setCurrentItem(position);
-	    }
-		
-		@Override
-	    public void onTabReselected(Tab tab, FragmentTransaction transaction) {}
+		}
 
 		@Override
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) {}
-
-		@Override
-		public void onPageScrollStateChanged(int arg0) {}
-
-		@Override
-		public void onPageScrolled(int arg0, float arg1, int arg2) {}
+		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) 
+		{
+		}
 
 		@Override
 		public void onPageSelected(int position) 
 		{
-			getActionBar().setSelectedNavigationItem(position);
+			TabWidget widget = mTabHost.getTabWidget();
+			int oldFocusability = widget.getDescendantFocusability();
+			widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+			mTabHost.setCurrentTab(position);
+			widget.setDescendantFocusability(oldFocusability);
 		}
+
+		@Override
+		public void onPageScrollStateChanged(int state) {}
+		
 
 		private class setAdapterTask extends AsyncTask<Void,Void,Void>
 		{
@@ -156,4 +173,14 @@ public abstract class TabsPagerFragment extends TraktFragment
 			}
 		}
 	}
+
+	@Override
+	public void onRestoreState(Bundle savedInstanceState) {}
+
+	@Override
+	public void onSaveState(Bundle toSave) 
+	{
+		toSave.putString("tab", mTabHost.getCurrentTabTag());
+	}
+
 }

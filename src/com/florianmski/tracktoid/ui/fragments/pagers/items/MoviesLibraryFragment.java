@@ -20,8 +20,8 @@ import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBMoviesTask;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.RemoveMovieTask;
-import com.florianmski.tracktoid.trakt.tasks.get.MoviesTask;
-import com.florianmski.tracktoid.trakt.tasks.get.MoviesTask.MoviesListener;
+import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
+import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateMoviesTask;
 import com.florianmski.tracktoid.ui.activities.phone.MovieActivity;
 import com.jakewharton.trakt.entities.Movie;
@@ -99,10 +99,10 @@ public class MoviesLibraryFragment extends PagerItemLibraryFragment<Movie>
 	@Override
 	public void onRefreshClick() 
 	{
-		tm.addToQueue(new MoviesTask(tm, this, new MoviesListener() 
+		tm.addToQueue(new TraktItemsTask<Movie>(tm, this, new TraktItemsListener<Movie>() 
 		{
 			@Override
-			public void onMovies(List<Movie> movies) 
+			public void onTraktItems(List<Movie> movies) 
 			{
 				createMoviesDialog(movies);					
 			}

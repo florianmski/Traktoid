@@ -3,6 +3,7 @@ package com.florianmski.tracktoid.ui.fragments;
 import android.os.Bundle;
 import android.view.View;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.florianmski.tracktoid.StatusView;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
@@ -75,6 +76,21 @@ public abstract class BaseFragment extends SherlockFragment
 		if (dbw == null)
 			dbw = new DatabaseWrapper(getActivity());
 		return dbw;
+	}
+	
+	public ActionBar getActionBar()
+	{
+		return getSherlockActivity().getSupportActionBar();
+	}
+	
+	protected void setTitle(String title)
+	{
+		getActionBar().setTitle(title);
+	}
+
+	protected void setSubtitle(String subtitle)
+	{
+		getActionBar().setSubtitle(subtitle);
 	}
 	
 	public abstract void onRestoreState(Bundle savedInstanceState);

@@ -35,8 +35,6 @@ public class CalendarPagerFragment extends TabsPagerFragment
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
-		super.onActivityCreated(savedInstanceState);
-
 		getStatusView().show().text("Retrieving calendar,\nPlease wait...");
 
 		commonTask = new CalendarTask(tm, this);
@@ -45,6 +43,8 @@ public class CalendarPagerFragment extends TabsPagerFragment
 			commonTask.fire();
 		else
 			addTabs(null);
+		
+		super.onActivityCreated(savedInstanceState);
 	}
 	
 	public void addTabs(ArrayList<ArrayList<CalendarDate>> calendars) 
@@ -53,20 +53,29 @@ public class CalendarPagerFragment extends TabsPagerFragment
 
 		if(Utils.isOnline(getActivity()))
 		{
+//			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(0));
+//			mTabsAdapter.addTab(mTabHost.newTabSpec("premieres").setIndicator("Premieres"), CalendarFragment.class, args);
+//			args = new Bundle();
+//			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(1));
+//			mTabsAdapter.addTab(mTabHost.newTabSpec("my_shows").setIndicator("My shows"), CalendarFragment.class, args);
+//			args = new Bundle();
+//			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(2));
+//			mTabsAdapter.addTab(mTabHost.newTabSpec("shows").setIndicator("Shows"), CalendarFragment.class, args);
+			
 			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(0));
-			mTabsAdapter.addTab(mTabHost.newTabSpec("premieres").setIndicator("Premieres"), CalendarFragment.class, args);
+			mTabsAdapter.addTab("Premieres", CalendarFragment.class, args);
 			args = new Bundle();
 			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(1));
-			mTabsAdapter.addTab(mTabHost.newTabSpec("my_shows").setIndicator("My shows"), CalendarFragment.class, args);
+			mTabsAdapter.addTab("My shows", CalendarFragment.class, args);
 			args = new Bundle();
 			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(2));
-			mTabsAdapter.addTab(mTabHost.newTabSpec("shows").setIndicator("Shows"), CalendarFragment.class, args);
+			mTabsAdapter.addTab("Shows", CalendarFragment.class, args);
 			
+			getActionBar().setSelectedNavigationItem(1);
 		}
 		else
-			mTabsAdapter.addTab(mTabHost.newTabSpec("my_shows").setIndicator("My shows"), CalendarFragment.class, null);
+			mTabsAdapter.addTab("My shows", CalendarFragment.class, null);
 		
-		mTabHost.setCurrentTab(1);
 		getStatusView().hide().text(null);
 	}
 

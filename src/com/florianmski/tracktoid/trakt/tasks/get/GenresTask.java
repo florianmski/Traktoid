@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
+import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Genre;
 
@@ -17,7 +18,7 @@ public class GenresTask extends TraktTask
 	private GenresListener listener;
 	private TraktApiBuilder<List<Genre>> builder;
 	
-	public GenresTask(TraktManager tm, Fragment fragment, GenresListener listener, TraktApiBuilder<List<Genre>> builder) 
+	public <T extends TraktoidInterface<T>> GenresTask(TraktManager tm, Fragment fragment, GenresListener listener, TraktApiBuilder<List<Genre>> builder) 
 	{
 		super(tm, fragment);
 		

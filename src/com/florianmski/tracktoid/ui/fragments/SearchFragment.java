@@ -18,8 +18,8 @@ import android.widget.ListView;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.lists.ListSearchAdapter;
-import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
+import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
+import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
 import com.jakewharton.trakt.entities.TvShow;
 
@@ -88,10 +88,10 @@ public class SearchFragment extends TraktFragment
 				String search = edtSearch.getText().toString().trim();
 				getStatusView().show().text("Searching for \"" + search + "\",\nPlease wait...");
 				
-				commonTask = new ShowsTask(tm, SearchFragment.this, new ShowsListener() 
+				commonTask = new TraktItemsTask<TvShow>(tm, SearchFragment.this, new TraktItemsListener<TvShow>() 
 				{
 					@Override
-					public void onShows(List<TvShow> shows) 
+					public void onTraktItems(List<TvShow> shows) 
 					{
 						SearchFragment.this.shows = shows;
 						

@@ -13,8 +13,8 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
-import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
+import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
+import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowFragment;
 import com.florianmski.tracktoid.widgets.coverflow.CoverFlow;
 import com.florianmski.tracktoid.widgets.coverflow.CoverFlowImageAdapter;
@@ -22,6 +22,8 @@ import com.jakewharton.trakt.entities.TvShow;
 
 public class TrendingFragment extends TraktFragment
 {
+	//TODO do movies to
+	
 	private CoverFlow cf;
 	private List<TvShow> shows;
 
@@ -69,10 +71,10 @@ public class TrendingFragment extends TraktFragment
 
 		if(savedInstanceState == null)
 		{
-			commonTask = new ShowsTask(tm, this, new ShowsListener() 
+			commonTask = new TraktItemsTask<TvShow>(tm, this, new TraktItemsListener<TvShow>() 
 			{
 				@Override
-				public void onShows(List<TvShow> shows) 
+				public void onTraktItems(List<TvShow> shows) 
 				{
 					TrendingFragment.this.shows = shows;
 					setAdapter();

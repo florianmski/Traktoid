@@ -18,8 +18,8 @@ package com.florianmski.tracktoid.ui.activities.phone;
 
 import android.os.Bundle;
 
-import com.florianmski.tracktoid.ui.fragments.RecommendationMoviesFragment;
-import com.florianmski.tracktoid.ui.fragments.RecommendationShowsFragment;
+import com.florianmski.tracktoid.ui.fragments.RecommendationFragment.RecommendationMoviesFragment;
+import com.florianmski.tracktoid.ui.fragments.RecommendationFragment.RecommendationShowsFragment;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 
 public class RecommendationActivity extends MovieShowActivity

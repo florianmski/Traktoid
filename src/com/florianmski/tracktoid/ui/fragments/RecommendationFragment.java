@@ -22,10 +22,21 @@ import com.florianmski.tracktoid.adapters.lists.ListRecommendationAdapter;
 import com.florianmski.tracktoid.adapters.lists.ListRecommendationAdapter.DismissListener;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.get.GenresTask;
+import com.florianmski.tracktoid.trakt.tasks.get.GenresTask.GenresListener;
+import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
+import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
+import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
 import com.florianmski.traktoid.TraktoidInterface;
+import com.jakewharton.trakt.TraktApiBuilder;
+import com.jakewharton.trakt.entities.DismissResponse;
 import com.jakewharton.trakt.entities.Genre;
+import com.jakewharton.trakt.entities.Movie;
+import com.jakewharton.trakt.entities.Response;
+import com.jakewharton.trakt.entities.TvShow;
+import com.jakewharton.trakt.services.RecommendationsService.MoviesBuilder;
+import com.jakewharton.trakt.services.RecommendationsService.ShowsBuilder;
 
 public abstract class RecommendationFragment<T extends TraktoidInterface<T>> extends TraktFragment
 {	
@@ -48,9 +59,9 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 		super(listener);
 	}
 	
-	public abstract GenresTask getGenresTask();
-	public abstract PostTask getDismissTask(String id);
-	public abstract TraktTask getItemsTask(Genre genre);
+	public abstract TraktApiBuilder<DismissResponse> getDismissBuilder(String id);
+	public abstract TraktApiBuilder<List<T>> getRecommendationBuilder(Genre genre);
+	public abstract TraktApiBuilder<List<Genre>> getGenreBuilder();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -64,12 +75,19 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 	{
 		super.onActivityCreated(savedInstanceState);
 		
-		
 		if(savedInstanceState == null)
 		{
 			getStatusView().show().text("Retrieving genres,\nPlease wait...");
 
-			getGenresTask().fire();
+			new GenresTask(tm, this, new GenresListener() 
+			{
+				@Override
+				public void onGenres(final List<Genre> genres) 
+				{				
+					RecommendationFragment.this.genres = genres;
+					createGetRecommendationsTask().fire();
+				}
+			}, getGenreBuilder()).fire();
 		}
 		else
 			setAdapter();
@@ -93,6 +111,10 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 		View v = inflater.inflate(R.layout.fragment_recommendation, null);
 
 		lvRecommendations = (ListView)v.findViewById(R.id.listViewRecommendation);
+		spGenre = (Spinner) v.findViewById(R.id.spinnerGenre);
+		spStartYear = (Spinner) v.findViewById(R.id.spinnerStartYear);
+		spEndYear = (Spinner) v.findViewById(R.id.spinnerEndYear);
+		ivSend = (ImageView) v.findViewById(R.id.imageViewSend);
 
 		return v;
 	}
@@ -101,14 +123,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 	{
 		if(adapter == null)
 		{
-			adapter = new ListRecommendationAdapter<T>(items, getActivity());
-			View header = LayoutInflater.from(getActivity()).inflate(R.layout.view_recommendation_header_list, null);
-			spGenre = (Spinner) header.findViewById(R.id.spinnerGenre);
-			spStartYear = (Spinner) header.findViewById(R.id.spinnerStartYear);
-			spEndYear = (Spinner) header.findViewById(R.id.spinnerEndYear);
-			ivSend = (ImageView) header.findViewById(R.id.imageViewSend);
-			lvRecommendations.addHeaderView(header);
-			lvRecommendations.setAdapter(adapter);
+			lvRecommendations.setAdapter(adapter = new ListRecommendationAdapter<T>(items, getActivity()));
 			
 			String[] itemsGenres = new String[genres.size()+1];
 			itemsGenres[0] = "All Genres";
@@ -162,7 +177,15 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 			@Override
 			public void onDismiss(String id) 
 			{
-				getDismissTask(id).fire();
+				new PostTask(tm, RecommendationFragment.this, getDismissBuilder(id), new PostListener() 
+				{
+					@Override
+					public void onComplete(Response r, boolean success) 
+					{
+						adapter.clear();
+						createGetRecommendationsTask().fire();
+					}
+				}).fire();
 			}
 		});
 	}
@@ -173,7 +196,15 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 		Genre genre = index <= 0 || index > genres.size() ? null : genres.get(index-1);
 		getStatusView().show().text("Retrieving recommendations" + ((genre == null) ? "" : " in \"" + genre.name + "\"") + ",\nPlease wait...");	
 
-		return commonTask = getItemsTask(genre);
+		return commonTask = new TraktItemsTask<T>(tm, this, new TraktItemsListener<T>() 
+		{
+			@Override
+			public void onTraktItems(List<T> traktItems) 
+			{
+				RecommendationFragment.this.items = traktItems;
+				setAdapter();
+			}
+		}, getRecommendationBuilder(genre), false);
 	}
 
 	@Override
@@ -181,4 +212,90 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 
 	@Override
 	public void onSaveState(Bundle toSave) {}
+	
+	public static class RecommendationMoviesFragment extends RecommendationFragment<Movie>
+	{	
+		public static RecommendationMoviesFragment newInstance(Bundle args)
+		{
+			RecommendationMoviesFragment f = new RecommendationMoviesFragment();
+			f.setArguments(args);
+			return f;
+		}
+
+		public RecommendationMoviesFragment() {}
+
+		public RecommendationMoviesFragment(FragmentListener listener) 
+		{
+			super(listener);
+		}
+
+		@Override
+		public TraktApiBuilder<DismissResponse> getDismissBuilder(String id)
+		{
+			return tm.recommendationsService().dismissMovie(id);
+		}
+
+		@Override
+		public TraktApiBuilder<List<Movie>> getRecommendationBuilder(Genre genre) 
+		{
+			MoviesBuilder builder = tm.recommendationsService().movies();
+
+			if(genre != null)
+				builder.genre(genre);
+			
+			if(spStartYear != null && spEndYear != null)
+				builder.startYear(spStartYear.getSelectedItemPosition() + START_YEAR).endYear(END_YEAR - spEndYear.getSelectedItemPosition());
+			
+			return builder;
+		}
+
+		@Override
+		public TraktApiBuilder<List<Genre>> getGenreBuilder() 
+		{
+			return tm.genreService().movies();
+		}
+	}
+	
+	public static class RecommendationShowsFragment extends RecommendationFragment<TvShow>
+	{	
+		public static RecommendationShowsFragment newInstance(Bundle args)
+		{
+			RecommendationShowsFragment f = new RecommendationShowsFragment();
+			f.setArguments(args);
+			return f;
+		}
+
+		public RecommendationShowsFragment() {}
+
+		public RecommendationShowsFragment(FragmentListener listener) 
+		{
+			super(listener);
+		}
+
+		@Override
+		public TraktApiBuilder<DismissResponse> getDismissBuilder(String id)
+		{
+			return tm.recommendationsService().dismissShow(Integer.valueOf(id));
+		}
+
+		@Override
+		public TraktApiBuilder<List<TvShow>> getRecommendationBuilder(Genre genre) 
+		{
+			ShowsBuilder builder = tm.recommendationsService().shows();
+
+			if(genre != null)
+				builder.genre(genre);
+			
+			if(spStartYear != null && spEndYear != null)
+				builder.startYear(spStartYear.getSelectedItemPosition() + START_YEAR).endYear(END_YEAR - spEndYear.getSelectedItemPosition());
+			
+			return builder;
+		}
+
+		@Override
+		public TraktApiBuilder<List<Genre>> getGenreBuilder() 
+		{
+			return tm.genreService().shows();
+		}
+	}
 }

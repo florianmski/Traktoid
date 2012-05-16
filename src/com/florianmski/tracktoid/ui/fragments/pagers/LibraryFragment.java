@@ -5,12 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.MoviesLibraryFragment;
 import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowsLibraryFragment;
 
 
-public class LibraryFragment extends TabsPagerFragment 
+public class LibraryFragment extends TabsPagerFragment
 {	
 	public static LibraryFragment newInstance(Bundle args)
 	{
@@ -29,11 +30,11 @@ public class LibraryFragment extends TabsPagerFragment
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) 
-	{
-		super.onActivityCreated(savedInstanceState);
+	{		
+		mTabsAdapter.addTab("Shows", ShowsLibraryFragment.class, null);
+		mTabsAdapter.addTab("Movies", MoviesLibraryFragment.class, null);
 		
-		mTabsAdapter.addTab(mTabHost.newTabSpec("shows").setIndicator("Shows"), ShowsLibraryFragment.class, null);
-		mTabsAdapter.addTab(mTabHost.newTabSpec("movies").setIndicator("Movies"), MoviesLibraryFragment.class, null);
+		super.onActivityCreated(savedInstanceState);
 	}
 
 	@Override

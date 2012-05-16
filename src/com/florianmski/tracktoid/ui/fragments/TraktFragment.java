@@ -45,16 +45,6 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 		super.onDestroy();
 	}
 
-	protected void setTitle(String title)
-	{
-		getSherlockActivity().getSupportActionBar().setTitle(title);
-	}
-
-	protected void setSubtitle(String subtitle)
-	{
-		getSherlockActivity().getSupportActionBar().setSubtitle(subtitle);
-	}
-
 	public interface FragmentListener
 	{
 		public void onFragmentAction(Fragment f, Bundle bundle, int actionToPerformed);

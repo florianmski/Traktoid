@@ -21,8 +21,8 @@ import com.florianmski.tracktoid.db.tasks.DBShowsTask;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.RemoveShowTask;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
-import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.get.ShowsTask.ShowsListener;
+import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
+import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.trakt.tasks.post.RateTask;
 import com.florianmski.tracktoid.ui.activities.phone.MyShowActivity;
@@ -116,10 +116,10 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment<TvShow>
 	@Override
 	public void onRefreshClick() 
 	{
-		tm.addToQueue(new ShowsTask(tm, this, new ShowsListener() 
+		tm.addToQueue(new TraktItemsTask<TvShow>(tm, this, new TraktItemsListener<TvShow>() 
 		{
 			@Override
-			public void onShows(List<TvShow> shows) 
+			public void onTraktItems(List<TvShow> shows) 
 			{
 				createShowsDialog(shows);
 			}
