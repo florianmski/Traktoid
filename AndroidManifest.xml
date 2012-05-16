@@ -19,7 +19,7 @@
 		android:name=".TraktoidApplication"
         android:hardwareAccelerated="true">
 
-        <activity android:name=".ui.activities.phone.SplashActivity">
+        <activity android:name=".ui.activities.phone.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -41,7 +41,7 @@
         <activity android:name=".ui.activities.phone.LoginActivity" android:label="Login"></activity>
         <activity android:name=".ui.activities.phone.ShoutsActivity" android:label="Shouts" android:windowSoftInputMode="stateAlwaysHidden"></activity>
         <activity android:name=".ui.activities.phone.TrendingActivity" android:label="Trending" ></activity>
-        <activity android:name=".ui.activities.phone.HomeActivity"></activity>
+<!--         <activity android:name=".ui.activities.phone.HomeActivity"></activity> -->
         <activity android:name=".ui.activities.phone.MyShowsTabletActivity"></activity>
 
     </application>
