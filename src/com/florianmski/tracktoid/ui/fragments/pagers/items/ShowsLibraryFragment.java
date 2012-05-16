@@ -106,7 +106,7 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment<TvShow>
 			@Override
 			public void onClick(DialogInterface dialog, int item) 
 			{
-				tm.addToQueue(new RateTask(tm, ShowsLibraryFragment.this, adapter.getItem(posterClickedPosition), ratings[item]));
+				tm.addToQueue(RateTask.createTask(tm, ShowsLibraryFragment.this, adapter.getItem(posterClickedPosition), ratings[item], null));
 			}
 		});
 		AlertDialog alert = builder.create();

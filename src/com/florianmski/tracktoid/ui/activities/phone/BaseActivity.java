@@ -1,11 +1,11 @@
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import android.R;
-import android.content.Intent;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+
+import android.R;
+import android.content.Intent;
 
 public class BaseActivity extends SherlockFragmentActivity
 {

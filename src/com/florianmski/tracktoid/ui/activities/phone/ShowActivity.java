@@ -19,6 +19,7 @@ package com.florianmski.tracktoid.ui.activities.phone;
 import java.util.ArrayList;
 
 import android.os.Bundle;
+
 import com.actionbarsherlock.app.SherlockFragment;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;

@@ -374,13 +374,13 @@ public class ShowFragment extends TraktFragment
 			}
 			return true;
 		case R.id.action_bar_rate_love :
-			tm.addToQueue(new RateTask(tm, ShowFragment.this, show, Rating.Love));
+			RateTask.createTask(tm, this, show, Rating.Love, null);
 			return true;
 		case R.id.action_bar_rate_hate :
-			tm.addToQueue(new RateTask(tm, ShowFragment.this, show, Rating.Hate));
+			RateTask.createTask(tm, this, show, Rating.Hate, null);
 			return true;
 		case R.id.action_bar_rate_unrate :
-			tm.addToQueue(new RateTask(tm, ShowFragment.this, show, Rating.Unrate));
+			RateTask.createTask(tm, this, show, Rating.Unrate, null);
 			return true;
 		case R.id.action_bar_about :
 			Intent i = new Intent(getActivity(), ShowActivity.class);
