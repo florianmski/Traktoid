@@ -19,6 +19,7 @@ package com.florianmski.tracktoid.ui.activities.phone;
 import android.os.Bundle;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.ui.fragments.pagers.PagerFragment;
 import com.florianmski.tracktoid.ui.fragments.pagers.PagerTraktItemMovieFragment;
 
 public class MovieActivity extends TraktActivity
@@ -31,6 +32,6 @@ public class MovieActivity extends TraktActivity
 		setContentView(R.layout.activity_single_fragment);
 		
 		if(savedInstanceState == null)
-			setPrincipalFragment(PagerTraktItemMovieFragment.newInstance(getIntent().getExtras()));
+			setPrincipalFragment(PagerFragment.newInstance(getIntent().getExtras()));
 	}
 }

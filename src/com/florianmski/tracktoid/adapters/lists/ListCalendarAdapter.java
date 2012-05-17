@@ -223,7 +223,9 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 				File posterImage = null;
 				AQuery aq = listAq.recycle(holder.llEpisodes);
 				
-				if(episode.images.screen != null && episode.images.fanart != null)
+				//TODO something is wrong with image display
+				
+				if(episode.images.screen != null || episode.images.fanart != null)
 					image = TraktImage.getScreen(episode);
 				else
 				{

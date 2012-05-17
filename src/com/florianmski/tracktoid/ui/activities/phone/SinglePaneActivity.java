@@ -20,7 +20,6 @@ import android.os.Bundle;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.BaseFragment;
-import com.florianmski.tracktoid.ui.fragments.HomeFragment;
 
 public class SinglePaneActivity extends TraktActivity
 {	

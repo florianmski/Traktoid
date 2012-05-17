@@ -21,7 +21,7 @@ public abstract class BaseFragment extends SherlockFragment
 	
 	public static Fragment newInstanceTest(Context context, Bundle args)
 	{
-		return SherlockFragment.instantiate(context, args.getString(TraktoidConstants.BUNDLE_CLASS), args);
+		return Fragment.instantiate(context, args.getString(TraktoidConstants.BUNDLE_CLASS), args);
 	}
 	
 	public void launchActivityWithSingleFragment(Class<?> fragmentClass)

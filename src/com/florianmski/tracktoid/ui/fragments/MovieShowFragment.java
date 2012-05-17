@@ -1,11 +1,7 @@
 package com.florianmski.tracktoid.ui.fragments;
 
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.ui.fragments.pagers.PagerLibraryFragment;
 import com.florianmski.tracktoid.ui.fragments.pagers.PagerTabsFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_LibaryMovieFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_LibraryShowFragment;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;

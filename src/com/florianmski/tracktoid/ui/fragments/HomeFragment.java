@@ -33,7 +33,6 @@ import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask.CheckinListener;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.ui.activities.phone.CalendarActivity;
-import com.florianmski.tracktoid.ui.activities.phone.RecommendationActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SearchActivity;
 import com.florianmski.tracktoid.ui.activities.phone.TrendingActivity;
 import com.florianmski.tracktoid.ui.fragments.pagers.PagerLibraryFragment;

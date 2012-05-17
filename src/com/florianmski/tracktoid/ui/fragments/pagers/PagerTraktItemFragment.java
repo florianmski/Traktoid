@@ -7,7 +7,6 @@ import android.os.Bundle;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.pagers.PagerTraktItemAdapter;
 import com.florianmski.traktoid.TraktoidInterface;
-import com.jakewharton.trakt.entities.TvShow;
 
 public abstract class PagerTraktItemFragment<T extends TraktoidInterface<T>> extends PagerFragment
 {	
