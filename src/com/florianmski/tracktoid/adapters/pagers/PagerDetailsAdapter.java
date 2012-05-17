@@ -7,7 +7,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.ui.fragments.pagers.TabsViewPagerFragment.TabsViewAdapter;
+import com.florianmski.tracktoid.ui.fragments.pagers.PagerTabsViewFragment.TabsViewAdapter;
 import com.florianmski.traktoid.TraktoidInterface;
 
 public class PagerDetailsAdapter<T extends TraktoidInterface<T>> extends TabsViewAdapter

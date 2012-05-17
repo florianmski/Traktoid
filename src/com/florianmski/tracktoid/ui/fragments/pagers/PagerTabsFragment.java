@@ -20,7 +20,7 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 
 
-public abstract class TabsPagerFragment extends TraktFragment 
+public abstract class PagerTabsFragment extends TraktFragment 
 {
 	protected ViewPager mViewPager;
 	protected TabsAdapter mTabsAdapter;
@@ -96,10 +96,10 @@ public abstract class TabsPagerFragment extends TraktFragment
 		{
 			TabInfo info = new TabInfo(name, clss, args);
 			mTabs.add(info);
-			ActionBar.Tab tab = TabsPagerFragment.this.getActionBar().newTab();
+			ActionBar.Tab tab = PagerTabsFragment.this.getActionBar().newTab();
             tab.setText(name);
             tab.setTabListener(this);
-            TabsPagerFragment.this.getActionBar().addTab(tab);
+            PagerTabsFragment.this.getActionBar().addTab(tab);
 			notifyDataSetChanged();
 		}
 
@@ -119,7 +119,7 @@ public abstract class TabsPagerFragment extends TraktFragment
 	    @Override
 	    public void onTabSelected(Tab tab, FragmentTransaction transaction) 
 	    {
-	    	int position = TabsPagerFragment.this.getActionBar().getSelectedTab().getPosition();
+	    	int position = PagerTabsFragment.this.getActionBar().getSelectedTab().getPosition();
 			mViewPager.setCurrentItem(position);
 	    }
 		

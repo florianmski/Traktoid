@@ -22,7 +22,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.florianmski.tracktoid.ui.fragments.pagers.items.CalendarFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_CalendarFragment;
 import com.jakewharton.trakt.entities.CalendarDate;
 import com.viewpagerindicator.TitleProvider;
 
@@ -54,7 +54,7 @@ public class PagerCalendarAdapter extends FragmentPagerAdapter implements TitleP
     public Fragment getItem(int position) 
     {
     	//TODO why not calendarfragment.newinstance ?
-    	return new CalendarFragment(calendars.get(position));
+    	return new PI_CalendarFragment(calendars.get(position));
     }
 
 	@Override

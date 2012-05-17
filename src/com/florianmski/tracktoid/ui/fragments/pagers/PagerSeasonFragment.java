@@ -19,22 +19,22 @@ import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
-public class SeasonPagerFragment extends PagerFragment
+public class PagerSeasonFragment extends PagerFragment
 {
 	private boolean watchedMode = false;
 	private String tvdbId;
 	private List<TvShowSeason> seasons;
 	
-	public static SeasonPagerFragment newInstance(Bundle args)
+	public static PagerSeasonFragment newInstance(Bundle args)
 	{
-		SeasonPagerFragment f = new SeasonPagerFragment();
+		PagerSeasonFragment f = new PagerSeasonFragment();
 		f.setArguments(args);
 		return f;
 	}
 	
-	public SeasonPagerFragment() {}
+	public PagerSeasonFragment() {}
 	
-	public SeasonPagerFragment(FragmentListener listener) 
+	public PagerSeasonFragment(FragmentListener listener) 
 	{
 		super(listener);
 	}

@@ -16,25 +16,25 @@ import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBCalendarTask;
 import com.jakewharton.trakt.entities.CalendarDate;
 
-public class CalendarFragment extends PagerItemFragment
+public class PI_CalendarFragment extends PI_Fragment
 {
 	private ArrayList<CalendarDate> calendar;
 	private ListView lvEpisodes;
 	
-	public static CalendarFragment newInstance(Bundle args)
+	public static PI_CalendarFragment newInstance(Bundle args)
 	{
-		CalendarFragment f = new CalendarFragment();
+		PI_CalendarFragment f = new PI_CalendarFragment();
 		f.setArguments(args);
 		return f;
 	}
 	
-	public CalendarFragment() 
+	public PI_CalendarFragment() 
 	{
 		//retain fragment when rotation occurs
 		this.setRetainInstance(true);
 	}
 	
-	public CalendarFragment(ArrayList<CalendarDate> calendar) 
+	public PI_CalendarFragment(ArrayList<CalendarDate> calendar) 
 	{
 		this();
 		this.calendar = calendar;
@@ -65,7 +65,7 @@ public class CalendarFragment extends PagerItemFragment
 				@Override
 				public void onDBCalendar(List<CalendarDate> calendar) 
 				{					
-					CalendarFragment.this.calendar = (ArrayList<CalendarDate>) calendar;
+					PI_CalendarFragment.this.calendar = (ArrayList<CalendarDate>) calendar;
 					lvEpisodes.setAdapter(new ListCalendarAdapter(calendar, getActivity()));
 					
 					if(lvEpisodes.getAdapter().isEmpty())

@@ -23,7 +23,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.EpisodeFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_TraktItemEpisodeFragment;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.viewpagerindicator.TitleProvider;
 
@@ -71,7 +71,7 @@ public class PagerEpisodeAdapter extends FragmentStatePagerAdapter implements Ti
 	@Override
 	public Fragment getItem(int position) 
 	{
-		return EpisodeFragment.newInstance(episodes.get(position), tvdbId);
+		return PI_TraktItemEpisodeFragment.newInstance(episodes.get(position), tvdbId);
 	}
 
 	@Override

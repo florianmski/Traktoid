@@ -11,19 +11,19 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.tasks.get.CalendarTask;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.CalendarFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_CalendarFragment;
 import com.jakewharton.trakt.entities.CalendarDate;
 
-public class CalendarPagerFragment extends TabsPagerFragment
+public class PagerCalendarFragment extends PagerTabsFragment
 {	
-	public static CalendarPagerFragment newInstance(Bundle args)
+	public static PagerCalendarFragment newInstance(Bundle args)
 	{
-		CalendarPagerFragment f = new CalendarPagerFragment();
+		PagerCalendarFragment f = new PagerCalendarFragment();
 		f.setArguments(args);
 		return f;
 	}
 	
-	public CalendarPagerFragment() {}
+	public PagerCalendarFragment() {}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -63,18 +63,18 @@ public class CalendarPagerFragment extends TabsPagerFragment
 //			mTabsAdapter.addTab(mTabHost.newTabSpec("shows").setIndicator("Shows"), CalendarFragment.class, args);
 			
 			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(0));
-			mTabsAdapter.addTab("Premieres", CalendarFragment.class, args);
+			mTabsAdapter.addTab("Premieres", PI_CalendarFragment.class, args);
 			args = new Bundle();
 			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(1));
-			mTabsAdapter.addTab("My shows", CalendarFragment.class, args);
+			mTabsAdapter.addTab("My shows", PI_CalendarFragment.class, args);
 			args = new Bundle();
 			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(2));
-			mTabsAdapter.addTab("Shows", CalendarFragment.class, args);
+			mTabsAdapter.addTab("Shows", PI_CalendarFragment.class, args);
 			
 			getActionBar().setSelectedNavigationItem(1);
 		}
 		else
-			mTabsAdapter.addTab("My shows", CalendarFragment.class, null);
+			mTabsAdapter.addTab("My shows", PI_CalendarFragment.class, null);
 		
 		getStatusView().hide().text(null);
 	}

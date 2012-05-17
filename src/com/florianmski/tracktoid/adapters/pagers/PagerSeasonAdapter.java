@@ -23,7 +23,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.florianmski.tracktoid.ui.fragments.pagers.items.SeasonFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_SeasonFragment;
 import com.jakewharton.trakt.entities.TvShowSeason;
 import com.viewpagerindicator.TitleProvider;
 
@@ -77,7 +77,7 @@ public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements Tit
 	@Override
 	public Fragment getItem(int position) 
 	{
-		return SeasonFragment.newInstance(seasons.get(position), tvdbId);
+		return PI_SeasonFragment.newInstance(seasons.get(position), tvdbId);
 	}
 	
 	@Override

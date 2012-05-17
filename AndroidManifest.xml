@@ -43,6 +43,7 @@
         <activity android:name=".ui.activities.phone.TrendingActivity" android:label="Trending" ></activity>
 <!--         <activity android:name=".ui.activities.phone.HomeActivity"></activity> -->
         <activity android:name=".ui.activities.phone.MyShowsTabletActivity"></activity>
+        <activity android:name=".ui.activities.phone.SinglePaneActivity"></activity>
 
     </application>
 </manifest>

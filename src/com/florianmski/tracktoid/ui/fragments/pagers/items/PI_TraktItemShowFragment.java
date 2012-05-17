@@ -5,32 +5,23 @@ import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class ShowFragment extends PagerItemTraktFragment<TvShow>
+public class PI_TraktItemShowFragment extends PI_TraktItemFragment<TvShow>
 {
 	private boolean existsInDb = false;
 
-	public static ShowFragment newInstance(Bundle args)
+	public static PI_TraktItemShowFragment newInstance(Bundle args)
 	{
-		ShowFragment f = new ShowFragment();
+		PI_TraktItemShowFragment f = new PI_TraktItemShowFragment();
 		f.setArguments(args);
 		return f;
 	}
 
-	public static ShowFragment newInstance(TvShow s)
+	public static PI_TraktItemShowFragment newInstance(TvShow s)
 	{
 		Bundle args = new Bundle();
-		args.putSerializable(TraktoidConstants.BUNDLE_TVSHOW, s);
+		args.putSerializable(TraktoidConstants.BUNDLE_TRAKT_ITEM, s);
 
 		return newInstance(args);
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) 
-	{
-		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
-
-		item = (TvShow) (getArguments() != null ? getArguments().getSerializable(TraktoidConstants.BUNDLE_TVSHOW) : null);
 	}
 
 	@Override

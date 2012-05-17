@@ -3,7 +3,7 @@ package com.florianmski.tracktoid.ui.activities.phone;
 import android.os.Bundle;
 
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.ui.fragments.pagers.LoginPagerFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.PagerLoginFragment;
 
 public class LoginActivity extends TraktActivity
 {
@@ -15,6 +15,6 @@ public class LoginActivity extends TraktActivity
 		setContentView(R.layout.activity_single_fragment);
 		
 		if(savedInstanceState == null)
-			setPrincipalFragment(LoginPagerFragment.newInstance(getIntent().getExtras()));
+			setPrincipalFragment(PagerLoginFragment.newInstance(getIntent().getExtras()));
 	}
 }

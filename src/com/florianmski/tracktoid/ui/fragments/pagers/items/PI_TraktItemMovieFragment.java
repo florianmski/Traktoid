@@ -5,41 +5,31 @@ import android.os.Bundle;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.jakewharton.trakt.entities.Movie;
 
-public class MovieFragment extends PagerItemTraktFragment<Movie>
+public class PI_TraktItemMovieFragment extends PI_TraktItemFragment<Movie>
 {
-	public static MovieFragment newInstance(Bundle args)
+	public static PI_TraktItemMovieFragment newInstance(Bundle args)
 	{
-		MovieFragment f = new MovieFragment();
+		PI_TraktItemMovieFragment f = new PI_TraktItemMovieFragment();
 		f.setArguments(args);
 		return f;
 	}
 
-	public static MovieFragment newInstance(Movie m)
+	public static PI_TraktItemMovieFragment newInstance(Movie m)
 	{
 		Bundle args = new Bundle();
-		args.putSerializable(TraktoidConstants.BUNDLE_MOVIE, m);
+		args.putSerializable(TraktoidConstants.BUNDLE_TRAKT_ITEM, m);
 
 		return newInstance(args);
 	}
 
-	public MovieFragment() {}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) 
-	{
-		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
-
-		if(getArguments() != null)
-			item = (Movie) getArguments().getSerializable(TraktoidConstants.BUNDLE_MOVIE);
-	}
-
+	public PI_TraktItemMovieFragment() {}
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
 	}
-
+	
 	@Override
 	public void onRestoreState(Bundle savedInstanceState) {}
 

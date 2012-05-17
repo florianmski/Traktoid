@@ -29,16 +29,16 @@ import com.florianmski.tracktoid.ui.activities.phone.MyShowActivity;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public class ShowsLibraryFragment extends PagerItemLibraryFragment<TvShow>
+public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 {
-	public static ShowsLibraryFragment newInstance(Bundle args)
+	public static PI_LibraryShowFragment newInstance(Bundle args)
 	{
-		ShowsLibraryFragment f = new ShowsLibraryFragment();
+		PI_LibraryShowFragment f = new PI_LibraryShowFragment();
 		f.setArguments(args);
 		return f;
 	}
 
-	public ShowsLibraryFragment() {}
+	public PI_LibraryShowFragment() {}
 
 	@Override
 	public void checkUpdateTask() 
@@ -84,13 +84,13 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment<TvShow>
 	{
 		ArrayList<TvShow> showsSelected = new ArrayList<TvShow>();
 		showsSelected.add(adapter.getItem(posterClickedPosition));
-		tm.addToQueue(new UpdateShowsTask(tm, ShowsLibraryFragment.this, showsSelected));
+		tm.addToQueue(new UpdateShowsTask(tm, PI_LibraryShowFragment.this, showsSelected));
 	}
 
 	@Override
 	public void onDeleteQAClick(QuickAction source, int pos, int actionId) 
 	{
-		tm.addToQueue(new RemoveShowTask(tm, ShowsLibraryFragment.this, adapter.getItem(posterClickedPosition)));
+		tm.addToQueue(new RemoveShowTask(tm, PI_LibraryShowFragment.this, adapter.getItem(posterClickedPosition)));
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment<TvShow>
 			@Override
 			public void onClick(DialogInterface dialog, int item) 
 			{
-				tm.addToQueue(RateTask.createTask(tm, ShowsLibraryFragment.this, adapter.getItem(posterClickedPosition), ratings[item], null));
+				tm.addToQueue(RateTask.createTask(tm, PI_LibraryShowFragment.this, adapter.getItem(posterClickedPosition), ratings[item], null));
 			}
 		});
 		AlertDialog alert = builder.create();
@@ -169,7 +169,7 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment<TvShow>
 			public void onClick(DialogInterface dialog, int which) 
 			{
 				if(selectedShows.size() > 0)
-					tm.addToQueue(new UpdateShowsTask(tm, ShowsLibraryFragment.this, selectedShows));
+					tm.addToQueue(new UpdateShowsTask(tm, PI_LibraryShowFragment.this, selectedShows));
 				else
 					Toast.makeText(getActivity(), "Nothing selected...", Toast.LENGTH_SHORT).show();
 			}
@@ -180,7 +180,7 @@ public class ShowsLibraryFragment extends PagerItemLibraryFragment<TvShow>
 			@Override
 			public void onClick(DialogInterface dialog, int which) 
 			{
-				tm.addToQueue(new UpdateShowsTask(tm, ShowsLibraryFragment.this, shows));
+				tm.addToQueue(new UpdateShowsTask(tm, PI_LibraryShowFragment.this, shows));
 			}
 		});
 

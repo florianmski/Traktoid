@@ -28,6 +28,8 @@ import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListen
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
+import com.florianmski.tracktoid.ui.fragments.pagers.PagerRecommendationFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.PagerTraktItemShowFragment;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.DismissResponse;
@@ -97,10 +99,14 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) 
 			{
-				Intent intent = new Intent(getActivity(), ShowActivity.class);
-				intent.putExtra(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<T>) adapter.getItems());
-				intent.putExtra(TraktoidConstants.BUNDLE_POSITION, position-1);
-				startActivity(intent);
+				Bundle b = new Bundle();
+				b.putSerializable(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<T>) adapter.getItems());
+				b.putInt(TraktoidConstants.BUNDLE_POSITION, position);
+				launchActivityWithSingleFragment(PagerTraktItemShowFragment.class, b);
+//				Intent intent = new Intent(getActivity(), ShowActivity.class);
+//				intent.putExtra(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<T>) adapter.getItems());
+//				intent.putExtra(TraktoidConstants.BUNDLE_POSITION, position);
+//				startActivity(intent);
 			}
 		});
 	}

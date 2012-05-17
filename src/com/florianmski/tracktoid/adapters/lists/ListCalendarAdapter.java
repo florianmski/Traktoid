@@ -261,9 +261,10 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 						if(episode.images.screen != null)
 							episode.images.screen = episode.images.screen.replace("-940","");
 						
+						episode.tvdbId = e.show.tvdbId;
+						
 						episodes.add(episode);
 						i.putExtra(TraktoidConstants.BUNDLE_RESULTS, episodes);
-						i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, e.show.tvdbId);
 						context.startActivity(i);
 					}
 				});

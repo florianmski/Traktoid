@@ -4,11 +4,11 @@ import android.os.Bundle;
 
 import com.florianmski.tracktoid.adapters.pagers.PagerLoginAdapter;
 
-public class LoginPagerFragment extends PagerFragment
+public class PagerLoginFragment extends PagerFragment
 {
-	public static LoginPagerFragment newInstance(Bundle args)
+	public static PagerLoginFragment newInstance(Bundle args)
 	{
-		LoginPagerFragment f = new LoginPagerFragment();
+		PagerLoginFragment f = new PagerLoginFragment();
 		f.setArguments(args);
 		return f;
 	}

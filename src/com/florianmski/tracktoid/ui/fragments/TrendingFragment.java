@@ -15,7 +15,7 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_TraktItemShowFragment;
 import com.florianmski.tracktoid.widgets.coverflow.CoverFlow;
 import com.florianmski.tracktoid.widgets.coverflow.CoverFlowImageAdapter;
 import com.jakewharton.trakt.entities.TvShow;
@@ -65,7 +65,7 @@ public class TrendingFragment extends TraktFragment
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) 
 			{
-				getFragmentManager().beginTransaction().replace(R.id.fragment_show, ShowFragment.newInstance(shows.get(position))).commit();
+				getFragmentManager().beginTransaction().replace(R.id.fragment_show, PI_TraktItemShowFragment.newInstance(shows.get(position))).commit();
 			}
 		});
 

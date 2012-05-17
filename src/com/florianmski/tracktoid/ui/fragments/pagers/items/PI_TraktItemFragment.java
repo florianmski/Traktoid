@@ -26,28 +26,35 @@ import com.florianmski.tracktoid.trakt.tasks.post.InCollectionTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InWatchlistTask;
 import com.florianmski.tracktoid.trakt.tasks.post.SeenTask;
 import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
-import com.florianmski.tracktoid.ui.fragments.pagers.TabsViewPagerFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.PagerTabsViewFragment;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.tracktoid.widgets.ScrollingTextView;
 import com.florianmski.traktoid.TraktoidInterface;
+import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 
-public abstract class PagerItemTraktFragment<T extends TraktoidInterface<T>> extends TabsViewPagerFragment
+public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> extends PagerTabsViewFragment
 {
 	protected T item;
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public void onCreate(Bundle savedInstanceState) 
+	{
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+
+		if(getArguments() != null)
+			item = (T) getArguments().getSerializable(TraktoidConstants.BUNDLE_TRAKT_ITEM);
+	}
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		getSherlockActivity().invalidateOptionsMenu();
-
 		mTabsAdapter.addTab(mTabHost.newTabSpec("summary").setIndicator("Summary"), R.layout.pager_item_details_summary, null);
 		//		mTabsAdapter.addTab(mTabHost.newTabSpec("shouts").setIndicator("Shouts"), R.layout.fragment_shouts, null);
-		//		mTabsAdapter.addTab(mTabHost.newTabSpec("premieres2").setIndicator("Premieres2"), 0, null);
-		//		mTabsAdapter.addTab(mTabHost.newTabSpec("premieres3").setIndicator("Premieres3"), 0, null);
-		//		mTabsAdapter.addTab(mTabHost.newTabSpec("premieres4").setIndicator("Premieres4"), 0, null);
 	}
 
 	@Override
@@ -106,6 +113,9 @@ public abstract class PagerItemTraktFragment<T extends TraktoidInterface<T>> ext
 	{
 		super.onCreateOptionsMenu(menu, inflater);
 
+		if(item != null)
+			setTitle(item.getTitle());
+		
 		SubMenu watchMenu = menu.addSubMenu("Watched");
 
 		if(this.item != null && !this.item.isWatched())

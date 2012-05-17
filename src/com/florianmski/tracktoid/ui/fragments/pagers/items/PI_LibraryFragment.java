@@ -26,7 +26,7 @@ import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.traktoid.TraktoidInterface;
 
-public abstract class PagerItemLibraryFragment<T extends TraktoidInterface<T>> extends PagerItemFragment
+public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends PI_Fragment
 {
 	protected final static int NB_COLUMNS_TABLET_PORTRAIT = 5;
 	protected final static int NB_COLUMNS_TABLET_LANDSCAPE = 7;

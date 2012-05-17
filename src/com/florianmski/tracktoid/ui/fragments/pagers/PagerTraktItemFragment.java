@@ -9,25 +9,8 @@ import com.florianmski.tracktoid.adapters.pagers.PagerTraktItemAdapter;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class TraktItemPagerFragment<T extends TraktoidInterface<T>> extends PagerFragment
-{
-	//TODO onShowUpdated()
-	private T traktItem;
-	
-	public static TraktItemPagerFragment newInstance(Bundle args)
-	{
-		TraktItemPagerFragment f = new TraktItemPagerFragment();
-		f.setArguments(args);
-		return f;
-	}
-	
-	public TraktItemPagerFragment() {}
-	
-	public TraktItemPagerFragment(FragmentListener listener) 
-	{
-		super(listener);
-	}
-	
+public abstract class PagerTraktItemFragment<T extends TraktoidInterface<T>> extends PagerFragment
+{	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
@@ -41,7 +24,7 @@ public class TraktItemPagerFragment<T extends TraktoidInterface<T>> extends Page
 	{
 		super.onActivityCreated(savedInstanceState);
 		
-		getStatusView().show().text("Loading items,\nPlease wait...");
+		getStatusView().show().text("Loading,\nPlease wait...");
 		setData();
 	}
 	
@@ -53,16 +36,16 @@ public class TraktItemPagerFragment<T extends TraktoidInterface<T>> extends Page
 			@SuppressWarnings("unchecked")
 			public void run()
 			{
-				final List<TvShow> shows = (List<TvShow>)getArguments().getSerializable(TraktoidConstants.BUNDLE_RESULTS);
+				final List<T> items = (List<T>)getArguments().getSerializable(TraktoidConstants.BUNDLE_RESULTS);
 
 				getActivity().runOnUiThread(new Runnable() 
 				{
 					@Override
 					public void run() 
 					{
-						adapter = new PagerTraktItemAdapter(shows, getFragmentManager(), getActivity());
+						adapter = new PagerTraktItemAdapter<T>(items, getFragmentManager(), getActivity());
 						
-						if(((PagerTraktItemAdapter)adapter).isEmpty())
+						if(((PagerTraktItemAdapter<T>)adapter).isEmpty())
 							getStatusView().hide().text("No items, this is strange...");
 						else
 							getStatusView().hide().text(null);
@@ -72,14 +55,5 @@ public class TraktItemPagerFragment<T extends TraktoidInterface<T>> extends Page
 				});
 			}
 		}.start();
-	}
-
-	@Override
-	public void onPageSelected(int position) 
-	{
-		super.onPageSelected(position);
-
-		traktItem = (T) ((PagerTraktItemAdapter)adapter).getTraktItem(currentPagerPosition);
-		setTitle(traktItem.getTitle());
 	}
 }

@@ -5,9 +5,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
-import com.florianmski.tracktoid.ui.fragments.pagers.items.MoviesLibraryFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.PagerItemLibraryFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowsLibraryFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_LibaryMovieFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_LibraryFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_LibraryShowFragment;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.viewpagerindicator.TitleProvider;
 
@@ -29,12 +29,12 @@ public class PagerLibraryAdapter extends FragmentPagerAdapter implements TitlePr
 	@Override
 	public Fragment getItem(int position) 
 	{
-		PagerItemLibraryFragment<? extends TraktoidInterface<?>> f = null;
+		PI_LibraryFragment<? extends TraktoidInterface<?>> f = null;
 		
 		if(position == 0)
-			f = ShowsLibraryFragment.newInstance(null);
+			f = PI_LibraryShowFragment.newInstance(null);
 		else
-			f = MoviesLibraryFragment.newInstance(null);
+			f = PI_LibaryMovieFragment.newInstance(null);
 		
 		return f;
 	}

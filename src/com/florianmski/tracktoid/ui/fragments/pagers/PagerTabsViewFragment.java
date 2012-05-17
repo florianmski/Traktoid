@@ -18,7 +18,7 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 
 
-public abstract class TabsViewPagerFragment extends TraktFragment 
+public abstract class PagerTabsViewFragment extends TraktFragment 
 {
 	protected TabHost mTabHost;
 	protected ViewPager mViewPager;

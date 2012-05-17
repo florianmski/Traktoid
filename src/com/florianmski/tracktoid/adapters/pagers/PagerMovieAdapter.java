@@ -24,7 +24,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.MovieFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_TraktItemMovieFragment;
 import com.jakewharton.trakt.entities.Movie;
 
 public class PagerMovieAdapter extends FragmentStatePagerAdapter
@@ -65,7 +65,7 @@ public class PagerMovieAdapter extends FragmentStatePagerAdapter
 	@Override
 	public Fragment getItem(int position) 
 	{
-		return MovieFragment.newInstance(movies.get(position));
+		return PI_TraktItemMovieFragment.newInstance(movies.get(position));
 	}
 
 	public Movie getMovie(int position)

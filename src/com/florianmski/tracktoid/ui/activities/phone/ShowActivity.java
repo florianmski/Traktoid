@@ -23,8 +23,8 @@ import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
-import com.florianmski.tracktoid.ui.fragments.pagers.TraktItemPagerFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.PagerTraktItemFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_TraktItemShowFragment;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class ShowActivity extends TraktActivity
@@ -44,12 +44,12 @@ public class ShowActivity extends TraktActivity
 			{
 				ArrayList<TvShow> result = (ArrayList<TvShow>) b.get(TraktoidConstants.BUNDLE_RESULTS);
 				if(result != null && result.size() == 1)
-					f = ShowFragment.newInstance(result.get(0));
+					f = PI_TraktItemShowFragment.newInstance(result.get(0));
 				else
-					f = TraktItemPagerFragment.newInstance(b);
+					f = PagerTraktItemFragment.newInstance(b);
 			}
 			else
-				f = TraktItemPagerFragment.newInstance(b);
+				f = PagerTraktItemFragment.newInstance(b);
 
 			setPrincipalFragment(f);
 		}

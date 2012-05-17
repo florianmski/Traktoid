@@ -26,16 +26,16 @@ import com.florianmski.tracktoid.trakt.tasks.get.UpdateMoviesTask;
 import com.florianmski.tracktoid.ui.activities.phone.MovieActivity;
 import com.jakewharton.trakt.entities.Movie;
 
-public class MoviesLibraryFragment extends PagerItemLibraryFragment<Movie>
+public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 {
-	public static MoviesLibraryFragment newInstance(Bundle args)
+	public static PI_LibaryMovieFragment newInstance(Bundle args)
 	{
-		MoviesLibraryFragment f = new MoviesLibraryFragment();
+		PI_LibaryMovieFragment f = new PI_LibaryMovieFragment();
 		f.setArguments(args);
 		return f;
 	}
 	
-	public MoviesLibraryFragment() {}
+	public PI_LibaryMovieFragment() {}
 
 	@Override
 	public void checkUpdateTask() 
@@ -81,13 +81,13 @@ public class MoviesLibraryFragment extends PagerItemLibraryFragment<Movie>
 	{
 		ArrayList<Movie> moviesSelected = new ArrayList<Movie>();
 		moviesSelected.add(adapter.getItem(posterClickedPosition));
-		tm.addToQueue(new UpdateMoviesTask(tm, MoviesLibraryFragment.this, moviesSelected));
+		tm.addToQueue(new UpdateMoviesTask(tm, PI_LibaryMovieFragment.this, moviesSelected));
 	}
 
 	@Override
 	public void onDeleteQAClick(QuickAction source, int pos, int actionId) 
 	{
-		tm.addToQueue(new RemoveMovieTask(tm, MoviesLibraryFragment.this, adapter.getItem(posterClickedPosition)));
+		tm.addToQueue(new RemoveMovieTask(tm, PI_LibaryMovieFragment.this, adapter.getItem(posterClickedPosition)));
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public class MoviesLibraryFragment extends PagerItemLibraryFragment<Movie>
 			public void onClick(DialogInterface dialog, int which) 
 			{
 				if(selectedMovies.size() > 0)
-					tm.addToQueue(new UpdateMoviesTask(tm, MoviesLibraryFragment.this, selectedMovies));
+					tm.addToQueue(new UpdateMoviesTask(tm, PI_LibaryMovieFragment.this, selectedMovies));
 				else
 					Toast.makeText(getActivity(), "Nothing selected...", Toast.LENGTH_SHORT).show();
 			}
@@ -149,7 +149,7 @@ public class MoviesLibraryFragment extends PagerItemLibraryFragment<Movie>
 			@Override
 			public void onClick(DialogInterface dialog, int which) 
 			{
-				tm.addToQueue(new UpdateMoviesTask(tm, MoviesLibraryFragment.this, movies));
+				tm.addToQueue(new UpdateMoviesTask(tm, PI_LibaryMovieFragment.this, movies));
 			}
 		});
 

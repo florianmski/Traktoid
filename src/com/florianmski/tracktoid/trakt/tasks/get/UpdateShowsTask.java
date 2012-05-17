@@ -30,10 +30,12 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
-import com.florianmski.tracktoid.ui.activities.phone.LibraryActivity;
+import com.florianmski.tracktoid.ui.activities.phone.SinglePaneActivity;
+import com.florianmski.tracktoid.ui.fragments.pagers.PagerLibraryFragment;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
@@ -147,7 +149,8 @@ public class UpdateShowsTask extends TraktTask
 		contentView = new RemoteViews(context.getPackageName(), R.layout.notification_progress);
 		notification.contentView = contentView;
 
-		Intent notificationIntent = new Intent(context, LibraryActivity.class);
+		Intent notificationIntent = new Intent(context, SinglePaneActivity.class);
+		notificationIntent.putExtra(TraktoidConstants.BUNDLE_CLASS, PagerLibraryFragment.class.getName());
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 		notification.contentIntent = contentIntent;

@@ -19,18 +19,19 @@ package com.florianmski.tracktoid.ui.activities.phone;
 import android.os.Bundle;
 
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.ui.fragments.pagers.PagerTraktItemMovieFragment;
+import com.florianmski.tracktoid.ui.fragments.BaseFragment;
+import com.florianmski.tracktoid.ui.fragments.HomeFragment;
 
-public class MovieActivity extends TraktActivity
-{
-	@Override
-	public void onCreate(Bundle savedInstanceState) 
-	{
-		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_show);
-		setContentView(R.layout.activity_single_fragment);
-		
-		if(savedInstanceState == null)
-			setPrincipalFragment(PagerTraktItemMovieFragment.newInstance(getIntent().getExtras()));
-	}
+public class SinglePaneActivity extends TraktActivity
+{	
+    @Override
+    public void onCreate(Bundle savedInstanceState) 
+    {
+        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_single_fragment);
+        
+        if(savedInstanceState == null)
+			setPrincipalFragment(BaseFragment.newInstanceTest(this, getIntent().getExtras()));
+    }
 }

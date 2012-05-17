@@ -32,13 +32,12 @@ import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask;
 import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask.CheckinListener;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
-import com.florianmski.tracktoid.ui.activities.phone.AboutActivity;
 import com.florianmski.tracktoid.ui.activities.phone.CalendarActivity;
-import com.florianmski.tracktoid.ui.activities.phone.LibraryActivity;
 import com.florianmski.tracktoid.ui.activities.phone.RecommendationActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SearchActivity;
-import com.florianmski.tracktoid.ui.activities.phone.SettingsActivity;
 import com.florianmski.tracktoid.ui.activities.phone.TrendingActivity;
+import com.florianmski.tracktoid.ui.fragments.pagers.PagerLibraryFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.PagerRecommendationFragment;
 import com.florianmski.tracktoid.widgets.AppRater;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.jakewharton.trakt.entities.ActivityItemBase;
@@ -182,11 +181,8 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		// Handle item selection
 		switch (item.getItemId()) 
 		{
-		case R.id.action_bar_settings:
-			startActivity(new Intent(getActivity(), SettingsActivity.class));
-			return true;
 		case R.id.action_bar_about:
-			startActivity(new Intent(getActivity(), AboutActivity.class));
+			launchActivityWithSingleFragment(AboutFragment.class);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -245,15 +241,16 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		switch(buttonId)
 		{
 		case R.id.home_btn_calendar:
+//			launchActivityWithSingleFragment(CalendarPagerFragment.class, new Bundle().);
 			Intent i = new Intent(getActivity(), CalendarActivity.class);
 			i.putExtra(TraktoidConstants.BUNDLE_POSITION, 1);
 			startActivity(i);
 			break;
 		case R.id.home_btn_myshows:
-			startActivity(new Intent(getActivity(), LibraryActivity.class));
+			launchActivityWithSingleFragment(PagerLibraryFragment.class);
 			break;
 		case R.id.home_btn_recommendations:
-			startActivity(new Intent(getActivity(), RecommendationActivity.class));
+			launchActivityWithSingleFragment(PagerRecommendationFragment.class);
 			break;
 		case R.id.home_btn_search:
 			startActivity(new Intent(getActivity(), SearchActivity.class));

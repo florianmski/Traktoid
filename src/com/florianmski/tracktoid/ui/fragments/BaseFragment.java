@@ -1,12 +1,17 @@
 package com.florianmski.tracktoid.ui.fragments;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.florianmski.tracktoid.StatusView;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
+import com.florianmski.tracktoid.ui.activities.phone.SinglePaneActivity;
 
 public abstract class BaseFragment extends SherlockFragment
 {
@@ -14,11 +19,30 @@ public abstract class BaseFragment extends SherlockFragment
 	private boolean restoreStateCalled = false;
 	private DatabaseWrapper dbw = null;
 	
+	public static Fragment newInstanceTest(Context context, Bundle args)
+	{
+		return SherlockFragment.instantiate(context, args.getString(TraktoidConstants.BUNDLE_CLASS), args);
+	}
+	
+	public void launchActivityWithSingleFragment(Class<?> fragmentClass)
+	{
+		launchActivityWithSingleFragment(fragmentClass, null);
+	}
+	
+	public void launchActivityWithSingleFragment(Class<?> fragmentClass, Bundle args)
+	{
+		Intent i = new Intent(getActivity(), SinglePaneActivity.class);
+		i.putExtra(TraktoidConstants.BUNDLE_CLASS, fragmentClass.getName());
+		if(args != null)
+			i.putExtras(args);
+		startActivity(i);
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		getSherlockActivity().getSupportActionBar().setHomeButtonEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
 		
 		if(savedInstanceState != null)
 		{

@@ -1,5 +1,6 @@
 package com.florianmski.tracktoid.ui.fragments.pagers.items;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,27 +21,28 @@ import com.actionbarsherlock.view.MenuItem;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.WatchedModeManager;
+import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
-import com.florianmski.tracktoid.ui.fragments.pagers.SeasonPagerFragment.OnWatchedModeListener;
+import com.florianmski.tracktoid.ui.fragments.pagers.PagerSeasonFragment.OnWatchedModeListener;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
-public class SeasonFragment extends PagerItemFragment implements OnWatchedModeListener
+public class PI_SeasonFragment extends PI_Fragment implements OnWatchedModeListener
 {
 	private TvShowSeason season;
 	private String tvdbId;
 	private ListView lvEpisodes;
 
-	public static SeasonFragment newInstance(Bundle args)
+	public static PI_SeasonFragment newInstance(Bundle args)
 	{
-		SeasonFragment f = new SeasonFragment();
+		PI_SeasonFragment f = new PI_SeasonFragment();
 		f.setArguments(args);
 		return f;
 	}
 
-	public static SeasonFragment newInstance(TvShowSeason season, String tvdbId)
+	public static PI_SeasonFragment newInstance(TvShowSeason season, String tvdbId)
 	{		
 		Bundle args = new Bundle();
 		args.putSerializable(TraktoidConstants.BUNDLE_SEASON, season);
@@ -86,7 +88,7 @@ public class SeasonFragment extends PagerItemFragment implements OnWatchedModeLi
 					public void run() 
 					{
 						lvEpisodes.setAdapter(adapter);
-						WatchedModeManager.getInstance().addListener(SeasonFragment.this);
+						WatchedModeManager.getInstance().addListener(PI_SeasonFragment.this);
 						
 						if(adapter.isEmpty())
 							getStatusView().hide().text("No episodes for this season");
@@ -117,10 +119,11 @@ public class SeasonFragment extends PagerItemFragment implements OnWatchedModeLi
 			public void onItemClick(AdapterView<?> arg0, View arg1, int episode, long arg3) 
 			{
 				Intent i = new Intent(getActivity(), EpisodeActivity.class);
-				i.putExtra(TraktoidConstants.BUNDLE_SEASON_ID, season.url);
-				i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, tvdbId);
-				i.putExtra(TraktoidConstants.BUNDLE_TITLE, getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
+//				i.putExtra(TraktoidConstants.BUNDLE_SEASON_ID, season.url);
+//				i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, tvdbId);
+//				i.putExtra(TraktoidConstants.BUNDLE_TITLE, getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
 				i.putExtra(TraktoidConstants.BUNDLE_POSITION, episode);
+				i.putExtra(TraktoidConstants.BUNDLE_RESULTS, (Serializable)((RootAdapter<TvShowEpisode>) lvEpisodes.getAdapter()).getItems());
 				startActivity(i);
 			}
 		});

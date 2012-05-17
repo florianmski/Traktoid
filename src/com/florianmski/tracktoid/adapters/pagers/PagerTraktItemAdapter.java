@@ -24,16 +24,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.MovieFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.ShowFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_TraktItemEpisodeFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_TraktItemMovieFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_TraktItemShowFragment;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
+import com.jakewharton.trakt.entities.TvShowEpisode;
 
 public class PagerTraktItemAdapter<T extends TraktoidInterface<T>> extends FragmentStatePagerAdapter
 {
 	private List<T> items;
 
+	@SuppressWarnings("unchecked")
 	public PagerTraktItemAdapter(List<T> items, FragmentManager fm, Context context)
 	{
 		super(fm);
@@ -74,9 +77,13 @@ public class PagerTraktItemAdapter<T extends TraktoidInterface<T>> extends Fragm
 	public Fragment getItem(int position) 
 	{
 		if(items.get(position) instanceof TvShow)
-			return ShowFragment.newInstance((TvShow)items.get(position));
+			return PI_TraktItemShowFragment.newInstance((TvShow)items.get(position));
+		else if(items.get(position) instanceof Movie)
+			return PI_TraktItemMovieFragment.newInstance((Movie)items.get(position));
+		else if(items.get(position) instanceof TvShowEpisode)
+			return PI_TraktItemEpisodeFragment.newInstance((TvShowEpisode)items.get(position));
 		else
-			return MovieFragment.newInstance((Movie)items.get(position));
+			return null;
 	}
 	
 	public T getTraktItem(int position)

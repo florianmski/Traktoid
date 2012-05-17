@@ -1,6 +1,7 @@
 package com.florianmski.tracktoid.ui.activities.phone;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -35,7 +36,7 @@ public abstract class MovieShowActivity extends TraktActivity
 	}
 
 	@Override
-	public void setPrincipalFragment(SherlockFragment fragment)
+	public void setPrincipalFragment(Fragment fragment)
 	{
 		getSupportFragmentManager().beginTransaction().add(R.id.content, fragment).commit();
 	}

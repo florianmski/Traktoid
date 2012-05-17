@@ -20,8 +20,8 @@ import android.os.Bundle;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.ui.fragments.pagers.CalendarPagerFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.CalendarFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.PagerCalendarFragment;
+import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_CalendarFragment;
 
 public class CalendarActivity extends TraktActivity
 {
@@ -35,9 +35,9 @@ public class CalendarActivity extends TraktActivity
 		if(savedInstanceState == null)
 		{
 			if(Utils.isOnline(this))
-				setPrincipalFragment(CalendarPagerFragment.newInstance(getIntent().getExtras()));
+				setPrincipalFragment(PagerCalendarFragment.newInstance(getIntent().getExtras()));
 			else
-				setPrincipalFragment(new CalendarFragment());
+				setPrincipalFragment(new PI_CalendarFragment());
 		}
 	}
 }
