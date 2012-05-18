@@ -18,7 +18,7 @@ public class GenresTask extends TraktTask
 	private GenresListener listener;
 	private TraktApiBuilder<List<Genre>> builder;
 	
-	public <T extends TraktoidInterface<T>> GenresTask(TraktManager tm, Fragment fragment, GenresListener listener, TraktApiBuilder<List<Genre>> builder) 
+	public <T extends TraktoidInterface> GenresTask(TraktManager tm, Fragment fragment, GenresListener listener, TraktApiBuilder<List<Genre>> builder) 
 	{
 		super(tm, fragment);
 		

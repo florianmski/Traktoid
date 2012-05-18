@@ -24,9 +24,7 @@ import com.florianmski.tracktoid.ui.activities.phone.HomeActivity;
 import com.florianmski.tracktoid.ui.activities.phone.LoginActivity;
 
 public class SplashFragment extends TraktFragment
-{
-	//TODO start sync here ?
-	
+{	
 	private static final int STOPSPLASH = 0;
 	//time in milliseconds
 	private long SPLASHTIME = 2000;

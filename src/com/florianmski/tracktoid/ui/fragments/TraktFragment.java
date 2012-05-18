@@ -3,8 +3,6 @@ package com.florianmski.tracktoid.ui.fragments;
 import java.util.ArrayList;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-
 import com.florianmski.tracktoid.StatusView;
 import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.trakt.TraktManager;
@@ -19,13 +17,6 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 	protected TraktTask commonTask;
 	
 	public TraktFragment() {}
-
-	//TODO keep it ?
-	public TraktFragment(FragmentListener listener)
-	{
-		super();
-//		this.listener = listener;
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -45,11 +36,6 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 		super.onDestroy();
 	}
 
-	public interface FragmentListener
-	{
-		public void onFragmentAction(Fragment f, Bundle bundle, int actionToPerformed);
-	}
-
 	@Override
 	public void onAfterTraktRequest(boolean success) {}
 
@@ -59,13 +45,9 @@ public abstract class TraktFragment extends BaseFragment implements TraktListene
 	@Override
 	public void onErrorTraktRequest(Exception e) 
 	{
-		//TODO
 		StatusView sv = getStatusView();
 		if(sv != null)
-		{
 			sv.hide().text("Something goes wrong :/\n" + e.getMessage());
-//			sv.hide().text(null);
-		}
 	}
 
 	@Override

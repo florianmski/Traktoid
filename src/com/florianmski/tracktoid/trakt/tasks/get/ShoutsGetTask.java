@@ -13,7 +13,7 @@ import com.jakewharton.trakt.entities.Shout;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class ShoutsGetTask<T extends TraktoidInterface<T>> extends TraktTask
+public class ShoutsGetTask<T extends TraktoidInterface> extends TraktTask
 {
 	private String tvdbId;
 	private T traktItem;

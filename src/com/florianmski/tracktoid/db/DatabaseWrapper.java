@@ -875,7 +875,8 @@ public class DatabaseWrapper
 
 		c.close();
 
-		Collections.sort(shows);
+		if(shows != null && shows.size() > 0)
+			Collections.sort(shows);
 
 		return shows;
 	}

@@ -16,7 +16,7 @@ import com.jakewharton.trakt.services.MovieService.UnseenBuilder;
 import com.jakewharton.trakt.services.ShowService.EpisodeSeenBuilder;
 import com.jakewharton.trakt.services.ShowService.EpisodeUnseenBuilder;
 
-public abstract class SeenTask<T extends TraktoidInterface<T>> extends PostTask
+public abstract class SeenTask<T extends TraktoidInterface> extends PostTask
 {
 	protected Map<T,Boolean> traktItems;
 

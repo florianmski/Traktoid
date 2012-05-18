@@ -23,9 +23,8 @@ import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
-import com.florianmski.tracktoid.ui.fragments.pagers.PagerFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.PagerTraktItemFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_TraktItemShowFragment;
+import com.florianmski.tracktoid.ui.fragments.PagerFragment;
+import com.florianmski.tracktoid.ui.fragments.traktitems.PI_TraktItemShowFragment;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class ShowActivity extends TraktActivity

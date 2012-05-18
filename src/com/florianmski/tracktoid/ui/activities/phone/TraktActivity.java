@@ -16,11 +16,7 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import com.florianmski.tracktoid.ui.fragments.TraktFragment.FragmentListener;
-
-public class TraktActivity extends BaseActivity implements FragmentListener
+public class TraktActivity extends BaseActivity
 {		
 	@Override
 	public void onStart()
@@ -42,11 +38,5 @@ public class TraktActivity extends BaseActivity implements FragmentListener
 	protected void setSubtitle(String subtitle)
 	{
 		getSupportActionBar().setSubtitle(subtitle);
-	}
-
-	@Override
-	public void onFragmentAction(Fragment f, Bundle bundle, int actionToPerformed)
-	{
-		
 	}
 }

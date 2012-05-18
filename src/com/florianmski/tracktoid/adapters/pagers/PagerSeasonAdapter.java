@@ -23,7 +23,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_SeasonFragment;
+import com.florianmski.tracktoid.ui.fragments.season.PI_SeasonFragment;
 import com.jakewharton.trakt.entities.TvShowSeason;
 import com.viewpagerindicator.TitleProvider;
 

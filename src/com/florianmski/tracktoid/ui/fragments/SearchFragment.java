@@ -42,11 +42,6 @@ public class SearchFragment extends TraktFragment
 	
 	public SearchFragment() {}
 	
-	public SearchFragment(FragmentListener listener) 
-	{
-		super(listener);
-	}
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{

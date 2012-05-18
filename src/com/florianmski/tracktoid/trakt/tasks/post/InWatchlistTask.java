@@ -10,7 +10,7 @@ import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public abstract class InWatchlistTask<T extends TraktoidInterface<T>> extends PostTask
+public abstract class InWatchlistTask<T extends TraktoidInterface> extends PostTask
 {
 	protected T traktItem;
 	protected boolean addToWatchlist;
@@ -23,7 +23,7 @@ public abstract class InWatchlistTask<T extends TraktoidInterface<T>> extends Po
 		this.addToWatchlist = addToWatchlist;
 	}
 	
-	public static <T extends TraktoidInterface<T>> InWatchlistTask<?> createTask(TraktManager tm, Fragment fragment, T traktItem, boolean addToWatchlist, PostListener pListener)
+	public static <T extends TraktoidInterface> InWatchlistTask<?> createTask(TraktManager tm, Fragment fragment, T traktItem, boolean addToWatchlist, PostListener pListener)
 	{
 		if(traktItem instanceof TvShow)
 			return new InWatchlistShowTask(tm, fragment, (TvShow) traktItem, addToWatchlist, pListener);

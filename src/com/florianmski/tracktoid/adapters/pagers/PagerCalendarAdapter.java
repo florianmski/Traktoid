@@ -22,7 +22,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_CalendarFragment;
+import com.florianmski.tracktoid.ui.fragments.calendar.PI_CalendarFragment;
 import com.jakewharton.trakt.entities.CalendarDate;
 import com.viewpagerindicator.TitleProvider;
 

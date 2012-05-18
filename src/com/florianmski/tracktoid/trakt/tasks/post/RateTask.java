@@ -11,7 +11,7 @@ import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public abstract class RateTask<T extends TraktoidInterface<T>> extends PostTask
+public abstract class RateTask<T extends TraktoidInterface> extends PostTask
 {
 	//TODO new 10 rating
 	
@@ -26,7 +26,7 @@ public abstract class RateTask<T extends TraktoidInterface<T>> extends PostTask
 		this.rating = rating;
 	}
 
-	public static <T extends TraktoidInterface<T>> RateTask<?> createTask(TraktManager tm, Fragment fragment, T traktItem, Rating rating, PostListener pListener)
+	public static <T extends TraktoidInterface> RateTask<?> createTask(TraktManager tm, Fragment fragment, T traktItem, Rating rating, PostListener pListener)
 	{
 		if(traktItem instanceof TvShow)
 			return new RateShowTask(tm, fragment, (TvShow) traktItem, rating, pListener);

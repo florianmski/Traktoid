@@ -35,7 +35,7 @@ import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.ui.activities.phone.SinglePaneActivity;
-import com.florianmski.tracktoid.ui.fragments.pagers.PagerLibraryFragment;
+import com.florianmski.tracktoid.ui.fragments.library.PagerLibraryFragment;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;

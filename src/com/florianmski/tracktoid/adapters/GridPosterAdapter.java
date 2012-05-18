@@ -142,11 +142,11 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 	@Override
 	public View doGetView(int position, View convertView, ViewGroup parent) 
 	{
-		final ViewHolder holder;
+		final ViewHolder<T> holder;
 
 		if (convertView == null)
 		{
-			holder = new ViewHolder();
+			holder = new ViewHolder<T>();
 
 			convertView = LayoutInflater.from(context).inflate(R.layout.grid_item_show, null, false);
 			
@@ -158,7 +158,7 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 			convertView.setTag(holder);
 		} 
 		else
-			holder = (ViewHolder) convertView.getTag();
+			holder = (ViewHolder<T>) convertView.getTag();
 
 		GridView.LayoutParams paramsRl = new GridView.LayoutParams(LayoutParams.FILL_PARENT, height);
 		holder.bv.setLayoutParams(paramsRl);
@@ -186,9 +186,9 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 		return convertView;
 	}
 
-	private static class ViewHolder 
+	private static class ViewHolder<T extends TraktoidInterface<T>> 
 	{
 		private ImageView ivPoster;
-		private BadgesView bv;
+		private BadgesView<T> bv;
 	}
 }

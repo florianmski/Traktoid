@@ -28,7 +28,7 @@ import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 
-public class TraktItemsTask<T extends TraktoidInterface<T>> extends TraktTask
+public class TraktItemsTask<T extends TraktoidInterface> extends TraktTask
 {
 	private List<T> traktItems = new ArrayList<T>();
 	private TraktApiBuilder<?> builder;
@@ -50,7 +50,7 @@ public class TraktItemsTask<T extends TraktoidInterface<T>> extends TraktTask
 	{		
 		traktItems = (List<T>) builder.fire();
 		
-		if(sort)
+		if(sort && traktItems != null && traktItems.size() > 0)
 			Collections.sort(traktItems);
 		
 		return true;
@@ -65,7 +65,7 @@ public class TraktItemsTask<T extends TraktoidInterface<T>> extends TraktTask
 			listener.onTraktItems(traktItems);
 	}
 	
-	public interface TraktItemsListener<E extends TraktoidInterface<E>>
+	public interface TraktItemsListener<E extends TraktoidInterface>
 	{
 		public void onTraktItems(List<E> traktItems);
 	}

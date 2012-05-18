@@ -35,7 +35,7 @@ import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.traktoid.TraktoidInterface;
 
-public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends RootAdapter<T> 
+public class ListRecommendationAdapter<T extends TraktoidInterface> extends RootAdapter<T> 
 {
 	private DismissListener listener;
 	

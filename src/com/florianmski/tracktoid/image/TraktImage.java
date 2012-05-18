@@ -22,37 +22,37 @@ public class TraktImage
 		this.type = type;
 	}
 
-	public static <T extends TraktoidInterface<T>> TraktImage getPoster(T traktItem)
+	public static <T extends TraktoidInterface> TraktImage getPoster(T traktItem)
 	{
 		return getImage(traktItem, Type.POSTER);
 	}
 
-	public static <T extends TraktoidInterface<T>> TraktImage getHeadshot(T traktItem)
+	public static <T extends TraktoidInterface> TraktImage getHeadshot(T traktItem)
 	{
 		return getImage(traktItem, Type.HEADSHOT);
 	}
 
-	public static <T extends TraktoidInterface<T>> TraktImage getScreen(T traktItem)
+	public static <T extends TraktoidInterface> TraktImage getScreen(T traktItem)
 	{
 		return getImage(traktItem, Type.SCREEN);
 	}
 
-	public static <T extends TraktoidInterface<T>> TraktImage getBanner(T traktItem)
+	public static <T extends TraktoidInterface> TraktImage getBanner(T traktItem)
 	{
 		return getImage(traktItem, Type.BANNER);
 	}
 
-	public static <T extends TraktoidInterface<T>> TraktImage getFanart(T traktItem)
+	public static <T extends TraktoidInterface> TraktImage getFanart(T traktItem)
 	{
 		return getImage(traktItem, Type.FANART);
 	}
 
-	private static <T extends TraktoidInterface<T>> TraktImage getImage(T traktItem, Type type)
+	private static <T extends TraktoidInterface> TraktImage getImage(T traktItem, Type type)
 	{
 		return getImage(traktItem.getImages(), type);
 	}
 
-	private static <T extends TraktoidInterface<T>> TraktImage getImage(Images images, Type type)
+	private static <T extends TraktoidInterface> TraktImage getImage(Images images, Type type)
 	{
 		String uncompressedImageUrl = getUrlByType(images, type);
 		String finalUrl = getUrlBySize(uncompressedImageUrl, type, size);

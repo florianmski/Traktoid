@@ -3,8 +3,10 @@ package com.florianmski.tracktoid.ui.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,25 +27,23 @@ import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.pagers.PagerDashboardAdapter;
 import com.florianmski.tracktoid.adapters.pagers.PagerDashboardAdapter.onDashboardButtonClicked;
-import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.trakt.tasks.get.ActivityTask;
-import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask;
-import com.florianmski.tracktoid.trakt.tasks.get.CheckinTask.CheckinListener;
-import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
+import com.florianmski.tracktoid.trakt.tasks.get.CheckinGetTask;
+import com.florianmski.tracktoid.trakt.tasks.get.CheckinGetTask.CheckinListener;
+import com.florianmski.tracktoid.trakt.tasks.post.CheckinPostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.ui.activities.phone.CalendarActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SearchActivity;
 import com.florianmski.tracktoid.ui.activities.phone.TrendingActivity;
-import com.florianmski.tracktoid.ui.fragments.pagers.PagerLibraryFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.PagerRecommendationFragment;
+import com.florianmski.tracktoid.ui.fragments.library.PagerLibraryFragment;
+import com.florianmski.tracktoid.ui.fragments.login.PagerLoginFragment;
+import com.florianmski.tracktoid.ui.fragments.recommendations.PagerRecommendationFragment;
 import com.florianmski.tracktoid.widgets.AppRater;
 import com.florianmski.tracktoid.widgets.BadgesView;
-import com.jakewharton.trakt.entities.ActivityItemBase;
+import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShowEpisode;
-import com.jakewharton.trakt.enumerations.ActivityAction;
-import com.jakewharton.trakt.enumerations.ActivityType;
 import com.viewpagerindicator.CirclePageIndicator;
 
 public class HomeFragment extends TraktFragment implements onDashboardButtonClicked
@@ -52,9 +52,8 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 	private TextView tvEpisodeTitle;
 	private TextView tvEpisodeEpisode;
 	private ImageView ivScreen;
-	
-	private TvShowEpisode episode;
-	private String tvdbId;
+
+	private TraktoidInterface traktItem;
 
 	public static HomeFragment newInstance(Bundle args)
 	{
@@ -62,13 +61,8 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		f.setArguments(args);
 		return f;
 	}
-	
-	public HomeFragment() {}
 
-	public HomeFragment(FragmentListener listener) 
-	{
-		super(listener);
-	}
+	public HomeFragment() {}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -83,10 +77,15 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 	{
 		super.onActivityCreated(savedInstanceState);
 
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		//if we don't have user pass or username, go to login activity
+		if(prefs.getString(TraktoidConstants.PREF_PASSWORD, null) == null || prefs.getString(TraktoidConstants.PREF_USERNAME, null) == null)
+			launchActivityWithSingleFragment(PagerLoginFragment.class);
+
 		//TODO make something smart
 		//check if db need an upgrade
-//		DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
-//		dbw.open();
+		//		DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
+		//		dbw.open();
 
 		//check if a new version of Traktoid is available and display a dialog if so
 		MarketService ms = new MarketService(getActivity());
@@ -94,13 +93,13 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 
 		//show sometimes a dialog to rate the app on the market 
 		AppRater.app_launched(getActivity());
-		
+
 		//sync with trakt
 		new ActivityTask(tm, this).silentConnectionError(true).fire();
 
 		//Trying to set high definition image on high resolution
 		//does not seem to be a great idea, it's slow and I sometimes get an outOfMemoryError :/
-//		Image.smallSize = !Utils.isTabletDevice(getActivity());
+		//		Image.smallSize = !Utils.isTabletDevice(getActivity());
 	}
 
 	@Override
@@ -112,10 +111,10 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		tvEpisodeTitle = (TextView)v.findViewById(R.id.textViewTitle);
 		tvEpisodeEpisode = (TextView)v.findViewById(R.id.textViewEpisode);
 		ivScreen = (ImageView)v.findViewById(R.id.imageViewScreen);
-		
+
 		ViewPager vp = (ViewPager)v.findViewById(R.id.paged_view);
 		CirclePageIndicator pageIndicator = (CirclePageIndicator) v.findViewById(R.id.page_indicator_circle);
-		
+
 		vp.setAdapter(new PagerDashboardAdapter(this));
 		pageIndicator.setViewPager(vp);
 
@@ -131,20 +130,28 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 					@Override
 					public void onClick(DialogInterface dialog, int id) 
 					{
-						new PostTask(tm, HomeFragment.this, tm.showService().cancelCheckin(), new PostListener() 
-						{
+//						new PostTask(tm, HomeFragment.this, tm.showService().cancelCheckin(), new PostListener() 
+//						{
+//							@Override
+//							public void onComplete(Response r, boolean success) 
+//							{
+//								if(success)
+//								{
+//									//unseen the episode we've canceled
+//									DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
+//									dbw.markEpisodeAsWatched(false, tvdbId, episode.season, episode.number);
+//									dbw.refreshPercentage(tvdbId);
+//									dbw.close();
+//									bvWatchingNow.setVisibility(View.INVISIBLE);
+//								}
+//							}
+//						}).fire();
+						CheckinPostTask.createTask(tm, HomeFragment.this, traktItem, false, new PostListener() 
+						{	
 							@Override
 							public void onComplete(Response r, boolean success) 
 							{
-								if(success)
-								{
-									//unseen the episode we've canceled
-									DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
-									dbw.markEpisodeAsWatched(false, tvdbId, episode.season, episode.number);
-									dbw.refreshPercentage(tvdbId);
-									dbw.close();
-									bvWatchingNow.setVisibility(View.INVISIBLE);
-								}
+								bvWatchingNow.setVisibility(View.INVISIBLE);
 							}
 						}).fire();
 					}
@@ -193,37 +200,30 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 	{
 		super.onResume();
 
-		new CheckinTask(tm, this, new CheckinListener() 
+		new CheckinGetTask(tm, this, new CheckinListener() 
 		{
 			@Override
-			public void onCheckin(ActivityItemBase checkin) 
+			public void onCheckin(TraktoidInterface traktItem) 
 			{
-				if(checkin != null && checkin.type == ActivityType.Episode && checkin.action == ActivityAction.Checkin)
+				HomeFragment.this.traktItem = traktItem;
+				bvWatchingNow.setVisibility(View.VISIBLE);
+				bvWatchingNow.initialize();
+				bvWatchingNow.setTraktItem(traktItem);
+				tvEpisodeTitle.setText(traktItem.getTitle());
+				if(traktItem instanceof TvShowEpisode)
+					tvEpisodeEpisode.setText(Utils.addZero(((TvShowEpisode)traktItem).number) + "x" + Utils.addZero(((TvShowEpisode)traktItem).season));
+				TraktImage i = TraktImage.getScreen(traktItem);
+				final AQuery aq = new AQuery(getActivity());
+				BitmapAjaxCallback cb = new BitmapAjaxCallback()
 				{
-					tvdbId = checkin.show.tvdbId;
-					episode = checkin.episode;
-					bvWatchingNow.setVisibility(View.VISIBLE);
-					bvWatchingNow.initialize();
-					bvWatchingNow.setTraktItem(episode);
-					tvEpisodeTitle.setText(episode.title);
-					tvEpisodeEpisode.setText(Utils.addZero(episode.number) + "x" + Utils.addZero(episode.season));
-					TraktImage i = TraktImage.getScreen(checkin.show);
-					final AQuery aq = new AQuery(getActivity());
-					BitmapAjaxCallback cb = new BitmapAjaxCallback()
-			        {
-			        	@Override
-			            public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
-			        	{     
-			        		aq.id(ivScreen).image(Utils.borderBitmap(bm, getActivity())).animate(android.R.anim.fade_in);
-			            }
+					@Override
+					public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
+					{     
+						aq.id(ivScreen).image(Utils.borderBitmap(bm, getActivity())).animate(android.R.anim.fade_in);
+					}
 
-			        }.url(i.getUrl()).fileCache(false).memCache(true).ratio(9.0f / 16.0f);
-			        aq.id(ivScreen).image(cb);
-				}
-				else
-				{
-					bvWatchingNow.setVisibility(View.INVISIBLE);
-				}
+				}.url(i.getUrl()).fileCache(false).memCache(true).ratio(9.0f / 16.0f);
+				aq.id(ivScreen).image(cb);
 			}
 		}).silent(true).fire();
 	}
@@ -240,7 +240,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		switch(buttonId)
 		{
 		case R.id.home_btn_calendar:
-//			launchActivityWithSingleFragment(CalendarPagerFragment.class, new Bundle().);
+			//			launchActivityWithSingleFragment(CalendarPagerFragment.class, new Bundle().);
 			Intent i = new Intent(getActivity(), CalendarActivity.class);
 			i.putExtra(TraktoidConstants.BUNDLE_POSITION, 1);
 			startActivity(i);

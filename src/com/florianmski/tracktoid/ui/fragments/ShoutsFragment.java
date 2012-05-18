@@ -32,7 +32,7 @@ import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.Shout;
 
-public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragment
+public class ShoutsFragment<T extends TraktoidInterface> extends TraktFragment
 {
 	private final static int SPOILER = 0;
 	private final static int NO_SPOILER = 1;
@@ -59,11 +59,6 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 
 	public ShoutsFragment() {}
 
-	public ShoutsFragment(FragmentListener listener) 
-	{
-		super(listener);
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
@@ -79,11 +74,7 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 		tvdbId = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
 		traktItem = (T)getArguments().get(TraktoidConstants.BUNDLE_TRAKT_ITEM);
 
-		//TODO find a better title
-//		if(traktItem == null)
-//			setTitle("Shouts : " + getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
-//		else
-			setTitle("Shouts : " + traktItem.getTitle());
+		setTitle("Shouts : " + traktItem.getTitle());
 
 		if(savedInstanceState != null)
 			setAdapter();

@@ -20,8 +20,8 @@ import android.os.Bundle;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.ui.fragments.pagers.PagerCalendarFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_CalendarFragment;
+import com.florianmski.tracktoid.ui.fragments.calendar.PI_CalendarFragment;
+import com.florianmski.tracktoid.ui.fragments.calendar.PagerCalendarFragment;
 
 public class CalendarActivity extends TraktActivity
 {

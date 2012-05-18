@@ -24,15 +24,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_TraktItemEpisodeFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_TraktItemMovieFragment;
-import com.florianmski.tracktoid.ui.fragments.pagers.items.PI_TraktItemShowFragment;
+import com.florianmski.tracktoid.ui.fragments.traktitems.PI_TraktItemEpisodeFragment;
+import com.florianmski.tracktoid.ui.fragments.traktitems.PI_TraktItemMovieFragment;
+import com.florianmski.tracktoid.ui.fragments.traktitems.PI_TraktItemShowFragment;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class PagerTraktItemAdapter<T extends TraktoidInterface<T>> extends FragmentStatePagerAdapter
+public class PagerTraktItemAdapter<T extends TraktoidInterface> extends FragmentStatePagerAdapter
 {
 	private List<T> items;
 
