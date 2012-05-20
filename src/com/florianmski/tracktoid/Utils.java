@@ -184,7 +184,6 @@ public class Utils
 		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 		c.setTimeInMillis(timestamp);
 		c.add(Calendar.MILLISECOND, offsetFromUTC);
-		Log.e("test", timestamp+"");
 		return c.getTimeInMillis()/1000;
 	}
 

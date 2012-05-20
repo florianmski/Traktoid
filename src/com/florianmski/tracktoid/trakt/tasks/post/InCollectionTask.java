@@ -22,7 +22,7 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 		this.traktItem = traktItem;
 		this.addToCollection = addToCollection;
 	}
-	
+
 	public static <T extends TraktoidInterface> InCollectionTask<?> createTask(TraktManager tm, Fragment fragment, T traktItem, boolean addToCollection, PostListener pListener)
 	{
 		if(traktItem instanceof TvShow)
@@ -37,9 +37,9 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 
 	protected abstract TraktApiBuilder<?> createLibraryBuilder(T traktItem);
 	protected abstract TraktApiBuilder<?> createUnlibraryBuilder(T traktItem);
-	protected abstract void insertInDb(T traktItem, boolean addToCollection);
+	protected abstract void insertInDb(T traktItem, boolean addToCollection, DatabaseWrapper dbw);
 	protected abstract void sendEvent(T traktItem);
-	
+
 	@Override
 	protected void doPrePostStuff() 
 	{
@@ -48,24 +48,24 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 		else
 			builders.add(createUnlibraryBuilder(traktItem));
 	}
-	
+
 	@Override
 	protected void doAfterPostStuff()
 	{
-		insertInDb(traktItem, addToCollection);
+		DatabaseWrapper dbw = new DatabaseWrapper(context);
+		insertInDb(traktItem, addToCollection, dbw);
+		dbw.close();
 	}
-	
+
 	@Override
 	protected void onPostExecute(Boolean success)
 	{
 		super.onPostExecute(success);
 
 		if(success)
-			sendEvent(traktItem);
-//			tm.onTraktItemUpdated(traktItem);
-			
+			sendEvent(traktItem);			
 	}
-	
+
 	public static final class InCollectionShowTask extends InCollectionTask<TvShow>
 	{
 		public InCollectionShowTask(TraktManager tm, Fragment fragment,	TvShow traktItem, boolean addToCollection, PostListener pListener) 
@@ -97,18 +97,13 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 		}
 
 		@Override
-		protected void insertInDb(TvShow traktItem, boolean addToCollection) 
+		protected void insertInDb(TvShow traktItem, boolean addToCollection, DatabaseWrapper dbw) 
 		{
-			//TODO
-//			traktItem.inCollection = addToCollection;
-			
-			DatabaseWrapper dbw = new DatabaseWrapper(context);
-			dbw.insertOrUpdateShow(traktItem);
-			dbw.close();
+			dbw.addOrRemoveShowInCollection(traktItem.tvdbId, addToCollection);
 		}
-		
+
 	}
-	
+
 	public static final class InCollectionMovieTask extends InCollectionTask<Movie>
 	{
 		public InCollectionMovieTask(TraktManager tm, Fragment fragment, Movie traktItem, boolean addToCollection, PostListener pListener) 
@@ -139,19 +134,16 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 		{
 			tm.onMovieUpdated(traktItem);
 		}
-		
+
 		@Override
-		protected void insertInDb(Movie traktItem, boolean addToCollection) 
+		protected void insertInDb(Movie traktItem, boolean addToCollection, DatabaseWrapper dbw) 
 		{
 			traktItem.inCollection = addToCollection;
-			
-			DatabaseWrapper dbw = new DatabaseWrapper(context);
 			dbw.insertOrUpdateMovie(traktItem);
-			dbw.close();
 		}
-		
+
 	}
-	
+
 	public static final class InCollectionEpisodeTask extends InCollectionTask<TvShowEpisode>
 	{
 		public InCollectionEpisodeTask(TraktManager tm, Fragment fragment, TvShowEpisode traktItem, boolean addToCollection, PostListener pListener) 
@@ -182,11 +174,12 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 		{
 			// TODO Auto-generated method stub
 		}
-		
+
 		@Override
-		protected void insertInDb(TvShowEpisode traktItem, boolean addToCollection) 
+		protected void insertInDb(TvShowEpisode traktItem, boolean addToCollection, DatabaseWrapper dbw) 
 		{
-			// TODO Auto-generated method stub
+			traktItem.inCollection = addToCollection;
+			dbw.insertOrUpdateEpisode(traktItem);
 		}
 	}
 }

@@ -37,7 +37,7 @@ public abstract class InWatchlistTask<T extends TraktoidInterface> extends PostT
 
 	protected abstract TraktApiBuilder<?> createWatchlistBuilder(T traktItem);
 	protected abstract TraktApiBuilder<?> createUnwatchlistBuilder(T traktItem);
-	protected abstract void insertInDb(T traktItem, boolean addToWatchlist);
+	protected abstract void insertInDb(T traktItem, boolean addToWatchlist, DatabaseWrapper dbw);
 	protected abstract void sendEvent(T traktItem);
 	
 	@Override
@@ -52,7 +52,9 @@ public abstract class InWatchlistTask<T extends TraktoidInterface> extends PostT
 	@Override
 	protected void doAfterPostStuff()
 	{
-		insertInDb(traktItem, addToWatchlist);
+		DatabaseWrapper dbw = new DatabaseWrapper(context);
+		insertInDb(traktItem, addToWatchlist, dbw);
+		dbw.close();
 	}
 	
 	@Override
@@ -61,16 +63,14 @@ public abstract class InWatchlistTask<T extends TraktoidInterface> extends PostT
 		super.onPostExecute(success);
 
 		if(success)
-			sendEvent(traktItem);
-//			tm.onTraktItemUpdated(traktItem);
-			
+			sendEvent(traktItem);			
 	}
 	
 	public static final class InWatchlistShowTask extends InWatchlistTask<TvShow>
 	{
-		public InWatchlistShowTask(TraktManager tm, Fragment fragment,	TvShow traktItem, boolean addToCollection, PostListener pListener) 
+		public InWatchlistShowTask(TraktManager tm, Fragment fragment,	TvShow traktItem, boolean addToWatchlist, PostListener pListener) 
 		{
-			super(tm, fragment, traktItem, addToCollection, pListener);
+			super(tm, fragment, traktItem, addToWatchlist, pListener);
 		}
 
 		@Override
@@ -98,23 +98,19 @@ public abstract class InWatchlistTask<T extends TraktoidInterface> extends PostT
 		}
 
 		@Override
-		protected void insertInDb(TvShow traktItem, boolean addToWatchlist) 
+		protected void insertInDb(TvShow traktItem, boolean addToWatchlist, DatabaseWrapper dbw) 
 		{
-			//TODO
-//			traktItem.inCollection = addToWatchlist;
-			
-			DatabaseWrapper dbw = new DatabaseWrapper(context);
+			traktItem.inWatchlist = addToWatchlist;
 			dbw.insertOrUpdateShow(traktItem);
-			dbw.close();
 		}
 		
 	}
 	
 	public static final class InWatchlistMovieTask extends InWatchlistTask<Movie>
 	{
-		public InWatchlistMovieTask(TraktManager tm, Fragment fragment, Movie traktItem, boolean addToCollection, PostListener pListener) 
+		public InWatchlistMovieTask(TraktManager tm, Fragment fragment, Movie traktItem, boolean addToWatchlist, PostListener pListener) 
 		{
-			super(tm, fragment, traktItem, addToCollection, pListener);
+			super(tm, fragment, traktItem, addToWatchlist, pListener);
 		}
 
 		@Override
@@ -142,13 +138,10 @@ public abstract class InWatchlistTask<T extends TraktoidInterface> extends PostT
 		}
 		
 		@Override
-		protected void insertInDb(Movie traktItem, boolean addToWatchlist) 
+		protected void insertInDb(Movie traktItem, boolean addToWatchlist, DatabaseWrapper dbw) 
 		{
-			traktItem.inCollection = addToWatchlist;
-			
-			DatabaseWrapper dbw = new DatabaseWrapper(context);
+			traktItem.inWatchlist = addToWatchlist;
 			dbw.insertOrUpdateMovie(traktItem);
-			dbw.close();
 		}
 		
 	}
@@ -185,9 +178,10 @@ public abstract class InWatchlistTask<T extends TraktoidInterface> extends PostT
 		}
 		
 		@Override
-		protected void insertInDb(TvShowEpisode traktItem, boolean addToWatchlist) 
+		protected void insertInDb(TvShowEpisode traktItem, boolean addToWatchlist, DatabaseWrapper dbw) 
 		{
-			// TODO Auto-generated method stub
+			traktItem.inWatchlist = addToWatchlist;
+			dbw.insertOrUpdateEpisode(traktItem);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.florianmski.tracktoid.ui.fragments;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -214,13 +215,16 @@ public class ProgressionFragment extends TraktFragment
 				public void onClick(View v) 
 				{
 					Intent i = new Intent(getActivity(), EpisodeActivity.class);
-					for(TvShowSeason s : adapter.getItems())
-					{
-						if(s.season == e.season)
-							i.putExtra(TraktoidConstants.BUNDLE_SEASON_ID, s.url);
-					}
-					
-					i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, show.tvdbId);
+//					for(TvShowSeason s : adapter.getItems())
+//					{
+//						if(s.season == e.season)
+//							i.putExtra(TraktoidConstants.BUNDLE_SEASON_ID, s.url);
+//					}
+//					
+//					i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, show.tvdbId);
+					List<TvShowEpisode> nextEpisode = new ArrayList<TvShowEpisode>();
+					nextEpisode.add(e);
+					i.putExtra(TraktoidConstants.BUNDLE_RESULTS, (Serializable) nextEpisode);
 					i.putExtra(TraktoidConstants.BUNDLE_POSITION, e.number-1);
 					startActivity(i);
 				}

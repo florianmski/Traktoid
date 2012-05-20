@@ -6,7 +6,6 @@ import com.jakewharton.trakt.entities.CalendarDate;
 import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 
-
 public interface TraktListener
 {
 	public void onBeforeTraktRequest();

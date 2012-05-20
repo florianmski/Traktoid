@@ -210,7 +210,6 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 			ProgressBar pbRefresh = new ProgressBar(getActivity());
 			pbRefresh.setIndeterminate(true);
 			RelativeLayout rl = new RelativeLayout(getActivity());
-			Log.e("test","value : "+value);
 			rl.setLayoutParams(new LayoutParams(value, value));
 			pbRefresh.setLayoutParams(new RelativeLayout.LayoutParams(value, value));
 			rl.addView(pbRefresh);

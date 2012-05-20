@@ -128,7 +128,7 @@ public class DatabaseWrapper
 
 	public static final String KEY_TVSHOW_PROGRESS = "progress";
 	public static final int COLUMN_TVSHOW_PROGRESS = 25;
-	
+
 	public static final String KEY_TVSHOW_IN_COLLECTION = "in_collection";
 	public static final int COLUMN_TVSHOW_IN_COLLECTION = 26;
 
@@ -210,7 +210,7 @@ public class DatabaseWrapper
 
 	public static final String KEY_SEASON_TVSHOW_ID = "tvshow_id";
 	public static final int COLUMN_SEASON_TVSHOW_ID = 5;
-	
+
 	public static final String KEY_SEASON_IN_COLLECTION = "in_collection";
 	public static final int COLUMN_SEASON_IN_COLLECTION = 6;
 
@@ -237,6 +237,7 @@ public class DatabaseWrapper
 
 	/************************** Episodes table *******************************/
 	private static final String EPISODES_TABLE = "episodes";
+	//TODO rating
 
 	public static final String KEY_EPISODE_SEASON = "season";
 	public static final int COLUMN_EPISODE_SEASON = 1;
@@ -276,13 +277,13 @@ public class DatabaseWrapper
 
 	public static final String KEY_EPISODE_SEASON_ID = "season_id";
 	public static final int COLUMN_EPISODE_SEASON_ID = 13;
-	
+
 	public static final String KEY_EPISODE_IN_WATCHLIST = "in_watchlist";
 	public static final int COLUMN_EPISODE_IN_WATCHLIST = 14;
-	
+
 	public static final String KEY_EPISODE_IN_COLLECTION = "in_collection";
 	public static final int COLUMN_EPISODE_IN_COLLECTION = 15;
-	
+
 
 	private final static String SELECT_EPISODE = 
 			EPISODES_TABLE+"."+KEY_ID + "," +
@@ -646,7 +647,7 @@ public class DatabaseWrapper
 		private void upgradeFromV2ToV3(SQLiteDatabase db)
 		{
 			db.execSQL(MOVIES_TABLE_CREATE);
-			
+
 			//adding new columns
 			db.execSQL(
 					"ALTER TABLE " + TVSHOWS_TABLE + " " +
@@ -659,7 +660,7 @@ public class DatabaseWrapper
 			db.execSQL(
 					"ALTER TABLE " + EPISODES_TABLE + " " +
 							"ADD COLUMN " + KEY_TVSHOW_IN_WATCHLIST + " boolean default 0 " + ";");
-			
+
 			db.execSQL(
 					"ALTER TABLE " + EPISODES_TABLE + " " +
 							"ADD COLUMN " + KEY_TVSHOW_IN_COLLECTION + " boolean default 0 " + ";");
@@ -773,9 +774,13 @@ public class DatabaseWrapper
 			values.put(KEY_TVSHOW_FIRST_AIRED, String.valueOf(s.firstAired.getTime()));
 
 		values.put(KEY_TVSHOW_IMDB_ID, s.imdbId);
-		values.put(KEY_TVSHOW_IN_WATCHLIST, s.inWatchlist);
-		//TODO
-//		values.put(KEY_TVSHOW_IN_Collection, s.inCollection);
+		
+		if(s.inWatchlist != null)
+			values.put(KEY_TVSHOW_IN_WATCHLIST, s.inWatchlist);
+		
+		if(s.inCollection != null)
+			values.put(KEY_TVSHOW_IN_COLLECTION, s.inCollection);
+		
 		values.put(KEY_TVSHOW_NETWORK, s.network);
 		values.put(KEY_TVSHOW_OVERVIEW, s.overview);
 		values.put(KEY_TVSHOW_RUNTIME, s.runtime);
@@ -829,13 +834,13 @@ public class DatabaseWrapper
 			//old way
 			//impossible to get a proper timestamp, there is a mess with the locale
 			//tell the user to refresh
-//			try 
-//			{
-//				show.firstAired = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ROOT).parse(date);
-//			} catch (ParseException e1) 
-//			{
-//				e1.printStackTrace();
-//			}
+			//			try 
+			//			{
+			//				show.firstAired = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ROOT).parse(date);
+			//			} catch (ParseException e1) 
+			//			{
+			//				e1.printStackTrace();
+			//			}
 		}
 		show.network = c.getString(COLUMN_TVSHOW_NETWORK);
 		show.overview = c.getString(COLUMN_TVSHOW_OVERVIEW);
@@ -844,8 +849,7 @@ public class DatabaseWrapper
 		show.tvrageId = c.getString(COLUMN_TVSHOW_TVRAGE_ID);
 		show.rating = c.getString(COLUMN_TVSHOW_RATING) == null ? null : Rating.fromValue(c.getString(COLUMN_TVSHOW_RATING));
 		show.inWatchlist = c.getInt(COLUMN_TVSHOW_IN_WATCHLIST) != 0;
-		//TODO
-//		show.inC = c.getInt(COLUMN_TVSHOW_IN_COLLECTION) != 0;
+		show.inCollection = c.getInt(COLUMN_TVSHOW_IN_COLLECTION) != 0;
 		show.images = i;
 		show.imdbId = c.getString(COLUMN_TVSHOW_IMDB_ID);
 		show.ratings = r;
@@ -944,6 +948,33 @@ public class DatabaseWrapper
 		return exist;
 	}
 
+	public void addOrRemoveShowInCollection(String tvdbId, boolean inCollection)
+	{
+		//TODO for all API methods like collection, watchlist, seen... check if show/movie/episode is already in db
+		//else dl it
+		TvShow show = getShow(tvdbId);
+		if(show != null)
+		{
+			show.inCollection = inCollection;
+			insertOrUpdateShow(show);
+
+			ContentValues cv = new ContentValues();
+			cv.put(KEY_EPISODE_IN_COLLECTION, inCollection);
+
+			db.update(
+					EPISODES_TABLE, 
+					cv, 
+					KEY_EPISODE_SEASON_ID + " " +
+							"IN (SELECT " + KEY_SEASON_URL + " " +
+							"FROM " + SEASONS_TABLE + " " +
+							"WHERE " + KEY_SEASON_TVSHOW_ID + "=?) " +
+							//if we remove from collection, remove all
+							//else if we add, add only episodes aired
+							(inCollection ? "AND " + KEY_EPISODE_FIRST_AIRED + "< ?" : ""),
+							new String[]{tvdbId, String.valueOf(new Date().getTime())});
+		}
+	}
+
 	/************************** Seasons methods *******************************/	
 
 	/**
@@ -966,7 +997,7 @@ public class DatabaseWrapper
 		values.put(KEY_SEASON_URL, url);
 		values.put(KEY_SEASON_TVSHOW_ID, tvshowId);
 		//TODO
-//		values.put(KEY_SEASON_IN_COLLECTION, s.inCollection);
+		//		values.put(KEY_SEASON_IN_COLLECTION, s.inCollection);
 
 		insertOrUpdate(SEASONS_TABLE, values, url);
 
@@ -996,7 +1027,7 @@ public class DatabaseWrapper
 		s.episodes.count = (c.getInt(COLUMN_SEASON_EPISODES));
 		s.url = c.getString(COLUMN_SEASON_URL);
 		//TODO
-//		s.inCollection = c.getString(COLUMN_SEASON_IN_COLLECTION);
+		//		s.inCollection = c.getString(COLUMN_SEASON_IN_COLLECTION);
 
 		return s;
 	}
@@ -1039,28 +1070,28 @@ public class DatabaseWrapper
 
 		return tvSeason;
 	}
-	
-//	public ArrayList<Integer> getSeasonsNumber(String tvdbId, boolean orderByASC)
-//	{
-//		ArrayList<Integer> seasons = new ArrayList<Integer>();
-//		String sql = 
-//				"SELECT " + KEY_SEASON_SEASON +
-//						"FROM " + SEASONS_TABLE + " " +
-//						"WHERE " + KEY_SEASON_TVSHOW_ID	+ "=? " +
-//						"ORDER BY " + KEY_SEASON_SEASON + (orderByASC ? " ASC" : " DESC");
-//		Cursor c = db.rawQuery(sql, new String[]{tvdbId});
-//		c.moveToFirst();
-//
-//		for(int i = 0; i < c.getCount(); i++)
-//		{
-//			seasons.add(c.getInt(0));
-//			c.moveToNext();
-//		}
-//		
-//		c.close();
-//
-//		return seasons;
-//	}
+
+	//	public ArrayList<Integer> getSeasonsNumber(String tvdbId, boolean orderByASC)
+	//	{
+	//		ArrayList<Integer> seasons = new ArrayList<Integer>();
+	//		String sql = 
+	//				"SELECT " + KEY_SEASON_SEASON +
+	//						"FROM " + SEASONS_TABLE + " " +
+	//						"WHERE " + KEY_SEASON_TVSHOW_ID	+ "=? " +
+	//						"ORDER BY " + KEY_SEASON_SEASON + (orderByASC ? " ASC" : " DESC");
+	//		Cursor c = db.rawQuery(sql, new String[]{tvdbId});
+	//		c.moveToFirst();
+	//
+	//		for(int i = 0; i < c.getCount(); i++)
+	//		{
+	//			seasons.add(c.getInt(0));
+	//			c.moveToNext();
+	//		}
+	//		
+	//		c.close();
+	//
+	//		return seasons;
+	//	}
 
 	/************************** Episodes methods *******************************/
 
@@ -1084,11 +1115,18 @@ public class DatabaseWrapper
 		values.put(KEY_EPISODE_TITLE, e.title);
 		values.put(KEY_EPISODE_URL, url);
 		values.put(KEY_EPISODE_VOTES, e.ratings.votes);
-		values.put(KEY_EPISODE_WATCHED, e.watched);
-		values.put(KEY_EPISODE_IN_WATCHLIST, e.inWatchlist);
-		//TODO
-//		values.put(KEY_EPISODE_IN_COLLECTION, e.inCollection);
-		values.put(KEY_EPISODE_SEASON_ID, seasonId);
+		
+		if(e.watched != null)
+			values.put(KEY_EPISODE_WATCHED, e.watched);
+		
+		if(e.inWatchlist != null)
+			values.put(KEY_EPISODE_IN_WATCHLIST, e.inWatchlist);
+		
+		if(e.inCollection != null)
+			values.put(KEY_EPISODE_IN_COLLECTION, e.inCollection);
+		
+		if(seasonId != null)
+			values.put(KEY_EPISODE_SEASON_ID, seasonId);
 
 		insertOrUpdate(EPISODES_TABLE, values, url);
 	}
@@ -1102,28 +1140,8 @@ public class DatabaseWrapper
 		//this episode is not in db, cancel insertion
 		if(getEpisode(e.url, null) == null)
 			return false;
-
-		ContentValues values = new ContentValues();
-
-		String url = e.url;
-
-		values.put(KEY_EPISODE_EPISODE, e.number);
-		values.put(KEY_EPISODE_FIRST_AIRED, e.firstAired.getTime());
-		values.put(KEY_EPISODE_HATED, e.ratings.hated);
-		values.put(KEY_EPISODE_LOVED, e.ratings.loved);
-		values.put(KEY_EPISODE_OVERVIEW, e.overview);
-		values.put(KEY_EPISODE_PERCENTAGE, e.ratings.percentage);
-		values.put(KEY_EPISODE_SCREEN, e.images.screen);
-		values.put(KEY_EPISODE_SEASON, e.season);
-		values.put(KEY_EPISODE_TITLE, e.title);
-		values.put(KEY_EPISODE_URL, url);
-		values.put(KEY_EPISODE_VOTES, e.ratings.votes);
-		values.put(KEY_EPISODE_WATCHED, e.watched);
-		values.put(KEY_EPISODE_IN_WATCHLIST, e.inWatchlist);
-		//TODO
-//		values.put(KEY_EPISODE_IN_COLLECTION, e.inCollection);
-
-		insertOrUpdate(EPISODES_TABLE, values, url);
+		else
+			insertOrUpdateEpisode(e, null);
 
 		return true;
 	}
@@ -1163,9 +1181,8 @@ public class DatabaseWrapper
 		e.url = c.getString(COLUMN_EPISODE_URL);
 		e.watched = c.getInt(COLUMN_EPISODE_WATCHED) != 0;
 		e.inWatchlist = c.getInt(COLUMN_EPISODE_IN_WATCHLIST) != 0;
-		//TODO
-//		e.inCollection = c.getInt(COLUMN_EPISODE_IN_COLLECTION) != 0;
-		
+		e.inCollection = c.getInt(COLUMN_EPISODE_IN_COLLECTION) != 0;
+
 		e.tvdbId = tvdbId;
 
 		return e;
@@ -1192,23 +1209,23 @@ public class DatabaseWrapper
 		return episodes;
 	}
 
-//	public TvShowEpisode getEpisode(String seasonId, int episode)
-//	{
-//		String sql = 
-//				"SELECT * " + 
-//						"FROM " + EPISODES_TABLE + " " +
-//						"WHERE " + KEY_EPISODE_SEASON_ID + "=? " + 
-//						"AND " + KEY_EPISODE_EPISODE + "=? " +
-//						"ORDER BY " + KEY_EPISODE_EPISODE;
-//		Cursor c = db.rawQuery(sql, new String[]{seasonId, String.valueOf(episode)});
-//		c.moveToFirst();
-//
-//		TvShowEpisode tvEpisode = getEpisodeFromCursor(c);
-//
-//		c.close();
-//
-//		return tvEpisode;
-//	}
+	//	public TvShowEpisode getEpisode(String seasonId, int episode)
+	//	{
+	//		String sql = 
+	//				"SELECT * " + 
+	//						"FROM " + EPISODES_TABLE + " " +
+	//						"WHERE " + KEY_EPISODE_SEASON_ID + "=? " + 
+	//						"AND " + KEY_EPISODE_EPISODE + "=? " +
+	//						"ORDER BY " + KEY_EPISODE_EPISODE;
+	//		Cursor c = db.rawQuery(sql, new String[]{seasonId, String.valueOf(episode)});
+	//		c.moveToFirst();
+	//
+	//		TvShowEpisode tvEpisode = getEpisodeFromCursor(c);
+	//
+	//		c.close();
+	//
+	//		return tvEpisode;
+	//	}
 
 	public TvShowEpisode getEpisode(String url, String tvdbId)
 	{
@@ -1303,13 +1320,11 @@ public class DatabaseWrapper
 						"WHERE " + SEASONS_TABLE+"."+KEY_SEASON_URL + "=" + KEY_EPISODE_SEASON_ID + " " + 
 						"AND " + KEY_SEASON_TVSHOW_ID + "=? " +
 						"AND " + SEASONS_TABLE+"."+KEY_SEASON_SEASON + "!=? " +
-						"AND(" + KEY_EPISODE_FIRST_AIRED + "=? " + " " +
-						"OR " + KEY_EPISODE_FIRST_AIRED + "> ? " + 
-						"OR " + EPISODES_TABLE+"."+KEY_EPISODE_EPISODE + "=? )";
+						"AND " + KEY_EPISODE_FIRST_AIRED + ">=?";
 
 		c.close();
 
-		Cursor c2 = db.rawQuery(sql2 , new String[]{tvdbId, String.valueOf(0), String.valueOf(0), String.valueOf(new Date().getTime()), String.valueOf(0)});
+		Cursor c2 = db.rawQuery(sql2 , new String[]{tvdbId, String.valueOf(0), String.valueOf(new Date().getTime())});
 		c2.moveToFirst();
 		numberOfEpisodes -= c2.getInt(0);
 
@@ -1356,7 +1371,7 @@ public class DatabaseWrapper
 
 			s.images = new Images();
 			s.images.poster = c.getString(c.getColumnIndex(KEY_TVSHOW_POSTER));
-			
+
 			TvShowEpisode e = getEpisodeFromCursor(c, s.tvdbId);
 			e.images.screen = null;
 
@@ -1405,16 +1420,19 @@ public class DatabaseWrapper
 			values.put(KEY_MOVIE_POSTER, m.images.poster);
 		}
 
-		values.put(KEY_MOVIE_IMDB_ID, m.imdbId);
-		values.put(KEY_MOVIE_IN_WATCHLIST, m.inWatchlist);
+		values.put(KEY_MOVIE_IMDB_ID, m.imdbId);		
 		values.put(KEY_MOVIE_OVERVIEW, m.overview);
 		values.put(KEY_MOVIE_RUNTIME, m.runtime);
 		values.put(KEY_MOVIE_TITLE, m.title);
 		values.put(KEY_MOVIE_URL, m.url);
 		values.put(KEY_MOVIE_YEAR, Integer.valueOf(m.year));
 
-		values.put(KEY_MOVIE_IN_COLLECTION, m.inCollection);
-		values.put(KEY_MOVIE_IN_WATCHLIST, m.inWatchlist);
+		if(m.inCollection != null)
+			values.put(KEY_MOVIE_IN_COLLECTION, m.inCollection);
+		
+		if(m.inWatchlist != null)
+			values.put(KEY_MOVIE_IN_WATCHLIST, m.inWatchlist);
+		
 		values.put(KEY_MOVIE_RELEASED, m.released.getTime());
 		values.put(KEY_MOVIE_TAGLINE, m.tagline);
 		values.put(KEY_MOVIE_TMDB_ID, m.tmdbId);
