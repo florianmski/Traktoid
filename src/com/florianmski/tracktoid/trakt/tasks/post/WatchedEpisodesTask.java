@@ -26,7 +26,6 @@ import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShow;
@@ -34,7 +33,7 @@ import com.jakewharton.trakt.entities.TvShowSeason;
 import com.jakewharton.trakt.services.ShowService.EpisodeSeenBuilder;
 import com.jakewharton.trakt.services.ShowService.EpisodeUnseenBuilder;
 
-public class WatchedEpisodesTask extends TraktTask
+public class WatchedEpisodesTask extends TraktTask<TvShow>
 {
 	private String tvdbId;
 	private int [] seasons;
@@ -42,18 +41,18 @@ public class WatchedEpisodesTask extends TraktTask
 	private TvShow show;
 	private boolean checkin;
 
-	public WatchedEpisodesTask(TraktManager tm, Fragment fragment, String tvdbId, int [] seasons, List<Map<Integer, Boolean>> listWatched) 
+	public WatchedEpisodesTask(Fragment fragment, String tvdbId, int [] seasons, List<Map<Integer, Boolean>> listWatched) 
 	{
-		super(tm, fragment);
+		super(fragment);
 
 		this.tvdbId = tvdbId;
 		this.seasons = seasons;
 		this.listWatched.addAll(listWatched);
 	}
 
-	public WatchedEpisodesTask(TraktManager tm, Fragment fragment, String tvdbId, int season, int episode, boolean watched) 
+	public WatchedEpisodesTask(Fragment fragment, String tvdbId, int season, int episode, boolean watched) 
 	{
-		super(tm, fragment);
+		super(fragment);
 
 		this.tvdbId = tvdbId;
 		this.seasons = new int[]{season};
@@ -61,9 +60,9 @@ public class WatchedEpisodesTask extends TraktTask
 		this.listWatched.get(0).put(episode, watched);
 	}
 
-	public WatchedEpisodesTask(TraktManager tm, Fragment fragment, String tvdbId, List<TvShowSeason> seasons, boolean watched) 
+	public WatchedEpisodesTask(Fragment fragment, String tvdbId, List<TvShowSeason> seasons, boolean watched) 
 	{
-		super(tm, fragment);
+		super(fragment);
 
 		this.tvdbId = tvdbId;
 		this.seasons = new int[seasons.size()];
@@ -84,7 +83,7 @@ public class WatchedEpisodesTask extends TraktTask
 	}
 
 	@Override
-	protected boolean doTraktStuffInBackground()
+	protected TvShow doTraktStuffInBackground()
 	{
 		showToast("Sending...", Toast.LENGTH_SHORT);
 
@@ -107,7 +106,7 @@ public class WatchedEpisodesTask extends TraktTask
 			if(r.error != null)
 			{
 				showToast(r.error, Toast.LENGTH_SHORT);
-				return false;
+				return null;
 			}
 			else
 				showToast(r.message, Toast.LENGTH_SHORT);
@@ -170,16 +169,16 @@ public class WatchedEpisodesTask extends TraktTask
 
 		dbw.close();
 		
-		return true;
+		return show;
 	}
 
 	@Override
-	protected void onPostExecute(Boolean success)
+	protected void onCompleted(TvShow show)
 	{
-		super.onPostExecute(success);
+		super.onCompleted(show);
 
-		if(success && show != null)
-			tm.onShowUpdated(show);
+		if(show != null)
+			TraktTask.traktItemUpdated(show);
 	}
 
 	public String getTvdbId() {

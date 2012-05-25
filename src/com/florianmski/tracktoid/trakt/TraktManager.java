@@ -25,16 +25,12 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.jakewharton.trakt.ServiceManager;
-import com.jakewharton.trakt.entities.CalendarDate;
-import com.jakewharton.trakt.entities.Movie;
-import com.jakewharton.trakt.entities.TvShow;
 
-public class TraktManager extends ServiceManager implements OnSharedPreferenceChangeListener, TraktListener
+public class TraktManager extends ServiceManager implements OnSharedPreferenceChangeListener
 {	
 	private static TraktManager traktManager;
 
@@ -42,7 +38,7 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 	private static String password;
 
 	private static ArrayList<TraktTask> tasks;
-	private static ArrayList<TraktListener> listeners;
+//	private static ArrayList<TraktListener> listeners;
 	private Context context;
 
 	public static synchronized TraktManager getInstance()
@@ -65,7 +61,7 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 	{
 		traktManager = new TraktManager(context);
 		tasks = new ArrayList<TraktTask>();
-		listeners = new ArrayList<TraktListener>();
+//		listeners = new ArrayList<TraktListener>();
 	}
 
 	public void setAccountInformations(Context context)
@@ -104,96 +100,96 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 		setAuthentication(username, password);
 	}
 
-	public void addObserver(TraktListener listener)
-	{
-		listeners.add(listener);
-	}
+//	public void addObserver(TraktListener listener)
+//	{
+//		listeners.add(listener);
+//	}
+//
+//	public void removeObserver(TraktListener listener)
+//	{
+//		listeners.remove(listener);
+//	}
 
-	public void removeObserver(TraktListener listener)
-	{
-		listeners.remove(listener);
-	}
+//	public void onBeforeTraktRequest(TraktListener listener)
+//	{
+//		if(listeners.contains(listener))
+//			listener.onBeforeTraktRequest();
+//	}
 
-	public void onBeforeTraktRequest(TraktListener listener)
-	{
-		if(listeners.contains(listener))
-			listener.onBeforeTraktRequest();
-	}
+//	public synchronized void onAfterTraktRequest(TraktListener listener, boolean success, boolean inQueue)
+//	{
+//		//		if(!tasks.isEmpty())
+//		//			tasks.remove(task);
+//		//
+//		//		if(!tasks.isEmpty())
+//		//			tasks.get(0).execute();
+//		//		
+//		//		if(listeners.contains(listener))
+//		//			listener.onAfterTraktRequest(success);
+//		
+//		//at the end of their execution ALL the task come here, even the ones that weren't queued. Be careful!
+//		if(!tasks.isEmpty() && inQueue)
+//		{
+//			tasks.remove(0);
+//
+//			if(!tasks.isEmpty())
+//				tasks.get(0).inQueue().fire();
+//		}
+//
+//		if(listeners.contains(listener))
+//			listener.onAfterTraktRequest(success);
+//	}
 
-	public synchronized void onAfterTraktRequest(TraktListener listener, boolean success, boolean inQueue)
-	{
-		//		if(!tasks.isEmpty())
-		//			tasks.remove(task);
-		//
-		//		if(!tasks.isEmpty())
-		//			tasks.get(0).execute();
-		//		
-		//		if(listeners.contains(listener))
-		//			listener.onAfterTraktRequest(success);
-		
-		//at the end of their execution ALL the task come here, even the ones that weren't queued. Be careful!
-		if(!tasks.isEmpty() && inQueue)
-		{
-			tasks.remove(0);
-
-			if(!tasks.isEmpty())
-				tasks.get(0).inQueue().fire();
-		}
-
-		if(listeners.contains(listener))
-			listener.onAfterTraktRequest(success);
-	}
-
-	public void onErrorTraktRequest(TraktListener listener, Exception e)
-	{
-		if(listeners.contains(listener))
-			listener.onErrorTraktRequest(e);
-	}
-
-	@Override
-	public void onShowUpdated(TvShow show)
-	{
-		for(TraktListener l : listeners)
-			l.onShowUpdated(show);
-	}
-
-	@Override
-	public void onShowRemoved(TvShow show)
-	{
-		for(TraktListener l : listeners)
-			l.onShowRemoved(show);
-	}
-	
-	@Override
-	public void onMovieUpdated(Movie movie)
-	{
-		for(TraktListener l : listeners)
-			l.onMovieUpdated(movie);
-	}
-
-	@Override
-	public void onMovieRemoved(Movie movie)
-	{
-		for(TraktListener l : listeners)
-			l.onMovieRemoved(movie);
-	}
-	
-
-	@Override
-	public void onCalendar(ArrayList<ArrayList<CalendarDate>> calendars) 
-	{
-		for(TraktListener l : listeners)
-			l.onCalendar(calendars);
-	}	
-
-	@Override
-	public void onBeforeTraktRequest() {}
-
-	@Override
-	public void onAfterTraktRequest(boolean success) {}
-
-	@Override
-	public void onErrorTraktRequest(Exception e) {}
+//	public void onErrorTraktRequest(TraktListener listener, Exception e)
+//	{
+//		if(listeners.contains(listener))
+//			listener.onErrorTraktRequest(e);
+//	}
+//
+//	@Override
+//	public void onShowUpdated(TvShow show)
+//	{
+//		for(TraktListener l : listeners)
+//			l.onShowUpdated(show);
+//	}
+//
+//	@Override
+//	public void onShowRemoved(TvShow show)
+//	{
+//		for(TraktListener l : listeners)
+//			l.onShowRemoved(show);
+//	}
+//	
+//	@Override
+//	public void onMovieUpdated(Movie movie)
+//	{
+//		for(TraktListener l : listeners)
+//			l.onMovieUpdated(movie);
+//	}
+//
+//	@Override
+//	public void onMovieRemoved(Movie movie)
+//	{
+//		for(TraktListener l : listeners)
+//			l.onMovieRemoved(movie);
+//	}
+//	
+//
+//	@Override
+//	public void onCalendar(ArrayList<ArrayList<CalendarDate>> calendars) 
+//	{
+//		for(TraktListener l : listeners)
+//			l.onCalendar(calendars);
+//	}	
+//
+//	@Override
+//	public void onBeforeTraktRequest() {}
+//
+//	@Override
+//	public void onAfterTraktRequest(boolean success) {}
+//
+//	@Override
+//	public void onErrorTraktRequest(Exception e) {}
 
 	//add user action in a queue so actions are done one by one
 	public synchronized void addToQueue(TraktTask task)

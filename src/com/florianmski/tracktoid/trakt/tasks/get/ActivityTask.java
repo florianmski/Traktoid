@@ -11,20 +11,19 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
-import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Activity;
 import com.jakewharton.trakt.entities.ActivityItemBase;
 import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class ActivityTask extends TraktTask
+public class ActivityTask extends TraktTask<Activity>
 {
-	private TraktApiBuilder<?> builder;
+	//TODO HashMap & movies
+	
 	private Activity activities;
 
 	private DatabaseWrapper dbw;
@@ -37,14 +36,14 @@ public class ActivityTask extends TraktTask
 	//shows we'll update
 	private List<TvShow> finalUpdateList = new ArrayList<TvShow>();
 
-	public ActivityTask(TraktManager tm, Fragment fragment) 
+	public ActivityTask(Fragment fragment) 
 	{
-		super(tm, fragment);
+		super(fragment);
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
 	@Override
-	protected boolean doTraktStuffInBackground()
+	protected Activity doTraktStuffInBackground()
 	{
 		showToast("Starting Trakt -> Traktoid sync...", Toast.LENGTH_SHORT);
 
@@ -169,21 +168,20 @@ public class ActivityTask extends TraktTask
 		showToast("Sync over!", Toast.LENGTH_SHORT);
 		prefs.edit().putLong("activity_timestamp", activities.timestamps.current.getTime()/1000).commit();
 
-		return true;
+		return activities;
 	}
 
 	@Override
-	protected void onPostExecute(Boolean success)
+	protected void onCompleted(Activity result) 	
 	{
-		super.onPostExecute(success);
-
-		if(success)
-		{
+		if(result != null)
+		{			
 			for(TvShow show : finalUpdateList)
-				tm.onShowUpdated(show);
+				TraktTask.traktItemUpdated(show);
 
+			//TODO getRef() is dangerous here
 			if(!refreshList.isEmpty())
-				tm.addToQueue(new UpdateShowsTask(tm, fragment, new ArrayList<TvShow>(refreshList)));
+				tm.addToQueue(new UpdateShowsTask(getRef(), new ArrayList<TvShow>(refreshList)));
 		}
 	}
 

@@ -22,26 +22,24 @@ import java.util.List;
 
 import android.support.v4.app.Fragment;
 
-import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.jakewharton.trakt.entities.CalendarDate;
 import com.jakewharton.trakt.entities.CalendarDate.CalendarTvShowEpisode;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class CalendarTask extends TraktTask
+public class CalendarTask extends TraktTask<ArrayList<ArrayList<CalendarDate>>>
 {	
 	ArrayList<ArrayList<CalendarDate>> calendars = new ArrayList<ArrayList<CalendarDate>>();
 
-	public CalendarTask(TraktManager tm, Fragment fragment) 
+	public CalendarTask(Fragment fragment) 
 	{
-		super(tm, fragment);
+		super(fragment);
 	}
 	
 	//instead of doing 3 requests (user shows, premieres and all), we do only "all" and then sorts
 	@Override
-	protected boolean doTraktStuffInBackground()
+	protected ArrayList<ArrayList<CalendarDate>> doTraktStuffInBackground()
 	{	
 //		showToast("Retrieving calendar...", Toast.LENGTH_SHORT);
 		
@@ -95,16 +93,15 @@ public class CalendarTask extends TraktTask
 		calendars.add(calendarListMyShows);
 		calendars.add(calendarListShows);
 				
-		return true;
+		return calendars;
 	}
 	
 	@Override
-	protected void onPostExecute(Boolean success)
-	{
-		super.onPostExecute(success);
-		
-		if(success && !Utils.isActivityFinished(fragment.getActivity()))
-			tm.onCalendar(calendars);
+	protected void onCompleted(ArrayList<ArrayList<CalendarDate>> result) 
+	{		
+		//TODO
+//		if(result != null && getRef() != null)
+//			tm.onCalendar(calendars);
 	}
 
 }

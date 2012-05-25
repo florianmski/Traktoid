@@ -9,22 +9,22 @@ import com.jakewharton.trakt.entities.ActivityItemBase;
 import com.jakewharton.trakt.enumerations.ActivityAction;
 import com.jakewharton.trakt.enumerations.ActivityType;
 
-public class CheckinGetTask extends TraktTask
+public class CheckinGetTask extends TraktTask<TraktoidInterface>
 {
 	private CheckinListener listener;
 	private ActivityItemBase checkin;
 	private TraktoidInterface traktItem;
 	
 
-	public CheckinGetTask(TraktManager tm, Fragment fragment, CheckinListener listener) 
+	public CheckinGetTask(Fragment fragment, CheckinListener listener) 
 	{
-		super(tm, fragment);
+		super(fragment);
 
 		this.listener = listener;
 	}
 
 	@Override
-	protected boolean doTraktStuffInBackground()
+	protected TraktoidInterface doTraktStuffInBackground()
 	{
 		checkin = tm.userService().watching(TraktManager.getUsername()).fire();
 
@@ -34,18 +34,16 @@ public class CheckinGetTask extends TraktTask
 				traktItem = checkin.episode;
 			else
 				traktItem = checkin.movie;
-			return true;
+			return traktItem;
 		}
 		
-		return false;
+		return null;
 	}
 
 	@Override
-	protected void onPostExecute(Boolean success)
+	protected void onCompleted(TraktoidInterface traktItem)
 	{
-		super.onPostExecute(success);
-
-		if(success)
+		if(traktItem != null)
 			listener.onCheckin(traktItem);
 	}
 	

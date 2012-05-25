@@ -1,6 +1,7 @@
 package com.florianmski.tracktoid.ui.fragments.traktitems;
 
 import android.os.Bundle;
+
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.jakewharton.trakt.entities.TvShow;
@@ -39,4 +40,5 @@ public class PI_TraktItemShowFragment extends PI_TraktItemFragment<TvShow>
 
 	@Override
 	public void onSaveState(Bundle toSave) {}
+
 }

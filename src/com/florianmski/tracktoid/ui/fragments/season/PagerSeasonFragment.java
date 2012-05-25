@@ -17,7 +17,6 @@ import com.florianmski.tracktoid.adapters.pagers.PagerSeasonAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 import com.florianmski.tracktoid.ui.fragments.PagerFragment;
-import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
 public class PagerSeasonFragment extends PagerFragment
@@ -164,7 +163,7 @@ public class PagerSeasonFragment extends PagerFragment
 			if(isEmpty)
 				Toast.makeText(getActivity(), "Nothing to send...", Toast.LENGTH_SHORT).show();
 			else
-				Utils.chooseBetweenSeenAndCheckin((new WatchedEpisodesTask(tm, this, tvdbId, seasons, listWatched)), getActivity());
+				Utils.chooseBetweenSeenAndCheckin((new WatchedEpisodesTask(this, tvdbId, seasons, listWatched)), getActivity());
 
 			watchedMode = !watchedMode;
 			getSherlockActivity().invalidateOptionsMenu();
@@ -175,19 +174,20 @@ public class PagerSeasonFragment extends PagerFragment
 		return super.onOptionsItemSelected(item);
 	}
 	
-	@Override
-	public void onShowUpdated(TvShow show)
-	{
-		if(show.tvdbId.equals(tvdbId) && adapter != null && show.seasons != null)
-			((PagerSeasonAdapter) adapter).reloadData(show.seasons);
-	}
-
-	@Override
-	public void onShowRemoved(TvShow show)
-	{
-		if(show.tvdbId.equals(tvdbId))
-			getActivity().finish();
-	}
+	//TODO
+//	@Override
+//	public void onShowUpdated(TvShow show)
+//	{
+//		if(show.tvdbId.equals(tvdbId) && adapter != null && show.seasons != null)
+//			((PagerSeasonAdapter) adapter).reloadData(show.seasons);
+//	}
+//
+//	@Override
+//	public void onShowRemoved(TvShow show)
+//	{
+//		if(show.tvdbId.equals(tvdbId))
+//			getActivity().finish();
+//	}
 	
 	@Override
 	public void onPageSelected(int position) 

@@ -70,7 +70,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface> extend
 		{
 			getStatusView().show().text("Retrieving genres,\nPlease wait...");
 
-			new GenresTask(tm, this, new GenresListener() 
+			new GenresTask(this, new GenresListener() 
 			{
 				@Override
 				public void onGenres(final List<Genre> genres) 
@@ -172,7 +172,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface> extend
 			@Override
 			public void onDismiss(String id) 
 			{
-				new PostTask(tm, RecommendationFragment.this, getDismissBuilder(id), new PostListener() 
+				new PostTask(RecommendationFragment.this, getDismissBuilder(id), new PostListener() 
 				{
 					@Override
 					public void onComplete(Response r, boolean success) 
@@ -191,7 +191,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface> extend
 		Genre genre = index <= 0 || index > genres.size() ? null : genres.get(index-1);
 		getStatusView().show().text("Retrieving recommendations" + ((genre == null) ? "" : " in \"" + genre.name + "\"") + ",\nPlease wait...");	
 
-		return commonTask = new TraktItemsTask<T>(tm, this, new TraktItemsListener<T>() 
+		return commonTask = new TraktItemsTask<T>(this, new TraktItemsListener<T>() 
 		{
 			@Override
 			public void onTraktItems(List<T> traktItems) 

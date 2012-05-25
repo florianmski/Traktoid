@@ -32,7 +32,6 @@ import android.widget.Toast;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.ui.activities.phone.SinglePaneActivity;
 import com.florianmski.tracktoid.ui.fragments.library.PagerLibraryFragment;
@@ -40,7 +39,7 @@ import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
-public class UpdateShowsTask extends TraktTask
+public class UpdateShowsTask extends TraktTask<TvShow>
 {
 	private final static int MAX_PERCENTAGE = 100;
 	private final static int NOTIFICATION_ID = 1337;
@@ -52,15 +51,15 @@ public class UpdateShowsTask extends TraktTask
 	private NotificationManager nm;
 	private RemoteViews contentView;
 
-	public UpdateShowsTask(TraktManager tm, Fragment fragment, List<TvShow> selectedShows) 
+	public UpdateShowsTask(Fragment fragment, List<TvShow> selectedShows) 
 	{
-		super(tm, fragment);
+		super(fragment);
 
 		this.showsSelected = selectedShows;
 	}
 
 	@Override
-	protected boolean doTraktStuffInBackground()
+	protected TvShow doTraktStuffInBackground()
 	{		
 		//TODO remove it (or not ?)
 		//allow task to failed before creating notification if something is wrong (bad username, trakt server issue...)
@@ -108,7 +107,7 @@ public class UpdateShowsTask extends TraktTask
 			lastProceedShow.seasons = dbw.getSeasons(s.tvdbId, true, true);
 
 			//send an event to activities which are listening to the update of a specific show (or not)
-			this.publishProgress("update");
+			this.publishProgress(0, lastProceedShow, "update");
 
 			i++;
 
@@ -121,23 +120,21 @@ public class UpdateShowsTask extends TraktTask
 		
 		dbw.close();
 		
-		return true;
+		return lastProceedShow;
 	}
 
 	@Override
-	protected void onProgressUpdate(String... values) 
+	protected void onProgressPublished(int progress, TvShow tmpResult, String... values)
 	{
-		super.onProgressUpdate(values);
+		super.onProgressPublished(progress, tmpResult, values);
 
 		if(values[0].equals("update") && lastProceedShow != null)
-			tm.onShowUpdated(lastProceedShow);
+			TraktTask.traktItemUpdated(lastProceedShow);
 	}
 	
 	@Override
-	protected void onPostExecute(Boolean success)
-	{
-		super.onPostExecute(success);
-		
+	protected void onCompleted(TvShow show)
+	{		
 		if(nm != null)
 			nm.cancel(NOTIFICATION_ID);
 	}

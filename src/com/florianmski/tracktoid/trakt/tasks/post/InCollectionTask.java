@@ -3,10 +3,11 @@ package com.florianmski.tracktoid.trakt.tasks.post;
 import android.support.v4.app.Fragment;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Movie;
+import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
@@ -15,22 +16,22 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 	protected T traktItem;
 	protected boolean addToCollection;
 
-	public InCollectionTask(TraktManager tm, Fragment fragment, T traktItem, boolean addToCollection, PostListener pListener) 
+	public InCollectionTask(Fragment fragment, T traktItem, boolean addToCollection, PostListener pListener) 
 	{
-		super(tm, fragment, null, pListener);
+		super(fragment, null, pListener);
 
 		this.traktItem = traktItem;
 		this.addToCollection = addToCollection;
 	}
 
-	public static <T extends TraktoidInterface> InCollectionTask<?> createTask(TraktManager tm, Fragment fragment, T traktItem, boolean addToCollection, PostListener pListener)
+	public static <T extends TraktoidInterface> InCollectionTask<?> createTask(Fragment fragment, T traktItem, boolean addToCollection, PostListener pListener)
 	{
 		if(traktItem instanceof TvShow)
-			return new InCollectionShowTask(tm, fragment, (TvShow) traktItem, addToCollection, pListener);
+			return new InCollectionShowTask(fragment, (TvShow) traktItem, addToCollection, pListener);
 		else if(traktItem instanceof Movie)
-			return new InCollectionMovieTask(tm, fragment, (Movie) traktItem, addToCollection, pListener);
+			return new InCollectionMovieTask(fragment, (Movie) traktItem, addToCollection, pListener);
 		else if(traktItem instanceof TvShowEpisode)
-			return new InCollectionEpisodeTask(tm, fragment, (TvShowEpisode) traktItem, addToCollection, pListener);
+			return new InCollectionEpisodeTask(fragment, (TvShowEpisode) traktItem, addToCollection, pListener);
 		else
 			return null;
 	}
@@ -58,19 +59,19 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 	}
 
 	@Override
-	protected void onPostExecute(Boolean success)
+	protected void onCompleted(Response r)
 	{
-		super.onPostExecute(success);
+		super.onCompleted(r);
 
-		if(success)
+		if(r != null)
 			sendEvent(traktItem);			
 	}
 
 	public static final class InCollectionShowTask extends InCollectionTask<TvShow>
 	{
-		public InCollectionShowTask(TraktManager tm, Fragment fragment,	TvShow traktItem, boolean addToCollection, PostListener pListener) 
+		public InCollectionShowTask(Fragment fragment,	TvShow traktItem, boolean addToCollection, PostListener pListener) 
 		{
-			super(tm, fragment, traktItem, addToCollection, pListener);
+			super(fragment, traktItem, addToCollection, pListener);
 		}
 
 		@Override
@@ -93,7 +94,7 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 		@Override
 		protected void sendEvent(TvShow traktItem) 
 		{
-			tm.onShowUpdated(traktItem);
+			TraktTask.traktItemUpdated(traktItem);
 		}
 
 		@Override
@@ -106,9 +107,9 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 
 	public static final class InCollectionMovieTask extends InCollectionTask<Movie>
 	{
-		public InCollectionMovieTask(TraktManager tm, Fragment fragment, Movie traktItem, boolean addToCollection, PostListener pListener) 
+		public InCollectionMovieTask(Fragment fragment, Movie traktItem, boolean addToCollection, PostListener pListener) 
 		{
-			super(tm, fragment, traktItem, addToCollection, pListener);
+			super(fragment, traktItem, addToCollection, pListener);
 		}
 
 		@Override
@@ -132,7 +133,7 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 		@Override
 		protected void sendEvent(Movie traktItem) 
 		{
-			tm.onMovieUpdated(traktItem);
+			TraktTask.traktItemUpdated(traktItem);
 		}
 
 		@Override
@@ -146,9 +147,9 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 
 	public static final class InCollectionEpisodeTask extends InCollectionTask<TvShowEpisode>
 	{
-		public InCollectionEpisodeTask(TraktManager tm, Fragment fragment, TvShowEpisode traktItem, boolean addToCollection, PostListener pListener) 
+		public InCollectionEpisodeTask(Fragment fragment, TvShowEpisode traktItem, boolean addToCollection, PostListener pListener) 
 		{
-			super(tm, fragment, traktItem, addToCollection, pListener);
+			super(fragment, traktItem, addToCollection, pListener);
 		}
 
 		@Override

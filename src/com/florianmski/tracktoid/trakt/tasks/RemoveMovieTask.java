@@ -23,19 +23,19 @@ import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.jakewharton.trakt.entities.Movie;
 
-public class RemoveMovieTask extends TraktTask
+public class RemoveMovieTask extends TraktTask<Movie>
 {
 	private Movie movie;
 
 	public RemoveMovieTask(TraktManager tm, Fragment fragment, Movie movie) 
 	{
-		super(tm, fragment);
+		super(fragment);
 
 		this.movie = movie;
 	}
 
 	@Override
-	protected boolean doTraktStuffInBackground()
+	protected Movie doTraktStuffInBackground()
 	{
 //		showToast("Removing " + movie.title + "...", Toast.LENGTH_SHORT);
 		
@@ -50,16 +50,14 @@ public class RemoveMovieTask extends TraktTask
 		
 		showToast(movie.title + " removed!", Toast.LENGTH_SHORT);
 		
-		return true;
+		return movie;
 	}
 	
 	@Override
-	protected void onPostExecute(Boolean success)
-	{
-		super.onPostExecute(success);
-		
-		if(success)
-			tm.onMovieRemoved(movie);
+	protected void onCompleted(Movie movie)
+	{		
+		if(movie != null)
+			TraktTask.traktItemRemoved(movie);
 	}
 
 }

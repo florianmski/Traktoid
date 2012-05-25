@@ -3,10 +3,11 @@ package com.florianmski.tracktoid.trakt.tasks.post;
 import android.support.v4.app.Fragment;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Movie;
+import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.enumerations.Rating;
@@ -18,22 +19,22 @@ public abstract class RateTask<T extends TraktoidInterface> extends PostTask
 	protected T traktItem;
 	protected Rating rating;
 
-	public RateTask(TraktManager tm, Fragment fragment, T traktItem, Rating rating, PostListener pListener) 
+	public RateTask(Fragment fragment, T traktItem, Rating rating, PostListener pListener) 
 	{
-		super(tm, fragment, null, pListener);
+		super(fragment, null, pListener);
 
 		this.traktItem = traktItem;
 		this.rating = rating;
 	}
 
-	public static <T extends TraktoidInterface> RateTask<?> createTask(TraktManager tm, Fragment fragment, T traktItem, Rating rating, PostListener pListener)
+	public static <T extends TraktoidInterface> RateTask<?> createTask( Fragment fragment, T traktItem, Rating rating, PostListener pListener)
 	{
 		if(traktItem instanceof TvShow)
-			return new RateShowTask(tm, fragment, (TvShow) traktItem, rating, pListener);
+			return new RateShowTask(fragment, (TvShow) traktItem, rating, pListener);
 		else if(traktItem instanceof Movie)
-			return new RateMovieTask(tm, fragment, (Movie) traktItem, rating, pListener);
+			return new RateMovieTask(fragment, (Movie) traktItem, rating, pListener);
 		else if(traktItem instanceof TvShowEpisode)
-			return new RateEpisodeTask(tm, fragment, (TvShowEpisode) traktItem, rating, pListener);
+			return new RateEpisodeTask(fragment, (TvShowEpisode) traktItem, rating, pListener);
 		else
 			return null;
 	}
@@ -55,19 +56,19 @@ public abstract class RateTask<T extends TraktoidInterface> extends PostTask
 	}
 
 	@Override
-	protected void onPostExecute(Boolean success)
+	protected void onCompleted(Response r)
 	{
-		super.onPostExecute(success);
+		super.onCompleted(r);
 
-		if(success)
+		if(r != null)
 			sendEvent(traktItem);
 	}
 	
 	public static final class RateShowTask extends RateTask<TvShow>
 	{
-		public RateShowTask(TraktManager tm, Fragment fragment,	TvShow traktItem, Rating rating, PostListener pListener) 
+		public RateShowTask(Fragment fragment,	TvShow traktItem, Rating rating, PostListener pListener) 
 		{
-			super(tm, fragment, traktItem, rating, pListener);
+			super(fragment, traktItem, rating, pListener);
 		}
 
 		@Override
@@ -82,7 +83,7 @@ public abstract class RateTask<T extends TraktoidInterface> extends PostTask
 		@Override
 		protected void sendEvent(TvShow traktItem) 
 		{
-			tm.onShowUpdated(traktItem);
+			TraktTask.traktItemUpdated(traktItem);
 		}
 
 		@Override
@@ -98,9 +99,9 @@ public abstract class RateTask<T extends TraktoidInterface> extends PostTask
 	
 	public static final class RateMovieTask extends RateTask<Movie>
 	{
-		public RateMovieTask(TraktManager tm, Fragment fragment, Movie traktItem, Rating rating, PostListener pListener) 
+		public RateMovieTask(Fragment fragment, Movie traktItem, Rating rating, PostListener pListener) 
 		{
-			super(tm, fragment, traktItem, rating, pListener);
+			super(fragment, traktItem, rating, pListener);
 		}
 
 		@Override
@@ -115,7 +116,7 @@ public abstract class RateTask<T extends TraktoidInterface> extends PostTask
 		@Override
 		protected void sendEvent(Movie traktItem) 
 		{
-			tm.onMovieUpdated(traktItem);
+			TraktTask.traktItemUpdated(traktItem);
 		}
 
 		@Override
@@ -131,9 +132,9 @@ public abstract class RateTask<T extends TraktoidInterface> extends PostTask
 	
 	public static final class RateEpisodeTask extends RateTask<TvShowEpisode>
 	{
-		public RateEpisodeTask(TraktManager tm, Fragment fragment, TvShowEpisode traktItem, Rating rating, PostListener pListener) 
+		public RateEpisodeTask(Fragment fragment, TvShowEpisode traktItem, Rating rating, PostListener pListener) 
 		{
-			super(tm, fragment, traktItem, rating, pListener);
+			super(fragment, traktItem, rating, pListener);
 		}
 
 		@Override
@@ -150,8 +151,7 @@ public abstract class RateTask<T extends TraktoidInterface> extends PostTask
 		@Override
 		protected void sendEvent(TvShowEpisode traktItem) 
 		{
-			//TODO
-//			tm.onMovieUpdated(traktItem);
+			TraktTask.traktItemUpdated(traktItem);
 		}
 
 		@Override

@@ -129,7 +129,7 @@ public class ShoutsFragment<T extends TraktoidInterface> extends TraktFragment
 			@Override
 			public void onItemClick(QuickAction source, int pos, int actionId) 
 			{
-				new ShoutsPostTask<T>(tm, ShoutsFragment.this, traktItem, edtShout.getText().toString().trim(), actionId == SPOILER, new PostListener() 
+				new ShoutsPostTask<T>(ShoutsFragment.this, traktItem, edtShout.getText().toString().trim(), actionId == SPOILER, new PostListener() 
 				{
 					@Override
 					public void onComplete(Response r, boolean success) 
@@ -161,7 +161,7 @@ public class ShoutsFragment<T extends TraktoidInterface> extends TraktFragment
 	{
 		getStatusView().show().text("Loading shouts,\nPlease wait...");
 
-		commonTask = new ShoutsGetTask<T>(tm, this, traktItem, tvdbId, new ShoutsListener() 
+		commonTask = new ShoutsGetTask<T>(this, traktItem, tvdbId, new ShoutsListener() 
 		{
 			@Override
 			public void onShouts(List<Shout> shouts) 

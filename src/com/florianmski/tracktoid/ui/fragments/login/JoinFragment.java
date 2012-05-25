@@ -72,7 +72,7 @@ public class JoinFragment extends TraktFragment
 				{
 					tm.setAuthentication(username, password);
 
-					new PostTask(tm, JoinFragment.this, tm.accountService().create(username, password, email), new PostListener() 
+					new PostTask(JoinFragment.this, tm.accountService().create(username, password, email), new PostListener() 
 					{	
 						@Override
 						public void onComplete(Response r, boolean success) 

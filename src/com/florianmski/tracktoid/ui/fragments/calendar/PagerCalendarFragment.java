@@ -37,7 +37,7 @@ public class PagerCalendarFragment extends PagerTabsFragment
 	{
 		getStatusView().show().text("Retrieving calendar,\nPlease wait...");
 
-		commonTask = new CalendarTask(tm, this);
+		commonTask = new CalendarTask(this);
 		
 		if(savedInstanceState == null)
 			commonTask.fire();
@@ -85,11 +85,12 @@ public class PagerCalendarFragment extends PagerTabsFragment
 		return inflater.inflate(R.layout.fragment_calendar, null);
 	}
 	
-	@Override
-	public void onCalendar(ArrayList<ArrayList<CalendarDate>> calendars) 
-	{
-		addTabs(calendars);
-	}
+	//TODO
+//	@Override
+//	public void onCalendar(ArrayList<ArrayList<CalendarDate>> calendars) 
+//	{
+//		addTabs(calendars);
+//	}
 	
 	@Override
 	public void onRestoreState(Bundle savedInstanceState) {}

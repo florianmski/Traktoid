@@ -19,7 +19,6 @@ import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBShowsTask;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.RemoveShowTask;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
@@ -42,9 +41,7 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 	@Override
 	public void checkUpdateTask() 
 	{
-		TraktTask updateTask = tm.getCurrentTask();
-		if(updateTask != null && updateTask instanceof UpdateShowsTask)
-			updateTask.reconnect(this);
+		//TODO
 	}
 
 	@Override
@@ -83,13 +80,13 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 	{
 		ArrayList<TvShow> showsSelected = new ArrayList<TvShow>();
 		showsSelected.add(adapter.getItem(posterClickedPosition));
-		tm.addToQueue(new UpdateShowsTask(tm, PI_LibraryShowFragment.this, showsSelected));
+		tm.addToQueue(new UpdateShowsTask(PI_LibraryShowFragment.this, showsSelected));
 	}
 
 	@Override
 	public void onDeleteQAClick(QuickAction source, int pos, int actionId) 
 	{
-		tm.addToQueue(new RemoveShowTask(tm, PI_LibraryShowFragment.this, adapter.getItem(posterClickedPosition)));
+		tm.addToQueue(new RemoveShowTask(PI_LibraryShowFragment.this, adapter.getItem(posterClickedPosition)));
 	}
 
 	@Override
@@ -105,7 +102,7 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 			@Override
 			public void onClick(DialogInterface dialog, int item) 
 			{
-				tm.addToQueue(RateTask.createTask(tm, PI_LibraryShowFragment.this, adapter.getItem(posterClickedPosition), ratings[item], null));
+				tm.addToQueue(RateTask.createTask(PI_LibraryShowFragment.this, adapter.getItem(posterClickedPosition), ratings[item], null));
 			}
 		});
 		AlertDialog alert = builder.create();
@@ -115,7 +112,7 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 	@Override
 	public void onRefreshClick() 
 	{
-		tm.addToQueue(new TraktItemsTask<TvShow>(tm, this, new TraktItemsListener<TvShow>() 
+		tm.addToQueue(new TraktItemsTask<TvShow>(this, new TraktItemsListener<TvShow>() 
 		{
 			@Override
 			public void onTraktItems(List<TvShow> shows) 
@@ -123,20 +120,6 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 				createShowsDialog(shows);
 			}
 		}, tm.userService().libraryShowsAll(TraktManager.getUsername()), true));
-	}
-
-	@Override
-	public void onShowUpdated(TvShow show)
-	{		
-		if(adapter != null)
-			adapter.updateItem(show);
-	}
-
-	@Override
-	public void onShowRemoved(TvShow show)
-	{
-		if(adapter != null)
-			adapter.remove(show);
 	}
 
 	public void createShowsDialog(final List<TvShow> shows)
@@ -168,7 +151,7 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 			public void onClick(DialogInterface dialog, int which) 
 			{
 				if(selectedShows.size() > 0)
-					tm.addToQueue(new UpdateShowsTask(tm, PI_LibraryShowFragment.this, selectedShows));
+					tm.addToQueue(new UpdateShowsTask(PI_LibraryShowFragment.this, selectedShows));
 				else
 					Toast.makeText(getActivity(), "Nothing selected...", Toast.LENGTH_SHORT).show();
 			}
@@ -179,7 +162,7 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 			@Override
 			public void onClick(DialogInterface dialog, int which) 
 			{
-				tm.addToQueue(new UpdateShowsTask(tm, PI_LibraryShowFragment.this, shows));
+				tm.addToQueue(new UpdateShowsTask(PI_LibraryShowFragment.this, shows));
 			}
 		});
 
@@ -201,4 +184,10 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 
 	@Override
 	public void onSaveState(Bundle toSave) {}
+	
+//	@Override
+//	public void onTrakItemUpdated(TvShow traktItem) 
+//	{
+//		Log.e("coucou","coucou tvshow");
+//	}
 }

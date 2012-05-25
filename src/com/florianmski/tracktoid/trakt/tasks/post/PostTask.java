@@ -6,20 +6,19 @@ import java.util.List;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Response;
 
-public class PostTask extends TraktTask
+public class PostTask extends TraktTask<Response>
 {
 	protected List<TraktApiBuilder<?>> builders;
 	protected PostListener pListener;
 	protected Response r;
 
-	public PostTask(TraktManager tm, Fragment fragment, TraktApiBuilder<?> builder, PostListener pListener) 
+	public PostTask(Fragment fragment, TraktApiBuilder<?> builder, PostListener pListener) 
 	{
-		super(tm, fragment);
+		super(fragment);
 
 		this.builders = new ArrayList<TraktApiBuilder<?>>();
 		if(builder != null)
@@ -28,46 +27,46 @@ public class PostTask extends TraktTask
 	}
 
 	@Override
-	protected boolean doTraktStuffInBackground() 
+	protected Response doTraktStuffInBackground() 
 	{
 		showToast("Sending...", Toast.LENGTH_SHORT);
 
 		doPrePostStuff();
 
-		boolean ok = true;
-		for(TraktApiBuilder<?> builder : builders)
+		int i = 0;
+		do
 		{
+			TraktApiBuilder<?> builder = builders.get(i);
 			try
 			{
 				r = (Response) builder.fire();
 			}
-			catch(ClassCastException e)
-			{
-				e.printStackTrace();
-			}
+			catch(ClassCastException e) {}
 
-			if(r!= null && r.error == null)
+			if(r != null && r.error == null)
 			{
 				//			showToast("Send to Trakt!", Toast.LENGTH_SHORT);
 				showToast(r.message, Toast.LENGTH_SHORT);
 				doAfterPostStuff();
-				ok &= true;
 			}
 			//sometimes there is no response but the action was performed (ex : remove sthg from collection)
 			else if(r == null)
 			{
 				showToast("Send to Trakt!", Toast.LENGTH_SHORT);
+				//we don't want to return null because returning null is when the request has failed (exception, see TraktTask)
+				r = new Response();
 				doAfterPostStuff();
-				ok &= true;
 			}
 			else
 			{
 				showToast("Something goes wrong : " + r.error, Toast.LENGTH_SHORT);
-				ok &= false;
 			}
+			
+			i++;
 		}
+		while(r != null && i < builders.size());
 		
-		return ok;
+		return r;
 	}
 
 	protected void doPrePostStuff() {}
@@ -75,12 +74,10 @@ public class PostTask extends TraktTask
 	protected void doAfterPostStuff() {}
 
 	@Override
-	protected void onPostExecute(Boolean success)
+	protected void onCompleted(Response r)
 	{
-		super.onPostExecute(success);
-
 		if(pListener != null)
-			pListener.onComplete(r, success);
+			pListener.onComplete(r, r != null);
 	}
 
 	public interface PostListener

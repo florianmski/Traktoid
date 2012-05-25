@@ -4,8 +4,6 @@ import java.util.List;
 
 import android.support.v4.app.Fragment;
 
-import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Movie;
@@ -13,7 +11,7 @@ import com.jakewharton.trakt.entities.Shout;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class ShoutsGetTask<T extends TraktoidInterface> extends TraktTask
+public class ShoutsGetTask<T extends TraktoidInterface> extends TraktTask<List<Shout>>
 {
 	private String tvdbId;
 	private T traktItem;
@@ -28,9 +26,9 @@ public class ShoutsGetTask<T extends TraktoidInterface> extends TraktTask
 //		this.listener = listener;
 //	}
 	
-	public ShoutsGetTask(TraktManager tm, Fragment fragment, T traktItem, String tvdbId, ShoutsListener listener) 
+	public ShoutsGetTask(Fragment fragment, T traktItem, String tvdbId, ShoutsListener listener) 
 	{
-		super(tm, fragment);
+		super(fragment);
 		
 		this.tvdbId = tvdbId;
 		this.traktItem = traktItem;
@@ -38,7 +36,7 @@ public class ShoutsGetTask<T extends TraktoidInterface> extends TraktTask
 	}
 	
 	@Override
-	protected boolean doTraktStuffInBackground()
+	protected List<Shout> doTraktStuffInBackground()
 	{
 //		showToast("Retrieving shouts...", Toast.LENGTH_SHORT);
 		
@@ -49,15 +47,13 @@ public class ShoutsGetTask<T extends TraktoidInterface> extends TraktTask
 		else if(traktItem instanceof TvShowEpisode)
 			shouts = tm.showService().episodeShouts(((TvShowEpisode)traktItem).tvdbId, ((TvShowEpisode)traktItem).season, ((TvShowEpisode)traktItem).number).fire();
 		
-		return true;
+		return shouts;
 	}
 	
 	@Override
-	protected void onPostExecute(Boolean success)
-	{
-		super.onPostExecute(success);
-		
-		if(success && !Utils.isActivityFinished(fragment.getActivity()))
+	protected void onCompleted(List<Shout> shouts)
+	{		
+		if(shouts != null && getRef() != null)
 			listener.onShouts(shouts);
 	}
 	

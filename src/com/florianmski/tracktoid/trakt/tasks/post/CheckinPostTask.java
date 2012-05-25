@@ -3,10 +3,11 @@ package com.florianmski.tracktoid.trakt.tasks.post;
 import android.support.v4.app.Fragment;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Movie;
+import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
 public abstract class CheckinPostTask<T extends TraktoidInterface> extends PostTask
@@ -14,20 +15,20 @@ public abstract class CheckinPostTask<T extends TraktoidInterface> extends PostT
 	protected T traktItem;
 	protected boolean checkin;
 
-	public CheckinPostTask(TraktManager tm, Fragment fragment, T traktItem, boolean checkin, PostListener pListener) 
+	public CheckinPostTask(Fragment fragment, T traktItem, boolean checkin, PostListener pListener) 
 	{
-		super(tm, fragment, null, pListener);
+		super(fragment, null, pListener);
 
 		this.traktItem = traktItem;
 		this.checkin = checkin;
 	}
 	
-	public static <T extends TraktoidInterface> CheckinPostTask<?> createTask(TraktManager tm, Fragment fragment, T traktItem, boolean checkin, PostListener pListener)
+	public static <T extends TraktoidInterface> CheckinPostTask<?> createTask(Fragment fragment, T traktItem, boolean checkin, PostListener pListener)
 	{
 		if(traktItem instanceof Movie)
-			return new CheckinMovieTask(tm, fragment, (Movie) traktItem, checkin, pListener);
+			return new CheckinMovieTask(fragment, (Movie) traktItem, checkin, pListener);
 		else if(traktItem instanceof TvShowEpisode)
-			return new CheckinEpisodeTask(tm, fragment, (TvShowEpisode) traktItem, checkin, pListener);
+			return new CheckinEpisodeTask(fragment, (TvShowEpisode) traktItem, checkin, pListener);
 		else
 			return null;
 	}
@@ -55,19 +56,19 @@ public abstract class CheckinPostTask<T extends TraktoidInterface> extends PostT
 	}
 	
 	@Override
-	protected void onPostExecute(Boolean success)
+	protected void onCompleted(Response r)
 	{
-		super.onPostExecute(success);
+		super.onCompleted(r);
 
-		if(success)
+		if(r != null)
 			sendEvent(traktItem);			
 	}
 	
 	public static final class CheckinMovieTask extends CheckinPostTask<Movie>
 	{
-		public CheckinMovieTask(TraktManager tm, Fragment fragment, Movie traktItem, boolean checkin, PostListener pListener) 
+		public CheckinMovieTask(Fragment fragment, Movie traktItem, boolean checkin, PostListener pListener) 
 		{
-			super(tm, fragment, traktItem, checkin, pListener);
+			super(fragment, traktItem, checkin, pListener);
 		}
 
 		@Override
@@ -89,7 +90,7 @@ public abstract class CheckinPostTask<T extends TraktoidInterface> extends PostT
 		@Override
 		protected void sendEvent(Movie traktItem) 
 		{
-			tm.onMovieUpdated(traktItem);
+			TraktTask.traktItemUpdated(traktItem);
 		}
 		
 		@Override
@@ -103,9 +104,9 @@ public abstract class CheckinPostTask<T extends TraktoidInterface> extends PostT
 	
 	public static final class CheckinEpisodeTask extends CheckinPostTask<TvShowEpisode>
 	{
-		public CheckinEpisodeTask(TraktManager tm, Fragment fragment, TvShowEpisode traktItem, boolean checkin, PostListener pListener) 
+		public CheckinEpisodeTask(Fragment fragment, TvShowEpisode traktItem, boolean checkin, PostListener pListener) 
 		{
-			super(tm, fragment, traktItem, checkin, pListener);
+			super(fragment, traktItem, checkin, pListener);
 		}
 
 		@Override
@@ -129,8 +130,7 @@ public abstract class CheckinPostTask<T extends TraktoidInterface> extends PostT
 		@Override
 		protected void sendEvent(TvShowEpisode traktItem) 
 		{
-			//TODO
-//			tm.onMovieUpdated(traktItem);
+			TraktTask.traktItemUpdated(traktItem);
 		}
 		
 		@Override

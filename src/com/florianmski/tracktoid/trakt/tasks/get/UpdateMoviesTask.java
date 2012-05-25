@@ -33,13 +33,12 @@ import android.widget.Toast;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.ui.activities.phone.SinglePaneActivity;
 import com.florianmski.tracktoid.ui.fragments.library.PagerLibraryFragment;
 import com.jakewharton.trakt.entities.Movie;
 
-public class UpdateMoviesTask extends TraktTask
+public class UpdateMoviesTask extends TraktTask<Movie>
 {
 	private final static int MAX_PERCENTAGE = 100;
 	private final static int NOTIFICATION_ID = 1337;
@@ -51,15 +50,15 @@ public class UpdateMoviesTask extends TraktTask
 	private NotificationManager nm;
 	private RemoteViews contentView;
 
-	public UpdateMoviesTask(TraktManager tm, Fragment fragment, List<Movie> selectedShows) 
+	public UpdateMoviesTask(Fragment fragment, List<Movie> selectedShows) 
 	{
-		super(tm, fragment);
+		super(fragment);
 
 		this.moviesSelected = selectedShows;
 	}
 
 	@Override
-	protected boolean doTraktStuffInBackground()
+	protected Movie doTraktStuffInBackground()
 	{		
 		//TODO remove it (or not ?)
 		//allow task to failed before creating notification if something is wrong (bad username, trakt server issue...)
@@ -105,7 +104,7 @@ public class UpdateMoviesTask extends TraktTask
 				lastProceedMovie = dbw.getMovie(m.url);
 	
 				//send an event to activities which are listening to the update of a specific movie (or not)
-				this.publishProgress("update");
+				this.publishProgress(0, lastProceedMovie, "update");
 	
 				i++;
 	
@@ -121,23 +120,21 @@ public class UpdateMoviesTask extends TraktTask
 		
 		dbw.close();
 		
-		return true;
+		return lastProceedMovie;
 	}
 
 	@Override
-	protected void onProgressUpdate(String... values) 
+	protected void onProgressPublished(int progress, Movie tmpResult, String... values)
 	{
-		super.onProgressUpdate(values);
+		super.onProgressPublished(progress, tmpResult, values);
 
 		if(values[0].equals("update") && lastProceedMovie != null)
-			tm.onMovieUpdated(lastProceedMovie);
+			TraktTask.traktItemUpdated(lastProceedMovie);
 	}
 	
 	@Override
-	protected void onPostExecute(Boolean success)
-	{
-		super.onPostExecute(success);
-		
+	protected void onCompleted(Movie movies)
+	{		
 		if(nm != null)
 			nm.cancel(NOTIFICATION_ID);
 	}

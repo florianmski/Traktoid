@@ -72,7 +72,7 @@ public class TrendingFragment extends TraktFragment
 
 		if(savedInstanceState == null)
 		{
-			commonTask = new TraktItemsTask<TvShow>(tm, this, new TraktItemsListener<TvShow>() 
+			commonTask = new TraktItemsTask<TvShow>(this, new TraktItemsListener<TvShow>() 
 			{
 				@Override
 				public void onTraktItems(List<TvShow> shows) 

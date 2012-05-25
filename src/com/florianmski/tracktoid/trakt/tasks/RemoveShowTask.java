@@ -20,22 +20,21 @@ import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.trakt.TraktManager;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class RemoveShowTask extends TraktTask
+public class RemoveShowTask extends TraktTask<TvShow>
 {
 	private TvShow show;
 
-	public RemoveShowTask(TraktManager tm, Fragment fragment, TvShow show) 
+	public RemoveShowTask(Fragment fragment, TvShow show) 
 	{
-		super(tm, fragment);
+		super(fragment);
 
 		this.show = show;
 	}
 
 	@Override
-	protected boolean doTraktStuffInBackground()
+	protected TvShow doTraktStuffInBackground()
 	{
 		showToast("Removing " + show.title + "...", Toast.LENGTH_SHORT);
 		
@@ -50,16 +49,14 @@ public class RemoveShowTask extends TraktTask
 		
 		showToast(show.title + " removed!", Toast.LENGTH_SHORT);
 		
-		return true;
+		return show;
 	}
 	
 	@Override
-	protected void onPostExecute(Boolean success)
-	{
-		super.onPostExecute(success);
-		
-		if(success)
-			tm.onShowRemoved(show);
+	protected void onCompleted(TvShow show)
+	{		
+		if(show != null)
+			TraktTask.traktItemRemoved(show);
 	}
 
 }

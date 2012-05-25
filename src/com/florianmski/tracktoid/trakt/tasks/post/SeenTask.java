@@ -6,10 +6,10 @@ import java.util.Map;
 
 import android.support.v4.app.Fragment;
 
-import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Movie;
+import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.services.MovieService.UnseenBuilder;
@@ -20,29 +20,29 @@ public abstract class SeenTask<T extends TraktoidInterface> extends PostTask
 {
 	protected Map<T,Boolean> traktItems;
 
-	public SeenTask(TraktManager tm, Fragment fragment, Map<T,Boolean> traktItems, PostListener pListener) 
+	public SeenTask(Fragment fragment, Map<T,Boolean> traktItems, PostListener pListener) 
 	{
-		super(tm, fragment, null, pListener);
+		super(fragment, null, pListener);
 
 		this.traktItems = traktItems;
 	}
 	
-	public static <T extends TraktoidInterface<T>> SeenTask<?> createTask(TraktManager tm, Fragment fragment, T traktItem, boolean seen, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> SeenTask<?> createTask(Fragment fragment, T traktItem, boolean seen, PostListener pListener)
 	{
 		Map<T,Boolean> traktItems = new HashMap<T, Boolean>();
 		traktItems.put(traktItem, seen);
-		return createTask(tm, fragment, traktItems, pListener);
+		return createTask(fragment, traktItems, pListener);
 	}
 
-	public static <T extends TraktoidInterface<T>> SeenTask<?> createTask(TraktManager tm, Fragment fragment, Map<T,Boolean> traktItems, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> SeenTask<?> createTask(Fragment fragment, Map<T,Boolean> traktItems, PostListener pListener)
 	{
 		//TODO
 		if(traktItems.keySet().iterator().next() instanceof TvShow)
-			return new SeenShowTask(tm, fragment, (Map<TvShow, Boolean>) traktItems, pListener);
+			return new SeenShowTask(fragment, (Map<TvShow, Boolean>) traktItems, pListener);
 		else if(traktItems.keySet().iterator().next() instanceof Movie)
-			return new SeenMovieTask(tm, fragment, (Map<Movie, Boolean>) traktItems, pListener);
+			return new SeenMovieTask(fragment, (Map<Movie, Boolean>) traktItems, pListener);
 		else if(traktItems.keySet().iterator().next() instanceof TvShowEpisode)
-			return new SeenEpisodeTask(tm, fragment, (Map<TvShowEpisode, Boolean>) traktItems, pListener);
+			return new SeenEpisodeTask(fragment, (Map<TvShowEpisode, Boolean>) traktItems, pListener);
 		else
 			return null;
 	}
@@ -70,11 +70,11 @@ public abstract class SeenTask<T extends TraktoidInterface> extends PostTask
 	}
 
 	@Override
-	protected void onPostExecute(Boolean success)
+	protected void onCompleted(Response r)
 	{
-		super.onPostExecute(success);
+		super.onCompleted(r);
 
-		if(success)
+		if(r != null)
 			sendEvent(traktItems);
 		//			tm.onTraktItemUpdated(traktItem);
 
@@ -82,9 +82,9 @@ public abstract class SeenTask<T extends TraktoidInterface> extends PostTask
 
 	public static final class SeenShowTask extends SeenTask<TvShow>
 	{
-		public SeenShowTask(TraktManager tm, Fragment fragment, Map<TvShow,Boolean> traktItems, PostListener pListener) 
+		public SeenShowTask(Fragment fragment, Map<TvShow,Boolean> traktItems, PostListener pListener) 
 		{
-			super(tm, fragment, traktItems, pListener);
+			super(fragment, traktItems, pListener);
 		}
 
 		@Override
@@ -133,9 +133,9 @@ public abstract class SeenTask<T extends TraktoidInterface> extends PostTask
 
 	public static final class SeenMovieTask extends SeenTask<Movie>
 	{
-		public SeenMovieTask(TraktManager tm, Fragment fragment, Map<Movie,Boolean> traktItems, PostListener pListener) 
+		public SeenMovieTask(Fragment fragment, Map<Movie,Boolean> traktItems, PostListener pListener) 
 		{
-			super(tm, fragment, traktItems, pListener);
+			super(fragment, traktItems, pListener);
 		}
 
 		@Override
@@ -176,9 +176,9 @@ public abstract class SeenTask<T extends TraktoidInterface> extends PostTask
 
 	public static final class SeenEpisodeTask extends SeenTask<TvShowEpisode>
 	{
-		public SeenEpisodeTask(TraktManager tm, Fragment fragment, Map<TvShowEpisode,Boolean> traktItems, PostListener pListener) 
+		public SeenEpisodeTask(Fragment fragment, Map<TvShowEpisode,Boolean> traktItems, PostListener pListener) 
 		{
-			super(tm, fragment, traktItems, pListener);
+			super(fragment, traktItems, pListener);
 		}
 
 		@Override

@@ -34,6 +34,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.lists.ListSeasonAdapter;
@@ -53,7 +54,7 @@ import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public class ProgressionFragment extends TraktFragment
+public class ProgressionFragment extends TraktFragment implements TraktListener<TvShow>
 {
 	private final static int PERCENTAGE_STEP = 2;
 
@@ -341,7 +342,7 @@ public class ProgressionFragment extends TraktFragment
 					public void onClick(DialogInterface dialog, int which) 
 					{
 						if(!seasonsChecked.isEmpty())
-							tm.addToQueue(new WatchedEpisodesTask(tm, ProgressionFragment.this, show.tvdbId, seasonsChecked, true));
+							tm.addToQueue(new WatchedEpisodesTask(ProgressionFragment.this, show.tvdbId, seasonsChecked, true));
 						else
 							Toast.makeText(getActivity(), "Nothing to send...", Toast.LENGTH_SHORT).show();
 					}
@@ -353,7 +354,7 @@ public class ProgressionFragment extends TraktFragment
 					public void onClick(DialogInterface dialog, int which) 
 					{
 						if(!seasonsChecked.isEmpty())
-							tm.addToQueue(new WatchedEpisodesTask(tm, ProgressionFragment.this, show.tvdbId, seasonsChecked, false));
+							tm.addToQueue(new WatchedEpisodesTask(ProgressionFragment.this, show.tvdbId, seasonsChecked, false));
 						else
 							Toast.makeText(getActivity(), "Nothing to send...", Toast.LENGTH_SHORT).show();
 					}
@@ -373,13 +374,13 @@ public class ProgressionFragment extends TraktFragment
 			}
 			return true;
 		case R.id.action_bar_rate_love :
-			RateTask.createTask(tm, this, show, Rating.Love, null);
+			RateTask.createTask(this, show, Rating.Love, null);
 			return true;
 		case R.id.action_bar_rate_hate :
-			RateTask.createTask(tm, this, show, Rating.Hate, null);
+			RateTask.createTask(this, show, Rating.Hate, null);
 			return true;
 		case R.id.action_bar_rate_unrate :
-			RateTask.createTask(tm, this, show, Rating.Unrate, null);
+			RateTask.createTask(this, show, Rating.Unrate, null);
 			return true;
 		case R.id.action_bar_about :
 			Intent i = new Intent(getActivity(), ShowActivity.class);
@@ -390,29 +391,6 @@ public class ProgressionFragment extends TraktFragment
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onShowUpdated(TvShow show) 
-	{
-		if(show.tvdbId.equals(this.show.tvdbId) && adapter != null)
-		{
-			displayPercentage(show.progress);
-			displayNextEpisode();
-
-			if(show.seasons != null)
-				adapter.updateItems(show.seasons);
-
-			this.show = show;
-			getSherlockActivity().invalidateOptionsMenu();
-		}
-	}
-
-	@Override
-	public void onShowRemoved(TvShow show)
-	{
-		if(show.tvdbId.equals(show.tvdbId))
-			getActivity().finish();
 	}
 
 	private class ProgressBarRunnable implements Runnable
@@ -453,4 +431,27 @@ public class ProgressionFragment extends TraktFragment
 
 	@Override
 	public void onSaveState(Bundle toSave) {}
+
+	@Override
+	public void onTraktItemUpdated(TvShow traktItem) 
+	{
+		if(traktItem.tvdbId.equals(this.show.tvdbId) && adapter != null)
+		{
+			displayPercentage(traktItem.progress);
+			displayNextEpisode();
+
+			if(traktItem.seasons != null)
+				adapter.updateItems(traktItem.seasons);
+
+			this.show = traktItem;
+			getSherlockActivity().invalidateOptionsMenu();
+		}
+	}
+
+	@Override
+	public void onTraktItemRemoved(TvShow traktItem) 
+	{
+		if(traktItem.tvdbId.equals(show.tvdbId))
+			getActivity().finish();
+	}
 }

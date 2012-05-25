@@ -3,6 +3,7 @@ package com.florianmski.tracktoid.ui.fragments.traktitems;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,11 @@ import com.actionbarsherlock.view.SubMenu;
 import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.pagers.PagerDetailsAdapter;
 import com.florianmski.tracktoid.image.TraktImage;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.post.CheckinPostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InCollectionTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InWatchlistTask;
@@ -32,9 +35,14 @@ import com.florianmski.tracktoid.widgets.ScrollingTextView;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.TvShow;
 
-public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> extends PagerTabsViewFragment
+public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> extends PagerTabsViewFragment implements TraktListener<T>
 {
 	protected T item;
+	
+	private ScrollingTextView tvAired;
+	private TextView tvPercentage;
+	private ImageView ivScreen;
+	private BadgesView<T> bl;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -47,6 +55,15 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 			item = (T) getArguments().getSerializable(TraktoidConstants.BUNDLE_TRAKT_ITEM);
 		
 		getActivity().invalidateOptionsMenu();
+		
+		TraktTask.addObserver(this);
+	}
+	
+	@Override
+	public void onDestroy()
+	{
+		TraktTask.removeObserver(this);
+		super.onDestroy();
 	}
 	
 	@Override
@@ -75,10 +92,10 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 	{
 		View v = super.onCreateView(inflater, container, savedInstanceState);
 
-		ScrollingTextView tvAired = (ScrollingTextView)v.findViewById(R.id.textViewAired);
-		TextView tvPercentage = (TextView)v.findViewById(R.id.textViewPercentage);
-		ImageView ivScreen = (ImageView)v.findViewById(R.id.imageViewScreen);
-		BadgesView<T> bl = (BadgesView<T>)v.findViewById(R.id.badgesLayout);
+		tvAired = (ScrollingTextView)v.findViewById(R.id.textViewAired);
+		tvPercentage = (TextView)v.findViewById(R.id.textViewPercentage);
+		ivScreen = (ImageView)v.findViewById(R.id.imageViewScreen);
+		bl = (BadgesView<T>)v.findViewById(R.id.badgesLayout);
 
 		//sometimes pager.getWidth = 0, don't know why so I use this trick
 		int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
@@ -86,7 +103,14 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, (int) (width*TraktImage.RATIO_SCREEN));
 		ivScreen.setLayoutParams(params);
 		ivScreen.setScaleType(ScaleType.CENTER_CROP);
+		
+		refreshView();
 
+		return v;
+	}
+	
+	private void refreshView()
+	{
 		if(item.getFirstAired() == null || item.getFirstAired().getTime() == 0)
 			tvAired.setText("Never, date is not known or try to refresh");
 		else
@@ -96,7 +120,7 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		bl.setTraktItem(item);
 
 		//		Image i = new Image(item.getId(), item.getImages().fanart, Image.FANART);
-		final AQuery aq = new AQuery(v);
+		final AQuery aq = new AQuery(ivScreen);
 		//create a bitmap ajax callback object
 		BitmapAjaxCallback cb = new BitmapAjaxCallback().url(TraktImage.getFanart(item).getUrl()).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
 		aq.id(ivScreen).image(cb);
@@ -105,8 +129,7 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 			tvPercentage.setText(item.getRatings().percentage+"%");
 		else
 			tvPercentage.setText("?%");
-
-		return v;
+		
 	}
 
 	@Override
@@ -182,10 +205,10 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		{	
 		case R.id.action_bar_watched_seen:
 		case R.id.action_bar_watched_unseen:
-			SeenTask.createTask(tm, this, this.item, item.getItemId() == R.id.action_bar_watched_seen, null).fire();
+			SeenTask.createTask(this, this.item, item.getItemId() == R.id.action_bar_watched_seen, null).fire();
 			break;
 		case R.id.action_bar_watched_checkin:
-			CheckinPostTask.createTask(tm, this, this.item, true, null).fire();
+			CheckinPostTask.createTask(this, this.item, true, null).fire();
 			break;
 		case R.id.action_bar_shouts:
 			Intent i = new Intent(getActivity(), ShoutsActivity.class);
@@ -194,11 +217,11 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 			break;
 		case R.id.action_bar_add_to_collection:
 		case R.id.action_bar_remove_from_collection:
-			InCollectionTask.createTask(tm, this, this.item, item.getItemId() == R.id.action_bar_add_to_collection, null).fire();
+			InCollectionTask.createTask(this, this.item, item.getItemId() == R.id.action_bar_add_to_collection, null).fire();
 			break;
 		case R.id.action_bar_add_to_watchlist:
 		case R.id.action_bar_remove_from_watchlist:
-			InWatchlistTask.createTask(tm, this, this.item, item.getItemId() == R.id.action_bar_add_to_watchlist, null).fire();
+			InWatchlistTask.createTask(this, this.item, item.getItemId() == R.id.action_bar_add_to_watchlist, null).fire();
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -208,5 +231,24 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 
 	@Override
 	public void onSaveState(Bundle toSave) {}
+	
+	@Override
+	public void onTraktItemUpdated(T traktItem) 
+	{
+		Log.e("test", "onTraktItemUpdated");
+		if(traktItem.getId().equals(item.getId()))
+		{
+			this.item = traktItem;
+			getActivity().invalidateOptionsMenu();
+			refreshView();
+		}
+	}
+	
+	@Override
+	public void onTraktItemRemoved(T traktItem) 
+	{
+		if(traktItem.getId().equals(item.getId()))
+			getActivity().finish();
+	}
 
 }

@@ -1,19 +1,13 @@
 package com.florianmski.tracktoid;
 
-import java.util.ArrayList;
+import com.florianmski.traktoid.TraktoidInterface;
 
-import com.jakewharton.trakt.entities.CalendarDate;
-import com.jakewharton.trakt.entities.Movie;
-import com.jakewharton.trakt.entities.TvShow;
-
-public interface TraktListener
+public interface TraktListener <T extends TraktoidInterface<T>>
 {
-	public void onBeforeTraktRequest();
-	public void onAfterTraktRequest(boolean success);
-	public void onErrorTraktRequest(Exception e);
-	public void onShowUpdated(TvShow show);
-	public void onShowRemoved(TvShow show);
-	public void onMovieUpdated(Movie movie);
-	public void onMovieRemoved(Movie movie);
-	public void onCalendar(ArrayList<ArrayList<CalendarDate>> calendars);
+//	public void onBeforeTraktRequest();
+//	public void onAfterTraktRequest(boolean success);
+//	public void onErrorTraktRequest(Exception e);
+	public void onTraktItemUpdated(T traktItem);
+	public void onTraktItemRemoved(T traktItem);
+//	public void onCalendar(ArrayList<ArrayList<CalendarDate>> calendars);
 }

@@ -3,7 +3,6 @@ package com.florianmski.tracktoid.ui.fragments.library;
 import net.londatiga.android.ActionItem;
 import net.londatiga.android.QuickAction;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +19,15 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.image.TraktImage;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.traktoid.TraktoidInterface;
 
-public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends TraktFragment
+public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends TraktFragment implements TraktListener<T>
 {
 	protected final static int NB_COLUMNS_TABLET_PORTRAIT = 5;
 	protected final static int NB_COLUMNS_TABLET_LANDSCAPE = 7;
@@ -130,6 +131,15 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 			}
 
 		});
+
+		TraktTask.addObserver(this);
+	}
+	
+	@Override
+	public void onDestroy()
+	{
+		TraktTask.removeObserver(this);
+		super.onDestroy();
 	}
 
 	@Override
@@ -242,17 +252,18 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public void onBeforeTraktRequest()
-	{
-		getSherlockActivity().invalidateOptionsMenu();
-	}
-
-	@Override
-	public void onAfterTraktRequest(boolean success) 
-	{
-		getSherlockActivity().invalidateOptionsMenu();
-	}
+	//TODO
+//	@Override
+//	public void onBeforeTraktRequest()
+//	{
+//		getSherlockActivity().invalidateOptionsMenu();
+//	}
+//
+//	@Override
+//	public void onAfterTraktRequest(boolean success) 
+//	{
+//		getSherlockActivity().invalidateOptionsMenu();
+//	}
 
 	@Override
 	public void onResume()
@@ -266,4 +277,17 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 	@Override
 	public void onSaveState(Bundle toSave) {}
 
+	@Override
+	public void onTraktItemUpdated(T traktItem) 
+	{
+		if(adapter != null)
+			adapter.updateItem(traktItem);
+	}
+	
+	@Override
+	public void onTraktItemRemoved(T traktItem) 
+	{
+		if(adapter != null)
+			adapter.remove(traktItem);
+	}
 }

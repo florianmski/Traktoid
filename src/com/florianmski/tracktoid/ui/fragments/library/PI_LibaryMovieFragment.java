@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -79,7 +80,7 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 	{
 		ArrayList<Movie> moviesSelected = new ArrayList<Movie>();
 		moviesSelected.add(adapter.getItem(posterClickedPosition));
-		tm.addToQueue(new UpdateMoviesTask(tm, PI_LibaryMovieFragment.this, moviesSelected));
+		tm.addToQueue(new UpdateMoviesTask(PI_LibaryMovieFragment.this, moviesSelected));
 	}
 
 	@Override
@@ -97,7 +98,7 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 	@Override
 	public void onRefreshClick() 
 	{
-		tm.addToQueue(new TraktItemsTask<Movie>(tm, this, new TraktItemsListener<Movie>() 
+		tm.addToQueue(new TraktItemsTask<Movie>(this, new TraktItemsListener<Movie>() 
 		{
 			@Override
 			public void onTraktItems(List<Movie> movies) 
@@ -136,7 +137,7 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 			public void onClick(DialogInterface dialog, int which) 
 			{
 				if(selectedMovies.size() > 0)
-					tm.addToQueue(new UpdateMoviesTask(tm, PI_LibaryMovieFragment.this, selectedMovies));
+					tm.addToQueue(new UpdateMoviesTask(PI_LibaryMovieFragment.this, selectedMovies));
 				else
 					Toast.makeText(getActivity(), "Nothing selected...", Toast.LENGTH_SHORT).show();
 			}
@@ -147,7 +148,7 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 			@Override
 			public void onClick(DialogInterface dialog, int which) 
 			{
-				tm.addToQueue(new UpdateMoviesTask(tm, PI_LibaryMovieFragment.this, movies));
+				tm.addToQueue(new UpdateMoviesTask(PI_LibaryMovieFragment.this, movies));
 			}
 		});
 
@@ -165,17 +166,9 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 	}
 
 	@Override
-	public void onMovieUpdated(Movie movie)
-	{		
-		if(adapter != null)
-			adapter.updateItem(movie);
-	}
-
-	@Override
-	public void onMovieRemoved(Movie movie)
+	public void onTraktItemUpdated(Movie traktItem) 
 	{
-		if(adapter != null)
-			adapter.remove(movie);
+		Log.e("coucou","coucou movie");
 	}
 
 }

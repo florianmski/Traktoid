@@ -22,22 +22,20 @@ import java.util.List;
 
 import android.support.v4.app.Fragment;
 
-import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 
-public class TraktItemsTask<T extends TraktoidInterface> extends TraktTask
+public class TraktItemsTask<T extends TraktoidInterface> extends TraktTask<List<T>>
 {
 	private List<T> traktItems = new ArrayList<T>();
 	private TraktApiBuilder<?> builder;
 	private boolean sort;
 	private TraktItemsListener<T> listener;
 	
-	public TraktItemsTask(TraktManager tm, Fragment fragment, TraktItemsListener<T> listener, TraktApiBuilder<?> builder, boolean sort) 
+	public TraktItemsTask(Fragment fragment, TraktItemsListener<T> listener, TraktApiBuilder<?> builder, boolean sort) 
 	{
-		super(tm, fragment);
+		super(fragment);
 		
 		this.builder = builder;
 		this.sort = sort;
@@ -46,22 +44,20 @@ public class TraktItemsTask<T extends TraktoidInterface> extends TraktTask
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected boolean doTraktStuffInBackground()
+	protected List<T> doTraktStuffInBackground()
 	{		
 		traktItems = (List<T>) builder.fire();
 		
 		if(sort && traktItems != null && traktItems.size() > 0)
 			Collections.sort(traktItems);
 		
-		return true;
+		return traktItems;
 	}
 	
 	@Override
-	protected void onPostExecute(Boolean success)
-	{
-		super.onPostExecute(success);
-		
-		if(success && !Utils.isActivityFinished(fragment.getActivity()))
+	protected void onCompleted(List<T> traktItems)
+	{		
+		if(traktItems != null && getRef() != null)
 			listener.onTraktItems(traktItems);
 	}
 	

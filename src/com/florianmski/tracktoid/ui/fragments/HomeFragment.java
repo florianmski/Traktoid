@@ -95,7 +95,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		AppRater.app_launched(getActivity());
 
 		//sync with trakt
-		new ActivityTask(tm, this).silentConnectionError(true).fire();
+		new ActivityTask(this).silentConnectionError(true).fire();
 
 		//Trying to set high definition image on high resolution
 		//does not seem to be a great idea, it's slow and I sometimes get an outOfMemoryError :/
@@ -146,7 +146,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 //								}
 //							}
 //						}).fire();
-						CheckinPostTask.createTask(tm, HomeFragment.this, traktItem, false, new PostListener() 
+						CheckinPostTask.createTask(HomeFragment.this, traktItem, false, new PostListener() 
 						{	
 							@Override
 							public void onComplete(Response r, boolean success) 
@@ -200,7 +200,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 	{
 		super.onResume();
 
-		new CheckinGetTask(tm, this, new CheckinListener() 
+		new CheckinGetTask(this, new CheckinListener() 
 		{
 			@Override
 			public void onCheckin(TraktoidInterface traktItem) 

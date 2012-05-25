@@ -2,7 +2,6 @@ package com.florianmski.tracktoid.trakt.tasks.post;
 
 import android.support.v4.app.Fragment;
 
-import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
@@ -14,9 +13,9 @@ public class ShoutsPostTask<T extends TraktoidInterface> extends PostTask
 	private String shout;
 	private boolean spoiler;
 	
-	public ShoutsPostTask(TraktManager tm, Fragment fragment, T traktItem, String shout, boolean spoiler, PostListener pListener) 
+	public ShoutsPostTask(Fragment fragment, T traktItem, String shout, boolean spoiler, PostListener pListener) 
 	{
-		super(tm, fragment, null, pListener);
+		super(fragment, null, pListener);
 		
 		this.traktItem = traktItem;
 		this.shout = shout;
