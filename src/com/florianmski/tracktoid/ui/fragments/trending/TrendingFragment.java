@@ -72,7 +72,7 @@ public class TrendingFragment extends TraktFragment
 
 		if(savedInstanceState == null)
 		{
-			commonTask = new TraktItemsTask<TvShow>(this, new TraktItemsListener<TvShow>() 
+			new TraktItemsTask<TvShow>(this, new TraktItemsListener<TvShow>() 
 			{
 				@Override
 				public void onTraktItems(List<TvShow> shows) 
@@ -80,8 +80,7 @@ public class TrendingFragment extends TraktFragment
 					TrendingFragment.this.shows = shows;
 					setAdapter();
 				}
-			}, tm.showService().trending(), false);
-			commonTask.fire();
+			}, tm.showService().trending(), false).fire();
 		}
 		else
 			setAdapter();

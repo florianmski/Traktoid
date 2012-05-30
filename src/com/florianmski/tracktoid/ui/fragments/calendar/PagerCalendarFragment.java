@@ -1,6 +1,7 @@
 package com.florianmski.tracktoid.ui.fragments.calendar;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,10 +12,11 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.tasks.get.CalendarTask;
+import com.florianmski.tracktoid.trakt.tasks.get.CalendarTask.CalendarListener;
 import com.florianmski.tracktoid.ui.fragments.PagerTabsFragment;
 import com.jakewharton.trakt.entities.CalendarDate;
 
-public class PagerCalendarFragment extends PagerTabsFragment
+public class PagerCalendarFragment extends PagerTabsFragment implements CalendarListener
 {	
 	public static PagerCalendarFragment newInstance(Bundle args)
 	{
@@ -30,24 +32,30 @@ public class PagerCalendarFragment extends PagerTabsFragment
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		
+		CalendarTask.addObserver(this);
+	}
+	
+	public void onDestroy()
+	{
+		CalendarTask.removeObserver(this);
+		super.onDestroy();
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		getStatusView().show().text("Retrieving calendar,\nPlease wait...");
-
-		commonTask = new CalendarTask(this);
 		
 		if(savedInstanceState == null)
-			commonTask.fire();
+			new CalendarTask(this).fire();
 		else
 			addTabs(null);
 		
 		super.onActivityCreated(savedInstanceState);
 	}
 	
-	public void addTabs(ArrayList<ArrayList<CalendarDate>> calendars) 
+	public void addTabs(List<ArrayList<CalendarDate>> calendars) 
 	{
 		Bundle args = new Bundle();
 
@@ -85,16 +93,15 @@ public class PagerCalendarFragment extends PagerTabsFragment
 		return inflater.inflate(R.layout.fragment_calendar, null);
 	}
 	
-	//TODO
-//	@Override
-//	public void onCalendar(ArrayList<ArrayList<CalendarDate>> calendars) 
-//	{
-//		addTabs(calendars);
-//	}
-	
 	@Override
 	public void onRestoreState(Bundle savedInstanceState) {}
 
 	@Override
 	public void onSaveState(Bundle toSave) {}
+
+	@Override
+	public void onCalendar(List<ArrayList<CalendarDate>> calendars) 
+	{
+		addTabs(calendars);
+	}
 }

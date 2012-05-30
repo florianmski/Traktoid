@@ -7,7 +7,7 @@ import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class ShoutsPostTask<T extends TraktoidInterface> extends PostTask
+public class ShoutsPostTask<T extends TraktoidInterface<T>> extends PostTask
 {
 	private T traktItem;
 	private String shout;

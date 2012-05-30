@@ -43,7 +43,7 @@ public class WatchedEpisodesTask extends TraktTask<TvShow>
 
 	public WatchedEpisodesTask(Fragment fragment, String tvdbId, int [] seasons, List<Map<Integer, Boolean>> listWatched) 
 	{
-		super(fragment);
+		super(fragment, sSingleThreadExecutor);
 
 		this.tvdbId = tvdbId;
 		this.seasons = seasons;
@@ -52,7 +52,7 @@ public class WatchedEpisodesTask extends TraktTask<TvShow>
 
 	public WatchedEpisodesTask(Fragment fragment, String tvdbId, int season, int episode, boolean watched) 
 	{
-		super(fragment);
+		super(fragment, sSingleThreadExecutor);
 
 		this.tvdbId = tvdbId;
 		this.seasons = new int[]{season};
@@ -62,7 +62,7 @@ public class WatchedEpisodesTask extends TraktTask<TvShow>
 
 	public WatchedEpisodesTask(Fragment fragment, String tvdbId, List<TvShowSeason> seasons, boolean watched) 
 	{
-		super(fragment);
+		super(fragment, sSingleThreadExecutor);
 
 		this.tvdbId = tvdbId;
 		this.seasons = new int[seasons.size()];

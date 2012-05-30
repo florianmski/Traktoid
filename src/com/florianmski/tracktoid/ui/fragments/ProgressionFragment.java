@@ -63,7 +63,7 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 	private ListView lvSeasons;
 	private ImageView ivBackground;
 
-	private BadgesView bvNextEpisode;
+	private BadgesView<TvShowEpisode> bvNextEpisode;
 
 	private ListSeasonAdapter adapter;
 
@@ -235,6 +235,7 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 			bvNextEpisode.setVisibility(View.GONE);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
@@ -251,7 +252,7 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 		sbProgress.setEnabled(false);
 		sbProgress.setProgressDrawable(getResources().getDrawable(R.drawable.gradient_progress));
 
-		bvNextEpisode = (BadgesView)v.findViewById(R.id.badgesLayoutNextEpisode);
+		bvNextEpisode = (BadgesView<TvShowEpisode>)v.findViewById(R.id.badgesLayoutNextEpisode);
 
 		return v;
 	}
@@ -342,7 +343,7 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 					public void onClick(DialogInterface dialog, int which) 
 					{
 						if(!seasonsChecked.isEmpty())
-							tm.addToQueue(new WatchedEpisodesTask(ProgressionFragment.this, show.tvdbId, seasonsChecked, true));
+							new WatchedEpisodesTask(ProgressionFragment.this, show.tvdbId, seasonsChecked, true).fire();
 						else
 							Toast.makeText(getActivity(), "Nothing to send...", Toast.LENGTH_SHORT).show();
 					}
@@ -354,7 +355,7 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 					public void onClick(DialogInterface dialog, int which) 
 					{
 						if(!seasonsChecked.isEmpty())
-							tm.addToQueue(new WatchedEpisodesTask(ProgressionFragment.this, show.tvdbId, seasonsChecked, false));
+							new WatchedEpisodesTask(ProgressionFragment.this, show.tvdbId, seasonsChecked, false).fire();
 						else
 							Toast.makeText(getActivity(), "Nothing to send...", Toast.LENGTH_SHORT).show();
 					}

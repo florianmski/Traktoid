@@ -41,8 +41,8 @@ public class TraktoidApplication extends Application
 		//if extern media is mounted, use it for cache, else use default cache
 		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
 		{
-			File ext = new File(Environment.getExternalStorageDirectory() + "/Android/data/" + getPackageName());
-			File cacheDir = new File(ext, "/cache"); 
+			File ext = new File(Utils.getExtFolderPath(this));
+			File cacheDir = new File(ext, "cache"); 
 			AQUtility.setCacheDir(cacheDir);
 		}
 

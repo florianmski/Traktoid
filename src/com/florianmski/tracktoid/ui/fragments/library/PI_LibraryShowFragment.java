@@ -80,13 +80,13 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 	{
 		ArrayList<TvShow> showsSelected = new ArrayList<TvShow>();
 		showsSelected.add(adapter.getItem(posterClickedPosition));
-		tm.addToQueue(new UpdateShowsTask(PI_LibraryShowFragment.this, showsSelected));
+		new UpdateShowsTask(PI_LibraryShowFragment.this, showsSelected).fire();
 	}
 
 	@Override
 	public void onDeleteQAClick(QuickAction source, int pos, int actionId) 
 	{
-		tm.addToQueue(new RemoveShowTask(PI_LibraryShowFragment.this, adapter.getItem(posterClickedPosition)));
+		new RemoveShowTask(PI_LibraryShowFragment.this, adapter.getItem(posterClickedPosition)).fire();
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 			@Override
 			public void onClick(DialogInterface dialog, int item) 
 			{
-				tm.addToQueue(RateTask.createTask(PI_LibraryShowFragment.this, adapter.getItem(posterClickedPosition), ratings[item], null));
+				RateTask.createTask(PI_LibraryShowFragment.this, adapter.getItem(posterClickedPosition), ratings[item], null).fire();
 			}
 		});
 		AlertDialog alert = builder.create();
@@ -112,14 +112,14 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 	@Override
 	public void onRefreshClick() 
 	{
-		tm.addToQueue(new TraktItemsTask<TvShow>(this, new TraktItemsListener<TvShow>() 
+		new TraktItemsTask<TvShow>(this, new TraktItemsListener<TvShow>() 
 		{
 			@Override
 			public void onTraktItems(List<TvShow> shows) 
 			{
 				createShowsDialog(shows);
 			}
-		}, tm.userService().libraryShowsAll(TraktManager.getUsername()), true));
+		}, tm.userService().libraryShowsAll(TraktManager.getUsername()), true).fire();
 	}
 
 	public void createShowsDialog(final List<TvShow> shows)
@@ -151,7 +151,7 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 			public void onClick(DialogInterface dialog, int which) 
 			{
 				if(selectedShows.size() > 0)
-					tm.addToQueue(new UpdateShowsTask(PI_LibraryShowFragment.this, selectedShows));
+					new UpdateShowsTask(PI_LibraryShowFragment.this, selectedShows).fire();
 				else
 					Toast.makeText(getActivity(), "Nothing selected...", Toast.LENGTH_SHORT).show();
 			}
@@ -162,7 +162,7 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 			@Override
 			public void onClick(DialogInterface dialog, int which) 
 			{
-				tm.addToQueue(new UpdateShowsTask(PI_LibraryShowFragment.this, shows));
+				new UpdateShowsTask(PI_LibraryShowFragment.this, shows).fire();
 			}
 		});
 

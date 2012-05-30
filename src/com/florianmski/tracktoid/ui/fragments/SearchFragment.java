@@ -83,7 +83,7 @@ public class SearchFragment extends TraktFragment
 				String search = edtSearch.getText().toString().trim();
 				getStatusView().show().text("Searching for \"" + search + "\",\nPlease wait...");
 				
-				commonTask = new TraktItemsTask<TvShow>(SearchFragment.this, new TraktItemsListener<TvShow>() 
+				new TraktItemsTask<TvShow>(SearchFragment.this, new TraktItemsListener<TvShow>() 
 				{
 					@Override
 					public void onTraktItems(List<TvShow> shows) 
@@ -103,8 +103,7 @@ public class SearchFragment extends TraktFragment
 						else
 							getStatusView().hide().text(null);
 					}
-				}, tm.searchService().shows(search), false);
-        		commonTask.fire();
+				}, tm.searchService().shows(search), false).fire();
 			}
 		});
 	}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
@@ -16,7 +17,7 @@ public class GenresTask extends TraktTask<List<Genre>>
 	private GenresListener listener;
 	private TraktApiBuilder<List<Genre>> builder;
 	
-	public <T extends TraktoidInterface> GenresTask(Fragment fragment, GenresListener listener, TraktApiBuilder<List<Genre>> builder) 
+	public <T extends TraktoidInterface<T>> GenresTask(Fragment fragment, GenresListener listener, TraktApiBuilder<List<Genre>> builder) 
 	{
 		super(fragment);
 		

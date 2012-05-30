@@ -11,7 +11,7 @@ import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public abstract class InCollectionTask<T extends TraktoidInterface> extends PostTask
+public abstract class InCollectionTask<T extends TraktoidInterface<T>> extends PostTask
 {
 	protected T traktItem;
 	protected boolean addToCollection;
@@ -24,7 +24,7 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 		this.addToCollection = addToCollection;
 	}
 
-	public static <T extends TraktoidInterface> InCollectionTask<?> createTask(Fragment fragment, T traktItem, boolean addToCollection, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> InCollectionTask<?> createTask(Fragment fragment, T traktItem, boolean addToCollection, PostListener pListener)
 	{
 		if(traktItem instanceof TvShow)
 			return new InCollectionShowTask(fragment, (TvShow) traktItem, addToCollection, pListener);
@@ -39,7 +39,6 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 	protected abstract TraktApiBuilder<?> createLibraryBuilder(T traktItem);
 	protected abstract TraktApiBuilder<?> createUnlibraryBuilder(T traktItem);
 	protected abstract void insertInDb(T traktItem, boolean addToCollection, DatabaseWrapper dbw);
-	protected abstract void sendEvent(T traktItem);
 
 	@Override
 	protected void doPrePostStuff() 
@@ -64,7 +63,7 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 		super.onCompleted(r);
 
 		if(r != null)
-			sendEvent(traktItem);			
+			TraktTask.traktItemUpdated(traktItem);			
 	}
 
 	public static final class InCollectionShowTask extends InCollectionTask<TvShow>
@@ -89,12 +88,6 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 			return tm
 					.showService()
 					.unlibrary(Integer.valueOf(traktItem.tvdbId));
-		}
-
-		@Override
-		protected void sendEvent(TvShow traktItem) 
-		{
-			TraktTask.traktItemUpdated(traktItem);
 		}
 
 		@Override
@@ -131,12 +124,6 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 		}
 
 		@Override
-		protected void sendEvent(Movie traktItem) 
-		{
-			TraktTask.traktItemUpdated(traktItem);
-		}
-
-		@Override
 		protected void insertInDb(Movie traktItem, boolean addToCollection, DatabaseWrapper dbw) 
 		{
 			traktItem.inCollection = addToCollection;
@@ -168,12 +155,6 @@ public abstract class InCollectionTask<T extends TraktoidInterface> extends Post
 					.showService()
 					.episodeUnlibrary(Integer.valueOf(traktItem.tvdbId))
 					.episode(traktItem.season, traktItem.number);
-		}
-
-		@Override
-		protected void sendEvent(TvShowEpisode traktItem)
-		{
-			// TODO Auto-generated method stub
 		}
 
 		@Override

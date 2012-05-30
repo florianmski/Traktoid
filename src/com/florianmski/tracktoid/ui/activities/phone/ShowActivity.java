@@ -42,6 +42,7 @@ public class ShowActivity extends TraktActivity
 			SherlockFragment f;
 			if(b != null)
 			{
+				@SuppressWarnings("unchecked")
 				ArrayList<TvShow> result = (ArrayList<TvShow>) b.get(TraktoidConstants.BUNDLE_RESULTS);
 				if(result != null && result.size() == 1)
 					f = PI_TraktItemShowFragment.newInstance(result.get(0));

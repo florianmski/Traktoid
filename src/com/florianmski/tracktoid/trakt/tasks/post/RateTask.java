@@ -12,7 +12,7 @@ import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public abstract class RateTask<T extends TraktoidInterface> extends PostTask
+public abstract class RateTask<T extends TraktoidInterface<T>> extends PostTask
 {
 	//TODO new 10 rating
 	
@@ -27,7 +27,7 @@ public abstract class RateTask<T extends TraktoidInterface> extends PostTask
 		this.rating = rating;
 	}
 
-	public static <T extends TraktoidInterface> RateTask<?> createTask( Fragment fragment, T traktItem, Rating rating, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> RateTask<?> createTask( Fragment fragment, T traktItem, Rating rating, PostListener pListener)
 	{
 		if(traktItem instanceof TvShow)
 			return new RateShowTask(fragment, (TvShow) traktItem, rating, pListener);
@@ -41,7 +41,6 @@ public abstract class RateTask<T extends TraktoidInterface> extends PostTask
 
 	protected abstract TraktApiBuilder<?> createRateBuilder(T traktItem);
 	protected abstract void insertInDb(T traktItem, Rating rating);
-	protected abstract void sendEvent(T traktItem);
 
 	@Override
 	protected void doPrePostStuff() 
@@ -61,7 +60,7 @@ public abstract class RateTask<T extends TraktoidInterface> extends PostTask
 		super.onCompleted(r);
 
 		if(r != null)
-			sendEvent(traktItem);
+			TraktTask.traktItemUpdated(traktItem);
 	}
 	
 	public static final class RateShowTask extends RateTask<TvShow>
@@ -78,12 +77,6 @@ public abstract class RateTask<T extends TraktoidInterface> extends PostTask
 					.rateService()
 					.show(Integer.valueOf(traktItem.tvdbId))
 					.rating(rating);
-		}
-
-		@Override
-		protected void sendEvent(TvShow traktItem) 
-		{
-			TraktTask.traktItemUpdated(traktItem);
 		}
 
 		@Override
@@ -114,12 +107,6 @@ public abstract class RateTask<T extends TraktoidInterface> extends PostTask
 		}
 
 		@Override
-		protected void sendEvent(Movie traktItem) 
-		{
-			TraktTask.traktItemUpdated(traktItem);
-		}
-
-		@Override
 		protected void insertInDb(Movie traktItem, Rating rating) 
 		{
 			traktItem.rating = rating;
@@ -146,12 +133,6 @@ public abstract class RateTask<T extends TraktoidInterface> extends PostTask
 					.episode(traktItem.number)
 					.season(traktItem.season)
 					.rating(rating);
-		}
-
-		@Override
-		protected void sendEvent(TvShowEpisode traktItem) 
-		{
-			TraktTask.traktItemUpdated(traktItem);
 		}
 
 		@Override

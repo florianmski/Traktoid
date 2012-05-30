@@ -277,7 +277,7 @@ public abstract class BackgroundTask<TResult> {
 	 */
 	public void execute() {
 		addRunningTask(this);
-
+		Log.d("Traktoid", "add " + mId + " to " + mExecutor.getClass().getSimpleName());
 		mExecutor.execute(mFutureTask);
 	}
 

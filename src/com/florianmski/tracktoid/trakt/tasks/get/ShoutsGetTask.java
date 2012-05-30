@@ -11,35 +11,23 @@ import com.jakewharton.trakt.entities.Shout;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class ShoutsGetTask<T extends TraktoidInterface> extends TraktTask<List<Shout>>
+public class ShoutsGetTask<T extends TraktoidInterface<T>> extends TraktTask<List<Shout>>
 {
-	private String tvdbId;
 	private T traktItem;
 	private List<Shout> shouts;
 	private ShoutsListener listener;
 	
-//	public ShoutsGetTask(TraktManager tm, Fragment fragment, String tvdbId, ShoutsListener listener) 
-//	{
-//		super(tm, fragment);
-//		
-//		this.tvdbId = tvdbId;
-//		this.listener = listener;
-//	}
-	
-	public ShoutsGetTask(Fragment fragment, T traktItem, String tvdbId, ShoutsListener listener) 
+	public ShoutsGetTask(Fragment fragment, T traktItem, ShoutsListener listener) 
 	{
 		super(fragment);
 		
-		this.tvdbId = tvdbId;
 		this.traktItem = traktItem;
 		this.listener = listener;
 	}
 	
 	@Override
 	protected List<Shout> doTraktStuffInBackground()
-	{
-//		showToast("Retrieving shouts...", Toast.LENGTH_SHORT);
-		
+	{		
 		if(traktItem instanceof TvShow)
 			shouts = tm.showService().shouts(traktItem.getId()).fire();
 		else if(traktItem instanceof Movie)

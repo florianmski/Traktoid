@@ -80,13 +80,13 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 	{
 		ArrayList<Movie> moviesSelected = new ArrayList<Movie>();
 		moviesSelected.add(adapter.getItem(posterClickedPosition));
-		tm.addToQueue(new UpdateMoviesTask(PI_LibaryMovieFragment.this, moviesSelected));
+		new UpdateMoviesTask(PI_LibaryMovieFragment.this, moviesSelected).fire();
 	}
 
 	@Override
 	public void onDeleteQAClick(QuickAction source, int pos, int actionId) 
 	{
-		tm.addToQueue(new RemoveMovieTask(tm, PI_LibaryMovieFragment.this, adapter.getItem(posterClickedPosition)));
+		new RemoveMovieTask(tm, PI_LibaryMovieFragment.this, adapter.getItem(posterClickedPosition)).fire();
 	}
 
 	@Override
@@ -98,14 +98,14 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 	@Override
 	public void onRefreshClick() 
 	{
-		tm.addToQueue(new TraktItemsTask<Movie>(this, new TraktItemsListener<Movie>() 
+		new TraktItemsTask<Movie>(this, new TraktItemsListener<Movie>() 
 		{
 			@Override
 			public void onTraktItems(List<Movie> movies) 
 			{
 				createMoviesDialog(movies);					
 			}
-		}, tm.userService().libraryMoviesAll(TraktManager.getUsername()), true));
+		}, tm.userService().libraryMoviesAll(TraktManager.getUsername()), true).fire();
 	}
 	
 	public void createMoviesDialog(final List<Movie> movies)
@@ -137,7 +137,7 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 			public void onClick(DialogInterface dialog, int which) 
 			{
 				if(selectedMovies.size() > 0)
-					tm.addToQueue(new UpdateMoviesTask(PI_LibaryMovieFragment.this, selectedMovies));
+					new UpdateMoviesTask(PI_LibaryMovieFragment.this, selectedMovies).fire();
 				else
 					Toast.makeText(getActivity(), "Nothing selected...", Toast.LENGTH_SHORT).show();
 			}
@@ -148,7 +148,7 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 			@Override
 			public void onClick(DialogInterface dialog, int which) 
 			{
-				tm.addToQueue(new UpdateMoviesTask(PI_LibaryMovieFragment.this, movies));
+				new UpdateMoviesTask(PI_LibaryMovieFragment.this, movies).fire();
 			}
 		});
 

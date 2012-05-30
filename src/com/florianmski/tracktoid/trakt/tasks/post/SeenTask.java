@@ -16,7 +16,7 @@ import com.jakewharton.trakt.services.MovieService.UnseenBuilder;
 import com.jakewharton.trakt.services.ShowService.EpisodeSeenBuilder;
 import com.jakewharton.trakt.services.ShowService.EpisodeUnseenBuilder;
 
-public abstract class SeenTask<T extends TraktoidInterface> extends PostTask
+public abstract class SeenTask<T extends TraktoidInterface<T>> extends PostTask
 {
 	protected Map<T,Boolean> traktItems;
 
@@ -34,6 +34,7 @@ public abstract class SeenTask<T extends TraktoidInterface> extends PostTask
 		return createTask(fragment, traktItems, pListener);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T extends TraktoidInterface<T>> SeenTask<?> createTask(Fragment fragment, Map<T,Boolean> traktItems, PostListener pListener)
 	{
 		//TODO

@@ -18,7 +18,8 @@ public class PostTask extends TraktTask<Response>
 
 	public PostTask(Fragment fragment, TraktApiBuilder<?> builder, PostListener pListener) 
 	{
-		super(fragment);
+		//post request one by one
+		super(fragment, sSingleThreadExecutor);
 
 		this.builders = new ArrayList<TraktApiBuilder<?>>();
 		if(builder != null)

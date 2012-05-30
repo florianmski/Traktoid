@@ -10,7 +10,7 @@ import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public abstract class InWatchlistTask<T extends TraktoidInterface> extends PostTask
+public abstract class InWatchlistTask<T extends TraktoidInterface<T>> extends PostTask
 {
 	protected T traktItem;
 	protected boolean addToWatchlist;
@@ -23,7 +23,7 @@ public abstract class InWatchlistTask<T extends TraktoidInterface> extends PostT
 		this.addToWatchlist = addToWatchlist;
 	}
 	
-	public static <T extends TraktoidInterface> InWatchlistTask<?> createTask(Fragment fragment, T traktItem, boolean addToWatchlist, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> InWatchlistTask<?> createTask(Fragment fragment, T traktItem, boolean addToWatchlist, PostListener pListener)
 	{
 		if(traktItem instanceof TvShow)
 			return new InWatchlistShowTask(fragment, (TvShow) traktItem, addToWatchlist, pListener);
@@ -38,7 +38,6 @@ public abstract class InWatchlistTask<T extends TraktoidInterface> extends PostT
 	protected abstract TraktApiBuilder<?> createWatchlistBuilder(T traktItem);
 	protected abstract TraktApiBuilder<?> createUnwatchlistBuilder(T traktItem);
 	protected abstract void insertInDb(T traktItem, boolean addToWatchlist, DatabaseWrapper dbw);
-	protected abstract void sendEvent(T traktItem);
 	
 	@Override
 	protected void doPrePostStuff() 
@@ -63,7 +62,7 @@ public abstract class InWatchlistTask<T extends TraktoidInterface> extends PostT
 		super.onCompleted(r);
 
 		if(r != null)
-			sendEvent(traktItem);			
+			TraktTask.traktItemUpdated(traktItem);			
 	}
 	
 	public static final class InWatchlistShowTask extends InWatchlistTask<TvShow>
@@ -89,12 +88,6 @@ public abstract class InWatchlistTask<T extends TraktoidInterface> extends PostT
 					.showService()
 					.unwatchlist()
 					.tvdbId(Integer.valueOf(traktItem.getId()));
-		}
-
-		@Override
-		protected void sendEvent(TvShow traktItem) 
-		{
-			TraktTask.traktItemUpdated(traktItem);
 		}
 
 		@Override
@@ -130,12 +123,6 @@ public abstract class InWatchlistTask<T extends TraktoidInterface> extends PostT
 					.unwatchlist()
 					.movie(traktItem.getId());
 		}
-
-		@Override
-		protected void sendEvent(Movie traktItem) 
-		{
-			TraktTask.traktItemUpdated(traktItem);
-		}
 		
 		@Override
 		protected void insertInDb(Movie traktItem, boolean addToWatchlist, DatabaseWrapper dbw) 
@@ -169,12 +156,6 @@ public abstract class InWatchlistTask<T extends TraktoidInterface> extends PostT
 					.showService()
 					.episodeUnwatchlist(Integer.valueOf(traktItem.tvdbId))
 					.episode(traktItem.season, traktItem.number);
-		}
-
-		@Override
-		protected void sendEvent(TvShowEpisode traktItem)
-		{
-			// TODO Auto-generated method stub
 		}
 		
 		@Override

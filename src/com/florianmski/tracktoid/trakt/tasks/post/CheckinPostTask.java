@@ -10,7 +10,7 @@ import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public abstract class CheckinPostTask<T extends TraktoidInterface> extends PostTask
+public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends PostTask
 {
 	protected T traktItem;
 	protected boolean checkin;
@@ -23,7 +23,7 @@ public abstract class CheckinPostTask<T extends TraktoidInterface> extends PostT
 		this.checkin = checkin;
 	}
 	
-	public static <T extends TraktoidInterface> CheckinPostTask<?> createTask(Fragment fragment, T traktItem, boolean checkin, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> CheckinPostTask<?> createTask(Fragment fragment, T traktItem, boolean checkin, PostListener pListener)
 	{
 		if(traktItem instanceof Movie)
 			return new CheckinMovieTask(fragment, (Movie) traktItem, checkin, pListener);

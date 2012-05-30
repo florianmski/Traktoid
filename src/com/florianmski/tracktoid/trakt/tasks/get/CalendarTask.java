@@ -19,7 +19,6 @@ package com.florianmski.tracktoid.trakt.tasks.get;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import android.support.v4.app.Fragment;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
@@ -28,21 +27,31 @@ import com.jakewharton.trakt.entities.CalendarDate;
 import com.jakewharton.trakt.entities.CalendarDate.CalendarTvShowEpisode;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class CalendarTask extends TraktTask<ArrayList<ArrayList<CalendarDate>>>
+public class CalendarTask extends TraktTask<List<ArrayList<CalendarDate>>>
 {	
-	ArrayList<ArrayList<CalendarDate>> calendars = new ArrayList<ArrayList<CalendarDate>>();
+	private List<ArrayList<CalendarDate>> calendars = new ArrayList<ArrayList<CalendarDate>>();
+	
+	private static List<CalendarListener> listeners = new ArrayList<CalendarListener>();
 
 	public CalendarTask(Fragment fragment) 
 	{
 		super(fragment);
 	}
 	
+	public static void addObserver(CalendarListener listener)
+	{
+		listeners.add(listener);
+	}
+	
+	public static void removeObserver(CalendarListener listener)
+	{
+		listeners.remove(listener);
+	}
+	
 	//instead of doing 3 requests (user shows, premieres and all), we do only "all" and then sorts
 	@Override
-	protected ArrayList<ArrayList<CalendarDate>> doTraktStuffInBackground()
-	{	
-//		showToast("Retrieving calendar...", Toast.LENGTH_SHORT);
-		
+	protected List<ArrayList<CalendarDate>> doTraktStuffInBackground()
+	{			
 		ArrayList<CalendarDate> calendarListShows;
 		ArrayList<CalendarDate> calendarListPremieres = new ArrayList<CalendarDate>();
 		ArrayList<CalendarDate> calendarListMyShows = new ArrayList<CalendarDate>();
@@ -97,11 +106,16 @@ public class CalendarTask extends TraktTask<ArrayList<ArrayList<CalendarDate>>>
 	}
 	
 	@Override
-	protected void onCompleted(ArrayList<ArrayList<CalendarDate>> result) 
+	protected void onCompleted(List<ArrayList<CalendarDate>> result) 
 	{		
-		//TODO
-//		if(result != null && getRef() != null)
-//			tm.onCalendar(calendars);
+		if(result != null && getRef() != null)
+			for(CalendarListener listener : listeners)
+				listener.onCalendar(calendars);
+	}
+	
+	public interface CalendarListener
+	{
+		public void onCalendar(List<ArrayList<CalendarDate>> calendars);
 	}
 
 }

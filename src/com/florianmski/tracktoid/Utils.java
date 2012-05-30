@@ -16,6 +16,7 @@
 
 package com.florianmski.tracktoid;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Calendar;
@@ -42,6 +43,8 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Environment;
+
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 
@@ -165,14 +168,14 @@ public class Utils
 				@Override
 				public void onClick(DialogInterface dialog, int item) 
 				{
-					TraktManager.getInstance().addToQueue(task.init(item == 1));
+					task.init(item == 1).fire();
 				}
 			});
 			builder.create().show();
 		}
 		//standard "seen" method
 		else
-			TraktManager.getInstance().addToQueue(task.init(false));
+			task.init(false).fire();
 	}
 
 	public static long getPSTTimestamp(long timestamp)
@@ -263,5 +266,10 @@ public class Utils
 		canvas.drawRect(rect, paintStroke);
 
 		return shadowBitmap(output);
+	}
+	
+	public static String getExtFolderPath(Context context)
+	{
+		return Environment.getExternalStorageDirectory() + "/Android/data/" + context.getPackageName() + "/";
 	}
 }

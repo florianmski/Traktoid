@@ -34,7 +34,7 @@ import com.jakewharton.trakt.entities.DismissResponse;
 import com.jakewharton.trakt.entities.Genre;
 import com.jakewharton.trakt.entities.Response;
 
-public abstract class RecommendationFragment<T extends TraktoidInterface> extends TraktFragment
+public abstract class RecommendationFragment<T extends TraktoidInterface<T>> extends TraktFragment
 {	
 	protected final static int START_YEAR = 1919;
 	protected final static int END_YEAR = 2019;
@@ -185,13 +185,13 @@ public abstract class RecommendationFragment<T extends TraktoidInterface> extend
 		});
 	}
 
-	protected TraktTask createGetRecommendationsTask()
+	protected TraktTask<?> createGetRecommendationsTask()
 	{
 		int index = spGenre == null ? -1 : spGenre.getSelectedItemPosition();
 		Genre genre = index <= 0 || index > genres.size() ? null : genres.get(index-1);
 		getStatusView().show().text("Retrieving recommendations" + ((genre == null) ? "" : " in \"" + genre.name + "\"") + ",\nPlease wait...");	
 
-		return commonTask = new TraktItemsTask<T>(this, new TraktItemsListener<T>() 
+		return new TraktItemsTask<T>(this, new TraktItemsListener<T>() 
 		{
 			@Override
 			public void onTraktItems(List<T> traktItems) 

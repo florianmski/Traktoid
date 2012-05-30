@@ -134,7 +134,7 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 
 		TraktTask.addObserver(this);
 	}
-	
+
 	@Override
 	public void onDestroy()
 	{
@@ -208,27 +208,18 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 		MenuItem rateItem = rateMenu.getItem();
 		rateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-		if(!tm.isUpdateTaskRunning())
-		{
-			menu.add(0, R.id.action_bar_refresh, 0, "Refresh")
-			.setIcon(R.drawable.ab_icon_refresh)
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		}
-		else
-		{
-			int value = getSherlockActivity().getSupportActionBar().getHeight();
-			ProgressBar pbRefresh = new ProgressBar(getActivity());
-			pbRefresh.setIndeterminate(true);
-			RelativeLayout rl = new RelativeLayout(getActivity());
-			rl.setLayoutParams(new LayoutParams(value, value));
-			pbRefresh.setLayoutParams(new RelativeLayout.LayoutParams(value, value));
-			rl.addView(pbRefresh);
+		int value = getSherlockActivity().getSupportActionBar().getHeight();
+		ProgressBar pbRefresh = new ProgressBar(getActivity());
+		pbRefresh.setIndeterminate(true);
+		RelativeLayout rl = new RelativeLayout(getActivity());
+		rl.setLayoutParams(new LayoutParams(value, value));
+		pbRefresh.setLayoutParams(new RelativeLayout.LayoutParams(value, value));
+		rl.addView(pbRefresh);
 
-			menu.add(0, R.id.action_bar_refresh, 0, "Refresh")
-			.setActionView(rl)
-			.setEnabled(false)
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		}
+		menu.add(0, R.id.action_bar_refresh, 0, "Refresh")
+		.setActionView(rl)
+		.setEnabled(false)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 	}
 
 	@Override
@@ -253,17 +244,17 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 	}
 
 	//TODO
-//	@Override
-//	public void onBeforeTraktRequest()
-//	{
-//		getSherlockActivity().invalidateOptionsMenu();
-//	}
-//
-//	@Override
-//	public void onAfterTraktRequest(boolean success) 
-//	{
-//		getSherlockActivity().invalidateOptionsMenu();
-//	}
+	//	@Override
+	//	public void onBeforeTraktRequest()
+	//	{
+	//		getSherlockActivity().invalidateOptionsMenu();
+	//	}
+	//
+	//	@Override
+	//	public void onAfterTraktRequest(boolean success) 
+	//	{
+	//		getSherlockActivity().invalidateOptionsMenu();
+	//	}
 
 	@Override
 	public void onResume()
@@ -283,7 +274,7 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 		if(adapter != null)
 			adapter.updateItem(traktItem);
 	}
-	
+
 	@Override
 	public void onTraktItemRemoved(T traktItem) 
 	{

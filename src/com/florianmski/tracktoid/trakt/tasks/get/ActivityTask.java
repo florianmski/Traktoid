@@ -181,7 +181,7 @@ public class ActivityTask extends TraktTask<Activity>
 
 			//TODO getRef() is dangerous here
 			if(!refreshList.isEmpty())
-				tm.addToQueue(new UpdateShowsTask(getRef(), new ArrayList<TvShow>(refreshList)));
+				new UpdateShowsTask(getRef(), new ArrayList<TvShow>(refreshList)).fire();
 		}
 	}
 

@@ -37,8 +37,6 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 	private static String username;
 	private static String password;
 
-	private static ArrayList<TraktTask> tasks;
-//	private static ArrayList<TraktListener> listeners;
 	private Context context;
 
 	public static synchronized TraktManager getInstance()
@@ -60,8 +58,6 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 	public static void create(Context context)
 	{
 		traktManager = new TraktManager(context);
-		tasks = new ArrayList<TraktTask>();
-//		listeners = new ArrayList<TraktListener>();
 	}
 
 	public void setAccountInformations(Context context)
@@ -190,26 +186,4 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 //
 //	@Override
 //	public void onErrorTraktRequest(Exception e) {}
-
-	//add user action in a queue so actions are done one by one
-	public synchronized void addToQueue(TraktTask task)
-	{
-		tasks.add(task);
-
-		if(tasks.size() == 1)
-			task.inQueue().fire();
-		else
-			Toast.makeText(context, "This action will be done later...", Toast.LENGTH_SHORT).show();
-	}
-
-	//check if a show is currently updating
-	public boolean isUpdateTaskRunning()
-	{
-		return !tasks.isEmpty() && (tasks.get(0) instanceof UpdateShowsTask);
-	}
-
-	public TraktTask getCurrentTask()
-	{
-		return tasks.isEmpty() ? null : tasks.get(0);
-	}
 }

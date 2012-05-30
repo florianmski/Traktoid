@@ -32,12 +32,11 @@ import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.Shout;
 
-public class ShoutsFragment<T extends TraktoidInterface> extends TraktFragment
+public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragment
 {
 	private final static int SPOILER = 0;
 	private final static int NO_SPOILER = 1;
 
-	private String tvdbId;
 	private T traktItem;
 
 	private ListView lvShouts;
@@ -66,12 +65,12 @@ public class ShoutsFragment<T extends TraktoidInterface> extends TraktFragment
 		setHasOptionsMenu(true);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		tvdbId = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
 		traktItem = (T)getArguments().get(TraktoidConstants.BUNDLE_TRAKT_ITEM);
 
 		setTitle("Shouts : " + traktItem.getTitle());
@@ -80,8 +79,7 @@ public class ShoutsFragment<T extends TraktoidInterface> extends TraktFragment
 			setAdapter();
 		else
 		{
-			createGetShoutsTask();
-			commonTask.fire();
+			createGetShoutsTask().fire();
 		}
 
 		lvShouts.setOnItemClickListener(new OnItemClickListener() 
@@ -137,7 +135,6 @@ public class ShoutsFragment<T extends TraktoidInterface> extends TraktFragment
 						if(success)
 						{
 							adapter.clear();
-							createGetShoutsTask();
 
 							//post the task 3sec later to let trakt the time to save the shout
 							new Handler().postDelayed(new Runnable() 
@@ -145,7 +142,7 @@ public class ShoutsFragment<T extends TraktoidInterface> extends TraktFragment
 								@Override
 								public void run() 
 								{
-									commonTask.fire();
+									createGetShoutsTask().fire();
 								}
 							}, 3000);
 						}
@@ -157,11 +154,11 @@ public class ShoutsFragment<T extends TraktoidInterface> extends TraktFragment
 
 	}
 
-	private void createGetShoutsTask()
+	private ShoutsGetTask<T> createGetShoutsTask()
 	{
 		getStatusView().show().text("Loading shouts,\nPlease wait...");
 
-		commonTask = new ShoutsGetTask<T>(this, traktItem, tvdbId, new ShoutsListener() 
+		return new ShoutsGetTask<T>(this, traktItem, new ShoutsListener() 
 		{
 			@Override
 			public void onShouts(List<Shout> shouts) 

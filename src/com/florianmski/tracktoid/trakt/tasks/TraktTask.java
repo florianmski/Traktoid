@@ -29,8 +29,10 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 	protected boolean inQueue = false;
 	protected Exception error;
 	protected Context context;
+	
 	private static List<TraktListener> listeners = new ArrayList<TraktListener>();
-
+	protected static ExecutorService sSingleThreadExecutor = new SingleThreadExecutor();
+	
 	public TraktTask(Fragment ref) 
 	{
 		this(ref, null);
@@ -48,6 +50,8 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 			tListener = (TraktListener)getRef();
 		}
 		catch(ClassCastException e){}
+		
+		setId(this.getClass().getSimpleName());
 	}
 
 	@Override
@@ -147,11 +151,6 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 	{
 		this.silentConnectionError = silentConnectionError;
 		return this;
-	}
-
-	public TraktTask<TResult> inQueue() 
-	{
-		return null;
 	}
 
 	public void fire() 

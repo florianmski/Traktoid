@@ -26,7 +26,7 @@ import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 
-public class TraktItemsTask<T extends TraktoidInterface> extends TraktTask<List<T>>
+public class TraktItemsTask<T extends TraktoidInterface<T>> extends TraktTask<List<T>>
 {
 	private List<T> traktItems = new ArrayList<T>();
 	private TraktApiBuilder<?> builder;
@@ -61,7 +61,7 @@ public class TraktItemsTask<T extends TraktoidInterface> extends TraktTask<List<
 			listener.onTraktItems(traktItems);
 	}
 	
-	public interface TraktItemsListener<E extends TraktoidInterface>
+	public interface TraktItemsListener<E extends TraktoidInterface<E>>
 	{
 		public void onTraktItems(List<E> traktItems);
 	}
