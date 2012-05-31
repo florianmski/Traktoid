@@ -38,6 +38,7 @@ public class RemoveShowTask extends TraktTask<TvShow>
 	{
 		showToast("Removing " + show.title + "...", Toast.LENGTH_SHORT);
 		
+		//TODO
 		//delete only locally
 //		tm.showService().unlibrary(Integer.valueOf(show.getTvdbId())).fire();
 
@@ -53,10 +54,9 @@ public class RemoveShowTask extends TraktTask<TvShow>
 	}
 	
 	@Override
-	protected void onCompleted(TvShow show)
-	{		
-		if(show != null)
-			TraktTask.traktItemRemoved(show);
+	protected void sendEvent(TvShow result) 
+	{
+		TraktTask.traktItemRemoved(show);
 	}
 
 }

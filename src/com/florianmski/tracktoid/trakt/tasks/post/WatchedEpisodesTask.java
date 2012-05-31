@@ -172,15 +172,6 @@ public class WatchedEpisodesTask extends TraktTask<TvShow>
 		return show;
 	}
 
-	@Override
-	protected void onCompleted(TvShow show)
-	{
-		super.onCompleted(show);
-
-		if(show != null)
-			TraktTask.traktItemUpdated(show);
-	}
-
 	public String getTvdbId() {
 		return tvdbId;
 	}
@@ -211,5 +202,11 @@ public class WatchedEpisodesTask extends TraktTask<TvShow>
 
 	public void setShow(TvShow show) {
 		this.show = show;
+	}
+
+	@Override
+	protected void sendEvent(TvShow result) 
+	{
+		TraktTask.traktItemUpdated(show);
 	}
 }

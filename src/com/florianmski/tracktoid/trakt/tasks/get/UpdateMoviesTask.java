@@ -38,7 +38,7 @@ import com.florianmski.tracktoid.ui.activities.phone.SinglePaneActivity;
 import com.florianmski.tracktoid.ui.fragments.library.PagerLibraryFragment;
 import com.jakewharton.trakt.entities.Movie;
 
-public class UpdateMoviesTask extends TraktTask<Movie>
+public class UpdateMoviesTask extends GetTask<Movie>
 {
 	private final static int MAX_PERCENTAGE = 100;
 	private final static int NOTIFICATION_ID = 1337;
@@ -168,6 +168,12 @@ public class UpdateMoviesTask extends TraktTask<Movie>
 		contentView.setTextViewText(R.id.textViewSeason, text);
 		contentView.setProgressBar(R.id.progressBarSeasons, 100, progress, false);
 		nm.notify(NOTIFICATION_ID, notification);
+	}
+
+	@Override
+	protected void sendEvent(Movie result) 
+	{
+		// TODO Auto-generated method stub
 	}
 
 }

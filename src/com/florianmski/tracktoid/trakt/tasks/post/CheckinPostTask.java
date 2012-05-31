@@ -12,6 +12,8 @@ import com.jakewharton.trakt.entities.TvShowEpisode;
 
 public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends PostTask
 {
+	//TODO add social networks
+	
 	protected T traktItem;
 	protected boolean checkin;
 
@@ -36,7 +38,6 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 	protected abstract TraktApiBuilder<?> createCheckinBuilder(T traktItem);
 	protected abstract TraktApiBuilder<?> createUncheckinBuilder(T traktItem);
 	protected abstract void insertInDb(T traktItem, boolean addToCollection, DatabaseWrapper dbw);
-	protected abstract void sendEvent(T traktItem);
 	
 	@Override
 	protected void doPrePostStuff() 
@@ -56,12 +57,9 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 	}
 	
 	@Override
-	protected void onCompleted(Response r)
+	protected void sendEvent(Response result) 
 	{
-		super.onCompleted(r);
-
-		if(r != null)
-			sendEvent(traktItem);			
+		TraktTask.traktItemUpdated(traktItem);
 	}
 	
 	public static final class CheckinMovieTask extends CheckinPostTask<Movie>
@@ -85,12 +83,6 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 			return tm
 					.movieService()
 					.cancelCheckin();
-		}
-
-		@Override
-		protected void sendEvent(Movie traktItem) 
-		{
-			TraktTask.traktItemUpdated(traktItem);
 		}
 		
 		@Override
@@ -125,12 +117,6 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 			return tm
 					.showService()
 					.cancelCheckin();
-		}
-
-		@Override
-		protected void sendEvent(TvShowEpisode traktItem) 
-		{
-			TraktTask.traktItemUpdated(traktItem);
 		}
 		
 		@Override

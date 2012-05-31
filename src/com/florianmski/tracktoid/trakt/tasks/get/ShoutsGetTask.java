@@ -11,7 +11,7 @@ import com.jakewharton.trakt.entities.Shout;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class ShoutsGetTask<T extends TraktoidInterface<T>> extends TraktTask<List<Shout>>
+public class ShoutsGetTask<T extends TraktoidInterface<T>> extends GetTask<List<Shout>>
 {
 	private T traktItem;
 	private List<Shout> shouts;
@@ -38,16 +38,16 @@ public class ShoutsGetTask<T extends TraktoidInterface<T>> extends TraktTask<Lis
 		return shouts;
 	}
 	
-	@Override
-	protected void onCompleted(List<Shout> shouts)
-	{		
-		if(shouts != null && getRef() != null)
-			listener.onShouts(shouts);
-	}
-	
 	public interface ShoutsListener
 	{
 		public void onShouts(List<Shout> shouts);
+	}
+
+	@Override
+	protected void sendEvent(List<Shout> result) 
+	{
+		if(getRef() != null)
+			listener.onShouts(shouts);
 	}
 
 }

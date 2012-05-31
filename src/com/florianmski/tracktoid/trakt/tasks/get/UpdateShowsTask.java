@@ -39,7 +39,7 @@ import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
-public class UpdateShowsTask extends TraktTask<TvShow>
+public class UpdateShowsTask extends GetTask<TvShow>
 {
 	private final static int MAX_PERCENTAGE = 100;
 	private final static int NOTIFICATION_ID = 1337;
@@ -168,6 +168,12 @@ public class UpdateShowsTask extends TraktTask<TvShow>
 		contentView.setTextViewText(R.id.textViewSeason, text);
 		contentView.setProgressBar(R.id.progressBarSeasons, 100, progress, false);
 		nm.notify(NOTIFICATION_ID, notification);
+	}
+
+	@Override
+	protected void sendEvent(TvShow result) 
+	{
+		// TODO Auto-generated method stub
 	}
 
 }

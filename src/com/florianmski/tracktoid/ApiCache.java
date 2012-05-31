@@ -1,46 +1,43 @@
 package com.florianmski.tracktoid;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap.Config;
 
 import com.jakewharton.trakt.TraktApiBuilder;
 
 public class ApiCache 
 {
-	private static final String GET_FOLDER = "/get";
-	private static final String POST_FOLDER = "/post";
+	private static final String GET_FOLDER = "get/";
+	private static final String POST_FOLDER = "post/";
 	
 	private static String getPath(TraktApiBuilder<?> builder, String type, Context context)
 	{
-		try 
-		{
-			return Utils.getExtFolderPath(context) + type + URLEncoder.encode(builder.getURL(), "UTF-8");
-		} 
-		catch (UnsupportedEncodingException e) 
-		{
-			e.printStackTrace();
-		}
-		return null;
+		return Utils.getExtFolderPath(context) + type + Utils.getMD5Hex(builder.getURL());
 	}
 
-	public static void save(TraktApiBuilder<?> builder, Context context)
+	public static void save(TraktApiBuilder<?> builder, Object toSave, Context context)
 	{
+		if(builder == null || toSave == null || context == null)
+			return;
+		
 		ObjectOutputStream outputStream = null;
 
 		try 
 		{
-			outputStream = new ObjectOutputStream(new FileOutputStream(getPath(builder, GET_FOLDER, context)));
-			outputStream.writeObject(builder);
+			String path = getPath(builder, GET_FOLDER, context);
+			File f = new File(path);
+			f.getParentFile().mkdirs();
+			f.createNewFile();
+			outputStream = new ObjectOutputStream(new FileOutputStream(f));
+			outputStream.writeObject(toSave);
 		} 
 		catch (FileNotFoundException ex) 
 		{
@@ -67,15 +64,18 @@ public class ApiCache
 		}
 	}
 
-	public static Object load(TraktApiBuilder<?> builder, Context context)
+	@SuppressWarnings("unchecked")
+	public static <T> T read(TraktApiBuilder<T> builder, Context context)
 	{
 		ObjectInputStream inputStream = null;
-		Object o = null;
+		T result = null;
 
 		try 
 		{
-			inputStream = new ObjectInputStream(new FileInputStream(getPath(builder, POST_FOLDER, context)));
-			o = (Config) inputStream.readObject();
+			String path = getPath(builder, GET_FOLDER, context);
+			File f = new File(path);
+			inputStream = new ObjectInputStream(new FileInputStream(f));
+			result = (T) inputStream.readObject();
 		}  
 		catch (ClassNotFoundException e) 
 		{
@@ -101,7 +101,7 @@ public class ApiCache
 				e.printStackTrace();
 			}
 		}
-		return o;
+		return result;
 	}
 	
 	public static List<TraktApiBuilder<?>> getPendingRequests()

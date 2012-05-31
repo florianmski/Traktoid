@@ -1,5 +1,6 @@
 package com.florianmski.tracktoid.ui.fragments.calendar;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class PagerCalendarFragment extends PagerTabsFragment implements Calendar
 		super.onActivityCreated(savedInstanceState);
 	}
 	
-	public void addTabs(List<ArrayList<CalendarDate>> calendars) 
+	public void addTabs(List<List<CalendarDate>> calendars) 
 	{
 		Bundle args = new Bundle();
 
@@ -70,13 +71,13 @@ public class PagerCalendarFragment extends PagerTabsFragment implements Calendar
 //			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(2));
 //			mTabsAdapter.addTab(mTabHost.newTabSpec("shows").setIndicator("Shows"), CalendarFragment.class, args);
 			
-			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(0));
+			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, (Serializable) (calendars == null ? null : calendars.get(0)));
 			mTabsAdapter.addTab("Premieres", PI_CalendarFragment.class, args);
 			args = new Bundle();
-			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(1));
+			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, (Serializable) (calendars == null ? null : calendars.get(1)));
 			mTabsAdapter.addTab("My shows", PI_CalendarFragment.class, args);
 			args = new Bundle();
-			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, calendars == null ? null : calendars.get(2));
+			args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, (Serializable) (calendars == null ? null : calendars.get(2)));
 			mTabsAdapter.addTab("Shows", PI_CalendarFragment.class, args);
 			
 			getActionBar().setSelectedNavigationItem(1);
@@ -100,7 +101,7 @@ public class PagerCalendarFragment extends PagerTabsFragment implements Calendar
 	public void onSaveState(Bundle toSave) {}
 
 	@Override
-	public void onCalendar(List<ArrayList<CalendarDate>> calendars) 
+	public void onCalendar(List<List<CalendarDate>> calendars) 
 	{
 		addTabs(calendars);
 	}

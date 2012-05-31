@@ -16,9 +16,10 @@
 
 package com.florianmski.tracktoid;
 
-import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +46,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 
-import com.florianmski.tracktoid.trakt.TraktManager;
+import com.androidquery.util.AQUtility;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 
 public class Utils 
@@ -55,7 +56,7 @@ public class Utils
 	{
 		if(context == null)
 			return false;
-		
+
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 		if (netInfo != null && netInfo.isConnectedOrConnecting())
@@ -100,6 +101,33 @@ public class Utils
 		}
 		catch(Exception e) {}
 		return null;
+	}
+
+	public static String getMD5Hex(String str)
+	{
+		byte[] data = getMD5(str.getBytes());
+
+		BigInteger bi = new BigInteger(data).abs();
+
+		String result = bi.toString(36);
+		return result;
+	}
+
+
+	private static byte[] getMD5(byte[] data)
+	{
+		MessageDigest digest;
+		try 
+		{
+			digest = java.security.MessageDigest.getInstance("MD5");
+			digest.update(data);
+			byte[] hash = digest.digest();
+			return hash;
+		} 
+		catch (NoSuchAlgorithmException e) {}
+
+		return null;
+
 	}
 
 	public static boolean isTabletDevice(Context context) 
@@ -218,7 +246,7 @@ public class Utils
 
 		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 		canvas.drawBitmap(bm, rect, rect, paint);
-		
+
 		return shadowBitmap(output);
 	}
 
@@ -236,10 +264,10 @@ public class Utils
 		Bitmap shadowImage32 = shadowImage.copy(Bitmap.Config.ARGB_8888, true);
 
 		shadowImage.recycle();
-		
+
 		Canvas canvas = new Canvas(shadowImage32);
 		canvas.drawBitmap(bm, -offsetXY[0], -offsetXY[1], null);
-		
+
 		return shadowImage32;
 	}
 
@@ -247,9 +275,9 @@ public class Utils
 	{
 		if(bm == null)
 			return null;
-		
+
 		int stroke = 5;
-		
+
 		Bitmap output = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(), Config.ARGB_8888);
 		Canvas canvas = new Canvas(output);
 
@@ -267,7 +295,7 @@ public class Utils
 
 		return shadowBitmap(output);
 	}
-	
+
 	public static String getExtFolderPath(Context context)
 	{
 		return Environment.getExternalStorageDirectory() + "/Android/data/" + context.getPackageName() + "/";

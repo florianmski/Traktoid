@@ -57,12 +57,9 @@ public abstract class InWatchlistTask<T extends TraktoidInterface<T>> extends Po
 	}
 	
 	@Override
-	protected void onCompleted(Response r)
+	protected void sendEvent(Response result) 
 	{
-		super.onCompleted(r);
-
-		if(r != null)
-			TraktTask.traktItemUpdated(traktItem);			
+		TraktTask.traktItemUpdated(traktItem);
 	}
 	
 	public static final class InWatchlistShowTask extends InWatchlistTask<TvShow>

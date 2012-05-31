@@ -37,27 +37,25 @@ public class RemoveMovieTask extends TraktTask<Movie>
 	@Override
 	protected Movie doTraktStuffInBackground()
 	{
-//		showToast("Removing " + movie.title + "...", Toast.LENGTH_SHORT);
-		
+		//TODO
 		//delete only locally
-//		tm.showService().unlibrary(Integer.valueOf(show.getTvdbId())).fire();
+		//		tm.showService().unlibrary(Integer.valueOf(show.getTvdbId())).fire();
 
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
 
 		dbw.removeMovie(movie.url);
-		
+
 		dbw.close();
-		
+
 		showToast(movie.title + " removed!", Toast.LENGTH_SHORT);
-		
+
 		return movie;
 	}
-	
+
 	@Override
-	protected void onCompleted(Movie movie)
-	{		
-		if(movie != null)
-			TraktTask.traktItemRemoved(movie);
+	protected void sendEvent(Movie result) 
+	{
+		TraktTask.traktItemRemoved(movie);
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import android.support.v4.app.Fragment;
 
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Movie;
@@ -79,6 +80,12 @@ public abstract class SeenTask<T extends TraktoidInterface<T>> extends PostTask
 			sendEvent(traktItems);
 		//			tm.onTraktItemUpdated(traktItem);
 
+	}
+	
+	@Override
+	protected void sendEvent(Response result) 
+	{
+		//TODO
 	}
 
 	public static final class SeenShowTask extends SeenTask<TvShow>

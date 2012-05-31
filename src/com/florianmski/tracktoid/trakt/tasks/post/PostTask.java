@@ -77,12 +77,18 @@ public class PostTask extends TraktTask<Response>
 	@Override
 	protected void onCompleted(Response r)
 	{
-		if(pListener != null)
+		if(pListener != null && getRef() != null)
 			pListener.onComplete(r, r != null);
+		
+		if(r != null)
+			sendEvent(r);
 	}
 
 	public interface PostListener
 	{
 		public void onComplete(Response r, boolean success);
 	}
+
+	@Override
+	protected void sendEvent(Response result) {}
 }

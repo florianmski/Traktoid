@@ -19,7 +19,8 @@ import com.jakewharton.trakt.TraktException;
 public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TResult>
 {
 	protected final static int TOAST = -1;
-	protected final static int ERROR = -2;
+	protected final static int EVENT = -2;
+	protected final static int ERROR = -3;
 
 	protected TraktManager tm;
 	protected TraktListener tListener;
@@ -29,10 +30,10 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 	protected boolean inQueue = false;
 	protected Exception error;
 	protected Context context;
-	
+
 	private static List<TraktListener> listeners = new ArrayList<TraktListener>();
 	protected static ExecutorService sSingleThreadExecutor = new SingleThreadExecutor();
-	
+
 	public TraktTask(Fragment ref) 
 	{
 		this(ref, null);
@@ -50,7 +51,7 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 			tListener = (TraktListener)getRef();
 		}
 		catch(ClassCastException e){}
-		
+
 		setId(this.getClass().getSimpleName());
 	}
 
@@ -88,10 +89,11 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 	@Override
 	protected void onCompleted(TResult result) 
 	{
-		//has to be executed otherwise tasks will stay in queue even when finished
-		//		tm.onAfterTraktRequest(tListener, result != null, inQueue);
-		Log.i("Traktoid","task finish!");
+		if(result != null)
+			sendEvent(result);
 	}
+
+	protected abstract void sendEvent(TResult result);
 
 	@Override
 	protected void onFailed(Exception e)
@@ -123,13 +125,10 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 	@Override
 	protected void onProgressPublished(int progress, TResult tmpResult, String... values)
 	{
-//		if(getRef() != null)
-//		{
-			if(progress == TOAST)
-				Toast.makeText(context, values[1], Integer.parseInt(values[0])).show();
-			//			else if(progress == ERROR)
-			//				tm.onErrorTraktRequest(tListener, error);
-//		}
+		if(progress == TOAST)
+			Toast.makeText(context, values[1], Integer.parseInt(values[0])).show();
+		else if(progress == ERROR)
+			sendEvent(tmpResult);
 	}
 
 	private void handleException(Exception e)

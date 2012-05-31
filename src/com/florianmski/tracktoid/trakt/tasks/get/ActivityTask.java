@@ -20,7 +20,7 @@ import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class ActivityTask extends TraktTask<Activity>
+public class ActivityTask extends GetTask<Activity>
 {
 	//TODO HashMap & movies
 	
@@ -171,20 +171,6 @@ public class ActivityTask extends TraktTask<Activity>
 		return activities;
 	}
 
-	@Override
-	protected void onCompleted(Activity result) 	
-	{
-		if(result != null)
-		{			
-			for(TvShow show : finalUpdateList)
-				TraktTask.traktItemUpdated(show);
-
-			//TODO getRef() is dangerous here
-			if(!refreshList.isEmpty())
-				new UpdateShowsTask(getRef(), new ArrayList<TvShow>(refreshList)).fire();
-		}
-	}
-
 	private void updateEpisode(TvShow show, TvShowEpisode episode)
 	{
 		//this episode is in the db
@@ -217,5 +203,16 @@ public class ActivityTask extends TraktTask<Activity>
 		//		else
 		//			//add to the refresh list
 		//			refreshList.add(show);
+	}
+
+	@Override
+	protected void sendEvent(Activity result) 
+	{
+		for(TvShow show : finalUpdateList)
+			TraktTask.traktItemUpdated(show);
+
+		//TODO getRef() is dangerous here
+		if(!refreshList.isEmpty())
+			new UpdateShowsTask(getRef(), new ArrayList<TvShow>(refreshList)).fire();
 	}
 }

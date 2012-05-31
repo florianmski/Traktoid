@@ -56,14 +56,11 @@ public abstract class InCollectionTask<T extends TraktoidInterface<T>> extends P
 		insertInDb(traktItem, addToCollection, dbw);
 		dbw.close();
 	}
-
+	
 	@Override
-	protected void onCompleted(Response r)
+	protected void sendEvent(Response result) 
 	{
-		super.onCompleted(r);
-
-		if(r != null)
-			TraktTask.traktItemUpdated(traktItem);			
+		TraktTask.traktItemUpdated(traktItem);
 	}
 
 	public static final class InCollectionShowTask extends InCollectionTask<TvShow>

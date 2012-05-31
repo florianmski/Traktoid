@@ -9,7 +9,7 @@ import com.jakewharton.trakt.entities.ActivityItemBase;
 import com.jakewharton.trakt.enumerations.ActivityAction;
 import com.jakewharton.trakt.enumerations.ActivityType;
 
-public class CheckinGetTask extends TraktTask<TraktoidInterface>
+public class CheckinGetTask extends GetTask<TraktoidInterface>
 {
 	private CheckinListener listener;
 	private ActivityItemBase checkin;
@@ -39,16 +39,16 @@ public class CheckinGetTask extends TraktTask<TraktoidInterface>
 		
 		return null;
 	}
-
-	@Override
-	protected void onCompleted(TraktoidInterface traktItem)
-	{
-		if(traktItem != null)
-			listener.onCheckin(traktItem);
-	}
 	
 	public interface CheckinListener
 	{
 		public void onCheckin(TraktoidInterface traktItem);
+	}
+
+	@Override
+	protected void sendEvent(TraktoidInterface result) 
+	{
+		if(getRef() != null)
+			listener.onCheckin(traktItem);
 	}
 }
