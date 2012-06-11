@@ -19,7 +19,6 @@ package com.florianmski.tracktoid.db.tasks;
 import java.util.List;
 
 import android.content.Context;
-
 import com.jakewharton.trakt.entities.TvShowSeason;
 
 public class DBSeasonsTask extends DBTask

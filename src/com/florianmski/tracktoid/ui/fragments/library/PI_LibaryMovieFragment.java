@@ -3,13 +3,11 @@ package com.florianmski.tracktoid.ui.fragments.library;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.londatiga.android.QuickAction;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -19,7 +17,6 @@ import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBMoviesTask;
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.RemoveMovieTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateMoviesTask;
@@ -46,7 +43,7 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 	@Override
 	public GridPosterAdapter<Movie> setupAdapter() 
 	{
-		return new GridPosterAdapter<Movie>(getActivity(), new ArrayList<Movie>(), refreshGridView());
+		return new GridPosterAdapter<Movie>(getActivity(), new ArrayList<Movie>(), refreshGridView(), lcm);
 	}
 
 	@Override
@@ -68,31 +65,11 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 				@Override
 				public void onDBMovies(List<Movie> movies)
 				{
-					adapter.updateItems(movies);
+					adapter.refreshItems(movies);
 					getStatusView().hide().text(null);
 				}
 			}).fire();
 		}
-	}
-
-	@Override
-	public void onRefreshQAClick(QuickAction source, int pos, int actionId) 
-	{
-		ArrayList<Movie> moviesSelected = new ArrayList<Movie>();
-		moviesSelected.add(adapter.getItem(posterClickedPosition));
-		new UpdateMoviesTask(PI_LibaryMovieFragment.this, moviesSelected).fire();
-	}
-
-	@Override
-	public void onDeleteQAClick(QuickAction source, int pos, int actionId) 
-	{
-		new RemoveMovieTask(tm, PI_LibaryMovieFragment.this, adapter.getItem(posterClickedPosition)).fire();
-	}
-
-	@Override
-	public void onRateQAClick(QuickAction source, int pos, int actionId) 
-	{
-		//TODO
 	}
 
 	@Override
@@ -164,11 +141,4 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 		if(!getActivity().isFinishing())
 			alert.show();
 	}
-
-	@Override
-	public void onTraktItemUpdated(Movie traktItem) 
-	{
-		Log.e("coucou","coucou movie");
-	}
-
 }

@@ -1,6 +1,10 @@
 package com.florianmski.tracktoid.trakt.tasks.post;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.support.v4.app.Fragment;
+
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
@@ -9,157 +13,186 @@ import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
+import com.jakewharton.trakt.services.MovieService;
+import com.jakewharton.trakt.services.ShowService;
+import com.jakewharton.trakt.services.ShowService.EpisodeUnwatchlistBuilder;
+import com.jakewharton.trakt.services.ShowService.EpisodeWatchlistBuilder;
 
 public abstract class InWatchlistTask<T extends TraktoidInterface<T>> extends PostTask
 {
-	protected T traktItem;
+	protected List<T> traktItems;
 	protected boolean addToWatchlist;
 
-	public InWatchlistTask(Fragment fragment, T traktItem, boolean addToWatchlist, PostListener pListener) 
+	public InWatchlistTask(Fragment fragment, List<T> traktItems, boolean addToWatchlist, PostListener pListener) 
 	{
 		super(fragment, null, pListener);
 
-		this.traktItem = traktItem;
+		this.traktItems = traktItems;
 		this.addToWatchlist = addToWatchlist;
 	}
-	
+
 	public static <T extends TraktoidInterface<T>> InWatchlistTask<?> createTask(Fragment fragment, T traktItem, boolean addToWatchlist, PostListener pListener)
 	{
-		if(traktItem instanceof TvShow)
-			return new InWatchlistShowTask(fragment, (TvShow) traktItem, addToWatchlist, pListener);
-		else if(traktItem instanceof Movie)
-			return new InWatchlistMovieTask(fragment, (Movie) traktItem, addToWatchlist, pListener);
-		else if(traktItem instanceof TvShowEpisode)
-			return new InWatchlistEpisodeTask(fragment, (TvShowEpisode) traktItem, addToWatchlist, pListener);
+		List<T> traktItems = new ArrayList<T>();
+		traktItems.add(traktItem);
+		return createTask(fragment, traktItems, addToWatchlist, pListener);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T extends TraktoidInterface<T>> InWatchlistTask<?> createTask(Fragment fragment, List<T> traktItems, boolean addToWatchlist, PostListener pListener)
+	{
+		if(traktItems.get(0) instanceof TvShow)
+			return new InWatchlistShowTask(fragment, (List<TvShow>) traktItems, addToWatchlist, pListener);
+		else if(traktItems.get(0) instanceof Movie)
+			return new InWatchlistMovieTask(fragment, (List<Movie>) traktItems, addToWatchlist, pListener);
+		else if(traktItems.get(0) instanceof TvShowEpisode)
+			return new InWatchlistEpisodeTask(fragment, (List<TvShowEpisode>) traktItems, addToWatchlist, pListener);
 		else
 			return null;
 	}
 
-	protected abstract TraktApiBuilder<?> createWatchlistBuilder(T traktItem);
-	protected abstract TraktApiBuilder<?> createUnwatchlistBuilder(T traktItem);
-	protected abstract void insertInDb(T traktItem, boolean addToWatchlist, DatabaseWrapper dbw);
-	
+	protected abstract TraktApiBuilder<?> createWatchlistBuilder(List<T> traktItems);
+	protected abstract TraktApiBuilder<?> createUnwatchlistBuilder(List<T> traktItems);
+	protected abstract void insertInDb(List<T> traktItems, boolean addToWatchlist, DatabaseWrapper dbw);
+
 	@Override
 	protected void doPrePostStuff() 
 	{
 		if(addToWatchlist)
-			builders.add(createWatchlistBuilder(traktItem));
+			builders.add(createWatchlistBuilder(traktItems));
 		else
-			builders.add(createUnwatchlistBuilder(traktItem));
+			builders.add(createUnwatchlistBuilder(traktItems));
 	}
-	
+
 	@Override
 	protected void doAfterPostStuff()
 	{
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
-		insertInDb(traktItem, addToWatchlist, dbw);
+		insertInDb(traktItems, addToWatchlist, dbw);
 		dbw.close();
 	}
-	
+
 	@Override
 	protected void sendEvent(Response result) 
 	{
-		TraktTask.traktItemUpdated(traktItem);
+		TraktTask.traktItemsUpdated(traktItems);
 	}
-	
+
 	public static final class InWatchlistShowTask extends InWatchlistTask<TvShow>
 	{
-		public InWatchlistShowTask(Fragment fragment,	TvShow traktItem, boolean addToWatchlist, PostListener pListener) 
+		public InWatchlistShowTask(Fragment fragment, List<TvShow> traktItems, boolean addToWatchlist, PostListener pListener) 
 		{
-			super(fragment, traktItem, addToWatchlist, pListener);
+			super(fragment, traktItems, addToWatchlist, pListener);
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createWatchlistBuilder(TvShow traktItem) 
+		protected TraktApiBuilder<?> createWatchlistBuilder(List<TvShow> traktItems) 
 		{
-			return tm
-					.showService()
-					.watchlist()
-					.tvdbId(Integer.valueOf(traktItem.getId()));
+			ShowService.WatchlistBuilder builder = tm.showService().watchlist();
+			for(TvShow traktItem : traktItems)
+				builder.tvdbId(Integer.valueOf(traktItem.getId()));
+			return builder;
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createUnwatchlistBuilder(TvShow traktItem) 
+		protected TraktApiBuilder<?> createUnwatchlistBuilder(List<TvShow> traktItems) 
 		{
-			return tm
-					.showService()
-					.unwatchlist()
-					.tvdbId(Integer.valueOf(traktItem.getId()));
+			ShowService.UnwatchlistBuilder builder = tm.showService().unwatchlist();
+			for(TvShow traktItem : traktItems)
+				builder.tvdbId(Integer.valueOf(traktItem.getId()));
+			return builder;
 		}
 
 		@Override
-		protected void insertInDb(TvShow traktItem, boolean addToWatchlist, DatabaseWrapper dbw) 
+		protected void insertInDb(List<TvShow> traktItems, boolean addToWatchlist, DatabaseWrapper dbw) 
 		{
-			traktItem.inWatchlist = addToWatchlist;
-			dbw.insertOrUpdateShow(traktItem);
+			for(TvShow traktItem : traktItems)
+			{
+				traktItem.inWatchlist = addToWatchlist;
+				dbw.insertOrUpdateShow(traktItem);
+			}
 		}
-		
+
 	}
-	
+
 	public static final class InWatchlistMovieTask extends InWatchlistTask<Movie>
 	{
-		public InWatchlistMovieTask(Fragment fragment, Movie traktItem, boolean addToWatchlist, PostListener pListener) 
+		public InWatchlistMovieTask(Fragment fragment, List<Movie> traktItems, boolean addToWatchlist, PostListener pListener) 
 		{
-			super(fragment, traktItem, addToWatchlist, pListener);
+			super(fragment, traktItems, addToWatchlist, pListener);
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createWatchlistBuilder(Movie traktItem) 
+		protected TraktApiBuilder<?> createWatchlistBuilder(List<Movie> traktItems) 
 		{
-			return tm
-					.movieService()
-					.watchlist()
-					.movie(traktItem.getId());
+			MovieService.WatchlistBuilder builder = tm.movieService().watchlist();
+			for(Movie traktItem : traktItems)
+				builder.movie(traktItem.getId());
+			return builder;
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createUnwatchlistBuilder(Movie traktItem) 
+		protected TraktApiBuilder<?> createUnwatchlistBuilder(List<Movie> traktItems) 
 		{
-			return tm
-					.movieService()
-					.unwatchlist()
-					.movie(traktItem.getId());
+			MovieService.UnwatchlistBuilder builder = tm.movieService().unwatchlist();
+			for(Movie traktItem : traktItems)
+				builder.movie(traktItem.getId());
+			return builder;
 		}
-		
+
 		@Override
-		protected void insertInDb(Movie traktItem, boolean addToWatchlist, DatabaseWrapper dbw) 
+		protected void insertInDb(List<Movie> traktItems, boolean addToWatchlist, DatabaseWrapper dbw) 
 		{
-			traktItem.inWatchlist = addToWatchlist;
-			dbw.insertOrUpdateMovie(traktItem);
+			for(Movie traktItem : traktItems)
+			{
+				traktItem.inWatchlist = addToWatchlist;
+				dbw.insertOrUpdateMovie(traktItem);
+			}
 		}
-		
+
 	}
-	
+
 	public static final class InWatchlistEpisodeTask extends InWatchlistTask<TvShowEpisode>
 	{
-		public InWatchlistEpisodeTask(Fragment fragment, TvShowEpisode traktItem, boolean addToWatchlist, PostListener pListener) 
+		public InWatchlistEpisodeTask(Fragment fragment, List<TvShowEpisode> traktItem, boolean addToWatchlist, PostListener pListener) 
 		{
 			super(fragment, traktItem, addToWatchlist, pListener);
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createWatchlistBuilder(TvShowEpisode traktItem) 
+		protected TraktApiBuilder<?> createWatchlistBuilder(List<TvShowEpisode> traktItems) 
 		{
-			return tm
-					.showService()
-					.episodeWatchlist(Integer.valueOf(traktItem.tvdbId))
-					.episode(traktItem.season, traktItem.number);
+			EpisodeWatchlistBuilder builder = null;
+			for(TvShowEpisode traktItem : traktItems)
+			{
+				if(builder == null)
+					builder = tm.showService().episodeWatchlist(Integer.valueOf(traktItem.tvdbId));
+				builder.episode(traktItem.season, traktItem.number);
+			}
+			return builder;
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createUnwatchlistBuilder(TvShowEpisode traktItem) 
+		protected TraktApiBuilder<?> createUnwatchlistBuilder(List<TvShowEpisode> traktItems) 
 		{
-			return tm
-					.showService()
-					.episodeUnwatchlist(Integer.valueOf(traktItem.tvdbId))
-					.episode(traktItem.season, traktItem.number);
+			EpisodeUnwatchlistBuilder builder = null;
+			for(TvShowEpisode traktItem : traktItems)
+			{
+				if(builder == null)
+					builder = tm.showService().episodeUnwatchlist(Integer.valueOf(traktItem.tvdbId));
+				builder.episode(traktItem.season, traktItem.number);
+			}
+			return builder;
 		}
-		
+
 		@Override
-		protected void insertInDb(TvShowEpisode traktItem, boolean addToWatchlist, DatabaseWrapper dbw) 
+		protected void insertInDb(List<TvShowEpisode> traktItems, boolean addToWatchlist, DatabaseWrapper dbw) 
 		{
-			traktItem.inWatchlist = addToWatchlist;
-			dbw.insertOrUpdateEpisode(traktItem);
+			for(TvShowEpisode traktItem : traktItems)
+			{
+				traktItem.inWatchlist = addToWatchlist;
+				dbw.insertOrUpdateEpisode(traktItem);
+			}
 		}
 	}
 }

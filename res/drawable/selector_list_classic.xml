@@ -3,9 +3,10 @@
 
     <!-- Pressed -->
     <item android:drawable="@color/list_pressed_color" android:state_pressed="true"/>
+    <item android:drawable="@color/list_pressed_color" android:state_checked="true" />
     
     <!-- Focused states -->
-    <item android:drawable="@drawable/shape_stroke_focused" android:state_selected="true"/>
+    <item android:drawable="@drawable/shape_stroke_focused" android:state_selected="true" />
 
     <!-- Non focused states -->
     <item android:drawable="@color/list_background_color"/>

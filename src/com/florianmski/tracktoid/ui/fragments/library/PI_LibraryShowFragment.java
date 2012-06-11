@@ -3,7 +3,6 @@ package com.florianmski.tracktoid.ui.fragments.library;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.londatiga.android.QuickAction;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -18,14 +17,11 @@ import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBShowsTask;
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.RemoveShowTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
-import com.florianmski.tracktoid.trakt.tasks.post.RateTask;
-import com.florianmski.tracktoid.ui.fragments.ProgressionFragment;
+import com.florianmski.tracktoid.ui.fragments.show.PagerShowFragment;
 import com.jakewharton.trakt.entities.TvShow;
-import com.jakewharton.trakt.enumerations.Rating;
 
 public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 {
@@ -47,7 +43,7 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 	@Override
 	public GridPosterAdapter<TvShow> setupAdapter() 
 	{
-		return new GridPosterAdapter<TvShow>(getActivity(), new ArrayList<TvShow>(), refreshGridView());
+		return new GridPosterAdapter<TvShow>(getActivity(), new ArrayList<TvShow>(), refreshGridView(), lcm);
 	}
 
 	@Override
@@ -60,7 +56,7 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 				@Override
 				public void onDBShows(List<TvShow> shows)
 				{
-					adapter.updateItems(shows);
+					adapter.refreshItems(shows);
 					getStatusView().hide().text(null);
 				}
 			}).fire();
@@ -71,42 +67,8 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 	public void onGridItemClick(AdapterView<?> arg0, View v, int position, long arg3) 
 	{
 		Bundle b = new Bundle();
-		b.putSerializable(TraktoidConstants.BUNDLE_SHOW, adapter.getItem(position));
-		launchActivityWithSingleFragment(ProgressionFragment.class, b);
-	}
-
-	@Override
-	public void onRefreshQAClick(QuickAction source, int pos, int actionId) 
-	{
-		ArrayList<TvShow> showsSelected = new ArrayList<TvShow>();
-		showsSelected.add(adapter.getItem(posterClickedPosition));
-		new UpdateShowsTask(PI_LibraryShowFragment.this, showsSelected).fire();
-	}
-
-	@Override
-	public void onDeleteQAClick(QuickAction source, int pos, int actionId) 
-	{
-		new RemoveShowTask(PI_LibraryShowFragment.this, adapter.getItem(posterClickedPosition)).fire();
-	}
-
-	@Override
-	public void onRateQAClick(QuickAction source, int pos, int actionId) 
-	{
-		final CharSequence[] items = {"Totally ninja!", "Week sauce :(", "Unrate"};
-		final Rating[] ratings = {Rating.Love, Rating.Hate, Rating.Unrate};
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Rate");
-		builder.setItems(items, new DialogInterface.OnClickListener() 
-		{
-			@Override
-			public void onClick(DialogInterface dialog, int item) 
-			{
-				RateTask.createTask(PI_LibraryShowFragment.this, adapter.getItem(posterClickedPosition), ratings[item], null).fire();
-			}
-		});
-		AlertDialog alert = builder.create();
-		alert.show();
+		b.putSerializable(TraktoidConstants.BUNDLE_TRAKT_ITEM, adapter.getItem(position));
+		launchActivityWithSingleFragment(PagerShowFragment.class, b);
 	}
 
 	@Override

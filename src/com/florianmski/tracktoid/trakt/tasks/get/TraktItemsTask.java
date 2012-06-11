@@ -21,10 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
-import android.widget.Toast;
-
 import com.florianmski.tracktoid.ApiCache;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 

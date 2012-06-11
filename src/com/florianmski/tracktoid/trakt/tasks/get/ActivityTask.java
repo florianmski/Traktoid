@@ -208,8 +208,7 @@ public class ActivityTask extends GetTask<Activity>
 	@Override
 	protected void sendEvent(Activity result) 
 	{
-		for(TvShow show : finalUpdateList)
-			TraktTask.traktItemUpdated(show);
+		TraktTask.traktItemsUpdated(finalUpdateList);
 
 		//TODO getRef() is dangerous here
 		if(!refreshList.isEmpty())

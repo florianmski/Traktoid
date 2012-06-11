@@ -1,9 +1,7 @@
 package com.florianmski.tracktoid.ui.fragments.season;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,28 +11,29 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
+import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.TraktoidConstants;
-import com.florianmski.tracktoid.WatchedModeManager;
 import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
-import com.florianmski.tracktoid.ui.fragments.season.PagerSeasonFragment.OnWatchedModeListener;
+import com.florianmski.tracktoid.widgets.CheckableListView;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
-public class PI_SeasonFragment extends TraktFragment implements OnWatchedModeListener
+public class PI_SeasonFragment extends TraktFragment implements TraktListener<TvShowEpisode>
 {
 	private TvShowSeason season;
-	private String tvdbId;
-	private ListView lvEpisodes;
+	private int position;
+	private CheckableListView<TvShowEpisode> lvEpisodes;
+	private ListEpisodeAdapter adapter;
 
 	public static PI_SeasonFragment newInstance(Bundle args)
 	{
@@ -43,11 +42,11 @@ public class PI_SeasonFragment extends TraktFragment implements OnWatchedModeLis
 		return f;
 	}
 
-	public static PI_SeasonFragment newInstance(TvShowSeason season, String tvdbId)
+	public static PI_SeasonFragment newInstance(TvShowSeason season, int position)
 	{		
 		Bundle args = new Bundle();
 		args.putSerializable(TraktoidConstants.BUNDLE_SEASON, season);
-		args.putString(TraktoidConstants.BUNDLE_TVDB_ID, tvdbId);
+		args.putSerializable(TraktoidConstants.BUNDLE_POSITION, position);
 
 		return newInstance(args);
 	}
@@ -61,8 +60,10 @@ public class PI_SeasonFragment extends TraktFragment implements OnWatchedModeLis
 		if(getArguments() != null)
 		{
 			season = (TvShowSeason) getArguments().getSerializable(TraktoidConstants.BUNDLE_SEASON);
-			tvdbId = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
+			position = getArguments().getInt(TraktoidConstants.BUNDLE_POSITION);
 		}
+		
+		TraktTask.addObserver(this);
 	}
 
 	@Override
@@ -72,6 +73,9 @@ public class PI_SeasonFragment extends TraktFragment implements OnWatchedModeLis
 
 		getStatusView().show().text("Loading season " + season.season + ",\nPlease wait...");
 		
+		ListCheckerManager.getInstance().addListener(lvEpisodes);
+		lvEpisodes.initialize(this, position, ListCheckerManager.<TvShowEpisode>getInstance());
+
 		//TODO proper task
 		new Thread()
 		{
@@ -79,9 +83,9 @@ public class PI_SeasonFragment extends TraktFragment implements OnWatchedModeLis
 			public void run()
 			{
 				DatabaseWrapper dbw = getDBWrapper();
-				List<TvShowEpisode> episodes = dbw.getEpisodes(season.url, tvdbId);
+				List<TvShowEpisode> episodes = dbw.getEpisodes(season.url);
 
-				final ListEpisodeAdapter adapter = new ListEpisodeAdapter(episodes, getActivity(), tvdbId);
+				adapter = new ListEpisodeAdapter(episodes, season.season, getActivity());
 
 				getActivity().runOnUiThread(new Runnable() 
 				{
@@ -89,8 +93,7 @@ public class PI_SeasonFragment extends TraktFragment implements OnWatchedModeLis
 					public void run() 
 					{
 						lvEpisodes.setAdapter(adapter);
-						WatchedModeManager.getInstance().addListener(PI_SeasonFragment.this);
-						
+
 						if(adapter.isEmpty())
 							getStatusView().hide().text("No episodes for this season");
 						else
@@ -99,33 +102,53 @@ public class PI_SeasonFragment extends TraktFragment implements OnWatchedModeLis
 				});
 			}
 		}.start();
+
+//		lvEpisodes.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+//		lvEpisodes.setItemsCanFocus(false);
+//		lvEpisodes.setOnItemLongClickListener(new OnItemLongClickListener() 
+//		{
+//			@Override
+//			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) 
+//			{
+//				mMode = getSherlockActivity().startActionMode(mActionModeListener = new AnActionModeOfEpicProportions());
+//				return true;
+//			}
+//		});
 	}
 
-	public ListEpisodeAdapter getAdapter()
-	{
-		return lvEpisodes != null ? (ListEpisodeAdapter) lvEpisodes.getAdapter() : null;
-	}
-
+	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		View v = inflater.inflate(R.layout.pager_item_season, container, false);
 
-		lvEpisodes = (ListView)v.findViewById(R.id.listViewEpisodes);
+		lvEpisodes = (CheckableListView<TvShowEpisode>)v.findViewById(R.id.listViewEpisodes);
 		ImageView ivBackground = (ImageView)v.findViewById(R.id.imageViewBackground);
 
 		lvEpisodes.setOnItemClickListener(new OnItemClickListener() 
 		{
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int episode, long arg3) 
+			public void onItemClick(AdapterView<?> arg0, View v, int position, long id) 
 			{
-				Intent i = new Intent(getActivity(), EpisodeActivity.class);
-//				i.putExtra(TraktoidConstants.BUNDLE_SEASON_ID, season.url);
-//				i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, tvdbId);
-//				i.putExtra(TraktoidConstants.BUNDLE_TITLE, getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
-				i.putExtra(TraktoidConstants.BUNDLE_POSITION, episode);
-				i.putExtra(TraktoidConstants.BUNDLE_RESULTS, (Serializable)((RootAdapter<TvShowEpisode>) lvEpisodes.getAdapter()).getItems());
-				startActivity(i);
+//				if(mMode != null)
+//				{
+//					boolean checked = !lvEpisodes.getCheckedItemPositions().get(position, false);
+//					Log.d("test", "size : " + lvEpisodes.getCheckedItemPositions().size());
+//					Log.d("test", "test : " + checked);
+//					lvEpisodes.getCheckedItemPositions().put(position, checked);
+////					mActionModeListener.onItemCheckedStateChanged(mMode, position, id, !checked);
+//					v.setBackgroundResource(checked ? R.color.list_pressed_color : R.color.list_background_color);
+//				}
+//				else
+//				{
+					Intent i = new Intent(getActivity(), EpisodeActivity.class);
+					//				i.putExtra(TraktoidConstants.BUNDLE_SEASON_ID, season.url);
+					//				i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, tvdbId);
+					//				i.putExtra(TraktoidConstants.BUNDLE_TITLE, getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
+					i.putExtra(TraktoidConstants.BUNDLE_POSITION, position);
+					i.putExtra(TraktoidConstants.BUNDLE_RESULTS, (Serializable)((RootAdapter<TvShowEpisode>) lvEpisodes.getAdapter()).getItems());
+					startActivity(i);
+//				}
 			}
 		});
 
@@ -136,38 +159,22 @@ public class PI_SeasonFragment extends TraktFragment implements OnWatchedModeLis
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
 		super.onCreateOptionsMenu(menu, inflater);
-		if(getAdapter() != null && getAdapter().getWatchedMode())
-		{
-			menu.add(0, R.id.menu_all, 0, "All")
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-
-			menu.add(0, R.id.menu_none, 0, "None")
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) 
-	{
-		switch(item.getItemId())
-		{
-		case R.id.menu_all :
-			if(getAdapter() != null)
-				getAdapter().checkBoxSelection(true);
-			return true;
-		case R.id.menu_none :
-			if(getAdapter() != null)
-				getAdapter().checkBoxSelection(false);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+//		if(getAdapter() != null && getAdapter().getWatchedMode())
+//		{
+//			menu.add(0, R.id.menu_all, 0, "All")
+//			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+//
+//			menu.add(0, R.id.menu_none, 0, "None")
+//			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+//		}
 	}
 
 	@Override
 	public void onDestroy() 
 	{
+		ListCheckerManager.getInstance().removeListener(lvEpisodes);
+		TraktTask.removeObserver(this);
 		super.onDestroy();
-		WatchedModeManager.getInstance().removeListener(this);
 	}
 
 	@Override
@@ -177,32 +184,16 @@ public class PI_SeasonFragment extends TraktFragment implements OnWatchedModeLis
 	public void onSaveState(Bundle toSave) {}
 
 	@Override
-	public void setWatchedMode(boolean on) 
+	public void onTraktItemsUpdated(List<TvShowEpisode> traktItems) 
 	{
-		if(getAdapter() != null)
-		{
-			getAdapter().setWatchedMode(on);
-			getSherlockActivity().invalidateOptionsMenu();
-		}
+		if(traktItems != null)
+			adapter.updateItems(traktItems);
 	}
 
 	@Override
-	public Map<Integer, Boolean> getWatchedList() 
+	public void onTraktItemsRemoved(List<TvShowEpisode> traktItems) 
 	{
-		return (getAdapter() != null) ? getAdapter().getListWatched() : new HashMap<Integer, Boolean>();
-	}
-
-	@Override
-	public void checkAll(String url) 
-	{
-		if(url.equals(season.url) && getAdapter() != null)
-			getAdapter().checkBoxSelection(true);
-	}
-
-	@Override
-	public void checkNone(String url) 
-	{
-		if(url.equals(season.url) && getAdapter() != null)
-			getAdapter().checkBoxSelection(false);
+		if(traktItems != null)
+			adapter.remove(traktItems);
 	}
 }

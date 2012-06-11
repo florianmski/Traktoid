@@ -16,18 +16,12 @@
 
 package com.florianmski.tracktoid.trakt;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
-
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
-import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.jakewharton.trakt.ServiceManager;
 
 public class TraktManager extends ServiceManager implements OnSharedPreferenceChangeListener

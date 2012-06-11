@@ -1,9 +1,10 @@
 package com.florianmski.tracktoid.ui.fragments.traktitems;
 
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ import com.jakewharton.trakt.entities.TvShow;
 public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> extends PagerTabsViewFragment implements TraktListener<T>
 {
 	protected T item;
-	
+
 	private ScrollingTextView tvAired;
 	private TextView tvPercentage;
 	private ImageView ivScreen;
@@ -53,19 +54,19 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 
 		if(getArguments() != null)
 			item = (T) getArguments().getSerializable(TraktoidConstants.BUNDLE_TRAKT_ITEM);
-		
+
 		getActivity().invalidateOptionsMenu();
-		
+
 		TraktTask.addObserver(this);
 	}
-	
+
 	@Override
 	public void onDestroy()
 	{
 		TraktTask.removeObserver(this);
 		super.onDestroy();
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
@@ -103,12 +104,12 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, (int) (width*TraktImage.RATIO_SCREEN));
 		ivScreen.setLayoutParams(params);
 		ivScreen.setScaleType(ScaleType.CENTER_CROP);
-		
+
 		refreshView();
 
 		return v;
 	}
-	
+
 	private void refreshView()
 	{
 		if(item.getFirstAired() == null || item.getFirstAired().getTime() == 0)
@@ -129,7 +130,7 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 			tvPercentage.setText(item.getRatings().percentage+"%");
 		else
 			tvPercentage.setText("?%");
-		
+
 	}
 
 	@Override
@@ -139,7 +140,7 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 
 		if(item != null)
 			setTitle(item.getTitle());
-		
+
 		SubMenu watchMenu = menu.addSubMenu("Watched");
 
 		if(this.item != null && !this.item.isWatched())
@@ -231,24 +232,29 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 
 	@Override
 	public void onSaveState(Bundle toSave) {}
-	
+
 	@Override
-	public void onTraktItemUpdated(T traktItem) 
+	public void onTraktItemsUpdated(List<T> traktItems) 
 	{
-		Log.e("test", "onTraktItemUpdated");
-		if(traktItem.getId().equals(item.getId()))
-		{
-			this.item = traktItem;
-			getActivity().invalidateOptionsMenu();
-			refreshView();
-		}
-	}
-	
-	@Override
-	public void onTraktItemRemoved(T traktItem) 
-	{
-		if(traktItem.getId().equals(item.getId()))
-			getActivity().finish();
+		for(T traktItem : traktItems)
+			if(traktItem.getId().equals(item.getId()))
+			{
+				this.item = traktItem;
+				getActivity().invalidateOptionsMenu();
+				refreshView();
+
+				break;
+			}
 	}
 
+	@Override
+	public void onTraktItemsRemoved(List<T> traktItems) 
+	{
+		for(T traktItem : traktItems)
+			if(traktItem.getId().equals(item.getId()))
+			{
+				getActivity().finish();
+				break;
+			}
+	}
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.support.v4.app.Fragment;
 
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.Shout;

@@ -3,12 +3,8 @@ package com.florianmski.tracktoid.ui.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.londatiga.android.ActionItem;
-import net.londatiga.android.QuickAction;
-import net.londatiga.android.QuickAction.OnActionItemClickListener;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,10 +22,7 @@ import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.lists.ListShoutsAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask.ShoutsListener;
-import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
-import com.florianmski.tracktoid.trakt.tasks.post.ShoutsPostTask;
 import com.florianmski.traktoid.TraktoidInterface;
-import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.Shout;
 
 public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragment
@@ -42,9 +35,6 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 	private ListView lvShouts;
 	private EditText edtShout;
 	private Button btnSend;
-
-	private QuickAction qa;
-
 	private ListShoutsAdapter adapter;
 	
 	private ArrayList<Shout> shouts;
@@ -111,45 +101,46 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 						@Override
 						public void run() 
 						{
-							qa.show(btnSend);
+//							qa.show(btnSend);
 						}
 					}, 50);
 				}
 			}
 		});
 
-		qa = new QuickAction(getActivity(), QuickAction.HORIZONTAL);
-		qa.addActionItem(new ActionItem(SPOILER, "My shout contain\n a spoiler!"));
-		qa.addActionItem(new ActionItem(NO_SPOILER, "Stay calm! \nNo spoiler..."));
-
-		qa.setOnActionItemClickListener(new OnActionItemClickListener() 
-		{
-			@Override
-			public void onItemClick(QuickAction source, int pos, int actionId) 
-			{
-				new ShoutsPostTask<T>(ShoutsFragment.this, traktItem, edtShout.getText().toString().trim(), actionId == SPOILER, new PostListener() 
-				{
-					@Override
-					public void onComplete(Response r, boolean success) 
-					{
-						if(success)
-						{
-							adapter.clear();
-
-							//post the task 3sec later to let trakt the time to save the shout
-							new Handler().postDelayed(new Runnable() 
-							{
-								@Override
-								public void run() 
-								{
-									createGetShoutsTask().fire();
-								}
-							}, 3000);
-						}
-					}
-				}).fire();
-			}
-		});
+		//TODO better way to ask if spoiler or not
+//		qa = new QuickAction(getActivity(), QuickAction.HORIZONTAL);
+//		qa.addActionItem(new ActionItem(SPOILER, "My shout contain\n a spoiler!"));
+//		qa.addActionItem(new ActionItem(NO_SPOILER, "Stay calm! \nNo spoiler..."));
+//
+//		qa.setOnActionItemClickListener(new OnActionItemClickListener() 
+//		{
+//			@Override
+//			public void onItemClick(QuickAction source, int pos, int actionId) 
+//			{
+//				new ShoutsPostTask<T>(ShoutsFragment.this, traktItem, edtShout.getText().toString().trim(), actionId == SPOILER, new PostListener() 
+//				{
+//					@Override
+//					public void onComplete(Response r, boolean success) 
+//					{
+//						if(success)
+//						{
+//							adapter.clear();
+//
+//							//post the task 3sec later to let trakt the time to save the shout
+//							new Handler().postDelayed(new Runnable() 
+//							{
+//								@Override
+//								public void run() 
+//								{
+//									createGetShoutsTask().fire();
+//								}
+//							}, 3000);
+//						}
+//					}
+//				}).fire();
+//			}
+//		});
 
 
 	}
@@ -177,7 +168,7 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 			lvShouts.setAdapter(adapter);
 		}
 		else
-			adapter.updateItems(shouts);
+			adapter.refreshItems(shouts);
 
 		if(adapter.isEmpty())
 			getStatusView().hide().text("No shouts :(\nBe the first! Come on!");

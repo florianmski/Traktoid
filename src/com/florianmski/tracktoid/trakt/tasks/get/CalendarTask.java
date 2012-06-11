@@ -60,7 +60,7 @@ public class CalendarTask extends GetTask<List<List<CalendarDate>>>
 		publishProgress(EVENT, doCalendarTreatement(calendarListShows));
 		Log.d("traktoid","end");
 		
-		calendarListShows = (List<CalendarDate>) builder.fire();
+		calendarListShows = builder.fire();
 
 		ApiCache.save(builder, calendarListShows, context);
 		

@@ -58,6 +58,9 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 		super.onActivityCreated(savedInstanceState);
 		
 		aq = new AQuery(getActivity());
+		
+		if(savedInstanceState == null)
+			currentPagerPosition = getArguments() == null ? 0 : getArguments().getInt(TraktoidConstants.BUNDLE_POSITION, 0);
 	}
 
 	@Override
@@ -93,12 +96,9 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 	{
 		this.adapter = adapter;
 
-		currentPagerPosition = getArguments() == null ? 0 : getArguments().getInt(TraktoidConstants.BUNDLE_POSITION, 0);
-		currentPagerPosition = currentPagerPosition < 0 ? 0 : (currentPagerPosition >= adapter.getCount() ? adapter.getCount() - 1 : currentPagerPosition);
+//		currentPagerPosition = currentPagerPosition < 0 ? 0 : (currentPagerPosition >= adapter.getCount() ? adapter.getCount() - 1 : currentPagerPosition);
 
 		viewPager.setAdapter(adapter);
-
-		onPageSelected(currentPagerPosition);
 
 		ivBackground.setScaleType(ScaleType.CENTER_CROP);
 
@@ -145,12 +145,12 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 	@Override
 	public void onRestoreState(Bundle savedInstanceState) 
 	{
-		
+		currentPagerPosition = savedInstanceState.getInt(TraktoidConstants.BUNDLE_POSITION, 0);
 	}
 
 	@Override
 	public void onSaveState(Bundle toSave) 
 	{
-		
+		toSave.putInt(TraktoidConstants.BUNDLE_POSITION, currentPagerPosition);
 	}
 }

@@ -46,7 +46,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 
-import com.androidquery.util.AQUtility;
 import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 
 public class Utils 

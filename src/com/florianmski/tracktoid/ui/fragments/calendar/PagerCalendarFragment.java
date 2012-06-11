@@ -1,7 +1,6 @@
 package com.florianmski.tracktoid.ui.fragments.calendar;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
@@ -37,6 +36,7 @@ public class PagerCalendarFragment extends PagerTabsFragment implements Calendar
 		CalendarTask.addObserver(this);
 	}
 	
+	@Override
 	public void onDestroy()
 	{
 		CalendarTask.removeObserver(this);

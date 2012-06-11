@@ -18,7 +18,6 @@ package com.florianmski.tracktoid.adapters.pagers;
 
 import java.util.List;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -30,14 +29,12 @@ import com.viewpagerindicator.TitleProvider;
 public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements TitleProvider
 {
 	private List<TvShowSeason> seasons;
-	private String tvdbId;
 
-	public PagerSeasonAdapter(List<TvShowSeason> seasons, String tvdbId, FragmentManager fm, Context context)
+	public PagerSeasonAdapter(List<TvShowSeason> seasons, FragmentManager fm)
 	{
 		super(fm);
 				
 		this.seasons = seasons;
-		this.tvdbId = tvdbId;
 	}
 	
 	public void clear() 
@@ -77,7 +74,7 @@ public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements Tit
 	@Override
 	public Fragment getItem(int position) 
 	{
-		return PI_SeasonFragment.newInstance(seasons.get(position), tvdbId);
+		return PI_SeasonFragment.newInstance(seasons.get(position), position);
 	}
 	
 	@Override

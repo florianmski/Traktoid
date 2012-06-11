@@ -96,7 +96,7 @@ public class SearchFragment extends TraktFragment
 							lvSearch.setAdapter(adapter);
 						}
 						else
-							adapter.updateItems(shows);
+							adapter.refreshItems(shows);
 						
 						if(adapter.isEmpty())
 							getStatusView().hide().text("Nothing found, sorry man...");

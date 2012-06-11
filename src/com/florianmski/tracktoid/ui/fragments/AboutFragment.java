@@ -1,12 +1,9 @@
 package com.florianmski.tracktoid.ui.fragments;
 
-import net.londatiga.android.ActionItem;
-import net.londatiga.android.QuickAction;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,7 +14,6 @@ import com.florianmski.tracktoid.Utils;
 
 public class AboutFragment extends BaseFragment
 {
-	private QuickAction qa;
 	private ImageView ivNyan;
 	
 	public static AboutFragment newInstance(Bundle args)
@@ -39,9 +35,6 @@ public class AboutFragment extends BaseFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 		
-		qa = new QuickAction(getActivity());
-		qa.addActionItem(new ActionItem(0, "Nyan!"));
-		
 		//prepare nyan cat animation
 		final AnimationDrawable animation = Utils.getNyanCat(getActivity());
 
@@ -54,15 +47,6 @@ public class AboutFragment extends BaseFragment
 			public void run() 
 			{
 				animation.start();
-			}
-		});
-		
-		ivNyan.setOnClickListener(new OnClickListener() 
-		{
-			@Override
-			public void onClick(View v) 
-			{
-				qa.show(v);
 			}
 		});
 	}

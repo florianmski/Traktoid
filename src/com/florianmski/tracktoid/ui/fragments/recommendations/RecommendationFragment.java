@@ -157,7 +157,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 		}
 		else
 		{
-			adapter.updateItems(items);
+			adapter.refreshItems(items);
 			if(lvRecommendations.getAdapter() == null)
 				lvRecommendations.setAdapter(adapter);
 		}

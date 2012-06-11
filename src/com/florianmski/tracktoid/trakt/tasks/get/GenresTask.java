@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
-import android.util.Log;
-
 import com.florianmski.tracktoid.ApiCache;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Genre;
@@ -29,7 +26,7 @@ public class GenresTask extends GetTask<List<Genre>>
 	@Override
 	protected List<Genre> doTraktStuffInBackground() 
 	{
-		genres = (List<Genre>) ApiCache.read(builder, context);
+		genres = ApiCache.read(builder, context);
 		publishProgress(EVENT, genres);
 		
 		genres = builder.fire();

@@ -4,9 +4,7 @@ import java.util.concurrent.ExecutorService;
 
 import android.support.v4.app.Fragment;
 
-import com.florianmski.tracktoid.ApiCache;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
-import com.jakewharton.trakt.TraktApiBuilder;
 
 public abstract class GetTask<TResult> extends TraktTask<TResult>
 {

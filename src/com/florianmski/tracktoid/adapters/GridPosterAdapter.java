@@ -29,7 +29,9 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+
 import com.androidquery.AQuery;
+import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.widgets.BadgesView;
@@ -46,13 +48,15 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 	protected int height;
 	protected int currentFilter = 0;
 	protected Handler h = new Handler();
+	private ListCheckerManager<T> lcm;
 
-	public GridPosterAdapter(Activity context, List<T> items, int height)
+	public GridPosterAdapter(Activity context, List<T> items, int height, ListCheckerManager<T> lcm)
 	{
 		super(context, items);
 		this.height = height;
+		this.lcm = lcm;
 	}
-	
+
 	@Override
 	public void clear() 
 	{
@@ -110,18 +114,59 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 		setFilter(currentFilter);
 	}
 
+	public void updateItems(List<T> items)
+	{
+		boolean dataChanged = false;
+
+		for(T item : items)
+		{
+			int index = Collections.binarySearch(this.items, item);
+			if(index < 0 || index >= this.items.size())
+				this.items.add(item);
+			else
+				this.items.set(index, item);
+
+			dataChanged = true;
+		}
+
+		if(dataChanged)
+		{
+			Collections.sort(this.items);
+			setFilter(currentFilter);
+		}
+	}
+
 	@Override
 	public void remove(T item)
 	{
 		int index = Collections.binarySearch(items, item);
 		if(index >= 0 && index < items.size())
+		{
 			items.remove(index);
+			setFilter(currentFilter);
+		}
+	}
 
-		setFilter(currentFilter);
+	public void remove(List<T> items)
+	{
+		boolean dataChanged = false;
+
+		for(T item : items)
+		{
+			int index = Collections.binarySearch(this.items, item);
+			if(index >= 0 && index < this.items.size())
+			{
+				this.items.remove(index);
+				dataChanged = true;
+			}
+		}
+
+		if(dataChanged)
+			setFilter(currentFilter);
 	}
 
 	@Override
-	public void updateItems(List<T> items)
+	public void refreshItems(List<T> items)
 	{
 		this.items = items;
 		setFilter(currentFilter);
@@ -149,10 +194,10 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 			holder = new ViewHolder<T>();
 
 			convertView = LayoutInflater.from(context).inflate(R.layout.grid_item_show, null, false);
-			
+
 			holder.ivPoster = (ImageView) convertView.findViewById(R.id.imageViewPoster);
 			holder.ivPoster.setScaleType(ScaleType.CENTER_CROP);
-			
+
 			holder.bv = (BadgesView<T>) convertView.findViewById(R.id.badgesLayout);
 
 			convertView.setTag(holder);
@@ -166,7 +211,7 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 		final T item = getItem(position);
 		String url = item.getImages().poster;
 		String id = item.getId();
-		
+
 		holder.bv.initialize();
 		holder.ivPoster.setImageBitmap(null);
 
@@ -179,11 +224,11 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 		{
 			holder.ivPoster.setScaleType(ScaleType.CENTER_CROP);
 			aq.id(holder.ivPoster).image(i.getUrl(), true, true);
-			
+
 			holder.bv.setTraktItem(item);
 		}
 
-		return convertView;
+		return lcm.checkView(item, convertView);
 	}
 
 	private static class ViewHolder<T extends TraktoidInterface<T>> 

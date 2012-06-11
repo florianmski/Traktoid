@@ -43,7 +43,7 @@ public class PostTask extends TraktTask<Response>
 				r = (Response) builder.fire();
 			}
 			catch(ClassCastException e) {}
-
+			
 			if(r != null && r.error == null)
 			{
 				//			showToast("Send to Trakt!", Toast.LENGTH_SHORT);

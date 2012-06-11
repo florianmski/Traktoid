@@ -17,21 +17,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
-
-        <LinearLayout
-            android:id="@+id/linearLayoutWatched"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:background="#AF000000"
-            android:gravity="center"
-            android:visibility="invisible" >
-
-            <CheckBox
-                android:id="@+id/checkBoxWatched"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false" />
-        </LinearLayout>
     </RelativeLayout>
 
     <LinearLayout

@@ -19,7 +19,7 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.florianmski.tracktoid.R;
 
 
-public abstract class PagerTabsFragment extends TraktFragment 
+public abstract class PagerTabsFragment extends TraktFragment implements ViewPager.OnPageChangeListener 
 {
 	protected ViewPager mViewPager;
 	protected TabsAdapter mTabsAdapter;
@@ -42,6 +42,8 @@ public abstract class PagerTabsFragment extends TraktFragment
 		
 		if (savedInstanceState != null)
 			getActionBar().setSelectedNavigationItem(savedInstanceState.getInt("tab"));
+		
+		mViewPager.setOnPageChangeListener(this);
 	}
 
 	@Override
@@ -63,8 +65,20 @@ public abstract class PagerTabsFragment extends TraktFragment
 	{
 		toSave.putInt("tab", getActionBar().getSelectedTab().getPosition());
 	}
+	
+	@Override
+	public void onPageScrollStateChanged(int arg0) {}
 
-	public class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener, ViewPager.OnPageChangeListener 
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {}
+
+	@Override
+	public void onPageSelected(int position) 
+	{
+		getActionBar().setSelectedNavigationItem(position);
+	}
+
+	public class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener
 	{
 		private final Context mContext;
 		private final ViewPager mViewPager;
@@ -87,7 +101,6 @@ public abstract class PagerTabsFragment extends TraktFragment
 			super(activity.getSupportFragmentManager());
 			mContext = activity;
 			mViewPager = pager;
-			mViewPager.setOnPageChangeListener(this);
 			new setAdapterTask().execute();
 		}
 
@@ -127,18 +140,6 @@ public abstract class PagerTabsFragment extends TraktFragment
 
 		@Override
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {}
-
-		@Override
-		public void onPageScrollStateChanged(int arg0) {}
-
-		@Override
-		public void onPageScrolled(int arg0, float arg1, int arg2) {}
-
-		@Override
-		public void onPageSelected(int position) 
-		{
-			getActionBar().setSelectedNavigationItem(position);
-		}
 
 		private class setAdapterTask extends AsyncTask<Void,Void,Void>
 		{

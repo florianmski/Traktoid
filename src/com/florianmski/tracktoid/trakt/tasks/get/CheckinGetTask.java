@@ -3,7 +3,6 @@ package com.florianmski.tracktoid.trakt.tasks.get;
 import android.support.v4.app.Fragment;
 
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.ActivityItemBase;
 import com.jakewharton.trakt.enumerations.ActivityAction;
@@ -49,6 +48,6 @@ public class CheckinGetTask extends GetTask<TraktoidInterface>
 	protected void sendEvent(TraktoidInterface result) 
 	{
 		if(getRef() != null)
-			listener.onCheckin(traktItem);
+			listener.onCheckin(result);
 	}
 }

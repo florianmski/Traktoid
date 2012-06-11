@@ -16,25 +16,21 @@
 
 package com.florianmski.tracktoid.adapters.lists;
 
-import java.io.Serializable;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
+import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.RootAdapter;
@@ -42,54 +38,66 @@ import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode> implements Serializable
+public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode>
 {	
-	private static final long serialVersionUID = 3085212680669200372L;
-
-	private boolean watchedMode = false;
-	private String tvdb_id;
-	private Map<Integer, Boolean> listWatched = new HashMap<Integer, Boolean>();
+	private ListCheckerManager<TvShowEpisode> lcm;
+	private int season;
 
 	//TODO test if this works or not
 	//take the orientation change into account
 	//maybe move the watched logic from adapter to the fragment ?
 
-	public ListEpisodeAdapter(List<TvShowEpisode> episodes, Context context, String tvdb_id)
+	public ListEpisodeAdapter(List<TvShowEpisode> episodes, int season, Context context)
 	{
 		super(context, episodes);
-		this.tvdb_id = tvdb_id;
+
+		this.lcm = ListCheckerManager.getInstance();
+		this.season = season;
 	}
 
-	//set or unset mode where user can check watched episodes
-	public void setWatchedMode(boolean watchedMode)
+	public void updateItems(List<TvShowEpisode> items)
 	{
-		this.watchedMode = watchedMode;
+		boolean dataChanged = false;
 
-		if(watchedMode)
-			listWatched.clear();
-		notifyDataSetChanged();
-	}
-
-	public boolean getWatchedMode()
-	{
-		return watchedMode;
-	}
-
-	//check or uncheck all episodes of a season
-	public void checkBoxSelection(boolean checked)
-	{
-		listWatched.clear();
-		for(TvShowEpisode e : items)
+		for(TvShowEpisode item : items)
 		{
-			if(e.watched != checked)
-				listWatched.put(e.number, checked);
+			if(item.season == season)
+			{
+				int index = Collections.binarySearch(this.items, item);
+				if(index < 0 || index >= this.items.size())
+					this.items.add(item);
+				else
+					this.items.set(index, item);
+				dataChanged = true;
+			}
 		}
-		notifyDataSetChanged();
+
+		if(dataChanged)
+		{
+			Collections.sort(this.items);
+			notifyDataSetChanged();
+		}
 	}
 
-	public Map<Integer, Boolean> getListWatched()
+	public void remove(List<TvShowEpisode> items)
 	{
-		return listWatched;
+		boolean dataChanged = false;
+
+		for(TvShowEpisode item : items)
+		{
+			if(item.season == season)
+			{
+				int index = Collections.binarySearch(this.items, item);
+				if(index >= 0 && index < this.items.size())
+				{
+					this.items.remove(index);
+					dataChanged = true;
+				}
+			}
+		}
+		
+		if(dataChanged)
+			notifyDataSetChanged();
 	}
 
 	@Override
@@ -104,8 +112,6 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode> implements Se
 			holder.ivScreen = (ImageView)convertView.findViewById(R.id.imageViewScreen);
 			holder.tvTitle = (TextView)convertView.findViewById(R.id.textViewTitle);
 			holder.tvEpisode = (TextView)convertView.findViewById(R.id.textViewEpisode);
-			holder.cbWatched = (CheckBox)convertView.findViewById(R.id.checkBoxWatched);
-			holder.llWatched = (LinearLayout)convertView.findViewById(R.id.linearLayoutWatched);
 			holder.bv = (BadgesView)convertView.findViewById(R.id.badgesLayout);
 
 			convertView.setTag(holder);
@@ -142,41 +148,7 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode> implements Se
 		holder.tvTitle.setText(e.title);
 		holder.tvEpisode.setText("Episode " + e.number);
 
-		if(watchedMode)
-		{       	
-			holder.llWatched.setVisibility(View.VISIBLE);
-			holder.cbWatched.setOnClickListener(new OnClickListener() 
-			{
-				@Override
-				public void onClick(View v)
-				{
-					if(watchedMode)
-					{
-						int episode = items.get(position).number;
-						boolean watched = items.get(position).watched;
-						//it means that episode has been checked twice so user has changed his mind
-						if(listWatched.containsKey(episode) || (watched == holder.cbWatched.isChecked()))
-							listWatched.remove(episode);
-						else
-							listWatched.put(episode, holder.cbWatched.isChecked());
-					}
-				}
-			});
-
-			if(listWatched.containsKey(e.number))
-				holder.cbWatched.setChecked(listWatched.get(e.number));
-			else
-				holder.cbWatched.setChecked(e.watched);
-
-		}
-		else
-		{
-			holder.llWatched.setVisibility(View.GONE);
-
-			holder.cbWatched.setChecked(e.watched);
-		}
-
-		return convertView;
+		return lcm.checkView(e, convertView);
 	}
 
 	private static class ViewHolder 
@@ -184,9 +156,6 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode> implements Se
 		private ImageView ivScreen;
 		private TextView tvTitle;
 		private TextView tvEpisode;
-		private CheckBox cbWatched;
-		private LinearLayout llWatched;
 		private BadgesView bv;
 	}
-
 }

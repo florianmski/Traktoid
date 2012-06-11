@@ -1,30 +1,31 @@
 package com.florianmski.tracktoid.ui.fragments.library;
 
-import net.londatiga.android.ActionItem;
-import net.londatiga.android.QuickAction;
+import java.util.List;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.GridView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.ActionMode.Callback;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
+import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
+import com.florianmski.tracktoid.trakt.tasks.post.InCollectionTask;
+import com.florianmski.tracktoid.trakt.tasks.post.InWatchlistTask;
+import com.florianmski.tracktoid.trakt.tasks.post.SeenTask;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
+import com.florianmski.tracktoid.widgets.CheckableGridView;
 import com.florianmski.traktoid.TraktoidInterface;
 
 public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends TraktFragment implements TraktListener<T>
@@ -34,12 +35,10 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 	protected final static int NB_COLUMNS_PHONE_PORTRAIT = 3;
 	protected final static int NB_COLUMNS_PHONE_LANDSCAPE = 5;
 
-	protected GridView gd;
-	protected QuickAction quickAction;
-
-	protected int posterClickedPosition = -1;
-
+	protected CheckableGridView<T> gd;
 	protected GridPosterAdapter<T> adapter;
+	
+	protected ListCheckerManager<T> lcm;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -52,9 +51,6 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 	public abstract GridPosterAdapter<T> setupAdapter();
 	public abstract void onGridItemClick(AdapterView<?> arg0, View v, int position, long arg3);
 	public abstract void displayContent();
-	public abstract void onRefreshQAClick(QuickAction source, int pos, int actionId);
-	public abstract void onDeleteQAClick(QuickAction source, int pos, int actionId);
-	public abstract void onRateQAClick(QuickAction source, int pos, int actionId);
 	public abstract void onRefreshClick();
 
 	@Override
@@ -62,6 +58,83 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 	{
 		super.onActivityCreated(savedInstanceState);
 
+		lcm = new ListCheckerManager<T>();
+		lcm.setNoSelectedColorResId(android.R.color.transparent);
+		lcm.setSelectedViewResId(R.id.relativeLayoutSelectorPurpose);
+		lcm.setOnActionModeListener(new Callback() 
+		{
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) 
+			{
+				return false;
+			}
+			
+			@Override
+			public void onDestroyActionMode(ActionMode mode) 
+			{
+				
+			}
+			
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) 
+			{
+				SubMenu seenMenu = menu.addSubMenu("watched");
+				seenMenu.add(0, R.id.action_bar_watched_seen, 0, "Seen")
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				seenMenu.add(0, R.id.action_bar_watched_unseen, 0, "Unseen")
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				MenuItem seenItem = seenMenu.getItem();
+		        seenItem.setIcon(R.drawable.ab_icon_eye);
+		        seenItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+				
+		        SubMenu watchlistMenu = menu.addSubMenu("watchlist");
+		        watchlistMenu.add(0, R.id.action_bar_add_to_watchlist, 0, "add to watchlist")
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		        watchlistMenu.add(0, R.id.action_bar_remove_from_watchlist, 0, "remove from watchlist")
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				MenuItem watchlistItem = watchlistMenu.getItem();
+				watchlistItem.setIcon(R.drawable.badge_watchlist);
+				watchlistItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		        
+				SubMenu collectionMenu = menu.addSubMenu("collection");
+				collectionMenu.add(0, R.id.action_bar_add_to_collection, 0, "add to collection")
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				collectionMenu.add(0, R.id.action_bar_remove_from_collection, 0, "remove from collection")
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				MenuItem collectionItem = collectionMenu.getItem();
+				collectionItem.setIcon(R.drawable.badge_collection);
+				collectionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+				return true;
+			}
+			
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) 
+			{
+				switch(item.getItemId())
+				{
+				case R.id.action_bar_watched_unseen:
+				case R.id.action_bar_watched_seen:
+					SeenTask.createTask(PI_LibraryFragment.this, lcm.getItemsList(), item.getItemId() == R.id.action_bar_watched_seen, null).fire();
+					break;
+				case R.id.action_bar_add_to_watchlist:
+				case R.id.action_bar_remove_from_watchlist:
+					InWatchlistTask.createTask(PI_LibraryFragment.this, lcm.getItemsList(), item.getItemId() == R.id.action_bar_add_to_watchlist, null).fire();
+					break;
+				case R.id.action_bar_add_to_collection:
+				case R.id.action_bar_remove_from_collection:
+					InCollectionTask.createTask(PI_LibraryFragment.this, lcm.getItemsList(), item.getItemId() == R.id.action_bar_add_to_collection, null).fire();
+					break;
+				}
+				return true;
+			}
+		});
+		
+		lcm.addListener(gd);
+		gd.initialize(this, 0, lcm);
+		
+		if(lcm.isActivated())
+			getSherlockActivity().startActionMode(lcm.getCallback());
+		
 		getStatusView().show().text("Loading ,\nPlease wait...");
 
 		checkUpdateTask();
@@ -82,56 +155,6 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 			}
 		});
 
-		quickAction = new QuickAction(getActivity());
-
-		ActionItem aiRefresh = new ActionItem();
-		aiRefresh.setTitle("Refresh");
-		aiRefresh.setIcon(getResources().getDrawable(R.drawable.ab_icon_refresh));
-
-		ActionItem aiDelete = new ActionItem();
-		aiDelete.setTitle("Delete");
-		aiDelete.setIcon(getResources().getDrawable(R.drawable.ab_icon_delete));
-
-		ActionItem aiRating = new ActionItem();
-		aiRating.setTitle("Rate");
-		aiRating.setIcon(getResources().getDrawable(R.drawable.ab_icon_rate));
-
-		quickAction.addActionItem(aiRefresh);
-		quickAction.addActionItem(aiDelete);
-		//not necessary, disable it for the moment
-		//		quickAction.addActionItem(aiRating);
-
-		quickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() 
-		{			
-			@Override
-			public void onItemClick(QuickAction source, int pos, int actionId) 
-			{
-				switch(pos)
-				{
-				case 0 :
-					onRefreshQAClick(source, pos, actionId);
-					break;
-				case 1 :
-					onDeleteQAClick(source, pos, actionId);
-					break;
-				case 2:
-					onRateQAClick(source, pos, actionId);
-					break;
-				}
-			}
-		});
-
-		gd.setOnItemLongClickListener(new OnItemLongClickListener() 
-		{
-			@Override
-			public boolean onItemLongClick(AdapterView<?> arg0, View v, int position, long arg3) 
-			{
-				onShowQuickAction(v, position);
-				return false;
-			}
-
-		});
-
 		TraktTask.addObserver(this);
 	}
 
@@ -139,6 +162,7 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 	public void onDestroy()
 	{
 		TraktTask.removeObserver(this);
+		lcm.removeListener(gd);
 		super.onDestroy();
 	}
 
@@ -150,7 +174,7 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 	{
 		View v = inflater.inflate(R.layout.pager_item_library, null);
 
-		gd = (GridView)v.findViewById(R.id.gridViewLibrary);
+		gd = (CheckableGridView<T>)v.findViewById(R.id.gridViewLibrary);
 
 		return v;
 	}
@@ -182,13 +206,6 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 		return calculatePosterHeight(nbColumns);
 	}
 
-	public void onShowQuickAction(View v, int position) 
-	{
-		//maybe add a setTag() function in quickAction to avoid this
-		posterClickedPosition = position;
-		quickAction.show(v);
-	}
-
 	private int calculatePosterHeight(int nbColumns)
 	{
 		int width = (getActivity().getWindowManager().getDefaultDisplay().getWidth()/(nbColumns));
@@ -200,25 +217,16 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 	{
 		super.onCreateOptionsMenu(menu, inflater);
 
-		SubMenu rateMenu = menu.addSubMenu(0, R.id.action_bar_filter, 0, "Filter");
-		rateMenu.add(0, R.id.action_bar_filter_all, 0, "All");
-		rateMenu.add(0, R.id.action_bar_filter_unwatched, 0, "Unwatched");
-		rateMenu.add(0, R.id.action_bar_filter_loved, 0, "Loved");
+		SubMenu filterMenu = menu.addSubMenu(0, R.id.action_bar_filter, 0, "Filter");
+		filterMenu.add(0, R.id.action_bar_filter_all, 0, "All");
+		filterMenu.add(0, R.id.action_bar_filter_unwatched, 0, "Unwatched");
+		filterMenu.add(0, R.id.action_bar_filter_loved, 0, "Loved");
 
-		MenuItem rateItem = rateMenu.getItem();
+		MenuItem rateItem = filterMenu.getItem();
 		rateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-		int value = getSherlockActivity().getSupportActionBar().getHeight();
-		ProgressBar pbRefresh = new ProgressBar(getActivity());
-		pbRefresh.setIndeterminate(true);
-		RelativeLayout rl = new RelativeLayout(getActivity());
-		rl.setLayoutParams(new LayoutParams(value, value));
-		pbRefresh.setLayoutParams(new RelativeLayout.LayoutParams(value, value));
-		rl.addView(pbRefresh);
-
 		menu.add(0, R.id.action_bar_refresh, 0, "Refresh")
-		.setActionView(rl)
-		.setEnabled(false)
+		.setIcon(R.drawable.ab_icon_refresh)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 	}
 
@@ -269,14 +277,14 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 	public void onSaveState(Bundle toSave) {}
 
 	@Override
-	public void onTraktItemUpdated(T traktItem) 
+	public void onTraktItemsUpdated(List<T> traktItems) 
 	{
 		if(adapter != null)
-			adapter.updateItem(traktItem);
+			adapter.updateItems(traktItems);
 	}
 
 	@Override
-	public void onTraktItemRemoved(T traktItem) 
+	public void onTraktItemsRemoved(List<T> traktItem) 
 	{
 		if(adapter != null)
 			adapter.remove(traktItem);

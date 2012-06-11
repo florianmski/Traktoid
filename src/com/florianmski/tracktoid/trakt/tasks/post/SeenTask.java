@@ -1,11 +1,11 @@
 package com.florianmski.tracktoid.trakt.tasks.post;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.support.v4.app.Fragment;
 
+import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
@@ -13,226 +13,208 @@ import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
+import com.jakewharton.trakt.entities.TvShowSeason;
 import com.jakewharton.trakt.services.MovieService.UnseenBuilder;
+import com.jakewharton.trakt.services.MovieService;
+import com.jakewharton.trakt.services.ShowService;
 import com.jakewharton.trakt.services.ShowService.EpisodeSeenBuilder;
 import com.jakewharton.trakt.services.ShowService.EpisodeUnseenBuilder;
 
 public abstract class SeenTask<T extends TraktoidInterface<T>> extends PostTask
 {
-	protected Map<T,Boolean> traktItems;
+	protected List<T> traktItems;
+	protected boolean seen;
 
-	public SeenTask(Fragment fragment, Map<T,Boolean> traktItems, PostListener pListener) 
+	public SeenTask(Fragment fragment, List<T> traktItems, boolean seen, PostListener pListener) 
 	{
 		super(fragment, null, pListener);
 
 		this.traktItems = traktItems;
+		this.seen = seen;
 	}
-	
+
 	public static <T extends TraktoidInterface<T>> SeenTask<?> createTask(Fragment fragment, T traktItem, boolean seen, PostListener pListener)
 	{
-		Map<T,Boolean> traktItems = new HashMap<T, Boolean>();
-		traktItems.put(traktItem, seen);
-		return createTask(fragment, traktItems, pListener);
+		List<T> traktItems = new ArrayList<T>();
+		traktItems.add(traktItem);
+		return createTask(fragment, traktItems, seen, pListener);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends TraktoidInterface<T>> SeenTask<?> createTask(Fragment fragment, Map<T,Boolean> traktItems, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> SeenTask<?> createTask(Fragment fragment, List<T> traktItems, boolean seen, PostListener pListener)
 	{
-		//TODO
-		if(traktItems.keySet().iterator().next() instanceof TvShow)
-			return new SeenShowTask(fragment, (Map<TvShow, Boolean>) traktItems, pListener);
-		else if(traktItems.keySet().iterator().next() instanceof Movie)
-			return new SeenMovieTask(fragment, (Map<Movie, Boolean>) traktItems, pListener);
-		else if(traktItems.keySet().iterator().next() instanceof TvShowEpisode)
-			return new SeenEpisodeTask(fragment, (Map<TvShowEpisode, Boolean>) traktItems, pListener);
+		if(traktItems.get(0) instanceof TvShow)
+			return new SeenShowTask(fragment, (List<TvShow>) traktItems, seen, pListener);
+		else if(traktItems.get(0) instanceof Movie)
+			return new SeenMovieTask(fragment, (List<Movie>) traktItems, seen, pListener);
+		else if(traktItems.get(0) instanceof TvShowEpisode)
+			return new SeenEpisodeTask(fragment, (List<TvShowEpisode>) traktItems, seen, pListener);
 		else
 			return null;
 	}
 
-	protected abstract TraktApiBuilder<?> createSeenBuilder(Map<T,Boolean> traktItems);
-	protected abstract TraktApiBuilder<?> createUnseenBuilder(Map<T,Boolean> traktItems);
-	protected abstract void insertInDb(Map<T,Boolean> traktItems);
-	protected abstract void sendEvent(Map<T,Boolean> traktItems);
+	protected abstract List<TraktApiBuilder<?>> createSeenBuilder(List<T> traktItems);
+	protected abstract List<TraktApiBuilder<?>> createUnseenBuilder(List<T> traktItems);
+	protected abstract void insertInDb(List<T> traktItems, DatabaseWrapper dbw);
 
 	@Override
 	protected void doPrePostStuff() 
 	{
-		TraktApiBuilder<?> seenBuilder = createSeenBuilder(traktItems);
-		if(seenBuilder != null)
-			builders.add(seenBuilder);
-		TraktApiBuilder<?> unseenBuilder = createUnseenBuilder(traktItems);
-		if(unseenBuilder != null)
-			builders.add(unseenBuilder);
+		if(seen)
+			builders.addAll(createSeenBuilder(traktItems));
+		else
+			builders.addAll(createUnseenBuilder(traktItems));
 	}
 
 	@Override
 	protected void doAfterPostStuff()
 	{
-		insertInDb(traktItems);
+		DatabaseWrapper dbw = new DatabaseWrapper(context);
+		insertInDb(traktItems, dbw);
+		dbw.close();
 	}
 
-	@Override
-	protected void onCompleted(Response r)
-	{
-		super.onCompleted(r);
-
-		if(r != null)
-			sendEvent(traktItems);
-		//			tm.onTraktItemUpdated(traktItem);
-
-	}
-	
 	@Override
 	protected void sendEvent(Response result) 
 	{
-		//TODO
+		TraktTask.traktItemsUpdated(traktItems);
 	}
 
 	public static final class SeenShowTask extends SeenTask<TvShow>
 	{
-		public SeenShowTask(Fragment fragment, Map<TvShow,Boolean> traktItems, PostListener pListener) 
+		public SeenShowTask(Fragment fragment, List<TvShow> traktItems, boolean seen, PostListener pListener) 
 		{
-			super(fragment, traktItems, pListener);
+			super(fragment, traktItems, seen, pListener);
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createSeenBuilder(Map<TvShow,Boolean> traktItems) 
+		protected List<TraktApiBuilder<?>> createSeenBuilder(List<TvShow> traktItems) 
 		{
-			//TODO seen builder in trakt-java
-			//			EpisodeSeenBuilder seenBuilder = tm.showService().episodeSeen(Integer.valueOf(0)).episode(0, 0).;
-			//			for (Iterator<Integer> it = listEpisodes.keySet().iterator(); it.hasNext() ;)
-			//			{
-			//				Integer episode = it.next();
-			//				Boolean watched = listEpisodes.get(episode);
-			//
-			//				if(watched)
-			//				{
-			//					seenEpisodes++;
-			//					seenBuilder.episode(seasons[i], episode);
-			//				}
-			//				else
-			//				{
-			//					unseenEpisodes++;
-			//					unseenBuilder.episode(seasons[i], episode);
-			//				}
-			//			}
+			List<TraktApiBuilder<?>> builderList = new ArrayList<TraktApiBuilder<?>>();
+			for (TvShow show : traktItems)
+			{
+				ShowService.SeenBuilder seenBuilder = tm.showService().seen();
+				seenBuilder.show(Integer.valueOf(show.getId()));
+				builderList.add(seenBuilder);
+			}
+
+			return builderList;
+		}
+
+		@Override
+		protected List<TraktApiBuilder<?>> createUnseenBuilder(List<TvShow> traktItems) 
+		{
+			//TODO this method does not exists in API
 			return null;
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createUnseenBuilder(Map<TvShow,Boolean> traktItems) 
+		protected void insertInDb(List<TvShow> traktItems, DatabaseWrapper dbw) 
 		{
-			//TODO seen builder in trakt-java
-			return null;
-		}
-
-		@Override
-		protected void sendEvent(Map<TvShow,Boolean> traktItems) 
-		{
-			//TODO
-		}
-
-		@Override
-		protected void insertInDb(Map<TvShow,Boolean> traktItems) 
-		{
-			//TODO
+			for(TvShow traktItem : traktItems)
+				dbw.markShowAsSeen(traktItem.tvdbId, seen);
 		}
 	}
 
 	public static final class SeenMovieTask extends SeenTask<Movie>
 	{
-		public SeenMovieTask(Fragment fragment, Map<Movie,Boolean> traktItems, PostListener pListener) 
+		public SeenMovieTask(Fragment fragment, List<Movie> traktItems, boolean seen, PostListener pListener) 
 		{
-			super(fragment, traktItems, pListener);
+			super(fragment, traktItems, seen, pListener);
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createSeenBuilder(Map<Movie,Boolean> traktItems) 
+		protected List<TraktApiBuilder<?>> createSeenBuilder(List<Movie> traktItems) 
 		{
-			//TODO wait for justin response https://groups.google.com/forum/?fromgroups#!topic/traktapi/EI0xt5DQaXM
-			//			return tm
-			//					.movieService()
-			//					.seen().movie(0, 0, new Date()).checkin(Integer.valueOf(traktItem.getId()));
-			return null;
+			List<TraktApiBuilder<?>> builderList = new ArrayList<TraktApiBuilder<?>>();
+			MovieService.SeenBuilder seenBuilder = tm.movieService().seen();
+			for (Movie movie : traktItems)
+				seenBuilder.movie(movie.getId());
+
+			builderList.add(seenBuilder);
+			return builderList;
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createUnseenBuilder(Map<Movie,Boolean> traktItems) 
+		protected List<TraktApiBuilder<?>> createUnseenBuilder(List<Movie> traktItems) 
 		{
+			List<TraktApiBuilder<?>> builderList = new ArrayList<TraktApiBuilder<?>>();
 			UnseenBuilder unseenBuilder = tm.movieService().unseen();
-			for (Iterator<Movie> it = traktItems.keySet().iterator(); it.hasNext() ;)
+			for (Movie movie : traktItems)
+				unseenBuilder.movie(movie.getId());
+
+			builderList.add(unseenBuilder);
+			return builderList;
+		}
+
+		@Override
+		protected void insertInDb(List<Movie> traktItems, DatabaseWrapper dbw) 
+		{
+			for(Movie traktItem : traktItems)
 			{
-				Movie movie = it.next();
-				if(!traktItems.get(movie))
-					unseenBuilder.movie(movie.getId());
+				traktItem.watched = seen;
+				dbw.insertOrUpdateMovie(traktItem);
 			}
-			return unseenBuilder;
-		}
-
-		@Override
-		protected void sendEvent(Map<Movie,Boolean> traktItems) 
-		{
-			//TODO
-		}
-
-		@Override
-		protected void insertInDb(Map<Movie,Boolean> traktItems) 
-		{
-			//TODO
 		}
 	}
 
 	public static final class SeenEpisodeTask extends SeenTask<TvShowEpisode>
 	{
-		public SeenEpisodeTask(Fragment fragment, Map<TvShowEpisode,Boolean> traktItems, PostListener pListener) 
+		public SeenEpisodeTask(Fragment fragment, List<TvShowEpisode> traktItems, boolean seen, PostListener pListener) 
 		{
-			super(fragment, traktItems, pListener);
+			super(fragment, traktItems, seen, pListener);
+		}
+
+		public static SeenEpisodeTask createSeasonTask(Fragment fragment, List<TvShowSeason> traktItems, boolean seen, PostListener pListener)
+		{
+			List<TvShowEpisode> episodes = new ArrayList<TvShowEpisode>();
+			for(TvShowSeason s : traktItems)
+			{
+				for(TvShowEpisode e : s.episodes.episodes)
+					episodes.add(e);
+			}
+
+			return new SeenEpisodeTask(fragment, episodes, seen, pListener);
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createSeenBuilder(Map<TvShowEpisode,Boolean> traktItems) 
+		protected List<TraktApiBuilder<?>> createSeenBuilder(List<TvShowEpisode> traktItems) 
 		{
+			List<TraktApiBuilder<?>> builderList = new ArrayList<TraktApiBuilder<?>>();
 			EpisodeSeenBuilder seenBuilder = null;
-			for (Iterator<TvShowEpisode> it = traktItems.keySet().iterator(); it.hasNext() ;)
+			for(TvShowEpisode episode : traktItems)
 			{
-				TvShowEpisode episode = it.next();
-				if(traktItems.get(episode))
-				{
-					if(seenBuilder == null)
-						seenBuilder = tm.showService().episodeSeen(Integer.valueOf(episode.tvdbId));
-					seenBuilder.episode(episode.season, episode.number);
-				}
+				if(seenBuilder == null)
+					seenBuilder = tm.showService().episodeSeen(Integer.valueOf(episode.tvdbId));
+				seenBuilder.episode(episode.season, episode.number);
 			}
-			return seenBuilder;
+			builderList.add(seenBuilder);
+			return builderList;
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createUnseenBuilder(Map<TvShowEpisode,Boolean> traktItems) 
+		protected List<TraktApiBuilder<?>> createUnseenBuilder(List<TvShowEpisode> traktItems) 
 		{
+			List<TraktApiBuilder<?>> builderList = new ArrayList<TraktApiBuilder<?>>();
 			EpisodeUnseenBuilder unseenBuilder = null;
-			for (Iterator<TvShowEpisode> it = traktItems.keySet().iterator(); it.hasNext() ;)
+			for(TvShowEpisode episode : traktItems)
 			{
-				TvShowEpisode episode = it.next();
-				if(!traktItems.get(episode))
-				{
-					if(unseenBuilder == null)
-						unseenBuilder = tm.showService().episodeUnseen(Integer.valueOf(episode.tvdbId));
-					unseenBuilder.episode(episode.season, episode.number);
-				}
+				if(unseenBuilder == null)
+					unseenBuilder = tm.showService().episodeUnseen(Integer.valueOf(episode.tvdbId));
+				unseenBuilder.episode(episode.season, episode.number);
 			}
-			return unseenBuilder;
+			builderList.add(unseenBuilder);
+			return builderList;
 		}
 
 		@Override
-		protected void sendEvent(Map<TvShowEpisode,Boolean> traktItems) 
+		protected void insertInDb(List<TvShowEpisode> traktItems, DatabaseWrapper dbw) 
 		{
-			//TODO
-		}
-
-		@Override
-		protected void insertInDb(Map<TvShowEpisode,Boolean> traktItems) 
-		{
-			//TODO
+			for(TvShowEpisode traktItem : traktItems)
+			{
+				traktItem.watched = seen;
+				dbw.insertOrUpdateEpisode(traktItem);
+			}
 		}
 	}
 }

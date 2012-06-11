@@ -1,13 +1,9 @@
-package com.florianmski.tracktoid.ui.fragments;
+package com.florianmski.tracktoid.ui.fragments.show;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -21,11 +17,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.ActionMode.Callback;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -33,6 +29,7 @@ import com.actionbarsherlock.view.SubMenu;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
+import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.TraktoidConstants;
@@ -43,24 +40,26 @@ import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBSeasonsTask;
 import com.florianmski.tracktoid.image.Fanart;
 import com.florianmski.tracktoid.image.TraktImage;
+import com.florianmski.tracktoid.trakt.tasks.post.InCollectionTask.InCollectionEpisodeTask;
 import com.florianmski.tracktoid.trakt.tasks.post.RateTask;
-import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
+import com.florianmski.tracktoid.trakt.tasks.post.SeenTask.SeenEpisodeTask;
 import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SeasonActivity;
-import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
+import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.tracktoid.widgets.BadgesView;
+import com.florianmski.tracktoid.widgets.CheckableListView;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public class ProgressionFragment extends TraktFragment implements TraktListener<TvShow>
+public class ProgressFragment extends TraktFragment implements TraktListener<TvShow>
 {
 	private final static int PERCENTAGE_STEP = 2;
 
 	private ProgressBar sbProgress;
 	private TextView tvProgress;
-	private ListView lvSeasons;
+	private CheckableListView<TvShowSeason> lvSeasons;
 	private ImageView ivBackground;
 
 	private BadgesView<TvShowEpisode> bvNextEpisode;
@@ -68,15 +67,17 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 	private ListSeasonAdapter adapter;
 
 	private TvShow show = null;
+	
+	private ListCheckerManager<TvShowSeason> lcm;
 
-	public static ProgressionFragment newInstance(Bundle args)
+	public static ProgressFragment newInstance(Bundle args)
 	{
-		ProgressionFragment f = new ProgressionFragment();
+		ProgressFragment f = new ProgressFragment();
 		f.setArguments(args);
 		return f;
 	}
-	
-	public ProgressionFragment() {}
+
+	public ProgressFragment() {}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -89,10 +90,74 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
+		
+		//TODO save state in case of configuration change
+		
+		lcm = new ListCheckerManager<TvShowSeason>();
+		lcm.setOnActionModeListener(new Callback() 
+		{
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) 
+			{
+				return false;
+			}
+			
+			@Override
+			public void onDestroyActionMode(ActionMode mode) 
+			{
+				
+			}
+			
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) 
+			{
+				SubMenu seenMenu = menu.addSubMenu("watched");
+				seenMenu.add(0, R.id.action_bar_watched_seen, 0, "Seen")
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				seenMenu.add(0, R.id.action_bar_watched_unseen, 0, "Unseen")
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				MenuItem seenItem = seenMenu.getItem();
+		        seenItem.setIcon(R.drawable.ab_icon_eye);
+		        seenItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+				
+				SubMenu collectionMenu = menu.addSubMenu("collection");
+				collectionMenu.add(0, R.id.action_bar_add_to_collection, 0, "add to collection")
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				collectionMenu.add(0, R.id.action_bar_remove_from_collection, 0, "remove from collection")
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				MenuItem collectionItem = collectionMenu.getItem();
+				collectionItem.setIcon(R.drawable.badge_collection);
+				collectionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+				return true;
+			}
+			
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) 
+			{
+				switch(item.getItemId())
+				{
+				case R.id.action_bar_watched_unseen:
+				case R.id.action_bar_watched_seen:
+					SeenEpisodeTask.createSeasonTask(ProgressFragment.this, lcm.getItemsList(), item.getItemId() == R.id.action_bar_watched_seen, null).fire();
+					break;
+				case R.id.action_bar_add_to_collection:
+				case R.id.action_bar_remove_from_collection:
+					InCollectionEpisodeTask.createSeasonTask(ProgressFragment.this, lcm.getItemsList(), item.getItemId() == R.id.action_bar_add_to_collection, null).fire();
+					break;
+				}
+				return true;
+			}
+		});
+		
+		lcm.addListener(lvSeasons);
+		lvSeasons.initialize(this, 0, lcm);
+		
+		if(lcm.isActivated())
+			getSherlockActivity().startActionMode(lcm.getCallback());
 
 		getStatusView().show().text("Loading seasons,\nPlease wait...");
-		
-		adapter = new ListSeasonAdapter(new ArrayList<TvShowSeason>(), getActivity());
+
+		adapter = new ListSeasonAdapter(new ArrayList<TvShowSeason>(), getActivity(), lcm);
 		lvSeasons.setAdapter(adapter);
 
 		lvSeasons.setOnItemClickListener(new OnItemClickListener() 
@@ -111,12 +176,19 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 
 		refreshFragment(getArguments());
 	}
+	
+	@Override 
+	public void onDestroy()
+	{
+		super.onDestroy();
+		lcm.removeListener(lvSeasons);
+	}
 
 	public void refreshFragment(Bundle bundle)
 	{
 		if(bundle != null)
 		{
-			TvShow show = (TvShow)bundle.get(TraktoidConstants.BUNDLE_SHOW);
+			TvShow show = (TvShow)bundle.get(TraktoidConstants.BUNDLE_TRAKT_ITEM);
 
 			if(this.show == null || !this.show.tvdbId.equals(show.tvdbId))
 			{
@@ -134,14 +206,14 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 					public void onDBSeasons(List<TvShowSeason> seasons) 
 					{
 						Collections.reverse(seasons);
-						adapter.updateItems(seasons);
-						
+						adapter.refreshItems(seasons);
+
 						if(adapter.isEmpty())
 							getStatusView().hide().text("This show has no seasons, wait... WTF ?");
 						else
 							getStatusView().hide().text(null);
 					}
-				}, show.tvdbId, false, false).fire();
+				}, show.tvdbId, true, false).fire();
 
 				displayClearLogo();
 
@@ -200,15 +272,15 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 			TraktImage i = TraktImage.getScreen(e);
 			final AQuery aq = new AQuery(getActivity());
 			BitmapAjaxCallback cb = new BitmapAjaxCallback()
-	        {
-	        	@Override
-	            public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
-	        	{     
-	        		aq.id(iv).image(Utils.borderBitmap(bm, getActivity())).animate(android.R.anim.fade_in);
-	            }
+			{
+				@Override
+				public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
+				{     
+					aq.id(iv).image(Utils.borderBitmap(bm, getActivity())).animate(android.R.anim.fade_in);
+				}
 
-	        }.url(i.getUrl()).fileCache(false).memCache(true).ratio(9.0f / 16.0f);
-	        aq.id(ivScreen).image(cb);
+			}.url(i.getUrl()).fileCache(false).memCache(true).ratio(9.0f / 16.0f);
+			aq.id(ivScreen).image(cb);
 
 			bvNextEpisode.setOnClickListener(new OnClickListener() 
 			{
@@ -216,13 +288,13 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 				public void onClick(View v) 
 				{
 					Intent i = new Intent(getActivity(), EpisodeActivity.class);
-//					for(TvShowSeason s : adapter.getItems())
-//					{
-//						if(s.season == e.season)
-//							i.putExtra(TraktoidConstants.BUNDLE_SEASON_ID, s.url);
-//					}
-//					
-//					i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, show.tvdbId);
+					//					for(TvShowSeason s : adapter.getItems())
+					//					{
+					//						if(s.season == e.season)
+					//							i.putExtra(TraktoidConstants.BUNDLE_SEASON_ID, s.url);
+					//					}
+					//					
+					//					i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, show.tvdbId);
 					List<TvShowEpisode> nextEpisode = new ArrayList<TvShowEpisode>();
 					nextEpisode.add(e);
 					i.putExtra(TraktoidConstants.BUNDLE_RESULTS, (Serializable) nextEpisode);
@@ -246,7 +318,7 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 
 		sbProgress = (ProgressBar)v.findViewById(R.id.progressBarProgress);
 		tvProgress = (TextView)v.findViewById(R.id.textViewProgress);
-		lvSeasons = (ListView)v.findViewById(R.id.listViewSeasons);
+		lvSeasons = (CheckableListView<TvShowSeason>)v.findViewById(R.id.listViewSeasons);
 		ivBackground = (ImageView)v.findViewById(R.id.imageViewBackground);
 
 		sbProgress.setEnabled(false);
@@ -266,7 +338,7 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		Drawable d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
-		
+
 		SubMenu rateMenu = menu.addSubMenu("Rate");
 		d.setColorFilter(Color.parseColor("#691909"), PorterDuff.Mode.MULTIPLY);
 		rateMenu.add(0, R.id.action_bar_rate_love, 0, "Totally ninja!")
@@ -281,7 +353,7 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 		rateMenu.add(0, R.id.action_bar_rate_unrate, 0, "Unrate")
 		.setIcon(d)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		
+
 		if(show != null && show.rating != null)
 		{
 			d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
@@ -298,14 +370,10 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 				break;
 			}
 		}
-		
-        MenuItem rateItem = rateMenu.getItem();
-        rateItem.setIcon(d);
-        rateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		
-		menu.add(0, R.id.action_bar_about, 0, "Info")
-		.setIcon(R.drawable.ab_icon_info)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+		MenuItem rateItem = rateMenu.getItem();
+		rateItem.setIcon(d);
+		rateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 	}
 
 	@Override
@@ -314,81 +382,16 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 		switch(item.getItemId())
 		{
 		case R.id.action_bar_watched :
-			//if adapter is not currently loading
-			if(adapter != null)
-			{
-				final List<TvShowSeason> seasons = adapter.getItems();
-				final List<TvShowSeason> seasonsChecked = new ArrayList<TvShowSeason>();
-				CharSequence[] items = new CharSequence[seasons.size()];
-
-				for(int i = 0; i < items.length; i++)
-					items[i] = seasons.get(i).season == 0 ? "Specials" : "Season " + seasons.get(i).season;
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-				builder.setMultiChoiceItems(items, null, new OnMultiChoiceClickListener() 
-				{
-					@Override
-					public void onClick(DialogInterface dialog, int which, boolean isChecked) 
-					{
-						if(isChecked)
-							seasonsChecked.add(seasons.get(which));
-						else
-							seasonsChecked.remove(seasons.get(which));
-					}
-				});
-
-				builder.setPositiveButton("Watched", new android.content.DialogInterface.OnClickListener() 
-				{
-					@Override
-					public void onClick(DialogInterface dialog, int which) 
-					{
-						if(!seasonsChecked.isEmpty())
-							new WatchedEpisodesTask(ProgressionFragment.this, show.tvdbId, seasonsChecked, true).fire();
-						else
-							Toast.makeText(getActivity(), "Nothing to send...", Toast.LENGTH_SHORT).show();
-					}
-				});
-
-				builder.setNeutralButton("Unwatched", new android.content.DialogInterface.OnClickListener() 
-				{
-					@Override
-					public void onClick(DialogInterface dialog, int which) 
-					{
-						if(!seasonsChecked.isEmpty())
-							new WatchedEpisodesTask(ProgressionFragment.this, show.tvdbId, seasonsChecked, false).fire();
-						else
-							Toast.makeText(getActivity(), "Nothing to send...", Toast.LENGTH_SHORT).show();
-					}
-				});
-
-				builder.setNegativeButton("Cancel", new android.content.DialogInterface.OnClickListener() 
-				{
-					@Override
-					public void onClick(DialogInterface dialog, int which) {}
-				});
-
-				AlertDialog alert = builder.create();
-
-				//avoid trying to show dialog if activity no longer exist
-				if(!getActivity().isFinishing())
-					alert.show();
-			}
+			lvSeasons.start();
 			return true;
 		case R.id.action_bar_rate_love :
-			RateTask.createTask(this, show, Rating.Love, null);
+			RateTask.createTask(this, show, Rating.Love, null).fire();
 			return true;
 		case R.id.action_bar_rate_hate :
-			RateTask.createTask(this, show, Rating.Hate, null);
+			RateTask.createTask(this, show, Rating.Hate, null).fire();
 			return true;
 		case R.id.action_bar_rate_unrate :
-			RateTask.createTask(this, show, Rating.Unrate, null);
-			return true;
-		case R.id.action_bar_about :
-			Intent i = new Intent(getActivity(), ShowActivity.class);
-			ArrayList<TvShow> shows = new ArrayList<TvShow>();
-			shows.add(this.show);
-			i.putExtra(TraktoidConstants.BUNDLE_RESULTS, shows);
-			startActivity(i);
+			RateTask.createTask(this, show, Rating.Unrate, null).fire();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -434,25 +437,32 @@ public class ProgressionFragment extends TraktFragment implements TraktListener<
 	public void onSaveState(Bundle toSave) {}
 
 	@Override
-	public void onTraktItemUpdated(TvShow traktItem) 
+	public void onTraktItemsUpdated(List<TvShow> traktItems) 
 	{
-		if(traktItem.tvdbId.equals(this.show.tvdbId) && adapter != null)
-		{
-			displayPercentage(traktItem.progress);
-			displayNextEpisode();
+		for(TvShow traktItem : traktItems)
+			if(traktItem.tvdbId.equals(this.show.tvdbId) && adapter != null)
+			{
+				displayPercentage(traktItem.progress);
+				displayNextEpisode();
 
-			if(traktItem.seasons != null)
-				adapter.updateItems(traktItem.seasons);
+				if(traktItem.seasons != null)
+					adapter.refreshItems(traktItem.seasons);
 
-			this.show = traktItem;
-			getSherlockActivity().invalidateOptionsMenu();
-		}
+				this.show = traktItem;
+				getSherlockActivity().invalidateOptionsMenu();
+				
+				break;
+			}
 	}
 
 	@Override
-	public void onTraktItemRemoved(TvShow traktItem) 
+	public void onTraktItemsRemoved(List<TvShow> traktItems) 
 	{
-		if(traktItem.tvdbId.equals(show.tvdbId))
-			getActivity().finish();
+		for(TvShow traktItem : traktItems)
+			if(traktItem.tvdbId.equals(show.tvdbId))
+			{
+				getActivity().finish();
+				break;
+			}
 	}
 }

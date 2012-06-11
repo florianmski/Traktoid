@@ -74,7 +74,7 @@ public abstract class RootAdapter<T> extends BaseAdapter
         return items;
     }
     
-    public void updateItems(List<T> items) 
+    public void refreshItems(List<T> items) 
     {
         this.items = items;
         notifyDataSetChanged();

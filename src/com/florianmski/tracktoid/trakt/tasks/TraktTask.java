@@ -128,7 +128,9 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 		if(progress == TOAST)
 			Toast.makeText(context, values[1], Integer.parseInt(values[0])).show();
 		else if(progress == ERROR)
-			sendEvent(tmpResult);
+		{
+			//TODO something smart
+		}
 	}
 
 	private void handleException(Exception e)
@@ -169,23 +171,37 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 
 	public static <T extends TraktoidInterface<T>> void traktItemUpdated(T traktItem)
 	{
-		for(TraktListener<T> l : listeners)
-		{
-			try
-			{
-				l.onTraktItemUpdated(traktItem);
-			}
-			catch(ClassCastException e) {}
-		}
+		List<T> traktItems = new ArrayList<T>();
+		traktItems.add(traktItem);
+		traktItemsUpdated(traktItems);
 	}
 
 	public static <T extends TraktoidInterface<T>> void traktItemRemoved(T traktItem)
+	{
+		List<T> traktItems = new ArrayList<T>();
+		traktItems.add(traktItem);
+		traktItemsRemoved(traktItems);
+	}
+	
+	public static <T extends TraktoidInterface<T>> void traktItemsUpdated(List<T> traktItem)
 	{
 		for(TraktListener<T> l : listeners)
 		{
 			try
 			{
-				l.onTraktItemRemoved(traktItem);
+				l.onTraktItemsUpdated(traktItem);
+			}
+			catch(ClassCastException e) {}
+		}
+	}
+
+	public static <T extends TraktoidInterface<T>> void traktItemsRemoved(List<T> traktItem)
+	{
+		for(TraktListener<T> l : listeners)
+		{
+			try
+			{
+				l.onTraktItemsRemoved(traktItem);
 			}
 			catch(ClassCastException e) {}
 		}

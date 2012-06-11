@@ -2,7 +2,6 @@ package com.florianmski.tracktoid.ui.fragments;
 
 import android.os.Bundle;
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 
 public abstract class TraktFragment extends BaseFragment
 {

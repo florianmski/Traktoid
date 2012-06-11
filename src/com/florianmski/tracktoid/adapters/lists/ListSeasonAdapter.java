@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.widgets.BadgesView;
@@ -32,13 +33,17 @@ import com.jakewharton.trakt.entities.TvShowSeason;
 
 public class ListSeasonAdapter extends RootAdapter<TvShowSeason>
 {	
-	public ListSeasonAdapter(List<TvShowSeason> seasons, Context context)
+	private ListCheckerManager<TvShowSeason> lcm;
+	
+	public ListSeasonAdapter(List<TvShowSeason> seasons, Context context, ListCheckerManager<TvShowSeason> lcm)
 	{
 		super(context, seasons);
+		
+		this.lcm = lcm;
 	}
 	
 	@Override
-	public void updateItems(List<TvShowSeason> seasons)
+	public void refreshItems(List<TvShowSeason> seasons)
 	{
 		this.items.clear();
 		this.items.addAll(seasons);
@@ -75,7 +80,7 @@ public class ListSeasonAdapter extends RootAdapter<TvShowSeason>
         holder.bv.initialize();
         holder.bv.toggleWatched(episodesWatched >= episodes);
 		
-        return convertView;
+        return lcm.checkView(season, convertView);
     }
     
     private static class ViewHolder 

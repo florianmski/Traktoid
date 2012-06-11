@@ -961,6 +961,12 @@ public class DatabaseWrapper
 			ContentValues cv = new ContentValues();
 			cv.put(KEY_EPISODE_IN_COLLECTION, inCollection);
 
+			String[] whereArgs = null;
+			if(inCollection)
+				whereArgs = new String[]{tvdbId, String.valueOf(new Date().getTime())};
+			else
+				whereArgs = new String[]{tvdbId};
+			
 			db.update(
 					EPISODES_TABLE, 
 					cv, 
@@ -971,7 +977,40 @@ public class DatabaseWrapper
 							//if we remove from collection, remove all
 							//else if we add, add only episodes aired
 							(inCollection ? "AND " + KEY_EPISODE_FIRST_AIRED + "< ?" : ""),
-							new String[]{tvdbId, String.valueOf(new Date().getTime())});
+							whereArgs);
+		}
+	}
+	
+	public void markShowAsSeen(String tvdbId, boolean seen)
+	{
+		//TODO for all API methods like collection, watchlist, seen... check if show/movie/episode is already in db
+		//else dl it
+		TvShow show = getShow(tvdbId);
+		if(show != null)
+		{
+			show.progress = seen ? 100 : 0;
+			insertOrUpdateShow(show);
+
+			ContentValues cv = new ContentValues();
+			cv.put(KEY_EPISODE_WATCHED, seen);
+			
+			String[] whereArgs = null;
+			if(seen)
+				whereArgs = new String[]{tvdbId, String.valueOf(new Date().getTime())};
+			else
+				whereArgs = new String[]{tvdbId};
+
+			db.update(
+					EPISODES_TABLE, 
+					cv, 
+					KEY_EPISODE_SEASON_ID + " " +
+							"IN (SELECT " + KEY_SEASON_URL + " " +
+							"FROM " + SEASONS_TABLE + " " +
+							"WHERE " + KEY_SEASON_TVSHOW_ID + "=?) " +
+							//if we remove from collection, remove all
+							//else if we add, add only episodes aired
+							(seen ? "AND " + KEY_EPISODE_FIRST_AIRED + "< ?" : ""),
+							whereArgs);
 		}
 	}
 
@@ -1018,7 +1057,7 @@ public class DatabaseWrapper
 		Episodes episodes = new Episodes();
 
 		if(getEpisodesToo)
-			episodes.episodes = getEpisodes(c.getString(COLUMN_SEASON_URL), tvdbId);
+			episodes.episodes = getEpisodes(c.getString(COLUMN_SEASON_URL));
 
 		s.episodes = episodes;
 
@@ -1053,6 +1092,7 @@ public class DatabaseWrapper
 		return seasons;
 	}
 
+	//TODO use season.url
 	public TvShowSeason getSeason(String tvdbId, int season, boolean getEpisodesToo)
 	{
 		String sql = 
@@ -1188,8 +1228,10 @@ public class DatabaseWrapper
 		return e;
 	}
 
-	public List<TvShowEpisode> getEpisodes(String seasonId, String tvdbId)
+	public List<TvShowEpisode> getEpisodes(String seasonId)
 	{
+		String tvdbId = getTvdbId(seasonId);
+		
 		ArrayList<TvShowEpisode> episodes = new ArrayList<TvShowEpisode>();
 		String sql = 
 				"SELECT * " + 
@@ -1207,6 +1249,20 @@ public class DatabaseWrapper
 		c.close();
 
 		return episodes;
+	}
+	
+	public String getTvdbId(String seasonId)
+	{
+		String sql = 
+				"SELECT " + KEY_SEASON_TVSHOW_ID + " " +
+						"FROM " + SEASONS_TABLE + " " +
+						"WHERE " + KEY_SEASON_URL + "=? ";
+		Cursor c = db.rawQuery(sql, new String[]{seasonId});
+		
+		if(c.moveToFirst())
+			return c.getString(0);
+		
+		return null;
 	}
 
 	//	public TvShowEpisode getEpisode(String seasonId, int episode)

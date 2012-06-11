@@ -18,7 +18,7 @@ package com.florianmski.tracktoid.ui.activities.phone;
 
 import android.os.Bundle;
 
-import com.florianmski.tracktoid.ui.fragments.ProgressionFragment;
+import com.florianmski.tracktoid.ui.fragments.show.ProgressFragment;
 
 public class MyShowActivity extends TraktActivity
 {
@@ -28,6 +28,6 @@ public class MyShowActivity extends TraktActivity
 		super.onCreate(savedInstanceState);
 
 		if (savedInstanceState == null) 
-			setPrincipalFragment(ProgressionFragment.newInstance(getIntent().getExtras()));
+			setPrincipalFragment(ProgressFragment.newInstance(getIntent().getExtras()));
 	}
 }
