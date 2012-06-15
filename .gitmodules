@@ -1,0 +1,12 @@
+[submodule "libs/ActionBarSherlock"]
+	path = libs/ActionBarSherlock
+	url = https://github.com/JakeWharton/ActionBarSherlock.git
+[submodule "libs/ViewPagerIndicator"]
+	path = libs/ViewPagerIndicator
+	url = https://github.com/JakeWharton/Android-ViewPagerIndicator.git
+[submodule "libs/Trakt-java"]
+	path = libs/Trakt-java
+	url = https://github.com/florianmski/trakt-java.git
+[submodule "libs/QuickAction"]
+	path = libs/QuickAction
+	url = https://github.com/lorensiuswlt/NewQuickAction3D.git
