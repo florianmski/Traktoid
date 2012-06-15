@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/trakt-java"/>
+	<classpathentry excluding="com/florianmski/tracktoid/adapters/pagers/PagerStateFragmentAdapter.java|com/florianmski/tracktoid/adapters/pagers/PagerFragmentAdapter.java|com/florianmski/tracktoid/adapters/GridMoviePosterAdapter.java|com/florianmski/tracktoid/adapters/GridShowPosterAdapter.java|com/florianmski/tracktoid/trakt/tasks/get/MoviesTask.java|com/florianmski/tracktoid/ui/fragments/RecommendationMoviesFragment.java|com/florianmski/tracktoid/ui/fragments/RecommendationShowsFragment.java|com/florianmski/tracktoid/ui/fragments/pagers/TabsPagerFragment2.java|com/florianmski/tracktoid/ui/fragments/TabsFragment.java|com/florianmski/tracktoid/adapters/pagers/PagerMovieAdapter.java|com/florianmski/tracktoid/ui/fragments/TabsPagerFragment2.java|com/florianmski/tracktoid/trakt/tasks/TraktTaskOld.java|com/florianmski/tracktoid/WatchedModeManager.java|com/florianmski/tracktoid/ui/activities/phone/MovieShowActivity.java" kind="src" path="src"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="libs/acra-4.2.3.jar"/>
+	<classpathentry kind="lib" path="libs/gson-1.7.1.jar"/>
+	<classpathentry kind="lib" path="libs/android-query.0.21.6.jar"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
