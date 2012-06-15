@@ -6,7 +6,6 @@ import com.androidquery.AQuery;
 import com.florianmski.tracktoid.R;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -18,9 +17,6 @@ public abstract class RootAdapter<T> extends BaseAdapter
 {
     protected List<T> items;
     protected Context context;
-    
-    protected static Drawable bmPlaceholder;
-    protected static Drawable bmFallback;
     
     protected AQuery listAq;
 
@@ -90,11 +86,17 @@ public abstract class RootAdapter<T> extends BaseAdapter
     
     public void setPlaceholder(ImageView iv)
     {
-    	iv.setScaleType(ScaleType.FIT_XY);
-    	
-    	if(bmPlaceholder == null)
-    		bmPlaceholder = context.getResources().getDrawable(R.drawable.placeholder);
-    	
-    	iv.setImageDrawable(bmPlaceholder);
+    	iv.setScaleType(ScaleType.FIT_XY);    	
+    	iv.setImageResource(R.drawable.placeholder);
+    }
+    
+    public void removePlaceholder(ImageView iv)
+    {
+    	removePlaceholder(iv, ScaleType.MATRIX);
+    }
+    
+    public void removePlaceholder(ImageView iv, ScaleType st)
+    {
+    	iv.setScaleType(st);
     }
 }

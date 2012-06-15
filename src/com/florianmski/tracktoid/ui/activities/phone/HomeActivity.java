@@ -16,21 +16,15 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
-import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.HomeFragment;
 
-public class HomeActivity extends TraktActivity
+public class HomeActivity extends SinglePaneActivity
 {	
-    @Override
-    public void onCreate(Bundle savedInstanceState) 
-    {
-        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_home);
-        setContentView(R.layout.activity_single_fragment);
-        
-        if(savedInstanceState == null)
-			setPrincipalFragment(HomeFragment.newInstance(getIntent().getExtras()));
-    }
+	@Override
+	public Fragment getFragment() 
+	{
+		return HomeFragment.newInstance(getIntent().getExtras());
+	}
 }

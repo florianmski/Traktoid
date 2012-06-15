@@ -26,8 +26,8 @@ import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
+import com.florianmski.tracktoid.ui.activities.phone.TraktItemsActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
-import com.florianmski.tracktoid.ui.fragments.traktitems.PagerTraktItemShowFragment;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.DismissResponse;
@@ -70,7 +70,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 		{
 			getStatusView().show().text("Retrieving genres,\nPlease wait...");
 
-			new GenresTask(this, new GenresListener() 
+			new GenresTask(getActivity(), new GenresListener() 
 			{
 				@Override
 				public void onGenres(final List<Genre> genres) 
@@ -91,7 +91,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 				Bundle b = new Bundle();
 				b.putSerializable(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<T>) adapter.getItems());
 				b.putInt(TraktoidConstants.BUNDLE_POSITION, position);
-				launchActivityWithSingleFragment(PagerTraktItemShowFragment.class, b);
+				launchActivity(TraktItemsActivity.class, b);
 //				Intent intent = new Intent(getActivity(), ShowActivity.class);
 //				intent.putExtra(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<T>) adapter.getItems());
 //				intent.putExtra(TraktoidConstants.BUNDLE_POSITION, position);
@@ -172,7 +172,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 			@Override
 			public void onDismiss(String id) 
 			{
-				new PostTask(RecommendationFragment.this, getDismissBuilder(id), new PostListener() 
+				new PostTask(getActivity(), getDismissBuilder(id), new PostListener() 
 				{
 					@Override
 					public void onComplete(Response r, boolean success) 
@@ -191,7 +191,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 		Genre genre = index <= 0 || index > genres.size() ? null : genres.get(index-1);
 		getStatusView().show().text("Retrieving recommendations" + ((genre == null) ? "" : " in \"" + genre.name + "\"") + ",\nPlease wait...");	
 
-		return new TraktItemsTask<T>(this, new TraktItemsListener<T>() 
+		return new TraktItemsTask<T>(getActivity(), new TraktItemsListener<T>() 
 		{
 			@Override
 			public void onTraktItems(List<T> traktItems) 

@@ -25,7 +25,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -41,6 +40,8 @@ import com.jakewharton.trakt.entities.TvShowSeason;
 
 public class UpdateShowsTask extends GetTask<TvShow>
 {
+	//TODO make one task with shows/movies
+	
 	private final static int MAX_PERCENTAGE = 100;
 	private final static int NOTIFICATION_ID = 1337;
 
@@ -51,21 +52,16 @@ public class UpdateShowsTask extends GetTask<TvShow>
 	private NotificationManager nm;
 	private RemoteViews contentView;
 
-	public UpdateShowsTask(Fragment fragment, List<TvShow> selectedShows) 
+	public UpdateShowsTask(Context context, List<TvShow> selectedShows) 
 	{
-		super(fragment);
+		super(context, sSingleThreadExecutor);
 
 		this.showsSelected = selectedShows;
 	}
 
 	@Override
 	protected TvShow doTraktStuffInBackground()
-	{		
-		//TODO remove it (or not ?)
-		//allow task to failed before creating notification if something is wrong (bad username, trakt server issue...)
-		//test if user account is ok
-//		tm.accountService().test().fire();
-
+	{
 		//sort shows by name, not really necessary
 		Collections.sort(showsSelected);
 		

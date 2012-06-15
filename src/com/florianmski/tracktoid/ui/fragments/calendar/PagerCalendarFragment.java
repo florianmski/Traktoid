@@ -49,7 +49,7 @@ public class PagerCalendarFragment extends PagerTabsFragment implements Calendar
 		getStatusView().show().text("Retrieving calendar,\nPlease wait...");
 		
 		if(savedInstanceState == null)
-			new CalendarTask(this).fire();
+			new CalendarTask(getActivity()).fire();
 		else
 			addTabs(null);
 		

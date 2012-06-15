@@ -33,12 +33,13 @@ import com.florianmski.tracktoid.trakt.tasks.get.CheckinGetTask;
 import com.florianmski.tracktoid.trakt.tasks.get.CheckinGetTask.CheckinListener;
 import com.florianmski.tracktoid.trakt.tasks.post.CheckinPostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
+import com.florianmski.tracktoid.ui.activities.phone.AboutActivity;
 import com.florianmski.tracktoid.ui.activities.phone.CalendarActivity;
+import com.florianmski.tracktoid.ui.activities.phone.LibraryActivity;
+import com.florianmski.tracktoid.ui.activities.phone.LoginActivity;
+import com.florianmski.tracktoid.ui.activities.phone.RecommendationActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SearchActivity;
 import com.florianmski.tracktoid.ui.activities.phone.TrendingActivity;
-import com.florianmski.tracktoid.ui.fragments.library.PagerLibraryFragment;
-import com.florianmski.tracktoid.ui.fragments.login.PagerLoginFragment;
-import com.florianmski.tracktoid.ui.fragments.recommendations.PagerRecommendationFragment;
 import com.florianmski.tracktoid.widgets.AppRater;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.traktoid.TraktoidInterface;
@@ -69,7 +70,6 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		getSherlockActivity().getSupportActionBar().setDisplayShowHomeEnabled(false);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		//if we don't have user pass or username, go to login activity
 		if(prefs.getString(TraktoidConstants.PREF_PASSWORD, null) == null || prefs.getString(TraktoidConstants.PREF_USERNAME, null) == null)
-			launchActivityWithSingleFragment(PagerLoginFragment.class);
+			launchActivity(LoginActivity.class);
 
 		//TODO make something smart
 		//check if db need an upgrade
@@ -95,7 +95,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		AppRater.app_launched(getActivity());
 
 		//sync with trakt
-		new ActivityTask(this).silentConnectionError(true).fire();
+		new ActivityTask(getActivity()).silentConnectionError(true).fire();
 
 		//Trying to set high definition image on high resolution
 		//does not seem to be a great idea, it's slow and I sometimes get an outOfMemoryError :/
@@ -146,7 +146,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 //								}
 //							}
 //						}).fire();
-						CheckinPostTask.createTask(HomeFragment.this, traktItem, false, new PostListener() 
+						CheckinPostTask.createTask(getActivity(), traktItem, false, new PostListener() 
 						{	
 							@Override
 							public void onComplete(Response r, boolean success) 
@@ -188,7 +188,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 		switch (item.getItemId()) 
 		{
 		case R.id.action_bar_about:
-			launchActivityWithSingleFragment(AboutFragment.class);
+			launchActivity(AboutActivity.class);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -200,7 +200,7 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 	{
 		super.onResume();
 
-		new CheckinGetTask(this, new CheckinListener() 
+		new CheckinGetTask(getActivity(), new CheckinListener() 
 		{
 			@Override
 			public void onCheckin(TraktoidInterface traktItem) 
@@ -246,10 +246,10 @@ public class HomeFragment extends TraktFragment implements onDashboardButtonClic
 			startActivity(i);
 			break;
 		case R.id.home_btn_myshows:
-			launchActivityWithSingleFragment(PagerLibraryFragment.class);
+			launchActivity(LibraryActivity.class);
 			break;
 		case R.id.home_btn_recommendations:
-			launchActivityWithSingleFragment(PagerRecommendationFragment.class);
+			launchActivity(RecommendationActivity.class);
 			break;
 		case R.id.home_btn_search:
 			startActivity(new Intent(getActivity(), SearchActivity.class));

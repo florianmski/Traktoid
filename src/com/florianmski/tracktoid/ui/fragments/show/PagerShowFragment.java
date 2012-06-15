@@ -8,6 +8,13 @@ import com.florianmski.tracktoid.ui.fragments.PagerFragment;
 
 public class PagerShowFragment extends PagerFragment
 {
+	public static PagerShowFragment newInstance(Bundle args)
+	{
+		PagerShowFragment f = new PagerShowFragment();
+		f.setArguments(args);
+		return f;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{

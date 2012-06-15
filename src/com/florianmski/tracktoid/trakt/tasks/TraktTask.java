@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,7 +15,7 @@ import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.apibuilder.ApiException;
 import com.jakewharton.trakt.TraktException;
 
-public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TResult>
+public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Context, TResult>
 {
 	protected final static int TOAST = -1;
 	protected final static int EVENT = -2;
@@ -34,17 +33,17 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 	private static List<TraktListener> listeners = new ArrayList<TraktListener>();
 	protected static ExecutorService sSingleThreadExecutor = new SingleThreadExecutor();
 
-	public TraktTask(Fragment ref) 
+	public TraktTask(Context ref) 
 	{
 		this(ref, null);
 	}
 
-	public TraktTask(Fragment ref, ExecutorService executor) 
+	public TraktTask(Context ref, ExecutorService executor) 
 	{
 		super(ref, executor);
 
 		this.tm = TraktManager.getInstance();
-		this.context = getRef().getActivity().getApplicationContext();
+		this.context = getRef().getApplicationContext();
 
 		try
 		{
@@ -61,7 +60,7 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 		if(!Utils.isOnline(context))
 		{
 			if(getRef() != null && !silentConnectionError)
-				handleException(new Exception("Internet connection required!"));
+				onFailed(new Exception("Internet connection required!"));
 
 			return doOfflineTraktStuff();
 		}
@@ -91,6 +90,8 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 	{
 		if(result != null)
 			sendEvent(result);
+		
+		Log.i("Traktoid","task ended!");
 	}
 
 	protected abstract void sendEvent(TResult result);
@@ -98,15 +99,16 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 	@Override
 	protected void onFailed(Exception e)
 	{
-
+		e.printStackTrace();
+		this.error = e;
+		this.publishProgress(ERROR, null);
+		showToast("Error : " + e.getMessage(), Toast.LENGTH_LONG);
 	}
 
 	@Override
 	protected void onPreExecute()
 	{
 		Log.i("Traktoid","start a task...");
-		//		if(getRef() != null)
-		//			tm.onBeforeTraktRequest(tListener);
 	}
 
 	protected abstract TResult doTraktStuffInBackground();
@@ -131,14 +133,6 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 		{
 			//TODO something smart
 		}
-	}
-
-	private void handleException(Exception e)
-	{
-		e.printStackTrace();
-		this.error = e;
-		this.publishProgress(ERROR, null);
-		showToast("Error : " + e.getMessage(), Toast.LENGTH_LONG);
 	}
 
 	public TraktTask<TResult> silent(boolean silent) 
@@ -183,25 +177,27 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Fragment, TR
 		traktItemsRemoved(traktItems);
 	}
 	
-	public static <T extends TraktoidInterface<T>> void traktItemsUpdated(List<T> traktItem)
+	public static <T extends TraktoidInterface<T>> void traktItemsUpdated(List<T> traktItems)
 	{
 		for(TraktListener<T> l : listeners)
 		{
 			try
 			{
-				l.onTraktItemsUpdated(traktItem);
+				if(!traktItems.isEmpty())
+					l.onTraktItemsUpdated(traktItems);
 			}
 			catch(ClassCastException e) {}
 		}
 	}
 
-	public static <T extends TraktoidInterface<T>> void traktItemsRemoved(List<T> traktItem)
+	public static <T extends TraktoidInterface<T>> void traktItemsRemoved(List<T> traktItems)
 	{
 		for(TraktListener<T> l : listeners)
 		{
 			try
 			{
-				l.onTraktItemsRemoved(traktItem);
+				if(!traktItems.isEmpty())
+					l.onTraktItemsRemoved(traktItems);
 			}
 			catch(ClassCastException e) {}
 		}

@@ -32,7 +32,7 @@ import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class PagerTraktItemAdapter<T extends TraktoidInterface> extends FragmentStatePagerAdapter
+public class PagerTraktItemAdapter<T extends TraktoidInterface<T>> extends FragmentStatePagerAdapter
 {
 	private List<T> items;
 

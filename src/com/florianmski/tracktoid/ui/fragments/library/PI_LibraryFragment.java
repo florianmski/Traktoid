@@ -59,7 +59,7 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 		super.onActivityCreated(savedInstanceState);
 
 		lcm = new ListCheckerManager<T>();
-		lcm.setNoSelectedColorResId(android.R.color.transparent);
+		lcm.setNoSelectedColorResId(R.drawable.selector_no_background);
 		lcm.setSelectedViewResId(R.id.relativeLayoutSelectorPurpose);
 		lcm.setOnActionModeListener(new Callback() 
 		{
@@ -114,15 +114,15 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 				{
 				case R.id.action_bar_watched_unseen:
 				case R.id.action_bar_watched_seen:
-					SeenTask.createTask(PI_LibraryFragment.this, lcm.getItemsList(), item.getItemId() == R.id.action_bar_watched_seen, null).fire();
+					SeenTask.createTask(getActivity(), lcm.getItemsList(), item.getItemId() == R.id.action_bar_watched_seen, null).fire();
 					break;
 				case R.id.action_bar_add_to_watchlist:
 				case R.id.action_bar_remove_from_watchlist:
-					InWatchlistTask.createTask(PI_LibraryFragment.this, lcm.getItemsList(), item.getItemId() == R.id.action_bar_add_to_watchlist, null).fire();
+					InWatchlistTask.createTask(getActivity(), lcm.getItemsList(), item.getItemId() == R.id.action_bar_add_to_watchlist, null).fire();
 					break;
 				case R.id.action_bar_add_to_collection:
 				case R.id.action_bar_remove_from_collection:
-					InCollectionTask.createTask(PI_LibraryFragment.this, lcm.getItemsList(), item.getItemId() == R.id.action_bar_add_to_collection, null).fire();
+					InCollectionTask.createTask(getActivity(), lcm.getItemsList(), item.getItemId() == R.id.action_bar_add_to_collection, null).fire();
 					break;
 				}
 				return true;
@@ -224,6 +224,10 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 
 		MenuItem rateItem = filterMenu.getItem();
 		rateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		
+		menu.add(0, R.id.action_bar_multiple_selection, 0, "Multiple selection")
+		.setIcon(R.drawable.ab_icon_mark)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		menu.add(0, R.id.action_bar_refresh, 0, "Refresh")
 		.setIcon(R.drawable.ab_icon_refresh)
@@ -247,6 +251,9 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 		case R.id.action_bar_filter_unwatched:
 			adapter.setFilter(GridPosterAdapter.FILTER_UNWATCHED);
 			break;
+		case R.id.action_bar_multiple_selection:
+			gd.start();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}

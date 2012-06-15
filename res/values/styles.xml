@@ -17,14 +17,14 @@
     <style name="Theme.Traktoid" parent="@style/Theme.Sherlock">
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
-        <item name="android:windowBackground">@drawable/background</item>
+        <item name="android:windowBackground">@color/action_bar_background_color</item>
         <item name="android:progressBarStyle">@style/TraktoidProgressBar</item>
         <item name="android:listViewStyle">@style/TraktoidListView</item>
         <item name="android:gridViewStyle">@style/TraktoidGridView</item>
         <item name="vpiCirclePageIndicatorStyle">@style/CustomCirclePageIndicator</item>
         <item name="vpiTitlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
         <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
-        <item name="vpiTabTextStyle">@style/Traktoid.SecondaryText.Small</item>
+        <item name="vpiUnderlinePageIndicatorStyle">@style/CustomUnderlinePageIndicator</item>
         <item name="android:scrollbarThumbVertical">@drawable/gradient_progress</item>
     </style>
 
@@ -65,7 +65,7 @@
         <item name="footerLineHeight">@dimen/default_title_indicator_footer_line_height</item>
         <item name="footerIndicatorHeight">@dimen/default_title_indicator_footer_indicator_height</item>
         <item name="footerIndicatorStyle">underline</item>
-        <item name="textColor">@color/secondary_text_color</item>
+        <item name="android:textColor">@color/secondary_text_color</item>
         <item name="selectedColor">@color/primary_text_color</item>
         <item name="selectedBold">true</item>
     </style>
@@ -85,6 +85,11 @@
         <item name="footerIndicatorHeight">@dimen/default_title_indicator_footer_indicator_height</item>
         <item name="footerIndicatorUnderlinePadding">@dimen/default_title_indicator_footer_indicator_underline_padding</item>
         <item name="selectedBold">@bool/default_title_indicator_selected_bold</item>
+    </style>
+    
+    <style name="CustomUnderlinePageIndicator">
+        <item name="selectedColor">@color/footer_color</item>
+        <item name="fades">false</item>
     </style>
 
     <!-- <style name="CustomTabPageIndicator.Text" parent="Widget.TabPageIndicator.Text"> -->

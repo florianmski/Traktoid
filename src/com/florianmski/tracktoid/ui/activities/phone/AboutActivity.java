@@ -16,39 +16,16 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import android.content.Intent;
-import android.os.Bundle;
-
-import com.actionbarsherlock.view.MenuItem;
-import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.AboutFragment;
 
-public class AboutActivity extends BaseActivity
-{	
+import android.support.v4.app.Fragment;
+
+public class AboutActivity extends SinglePaneActivity
+{
 	@Override
-	public void onCreate(Bundle savedInstanceState)
+	public Fragment getFragment() 
 	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_single_fragment);
-//		setContentView(R.layout.activity_about);
-		
-		if(savedInstanceState == null)
-			setPrincipalFragment(AboutFragment.newInstance(getIntent().getExtras()));
-	}
+		return AboutFragment.newInstance(getIntent().getExtras());
+	}	
 	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) 
-	{
-	    switch (item.getItemId()) 
-	    {
-	        case android.R.id.home:
-	            // app icon in Action Bar clicked; go home
-	            Intent intent = new Intent(this, HomeActivity.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
-	            return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
-	}
 }

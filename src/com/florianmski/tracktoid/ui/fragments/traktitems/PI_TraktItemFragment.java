@@ -206,10 +206,10 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		{	
 		case R.id.action_bar_watched_seen:
 		case R.id.action_bar_watched_unseen:
-			SeenTask.createTask(this, this.item, item.getItemId() == R.id.action_bar_watched_seen, null).fire();
+			SeenTask.createTask(getActivity(), this.item, item.getItemId() == R.id.action_bar_watched_seen, null).fire();
 			break;
 		case R.id.action_bar_watched_checkin:
-			CheckinPostTask.createTask(this, this.item, true, null).fire();
+			CheckinPostTask.createTask(getActivity(), this.item, true, null).fire();
 			break;
 		case R.id.action_bar_shouts:
 			Intent i = new Intent(getActivity(), ShoutsActivity.class);
@@ -218,11 +218,11 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 			break;
 		case R.id.action_bar_add_to_collection:
 		case R.id.action_bar_remove_from_collection:
-			InCollectionTask.createTask(this, this.item, item.getItemId() == R.id.action_bar_add_to_collection, null).fire();
+			InCollectionTask.createTask(getActivity(), this.item, item.getItemId() == R.id.action_bar_add_to_collection, null).fire();
 			break;
 		case R.id.action_bar_add_to_watchlist:
 		case R.id.action_bar_remove_from_watchlist:
-			InWatchlistTask.createTask(this, this.item, item.getItemId() == R.id.action_bar_add_to_watchlist, null).fire();
+			InWatchlistTask.createTask(getActivity(), this.item, item.getItemId() == R.id.action_bar_add_to_watchlist, null).fire();
 		}
 		return super.onOptionsItemSelected(item);
 	}

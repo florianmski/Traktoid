@@ -9,12 +9,19 @@ import com.florianmski.tracktoid.adapters.pagers.PagerTraktItemAdapter;
 import com.florianmski.tracktoid.ui.fragments.PagerFragment;
 import com.florianmski.traktoid.TraktoidInterface;
 
-public abstract class PagerTraktItemFragment<T extends TraktoidInterface> extends PagerFragment
+public class PagerTraktItemFragment<T extends TraktoidInterface<T>> extends PagerFragment
 {	
+	public static <T extends TraktoidInterface<T>> PagerTraktItemFragment<T> newInstance(Bundle args)
+	{
+		PagerTraktItemFragment<T> f = new PagerTraktItemFragment<T>();
+		f.setArguments(args);
+		return f;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
-		setPageIndicatorType(PagerFragment.IT_CIRCLE);
+		setPageIndicatorType(PagerFragment.IT_UNDERLINE);
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}

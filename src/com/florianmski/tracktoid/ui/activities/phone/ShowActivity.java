@@ -16,43 +16,15 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import java.util.ArrayList;
+import android.support.v4.app.Fragment;
 
-import android.os.Bundle;
+import com.florianmski.tracktoid.ui.fragments.show.PagerShowFragment;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.TraktoidConstants;
-import com.florianmski.tracktoid.ui.fragments.PagerFragment;
-import com.florianmski.tracktoid.ui.fragments.traktitems.PI_TraktItemShowFragment;
-import com.jakewharton.trakt.entities.TvShow;
-
-public class ShowActivity extends TraktActivity
+public class ShowActivity extends SinglePaneActivity
 {
 	@Override
-	public void onCreate(Bundle savedInstanceState) 
+	public Fragment getFragment() 
 	{
-		super.onCreate(savedInstanceState);
-		//		setContentView(R.layout.activity_show);
-		setContentView(R.layout.activity_single_fragment);
-
-		if(savedInstanceState == null)
-		{
-			Bundle b = getIntent().getExtras();
-			SherlockFragment f;
-			if(b != null)
-			{
-				@SuppressWarnings("unchecked")
-				ArrayList<TvShow> result = (ArrayList<TvShow>) b.get(TraktoidConstants.BUNDLE_RESULTS);
-				if(result != null && result.size() == 1)
-					f = PI_TraktItemShowFragment.newInstance(result.get(0));
-				else
-					f = PagerFragment.newInstance(b);
-			}
-			else
-				f = PagerFragment.newInstance(b);
-
-			setPrincipalFragment(f);
-		}
+		return PagerShowFragment.newInstance(getIntent().getExtras());
 	}
 }

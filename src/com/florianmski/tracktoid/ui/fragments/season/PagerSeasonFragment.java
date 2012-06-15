@@ -8,7 +8,6 @@ import android.os.Bundle;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.ActionMode.Callback;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.florianmski.tracktoid.ListCheckerManager;
@@ -25,7 +24,6 @@ import com.jakewharton.trakt.entities.TvShowSeason;
 
 public class PagerSeasonFragment extends PagerFragment
 {
-	private boolean watchedMode = false;
 	private String tvdbId;
 	private List<TvShowSeason> seasons;
 	private ListCheckerManager<TvShowEpisode> lcm;
@@ -41,6 +39,7 @@ public class PagerSeasonFragment extends PagerFragment
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
+		setPageIndicatorType(IT_UNDERLINE);
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
@@ -110,15 +109,15 @@ public class PagerSeasonFragment extends PagerFragment
 				{
 				case R.id.action_bar_watched_unseen:
 				case R.id.action_bar_watched_seen:
-					SeenTask.createTask(PagerSeasonFragment.this, lcm.getItemsList(), item.getItemId() == R.id.action_bar_watched_seen, null).fire();
+					SeenTask.createTask(getActivity(), lcm.getItemsList(), item.getItemId() == R.id.action_bar_watched_seen, null).fire();
 					break;
 				case R.id.action_bar_add_to_watchlist:
 				case R.id.action_bar_remove_from_watchlist:
-					InWatchlistTask.createTask(PagerSeasonFragment.this, lcm.getItemsList(), item.getItemId() == R.id.action_bar_add_to_watchlist, null).fire();
+					InWatchlistTask.createTask(getActivity(), lcm.getItemsList(), item.getItemId() == R.id.action_bar_add_to_watchlist, null).fire();
 					break;
 				case R.id.action_bar_add_to_collection:
 				case R.id.action_bar_remove_from_collection:
-					InCollectionTask.createTask(PagerSeasonFragment.this, lcm.getItemsList(), item.getItemId() == R.id.action_bar_add_to_collection, null).fire();
+					InCollectionTask.createTask(getActivity(), lcm.getItemsList(), item.getItemId() == R.id.action_bar_add_to_collection, null).fire();
 					break;
 				}
 				return true;
@@ -198,58 +197,6 @@ public class PagerSeasonFragment extends PagerFragment
 			}
 		}.start();
 	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-	{
-		super.onCreateOptionsMenu(menu, inflater);
-		if(watchedMode)
-		{
-			menu.add(0, R.id.action_bar_send, 0, "Send")
-				.setIcon(R.drawable.ab_icon_send)
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		}
-		menu.add(0, R.id.action_bar_watched, 0, "Watched")
-			.setIcon(R.drawable.ab_icon_eye)
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) 
-	{
-		switch(item.getItemId())
-		{
-//		case R.id.action_bar_watched :
-//			//if adapter is not currently loading
-//			if(adapter != null)
-//			{
-//				watchedMode = !watchedMode;
-//				getSherlockActivity().invalidateOptionsMenu();
-//				WatchedModeManager.getInstance().setWatchedMode(watchedMode);
-//			}
-//			return true;
-//		case R.id.action_bar_send :
-//		{
-//			List<Map<Integer, Boolean>> listWatched = WatchedModeManager.getInstance().getWatchedList();
-//			int[] seasons = ((PagerSeasonAdapter) adapter).getSeasons();
-//
-//			boolean isEmpty = true;
-//			for(int i = 0; i < listWatched.size(); i++)
-//				isEmpty &= listWatched.get(i).isEmpty();
-//
-//			if(isEmpty)
-//				Toast.makeText(getActivity(), "Nothing to send...", Toast.LENGTH_SHORT).show();
-//			else
-//				Utils.chooseBetweenSeenAndCheckin((new WatchedEpisodesTask(this, tvdbId, seasons, listWatched)), getActivity());
-//
-//			watchedMode = !watchedMode;
-//			getSherlockActivity().invalidateOptionsMenu();
-//			WatchedModeManager.getInstance().setWatchedMode(watchedMode);
-//		}
-//		return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
 	
 	//TODO
 //	@Override
@@ -272,6 +219,7 @@ public class PagerSeasonFragment extends PagerFragment
 		super.onPageSelected(position);
 		
 		lcm.setPageSelected(position);
+		setSubtitle(adapter.getPageTitle(position).toString());
 		//TODO
 //		setBackground(TraktImage.getnew Image(tvdbId, seasons.get(position).season));
 	}

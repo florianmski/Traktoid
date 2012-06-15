@@ -1,7 +1,6 @@
 package com.florianmski.tracktoid.trakt.tasks.post;
 
-import android.support.v4.app.Fragment;
-
+import android.content.Context;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
@@ -17,20 +16,20 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 	protected T traktItem;
 	protected boolean checkin;
 
-	public CheckinPostTask(Fragment fragment, T traktItem, boolean checkin, PostListener pListener) 
+	public CheckinPostTask(Context context, T traktItem, boolean checkin, PostListener pListener) 
 	{
-		super(fragment, null, pListener);
+		super(context, null, pListener);
 
 		this.traktItem = traktItem;
 		this.checkin = checkin;
 	}
 	
-	public static <T extends TraktoidInterface<T>> CheckinPostTask<?> createTask(Fragment fragment, T traktItem, boolean checkin, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> CheckinPostTask<?> createTask(Context context, T traktItem, boolean checkin, PostListener pListener)
 	{
 		if(traktItem instanceof Movie)
-			return new CheckinMovieTask(fragment, (Movie) traktItem, checkin, pListener);
+			return new CheckinMovieTask(context, (Movie) traktItem, checkin, pListener);
 		else if(traktItem instanceof TvShowEpisode)
-			return new CheckinEpisodeTask(fragment, (TvShowEpisode) traktItem, checkin, pListener);
+			return new CheckinEpisodeTask(context, (TvShowEpisode) traktItem, checkin, pListener);
 		else
 			return null;
 	}
@@ -64,9 +63,9 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 	
 	public static final class CheckinMovieTask extends CheckinPostTask<Movie>
 	{
-		public CheckinMovieTask(Fragment fragment, Movie traktItem, boolean checkin, PostListener pListener) 
+		public CheckinMovieTask(Context context, Movie traktItem, boolean checkin, PostListener pListener) 
 		{
-			super(fragment, traktItem, checkin, pListener);
+			super(context, traktItem, checkin, pListener);
 		}
 
 		@Override
@@ -96,9 +95,9 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 	
 	public static final class CheckinEpisodeTask extends CheckinPostTask<TvShowEpisode>
 	{
-		public CheckinEpisodeTask(Fragment fragment, TvShowEpisode traktItem, boolean checkin, PostListener pListener) 
+		public CheckinEpisodeTask(Context context, TvShowEpisode traktItem, boolean checkin, PostListener pListener) 
 		{
-			super(fragment, traktItem, checkin, pListener);
+			super(context, traktItem, checkin, pListener);
 		}
 
 		@Override

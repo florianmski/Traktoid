@@ -149,7 +149,7 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 	{
 		getStatusView().show().text("Loading shouts,\nPlease wait...");
 
-		return new ShoutsGetTask<T>(this, traktItem, new ShoutsListener() 
+		return new ShoutsGetTask<T>(getActivity(), traktItem, new ShoutsListener() 
 		{
 			@Override
 			public void onShouts(List<Shout> shouts) 

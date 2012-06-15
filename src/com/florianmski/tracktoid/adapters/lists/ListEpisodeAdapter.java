@@ -41,18 +41,14 @@ import com.jakewharton.trakt.entities.TvShowEpisode;
 public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode>
 {	
 	private ListCheckerManager<TvShowEpisode> lcm;
-	private int season;
+	private String seasonId;
 
-	//TODO test if this works or not
-	//take the orientation change into account
-	//maybe move the watched logic from adapter to the fragment ?
-
-	public ListEpisodeAdapter(List<TvShowEpisode> episodes, int season, Context context)
+	public ListEpisodeAdapter(List<TvShowEpisode> episodes, String seasonId, Context context)
 	{
 		super(context, episodes);
 
 		this.lcm = ListCheckerManager.getInstance();
-		this.season = season;
+		this.seasonId = seasonId;
 	}
 
 	public void updateItems(List<TvShowEpisode> items)
@@ -61,7 +57,7 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode>
 
 		for(TvShowEpisode item : items)
 		{
-			if(item.season == season)
+			if(item.seasonId == seasonId)
 			{
 				int index = Collections.binarySearch(this.items, item);
 				if(index < 0 || index >= this.items.size())
@@ -85,7 +81,7 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode>
 
 		for(TvShowEpisode item : items)
 		{
-			if(item.season == season)
+			if(item.seasonId == seasonId)
 			{
 				int index = Collections.binarySearch(this.items, item);
 				if(index >= 0 && index < this.items.size())

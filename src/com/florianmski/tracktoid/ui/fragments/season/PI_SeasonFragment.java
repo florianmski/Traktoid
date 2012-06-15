@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktListener;
@@ -22,7 +23,7 @@ import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
-import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
+import com.florianmski.tracktoid.ui.activities.phone.TraktItemsActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.tracktoid.widgets.CheckableListView;
 import com.jakewharton.trakt.entities.TvShowEpisode;
@@ -85,7 +86,7 @@ public class PI_SeasonFragment extends TraktFragment implements TraktListener<Tv
 				DatabaseWrapper dbw = getDBWrapper();
 				List<TvShowEpisode> episodes = dbw.getEpisodes(season.url);
 
-				adapter = new ListEpisodeAdapter(episodes, season.season, getActivity());
+				adapter = new ListEpisodeAdapter(episodes, season.url, getActivity());
 
 				getActivity().runOnUiThread(new Runnable() 
 				{
@@ -141,7 +142,7 @@ public class PI_SeasonFragment extends TraktFragment implements TraktListener<Tv
 //				}
 //				else
 //				{
-					Intent i = new Intent(getActivity(), EpisodeActivity.class);
+					Intent i = new Intent(getActivity(), TraktItemsActivity.class);
 					//				i.putExtra(TraktoidConstants.BUNDLE_SEASON_ID, season.url);
 					//				i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, tvdbId);
 					//				i.putExtra(TraktoidConstants.BUNDLE_TITLE, getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
@@ -159,14 +160,18 @@ public class PI_SeasonFragment extends TraktFragment implements TraktListener<Tv
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
 		super.onCreateOptionsMenu(menu, inflater);
-//		if(getAdapter() != null && getAdapter().getWatchedMode())
-//		{
-//			menu.add(0, R.id.menu_all, 0, "All")
-//			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-//
-//			menu.add(0, R.id.menu_none, 0, "None")
-//			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-//		}
+		menu.add(0, R.id.action_bar_multiple_selection, 0, "Multiple selection")
+			.setIcon(R.drawable.ab_icon_mark)
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{
+		if(item.getItemId() == R.id.action_bar_multiple_selection)
+			lvEpisodes.start();
+		
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

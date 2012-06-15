@@ -29,14 +29,4 @@ public class TraktActivity extends BaseActivity
 	{
 	   super.onStop();
 	}
-	
-	protected void setTitle(String title)
-	{
-		getSupportActionBar().setTitle(title);
-	}
-	
-	protected void setSubtitle(String subtitle)
-	{
-		getSupportActionBar().setSubtitle(subtitle);
-	}
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -43,8 +44,8 @@ import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.trakt.tasks.post.InCollectionTask.InCollectionEpisodeTask;
 import com.florianmski.tracktoid.trakt.tasks.post.RateTask;
 import com.florianmski.tracktoid.trakt.tasks.post.SeenTask.SeenEpisodeTask;
-import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
 import com.florianmski.tracktoid.ui.activities.phone.SeasonActivity;
+import com.florianmski.tracktoid.ui.activities.phone.TraktItemsActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.tracktoid.widgets.CheckableListView;
@@ -138,11 +139,11 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 				{
 				case R.id.action_bar_watched_unseen:
 				case R.id.action_bar_watched_seen:
-					SeenEpisodeTask.createSeasonTask(ProgressFragment.this, lcm.getItemsList(), item.getItemId() == R.id.action_bar_watched_seen, null).fire();
+					SeenEpisodeTask.createSeasonTask(getActivity(), lcm.getItemsList(), item.getItemId() == R.id.action_bar_watched_seen, null).fire();
 					break;
 				case R.id.action_bar_add_to_collection:
 				case R.id.action_bar_remove_from_collection:
-					InCollectionEpisodeTask.createSeasonTask(ProgressFragment.this, lcm.getItemsList(), item.getItemId() == R.id.action_bar_add_to_collection, null).fire();
+					InCollectionEpisodeTask.createSeasonTask(getActivity(), lcm.getItemsList(), item.getItemId() == R.id.action_bar_add_to_collection, null).fire();
 					break;
 				}
 				return true;
@@ -287,7 +288,7 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 				@Override
 				public void onClick(View v) 
 				{
-					Intent i = new Intent(getActivity(), EpisodeActivity.class);
+					Intent i = new Intent(getActivity(), TraktItemsActivity.class);
 					//					for(TvShowSeason s : adapter.getItems())
 					//					{
 					//						if(s.season == e.season)
@@ -333,9 +334,6 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
 		super.onCreateOptionsMenu(menu, inflater);
-		menu.add(0, R.id.action_bar_watched, 0, "Watched")
-		.setIcon(R.drawable.ab_icon_eye)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		Drawable d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
 
@@ -374,6 +372,10 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 		MenuItem rateItem = rateMenu.getItem();
 		rateItem.setIcon(d);
 		rateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		
+		menu.add(0, R.id.action_bar_multiple_selection, 0, "Multiple selection")
+		.setIcon(R.drawable.ab_icon_mark)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 	}
 
 	@Override
@@ -385,13 +387,16 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 			lvSeasons.start();
 			return true;
 		case R.id.action_bar_rate_love :
-			RateTask.createTask(this, show, Rating.Love, null).fire();
+			RateTask.createTask(getActivity(), show, Rating.Love, null).fire();
 			return true;
 		case R.id.action_bar_rate_hate :
-			RateTask.createTask(this, show, Rating.Hate, null).fire();
+			RateTask.createTask(getActivity(), show, Rating.Hate, null).fire();
 			return true;
 		case R.id.action_bar_rate_unrate :
-			RateTask.createTask(this, show, Rating.Unrate, null).fire();
+			RateTask.createTask(getActivity(), show, Rating.Unrate, null).fire();
+			return true;
+		case R.id.action_bar_multiple_selection:
+			lvSeasons.start();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

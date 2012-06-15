@@ -64,7 +64,7 @@ public class SignInFragment extends TraktFragment
 				{
 					tm.setAuthentication(username, password);
 
-					new PostTask(SignInFragment.this, tm.accountService().test(), new PostListener() 
+					new PostTask(getActivity(), tm.accountService().test(), new PostListener() 
 					{	
 						@Override
 						public void onComplete(Response r, boolean success) 

@@ -16,34 +16,15 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
-import com.florianmski.tracktoid.ui.fragments.TraktFragment;
-import com.florianmski.tracktoid.ui.fragments.recommendations.RecommendationMoviesFragment;
-import com.florianmski.tracktoid.ui.fragments.recommendations.RecommendationShowsFragment;
+import com.florianmski.tracktoid.ui.fragments.recommendations.PagerRecommendationFragment;
 
-public class RecommendationActivity extends MovieShowActivity
+public class RecommendationActivity extends SinglePaneActivity
 {
 	@Override
-	public void onCreate(Bundle savedInstanceState) 
+	public Fragment getFragment() 
 	{
-		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_recommendation);
-//		setContentView(R.layout.activity_single_fragment);
-//		
-//		if(savedInstanceState == null)
-//			setPrincipalFragment(RecommendationFragment.newInstance(getIntent().getExtras()));
-	}
-
-	@Override
-	public TraktFragment getMovieFragment() 
-	{
-		return RecommendationMoviesFragment.newInstance(getIntent().getExtras());
-	}
-
-	@Override
-	public TraktFragment getShowFragment() 
-	{
-		return RecommendationShowsFragment.newInstance(getIntent().getExtras());
+		return PagerRecommendationFragment.newInstance(getIntent().getExtras());
 	}
 }

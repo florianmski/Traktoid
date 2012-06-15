@@ -1,7 +1,6 @@
 package com.florianmski.tracktoid.ui.activities.phone;
 
 import android.os.Bundle;
-
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.login.PagerLoginFragment;
 
@@ -10,8 +9,8 @@ public class LoginActivity extends TraktActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
+		//TODO test this, not sure it works
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_login);
 		setContentView(R.layout.activity_single_fragment);
 		
 		if(savedInstanceState == null)

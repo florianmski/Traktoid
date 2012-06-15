@@ -734,6 +734,30 @@ public class DatabaseWrapper
 		if(nbRowsAffected == 0)
 			db.insert(table, null, values);
 	}
+	
+	public void putNotNull(ContentValues cv, String key, Integer value)
+	{
+		if(value != null)
+			cv.put(key, value);
+	}
+	
+	public void putNotNull(ContentValues cv, String key, Boolean value)
+	{
+		if(value != null)
+			cv.put(key, value);
+	}
+	
+	public void putNotNull(ContentValues cv, String key, String value)
+	{
+		if(value != null)
+			cv.put(key, value);
+	}
+	
+	public void putNotNull(ContentValues cv, String key, Long value)
+	{
+		if(value != null)
+			cv.put(key, value);
+	}
 
 	/************************** Shows methods *******************************/
 
@@ -746,51 +770,46 @@ public class DatabaseWrapper
 
 		if(s.ratings != null)
 		{
-			values.put(KEY_TVSHOW_HATED, s.ratings.hated);
-			values.put(KEY_TVSHOW_PERCENTAGE, s.ratings.percentage);
-			values.put(KEY_TVSHOW_LOVED, s.ratings.loved);
-			values.put(KEY_TVSHOW_VOTES, s.ratings.votes);			
+			putNotNull(values, KEY_TVSHOW_HATED, s.ratings.hated);
+			putNotNull(values, KEY_TVSHOW_PERCENTAGE, s.ratings.percentage);
+			putNotNull(values, KEY_TVSHOW_LOVED, s.ratings.loved);
+			putNotNull(values, KEY_TVSHOW_VOTES, s.ratings.votes);			
 		}
 
 		if(s.rating != null)
-			values.put(KEY_TVSHOW_RATING, s.rating.toString());
+			putNotNull(values, KEY_TVSHOW_RATING, s.rating.toString());
 
 		if(s.airDay != null)
-			values.put(KEY_TVSHOW_AIR_DAY, s.airDay.toString());
+			putNotNull(values, KEY_TVSHOW_AIR_DAY, s.airDay.toString());
 		else
-			values.put(KEY_TVSHOW_AIR_DAY, "");
+			putNotNull(values, KEY_TVSHOW_AIR_DAY, "");
 
-		values.put(KEY_TVSHOW_AIR_TIME, s.airTime);
-		values.put(KEY_TVSHOW_CERTIFICATION, s.certification);
-		values.put(KEY_TVSHOW_COUNTRY, s.country);
+		putNotNull(values, KEY_TVSHOW_AIR_TIME, s.airTime);
+		putNotNull(values, KEY_TVSHOW_CERTIFICATION, s.certification);
+		putNotNull(values, KEY_TVSHOW_COUNTRY, s.country);
 
 		if(s.images != null)
 		{
-			values.put(KEY_TVSHOW_FANART, s.images.fanart);
-			values.put(KEY_TVSHOW_POSTER, s.images.poster);
+			putNotNull(values, KEY_TVSHOW_FANART, s.images.fanart);
+			putNotNull(values, KEY_TVSHOW_POSTER, s.images.poster);
 		}
 
 		if(s.firstAired != null)
-			values.put(KEY_TVSHOW_FIRST_AIRED, String.valueOf(s.firstAired.getTime()));
+			putNotNull(values, KEY_TVSHOW_FIRST_AIRED, String.valueOf(s.firstAired.getTime()));
 
-		values.put(KEY_TVSHOW_IMDB_ID, s.imdbId);
-		
-		if(s.inWatchlist != null)
-			values.put(KEY_TVSHOW_IN_WATCHLIST, s.inWatchlist);
-		
-		if(s.inCollection != null)
-			values.put(KEY_TVSHOW_IN_COLLECTION, s.inCollection);
-		
-		values.put(KEY_TVSHOW_NETWORK, s.network);
-		values.put(KEY_TVSHOW_OVERVIEW, s.overview);
-		values.put(KEY_TVSHOW_RUNTIME, s.runtime);
-		values.put(KEY_TVSHOW_TITLE, s.title);
-		values.put(KEY_TVSHOW_TVDB_ID, s.tvdbId);
-		values.put(KEY_TVSHOW_TVRAGE_ID, s.tvrageId);
-		values.put(KEY_TVSHOW_URL, s.url);
-		values.put(KEY_TVSHOW_YEAR, Integer.valueOf(s.year));
+		putNotNull(values, KEY_TVSHOW_IMDB_ID, s.imdbId);
+		putNotNull(values, KEY_TVSHOW_IN_WATCHLIST, s.inWatchlist);
+		putNotNull(values, KEY_TVSHOW_IN_COLLECTION, s.inCollection);
+		putNotNull(values, KEY_TVSHOW_NETWORK, s.network);
+		putNotNull(values, KEY_TVSHOW_OVERVIEW, s.overview);
+		putNotNull(values, KEY_TVSHOW_RUNTIME, s.runtime);
+		putNotNull(values, KEY_TVSHOW_TITLE, s.title);
+		putNotNull(values, KEY_TVSHOW_TVDB_ID, s.tvdbId);
+		putNotNull(values, KEY_TVSHOW_TVRAGE_ID, s.tvrageId);
+		putNotNull(values, KEY_TVSHOW_URL, s.url);
+		putNotNull(values, KEY_TVSHOW_YEAR, Integer.valueOf(s.year));
 
-		//		values.put(KEY_TVSHOW_PROGRESS, s.getProgress());
+		//		putNotNull(values, KEY_TVSHOW_PROGRESS, s.getProgress());
 
 		insertOrUpdate(TVSHOWS_TABLE, values, s.tvdbId);
 	}
@@ -966,7 +985,7 @@ public class DatabaseWrapper
 				whereArgs = new String[]{tvdbId, String.valueOf(new Date().getTime())};
 			else
 				whereArgs = new String[]{tvdbId};
-			
+
 			db.update(
 					EPISODES_TABLE, 
 					cv, 
@@ -980,7 +999,7 @@ public class DatabaseWrapper
 							whereArgs);
 		}
 	}
-	
+
 	public void markShowAsSeen(String tvdbId, boolean seen)
 	{
 		//TODO for all API methods like collection, watchlist, seen... check if show/movie/episode is already in db
@@ -993,7 +1012,7 @@ public class DatabaseWrapper
 
 			ContentValues cv = new ContentValues();
 			cv.put(KEY_EPISODE_WATCHED, seen);
-			
+
 			String[] whereArgs = null;
 			if(seen)
 				whereArgs = new String[]{tvdbId, String.valueOf(new Date().getTime())};
@@ -1026,17 +1045,17 @@ public class DatabaseWrapper
 		if(s.episodes != null)
 		{
 			int episodes = s.episodes.episodes.size();
-			values.put(KEY_SEASON_EPISODES, episodes);
+			putNotNull(values, KEY_SEASON_EPISODES, episodes);
 		}
 
 		int season = s.season;
 		String url = s.url;
 
-		values.put(KEY_SEASON_SEASON, season);
-		values.put(KEY_SEASON_URL, url);
-		values.put(KEY_SEASON_TVSHOW_ID, tvshowId);
+		putNotNull(values, KEY_SEASON_SEASON, season);
+		putNotNull(values, KEY_SEASON_URL, url);
+		putNotNull(values, KEY_SEASON_TVSHOW_ID, tvshowId);
 		//TODO
-		//		values.put(KEY_SEASON_IN_COLLECTION, s.inCollection);
+		//		putNotNull(values, KEY_SEASON_IN_COLLECTION, s.inCollection);
 
 		insertOrUpdate(SEASONS_TABLE, values, url);
 
@@ -1092,47 +1111,6 @@ public class DatabaseWrapper
 		return seasons;
 	}
 
-	//TODO use season.url
-	public TvShowSeason getSeason(String tvdbId, int season, boolean getEpisodesToo)
-	{
-		String sql = 
-				"SELECT * "+
-						"FROM " + SEASONS_TABLE + " " + 
-						"WHERE " + KEY_SEASON_TVSHOW_ID + "=? " +
-						"AND s." + KEY_SEASON_SEASON + "=? " +
-						"ORDER BY " + KEY_SEASON_SEASON + " DESC";
-		Cursor c = db.rawQuery(sql, new String[]{tvdbId, String.valueOf(season)});
-		c.moveToFirst();
-
-		TvShowSeason tvSeason = getSeasonFromCursor(c, tvdbId, getEpisodesToo);
-
-		c.close();
-
-		return tvSeason;
-	}
-
-	//	public ArrayList<Integer> getSeasonsNumber(String tvdbId, boolean orderByASC)
-	//	{
-	//		ArrayList<Integer> seasons = new ArrayList<Integer>();
-	//		String sql = 
-	//				"SELECT " + KEY_SEASON_SEASON +
-	//						"FROM " + SEASONS_TABLE + " " +
-	//						"WHERE " + KEY_SEASON_TVSHOW_ID	+ "=? " +
-	//						"ORDER BY " + KEY_SEASON_SEASON + (orderByASC ? " ASC" : " DESC");
-	//		Cursor c = db.rawQuery(sql, new String[]{tvdbId});
-	//		c.moveToFirst();
-	//
-	//		for(int i = 0; i < c.getCount(); i++)
-	//		{
-	//			seasons.add(c.getInt(0));
-	//			c.moveToNext();
-	//		}
-	//		
-	//		c.close();
-	//
-	//		return seasons;
-	//	}
-
 	/************************** Episodes methods *******************************/
 
 	/**
@@ -1144,30 +1122,21 @@ public class DatabaseWrapper
 
 		String url = e.url;
 
-		values.put(KEY_EPISODE_EPISODE, e.number);
-		values.put(KEY_EPISODE_FIRST_AIRED, e.firstAired.getTime());
-		values.put(KEY_EPISODE_HATED, e.ratings.hated);
-		values.put(KEY_EPISODE_LOVED, e.ratings.loved);
-		values.put(KEY_EPISODE_OVERVIEW, e.overview);
-		values.put(KEY_EPISODE_PERCENTAGE, e.ratings.percentage);
-		values.put(KEY_EPISODE_SCREEN, e.images.screen);
-		values.put(KEY_EPISODE_SEASON, e.season);
-		values.put(KEY_EPISODE_TITLE, e.title);
-		values.put(KEY_EPISODE_URL, url);
-		values.put(KEY_EPISODE_VOTES, e.ratings.votes);
-		
-		if(e.watched != null)
-			values.put(KEY_EPISODE_WATCHED, e.watched);
-		
-		if(e.inWatchlist != null)
-			values.put(KEY_EPISODE_IN_WATCHLIST, e.inWatchlist);
-		
-		if(e.inCollection != null)
-			values.put(KEY_EPISODE_IN_COLLECTION, e.inCollection);
-		
-		if(seasonId != null)
-			values.put(KEY_EPISODE_SEASON_ID, seasonId);
-
+		putNotNull(values, KEY_EPISODE_EPISODE, e.number);
+		putNotNull(values, KEY_EPISODE_FIRST_AIRED, e.firstAired.getTime());
+		putNotNull(values, KEY_EPISODE_HATED, e.ratings.hated);
+		putNotNull(values, KEY_EPISODE_LOVED, e.ratings.loved);
+		putNotNull(values, KEY_EPISODE_OVERVIEW, e.overview);
+		putNotNull(values, KEY_EPISODE_PERCENTAGE, e.ratings.percentage);
+		putNotNull(values, KEY_EPISODE_SCREEN, e.images.screen);
+		putNotNull(values, KEY_EPISODE_SEASON, e.season);
+		putNotNull(values, KEY_EPISODE_TITLE, e.title);
+		putNotNull(values, KEY_EPISODE_URL, url);
+		putNotNull(values, KEY_EPISODE_VOTES, e.ratings.votes);
+		putNotNull(values, KEY_EPISODE_WATCHED, e.watched);
+		putNotNull(values, KEY_EPISODE_IN_WATCHLIST, e.inWatchlist);
+		putNotNull(values, KEY_EPISODE_IN_COLLECTION, e.inCollection);
+		putNotNull(values, KEY_EPISODE_SEASON_ID, seasonId);
 		insertOrUpdate(EPISODES_TABLE, values, url);
 	}
 
@@ -1175,10 +1144,11 @@ public class DatabaseWrapper
 	 *  Insert or update an episode
 	 *  /!\ be careful, this episode MUST BE ALREADY IN DB /!\
 	 */
+	//TODO find a better solution
 	public boolean insertOrUpdateEpisode(TvShowEpisode e) 
 	{
 		//this episode is not in db, cancel insertion
-		if(getEpisode(e.url, null) == null)
+		if(getEpisode(e.url) == null)
 			return false;
 		else
 			insertOrUpdateEpisode(e, null);
@@ -1217,6 +1187,7 @@ public class DatabaseWrapper
 		e.ratings = r;
 		e.images = i;
 		e.season = c.getInt(COLUMN_EPISODE_SEASON);
+		e.seasonId = c.getString(COLUMN_EPISODE_SEASON_ID);
 		e.title = c.getString(COLUMN_EPISODE_TITLE);
 		e.url = c.getString(COLUMN_EPISODE_URL);
 		e.watched = c.getInt(COLUMN_EPISODE_WATCHED) != 0;
@@ -1230,8 +1201,8 @@ public class DatabaseWrapper
 
 	public List<TvShowEpisode> getEpisodes(String seasonId)
 	{
-		String tvdbId = getTvdbId(seasonId);
-		
+		String tvdbId = getTvdbIdWithSeasonId(seasonId);
+
 		ArrayList<TvShowEpisode> episodes = new ArrayList<TvShowEpisode>();
 		String sql = 
 				"SELECT * " + 
@@ -1250,18 +1221,32 @@ public class DatabaseWrapper
 
 		return episodes;
 	}
-	
-	public String getTvdbId(String seasonId)
+
+	public String getTvdbIdWithSeasonId(String seasonId)
 	{
 		String sql = 
 				"SELECT " + KEY_SEASON_TVSHOW_ID + " " +
 						"FROM " + SEASONS_TABLE + " " +
 						"WHERE " + KEY_SEASON_URL + "=? ";
 		Cursor c = db.rawQuery(sql, new String[]{seasonId});
-		
+
 		if(c.moveToFirst())
 			return c.getString(0);
-		
+
+		return null;
+	}
+	
+	public String getTvdbIdWithEpisodeId(String episodeId)
+	{
+		String sql = 
+				"SELECT " + KEY_EPISODE_SEASON_ID + " " +
+						"FROM " + EPISODES_TABLE + " " +
+						"WHERE " + KEY_EPISODE_URL + "=? ";
+		Cursor c = db.rawQuery(sql, new String[]{episodeId});
+
+		if(c.moveToFirst())
+			return getTvdbIdWithSeasonId(c.getString(0));
+
 		return null;
 	}
 
@@ -1283,8 +1268,9 @@ public class DatabaseWrapper
 	//		return tvEpisode;
 	//	}
 
-	public TvShowEpisode getEpisode(String url, String tvdbId)
+	public TvShowEpisode getEpisode(String url)
 	{
+		String tvdbId = getTvdbIdWithEpisodeId(url);
 		String sql = 
 				"SELECT * " + 
 						"FROM " + EPISODES_TABLE + " " +
@@ -1463,41 +1449,42 @@ public class DatabaseWrapper
 		ContentValues values = new ContentValues();
 
 		if(m.ratings != null)
-			values.put(KEY_MOVIE_PERCENTAGE, m.ratings.percentage);
+			putNotNull(values, KEY_MOVIE_PERCENTAGE, m.ratings.percentage);
 
 		if(m.rating != null)
-			values.put(KEY_MOVIE_RATING, m.rating.toString());
+			putNotNull(values, KEY_MOVIE_RATING, m.rating.toString());
 
-		values.put(KEY_MOVIE_CERTIFICATION, m.certification);
+		putNotNull(values, KEY_MOVIE_CERTIFICATION, m.certification);
 
 		if(m.images != null)
 		{
-			values.put(KEY_MOVIE_FANART, m.images.fanart);
-			values.put(KEY_MOVIE_POSTER, m.images.poster);
+			putNotNull(values, KEY_MOVIE_FANART, m.images.fanart);
+			putNotNull(values, KEY_MOVIE_POSTER, m.images.poster);
 		}
 
-		values.put(KEY_MOVIE_IMDB_ID, m.imdbId);		
-		values.put(KEY_MOVIE_OVERVIEW, m.overview);
-		values.put(KEY_MOVIE_RUNTIME, m.runtime);
-		values.put(KEY_MOVIE_TITLE, m.title);
-		values.put(KEY_MOVIE_URL, m.url);
-		values.put(KEY_MOVIE_YEAR, Integer.valueOf(m.year));
-
-		if(m.inCollection != null)
-			values.put(KEY_MOVIE_IN_COLLECTION, m.inCollection);
+		putNotNull(values, KEY_MOVIE_IMDB_ID, m.imdbId);
+		putNotNull(values, KEY_MOVIE_OVERVIEW, m.overview);
+		putNotNull(values, KEY_MOVIE_RUNTIME, m.runtime);
+		putNotNull(values, KEY_MOVIE_TITLE, m.title);
+		putNotNull(values, KEY_MOVIE_URL, m.url);
 		
-		if(m.inWatchlist != null)
-			values.put(KEY_MOVIE_IN_WATCHLIST, m.inWatchlist);
+		if(m.year != null)
+			putNotNull(values, KEY_MOVIE_YEAR, Integer.valueOf(m.year));
 		
-		values.put(KEY_MOVIE_RELEASED, m.released.getTime());
-		values.put(KEY_MOVIE_TAGLINE, m.tagline);
-		values.put(KEY_MOVIE_TMDB_ID, m.tmdbId);
-		values.put(KEY_MOVIE_TRAILER, m.trailer);
-		values.put(KEY_MOVIE_WATCHED, m.watched);
+		putNotNull(values, KEY_MOVIE_IN_COLLECTION, m.inCollection);
+		putNotNull(values, KEY_MOVIE_IN_WATCHLIST, m.inWatchlist);
+		
+		if(m.released != null)
+			putNotNull(values, KEY_MOVIE_RELEASED, m.released.getTime());
+		
+		putNotNull(values, KEY_MOVIE_TAGLINE, m.tagline);
+		putNotNull(values, KEY_MOVIE_TMDB_ID, m.tmdbId);
+		putNotNull(values, KEY_MOVIE_TRAILER, m.trailer);
+		putNotNull(values, KEY_MOVIE_WATCHED, m.watched);
 
 		//TODO
-		//values.put(KEY_MOVIE_LAST_UPDATED, m.);
-		//values.put(KEY_MOVIE_RT_ID, m.);
+		//putNotNull(values, KEY_MOVIE_LAST_UPDATED, m.);
+		//putNotNull(values, KEY_MOVIE_RT_ID, m.);
 
 		insertOrUpdate(MOVIES_TABLE, values, m.url);
 	}
@@ -1594,13 +1581,13 @@ public class DatabaseWrapper
 				new String[]{url});
 	}
 
-	public boolean movieExist(String url)
+	public boolean movieExist(String imbdId)
 	{
 		Cursor c = db.rawQuery(
 				"SELECT " + KEY_MOVIE_URL + " " +
 						"FROM " + MOVIES_TABLE + " " +
-						"WHERE " + KEY_MOVIE_URL + "=?", 
-						new String[]{url});
+						"WHERE " + KEY_MOVIE_IMDB_ID + "=?", 
+						new String[]{imbdId});
 
 		boolean exist = c.moveToFirst();
 

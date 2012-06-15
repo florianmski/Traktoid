@@ -34,8 +34,8 @@ public class CheckableGridView<T> extends GridView implements ListCheckerListene
 				lcm.checkView(item, v);
 				
 				//apparently gridView has some issue to correctly update the view if it's the first position so do it ourself
-				if(position == 0)
-					((BaseAdapter) getAdapter()).notifyDataSetChanged();
+//				if(position == 0)
+//					((BaseAdapter) getAdapter()).notifyDataSetChanged();
 			}
 			else if(itemListener != null)
 				itemListener.onItemClick(arg0, v, position, id);				

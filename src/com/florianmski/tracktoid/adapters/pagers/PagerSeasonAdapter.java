@@ -24,9 +24,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.florianmski.tracktoid.ui.fragments.season.PI_SeasonFragment;
 import com.jakewharton.trakt.entities.TvShowSeason;
-import com.viewpagerindicator.TitleProvider;
 
-public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements TitleProvider
+public class PagerSeasonAdapter extends FragmentStatePagerAdapter
 {
 	private List<TvShowSeason> seasons;
 
@@ -65,7 +64,7 @@ public class PagerSeasonAdapter extends FragmentStatePagerAdapter implements Tit
 	}
 
 	@Override
-	public String getTitle(int position) 
+    public CharSequence getPageTitle(int position)
 	{
 		int season = seasons.get(position).season;
 		return season == 0 ? "Specials" : "Season "+season;

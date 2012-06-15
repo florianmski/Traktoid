@@ -16,28 +16,20 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
-import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.ui.fragments.calendar.PI_CalendarFragment;
 import com.florianmski.tracktoid.ui.fragments.calendar.PagerCalendarFragment;
 
-public class CalendarActivity extends TraktActivity
+public class CalendarActivity extends SinglePaneActivity
 {
 	@Override
-	public void onCreate(Bundle savedInstanceState) 
+	public Fragment getFragment() 
 	{
-		super.onCreate(savedInstanceState);
-		//		setContentView(R.layout.activity_calendar);
-		setContentView(R.layout.activity_single_fragment);
-
-		if(savedInstanceState == null)
-		{
-			if(Utils.isOnline(this))
-				setPrincipalFragment(PagerCalendarFragment.newInstance(getIntent().getExtras()));
-			else
-				setPrincipalFragment(new PI_CalendarFragment());
-		}
+		if(Utils.isOnline(this))
+			return PagerCalendarFragment.newInstance(getIntent().getExtras());
+		else
+			return new PI_CalendarFragment();
 	}
 }

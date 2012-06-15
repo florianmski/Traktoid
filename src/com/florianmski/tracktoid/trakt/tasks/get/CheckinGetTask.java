@@ -1,6 +1,6 @@
 package com.florianmski.tracktoid.trakt.tasks.get;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
 
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.traktoid.TraktoidInterface;
@@ -15,9 +15,9 @@ public class CheckinGetTask extends GetTask<TraktoidInterface>
 	private TraktoidInterface traktItem;
 	
 
-	public CheckinGetTask(Fragment fragment, CheckinListener listener) 
+	public CheckinGetTask(Context context, CheckinListener listener) 
 	{
-		super(fragment);
+		super(context);
 
 		this.listener = listener;
 	}

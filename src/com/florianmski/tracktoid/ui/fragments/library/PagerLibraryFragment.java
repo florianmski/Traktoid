@@ -1,12 +1,21 @@
 package com.florianmski.tracktoid.ui.fragments.library;
 
 
+import android.os.Bundle;
+
 import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.ui.fragments.MovieShowFragment;
 
 
 public class PagerLibraryFragment extends MovieShowFragment
 {	
+	public static PagerLibraryFragment newInstance(Bundle args)
+	{
+		PagerLibraryFragment f = new PagerLibraryFragment();
+		f.setArguments(args);
+		return f;
+	}
+	
 	public PagerLibraryFragment() {}
 
 	@Override

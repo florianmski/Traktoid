@@ -24,9 +24,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.florianmski.tracktoid.ui.fragments.calendar.PI_CalendarFragment;
 import com.jakewharton.trakt.entities.CalendarDate;
-import com.viewpagerindicator.TitleProvider;
 
-public class PagerCalendarAdapter extends FragmentPagerAdapter implements TitleProvider
+public class PagerCalendarAdapter extends FragmentPagerAdapter
 {
 	public final static String calendarTitles[] = new String[]{"Premieres","My shows","Shows"};
 
@@ -58,7 +57,7 @@ public class PagerCalendarAdapter extends FragmentPagerAdapter implements TitleP
     }
 
 	@Override
-	public String getTitle(int position) 
+    public CharSequence getPageTitle(int position)
 	{
 		return calendarTitles[position];
 	}

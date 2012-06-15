@@ -16,21 +16,15 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
-import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.season.PagerSeasonFragment;
 
-public class SeasonActivity extends TraktActivity
+public class SeasonActivity extends SinglePaneActivity
 {
 	@Override
-	public void onCreate(Bundle savedInstanceState) 
+	public Fragment getFragment() 
 	{
-		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_season);
-		setContentView(R.layout.activity_single_fragment);
-		
-		if(savedInstanceState == null)
-			setPrincipalFragment(PagerSeasonFragment.newInstance(getIntent().getExtras()));
+		return PagerSeasonFragment.newInstance(getIntent().getExtras());
 	}
 }

@@ -1,17 +1,13 @@
 package com.florianmski.tracktoid.ui.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.florianmski.tracktoid.StatusView;
-import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.ui.activities.phone.SinglePaneActivity;
 
 public abstract class BaseFragment extends SherlockFragment
 {
@@ -19,23 +15,36 @@ public abstract class BaseFragment extends SherlockFragment
 	private boolean restoreStateCalled = false;
 	private DatabaseWrapper dbw = null;
 	
-	public static Fragment newInstanceTest(Context context, Bundle args)
-	{
-		return Fragment.instantiate(context, args.getString(TraktoidConstants.BUNDLE_CLASS), args);
-	}
+//	public static Fragment newInstanceTest(Context context, Bundle args)
+//	{
+//		return Fragment.instantiate(context, args.getString(TraktoidConstants.BUNDLE_CLASS), args);
+//	}
 	
-	public void launchActivityWithSingleFragment(Class<?> fragmentClass)
-	{
-		launchActivityWithSingleFragment(fragmentClass, null);
-	}
+//	public void launchActivityWithSingleFragment(Class<?> fragmentClass)
+//	{
+//		launchActivityWithSingleFragment(fragmentClass, null);
+//	}
 	
-	public void launchActivityWithSingleFragment(Class<?> fragmentClass, Bundle args)
+//	public void launchActivityWithSingleFragment(Class<?> fragmentClass, Bundle args)
+//	{
+//		Intent i = new Intent(getActivity(), SinglePaneActivity.class);
+//		i.putExtra(TraktoidConstants.BUNDLE_CLASS, fragmentClass.getName());
+//		if(args != null)
+//			i.putExtras(args);
+//		startActivity(i);
+//	}
+	
+	public void launchActivity(Class<?> activityToLaunch, Bundle args)
 	{
-		Intent i = new Intent(getActivity(), SinglePaneActivity.class);
-		i.putExtra(TraktoidConstants.BUNDLE_CLASS, fragmentClass.getName());
+		Intent i = new Intent(getActivity(), activityToLaunch);
 		if(args != null)
 			i.putExtras(args);
 		startActivity(i);
+	}
+	
+	public void launchActivity(Class<?> activityToLaunch)
+	{
+		launchActivity(activityToLaunch, null);
 	}
 	
 	@Override

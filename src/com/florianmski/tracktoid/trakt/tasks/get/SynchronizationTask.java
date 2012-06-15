@@ -19,33 +19,44 @@ import com.jakewharton.trakt.entities.ActivityItemBase;
 import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
+import com.jakewharton.trakt.entities.Update;
 
-public class ActivityTask extends GetTask<Activity>
+public class SynchronizationTask extends GetTask<Activity>
 {
-	//TODO HashMap & movies
-	
 	private Activity activities;
 
 	private DatabaseWrapper dbw;
 	private SharedPreferences prefs;
 
 	//shows we'll have to refresh (ex: show or an episode of a show which is not in the db)
-	private List<TvShow> refreshList = new ArrayList<TvShow>();
+	private List<TvShow> traktUpdateShowList = new ArrayList<TvShow>();
 	//shows we'll update (temp list)
-	private List<TvShow> updateList = new ArrayList<TvShow>();
+	private List<TvShow> localUpdateShowList = new ArrayList<TvShow>();
 	//shows we'll update
-	private List<TvShow> finalUpdateList = new ArrayList<TvShow>();
+	private List<TvShow> finalUpdateShowList = new ArrayList<TvShow>();
 
-	public ActivityTask(Context context) 
+	//movies we'll have to refresh (ex: a movie which is not in the db)
+	private List<Movie> traktUpdateMovieList = new ArrayList<Movie>();
+	//movies we'll update (temp list)
+	private List<Movie> localUpdateMovieList = new ArrayList<Movie>();
+	//movies we'll update
+	private List<Movie> finalUpdateMovieList = new ArrayList<Movie>();
+	
+	//episodes we'll update (temp list)
+	private List<TvShowEpisode> localUpdateEpisodeList = new ArrayList<TvShowEpisode>();
+	//episodes we'll update
+	private List<TvShowEpisode> finalUpdateEpisodeList = new ArrayList<TvShowEpisode>();
+
+	public SynchronizationTask(Context context) 
 	{
-		super(context);
+		super(context, sSingleThreadExecutor);
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
 	@Override
 	protected Activity doTraktStuffInBackground()
 	{
-		showToast("Starting Trakt -> Traktoid sync...", Toast.LENGTH_SHORT);
+		showToast("Synchronization...", Toast.LENGTH_SHORT);
 
 		long timestamp = prefs.getLong("activity_timestamp", 0);
 		Log.e("start timestamp", new Date(timestamp*1000).toString());
@@ -122,9 +133,6 @@ public class ActivityTask extends GetTask<Activity>
 					case Watchlist :
 						activity.show.inWatchlist = true;
 						break;
-					case Collection :
-						activity.show.inCollection = true;
-						break;
 					}
 					updateShow(activity.show);
 					break;
@@ -152,34 +160,62 @@ public class ActivityTask extends GetTask<Activity>
 				}
 			}
 
-			for(TvShow show : updateList)
+			for(TvShow show : localUpdateShowList)
 			{
 				dbw.insertOrUpdateShow(show);
 				dbw.refreshPercentage(show.tvdbId);
 				show = dbw.getShow(show.tvdbId);
-				show.seasons = dbw.getSeasons(show.tvdbId, true, true);
-				finalUpdateList.add(show);
+				finalUpdateShowList.add(show);
 			}
-
-			dbw.close();
+			
+			for(TvShowEpisode episode : localUpdateEpisodeList)
+			{
+				episode = dbw.getEpisode(episode.url);
+				finalUpdateEpisodeList.add(episode);
+			}
 
 		}
 
-		showToast("Sync over!", Toast.LENGTH_SHORT);
+		Update u = tm.updateService().shows().timestamp(timestamp).fire();
+		for(TvShow s : u.shows)
+		{
+			if(dbw.showExist(s.tvdbId))
+				add(traktUpdateShowList, s);
+		}
+
+		u = tm.updateService().movies().timestamp(timestamp).fire();
+		for(Movie m : u.movies)
+		{
+			if(dbw.movieExist(m.imdbId))
+				add(traktUpdateMovieList, m);
+		}
+		
+		dbw.close();
+
+		showToast("Sync done!", Toast.LENGTH_SHORT);
 		prefs.edit().putLong("activity_timestamp", activities.timestamps.current.getTime()/1000).commit();
 
 		return activities;
+	}
+
+	public <T> void add(List<T> l, T item)
+	{
+		if(!l.contains(item))
+			l.add(item);
 	}
 
 	private void updateEpisode(TvShow show, TvShowEpisode episode)
 	{
 		//this episode is in the db
 		if(dbw.insertOrUpdateEpisode(episode))
+		{
 			//add to the update list
-			updateList.add(show);
+			add(localUpdateShowList, show);
+			add(localUpdateEpisodeList, episode);
+		}
 		else
 			//add to the refresh list
-			refreshList.add(show);
+			add(traktUpdateShowList, show);
 	}
 
 	private void updateShow(TvShow show)
@@ -187,31 +223,32 @@ public class ActivityTask extends GetTask<Activity>
 		//this show is in the db
 		if(dbw.showExist(show.tvdbId))
 			//add to the update list
-			updateList.add(show);
+			add(localUpdateShowList, show);
 		else
 			//add to the refresh list
-			refreshList.add(show);
+			add(traktUpdateShowList, show);
 	}
 
 	private void updateMovie(Movie movie)
 	{
-		//TODO
-		//		//this show is in the db
-		//		if(dbw.movieExist(movie.imdbId))
-		//			//add to the update list
-		//			updateList.add(show);
-		//		else
-		//			//add to the refresh list
-		//			refreshList.add(show);
+		//this movie is in the db
+		if(dbw.movieExist(movie.imdbId))
+			//add to the update list
+			add(localUpdateMovieList, movie);
+		else
+			//add to the refresh list
+			add(traktUpdateMovieList, movie);
 	}
 
 	@Override
 	protected void sendEvent(Activity result) 
 	{
-		TraktTask.traktItemsUpdated(finalUpdateList);
+		TraktTask.traktItemsUpdated(finalUpdateShowList);
+		TraktTask.traktItemsUpdated(finalUpdateEpisodeList);
+		TraktTask.traktItemsUpdated(finalUpdateMovieList);
 
-		//TODO getRef() is dangerous here
-		if(!refreshList.isEmpty())
-			new UpdateShowsTask(getRef(), new ArrayList<TvShow>(refreshList)).fire();
+		if(!traktUpdateShowList.isEmpty())
+			new UpdateShowsTask(context, new ArrayList<TvShow>(traktUpdateShowList)).fire();
 	}
 }
+

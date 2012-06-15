@@ -7,9 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.florianmski.tracktoid.ui.fragments.show.ProgressFragment;
 import com.florianmski.tracktoid.ui.fragments.traktitems.PI_TraktItemShowFragment;
-import com.viewpagerindicator.TitleProvider;
 
-public class PagerShowAdapter extends FragmentPagerAdapter implements TitleProvider
+public class PagerShowAdapter extends FragmentPagerAdapter
 {
 	private final static String titles[] = {"Progress", "About"};
 	
@@ -23,7 +22,7 @@ public class PagerShowAdapter extends FragmentPagerAdapter implements TitleProvi
 	}
 
 	@Override
-	public String getTitle(int position) 
+    public CharSequence getPageTitle(int position)
 	{
 		return titles[position];
 	}

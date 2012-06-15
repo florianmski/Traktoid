@@ -9,9 +9,8 @@ import com.florianmski.tracktoid.ui.fragments.library.PI_LibaryMovieFragment;
 import com.florianmski.tracktoid.ui.fragments.library.PI_LibraryFragment;
 import com.florianmski.tracktoid.ui.fragments.library.PI_LibraryShowFragment;
 import com.florianmski.traktoid.TraktoidInterface;
-import com.viewpagerindicator.TitleProvider;
 
-public class PagerLibraryAdapter extends FragmentPagerAdapter implements TitleProvider
+public class PagerLibraryAdapter extends FragmentPagerAdapter
 {
 	private final static String titles[] = {"Shows", "Movies"};
 		
@@ -21,7 +20,7 @@ public class PagerLibraryAdapter extends FragmentPagerAdapter implements TitlePr
 	}
 
 	@Override
-	public String getTitle(int position) 
+    public CharSequence getPageTitle(int position)
 	{
 		return titles[position];
 	}

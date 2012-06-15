@@ -2,18 +2,18 @@ package com.florianmski.tracktoid.trakt.tasks.get;
 
 import java.util.concurrent.ExecutorService;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
 
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 
 public abstract class GetTask<TResult> extends TraktTask<TResult>
 {
-	public GetTask(Fragment ref) 
+	public GetTask(Context ref) 
 	{
 		super(ref);
 	}
 	
-	public GetTask(Fragment ref, ExecutorService executor) 
+	public GetTask(Context ref, ExecutorService executor) 
 	{
 		super(ref, executor);
 	}

@@ -3,8 +3,7 @@ package com.florianmski.tracktoid.trakt.tasks.post;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.support.v4.app.Fragment;
-
+import android.content.Context;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
@@ -23,30 +22,30 @@ public abstract class InWatchlistTask<T extends TraktoidInterface<T>> extends Po
 	protected List<T> traktItems;
 	protected boolean addToWatchlist;
 
-	public InWatchlistTask(Fragment fragment, List<T> traktItems, boolean addToWatchlist, PostListener pListener) 
+	public InWatchlistTask(Context context, List<T> traktItems, boolean addToWatchlist, PostListener pListener) 
 	{
-		super(fragment, null, pListener);
+		super(context, null, pListener);
 
 		this.traktItems = traktItems;
 		this.addToWatchlist = addToWatchlist;
 	}
 
-	public static <T extends TraktoidInterface<T>> InWatchlistTask<?> createTask(Fragment fragment, T traktItem, boolean addToWatchlist, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> InWatchlistTask<?> createTask(Context context, T traktItem, boolean addToWatchlist, PostListener pListener)
 	{
 		List<T> traktItems = new ArrayList<T>();
 		traktItems.add(traktItem);
-		return createTask(fragment, traktItems, addToWatchlist, pListener);
+		return createTask(context, traktItems, addToWatchlist, pListener);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends TraktoidInterface<T>> InWatchlistTask<?> createTask(Fragment fragment, List<T> traktItems, boolean addToWatchlist, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> InWatchlistTask<?> createTask(Context context, List<T> traktItems, boolean addToWatchlist, PostListener pListener)
 	{
 		if(traktItems.get(0) instanceof TvShow)
-			return new InWatchlistShowTask(fragment, (List<TvShow>) traktItems, addToWatchlist, pListener);
+			return new InWatchlistShowTask(context, (List<TvShow>) traktItems, addToWatchlist, pListener);
 		else if(traktItems.get(0) instanceof Movie)
-			return new InWatchlistMovieTask(fragment, (List<Movie>) traktItems, addToWatchlist, pListener);
+			return new InWatchlistMovieTask(context, (List<Movie>) traktItems, addToWatchlist, pListener);
 		else if(traktItems.get(0) instanceof TvShowEpisode)
-			return new InWatchlistEpisodeTask(fragment, (List<TvShowEpisode>) traktItems, addToWatchlist, pListener);
+			return new InWatchlistEpisodeTask(context, (List<TvShowEpisode>) traktItems, addToWatchlist, pListener);
 		else
 			return null;
 	}
@@ -80,9 +79,9 @@ public abstract class InWatchlistTask<T extends TraktoidInterface<T>> extends Po
 
 	public static final class InWatchlistShowTask extends InWatchlistTask<TvShow>
 	{
-		public InWatchlistShowTask(Fragment fragment, List<TvShow> traktItems, boolean addToWatchlist, PostListener pListener) 
+		public InWatchlistShowTask(Context context, List<TvShow> traktItems, boolean addToWatchlist, PostListener pListener) 
 		{
-			super(fragment, traktItems, addToWatchlist, pListener);
+			super(context, traktItems, addToWatchlist, pListener);
 		}
 
 		@Override
@@ -117,9 +116,9 @@ public abstract class InWatchlistTask<T extends TraktoidInterface<T>> extends Po
 
 	public static final class InWatchlistMovieTask extends InWatchlistTask<Movie>
 	{
-		public InWatchlistMovieTask(Fragment fragment, List<Movie> traktItems, boolean addToWatchlist, PostListener pListener) 
+		public InWatchlistMovieTask(Context context, List<Movie> traktItems, boolean addToWatchlist, PostListener pListener) 
 		{
-			super(fragment, traktItems, addToWatchlist, pListener);
+			super(context, traktItems, addToWatchlist, pListener);
 		}
 
 		@Override
@@ -154,9 +153,9 @@ public abstract class InWatchlistTask<T extends TraktoidInterface<T>> extends Po
 
 	public static final class InWatchlistEpisodeTask extends InWatchlistTask<TvShowEpisode>
 	{
-		public InWatchlistEpisodeTask(Fragment fragment, List<TvShowEpisode> traktItem, boolean addToWatchlist, PostListener pListener) 
+		public InWatchlistEpisodeTask(Context context, List<TvShowEpisode> traktItem, boolean addToWatchlist, PostListener pListener) 
 		{
-			super(fragment, traktItem, addToWatchlist, pListener);
+			super(context, traktItem, addToWatchlist, pListener);
 		}
 
 		@Override

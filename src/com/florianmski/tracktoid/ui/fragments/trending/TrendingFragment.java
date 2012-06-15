@@ -22,9 +22,7 @@ import com.florianmski.tracktoid.widgets.coverflow.CoverFlowImageAdapter;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class TrendingFragment extends TraktFragment
-{
-	//TODO do movies to
-	
+{	
 	private CoverFlow cf;
 	private List<TvShow> shows;
 
@@ -72,7 +70,7 @@ public class TrendingFragment extends TraktFragment
 
 		if(savedInstanceState == null)
 		{
-			new TraktItemsTask<TvShow>(this, new TraktItemsListener<TvShow>() 
+			new TraktItemsTask<TvShow>(getActivity(), new TraktItemsListener<TvShow>() 
 			{
 				@Override
 				public void onTraktItems(List<TvShow> shows) 

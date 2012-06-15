@@ -1,18 +1,15 @@
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
-import com.florianmski.tracktoid.ui.fragments.pagers.LibraryPagerFragment;
+import com.florianmski.tracktoid.ui.activities.phone.SinglePaneActivity;
+import com.florianmski.tracktoid.ui.fragments.library.PagerLibraryFragment;
 
-public class LibraryActivity extends TraktActivity
+public class LibraryActivity extends SinglePaneActivity
 {
 	@Override
-	public void onCreate(Bundle savedInstanceState)
+	public Fragment getFragment() 
 	{
-		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_shows);
-
-//		if (savedInstanceState == null)
-//			setPrincipalFragment(LibraryPagerFragment.newInstance(getIntent().getExtras()));
+		return PagerLibraryFragment.newInstance(getIntent().getExtras());
 	}
 }

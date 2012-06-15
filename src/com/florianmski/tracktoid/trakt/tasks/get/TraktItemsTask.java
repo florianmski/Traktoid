@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
+
 import com.florianmski.tracktoid.ApiCache;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
@@ -37,9 +38,9 @@ public class TraktItemsTask<T extends TraktoidInterface<T>> extends GetTask<List
 	//recommendation needs only if "all genres" and "no date"
 	//trending needs it
 
-	public TraktItemsTask(Fragment fragment, TraktItemsListener<T> listener, TraktApiBuilder<?> builder, boolean sort) 
+	public TraktItemsTask(Context context, TraktItemsListener<T> listener, TraktApiBuilder<?> builder, boolean sort) 
 	{
-		super(fragment);
+		super(context);
 
 		this.builder = builder;
 		this.sort = sort;

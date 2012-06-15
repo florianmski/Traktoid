@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
@@ -41,18 +41,18 @@ public class WatchedEpisodesTask extends TraktTask<TvShow>
 	private TvShow show;
 	private boolean checkin;
 
-	public WatchedEpisodesTask(Fragment fragment, String tvdbId, int [] seasons, List<Map<Integer, Boolean>> listWatched) 
+	public WatchedEpisodesTask(Context context, String tvdbId, int [] seasons, List<Map<Integer, Boolean>> listWatched) 
 	{
-		super(fragment, sSingleThreadExecutor);
+		super(context, sSingleThreadExecutor);
 
 		this.tvdbId = tvdbId;
 		this.seasons = seasons;
 		this.listWatched.addAll(listWatched);
 	}
 
-	public WatchedEpisodesTask(Fragment fragment, String tvdbId, int season, int episode, boolean watched) 
+	public WatchedEpisodesTask(Context context, String tvdbId, int season, int episode, boolean watched) 
 	{
-		super(fragment, sSingleThreadExecutor);
+		super(context, sSingleThreadExecutor);
 
 		this.tvdbId = tvdbId;
 		this.seasons = new int[]{season};
@@ -60,9 +60,9 @@ public class WatchedEpisodesTask extends TraktTask<TvShow>
 		this.listWatched.get(0).put(episode, watched);
 	}
 
-	public WatchedEpisodesTask(Fragment fragment, String tvdbId, List<TvShowSeason> seasons, boolean watched) 
+	public WatchedEpisodesTask(Context context, String tvdbId, List<TvShowSeason> seasons, boolean watched) 
 	{
-		super(fragment, sSingleThreadExecutor);
+		super(context, sSingleThreadExecutor);
 
 		this.tvdbId = tvdbId;
 		this.seasons = new int[seasons.size()];

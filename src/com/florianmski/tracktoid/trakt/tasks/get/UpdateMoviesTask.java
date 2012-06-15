@@ -25,7 +25,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -50,9 +49,9 @@ public class UpdateMoviesTask extends GetTask<Movie>
 	private NotificationManager nm;
 	private RemoteViews contentView;
 
-	public UpdateMoviesTask(Fragment fragment, List<Movie> selectedShows) 
+	public UpdateMoviesTask(Context context, List<Movie> selectedShows) 
 	{
-		super(fragment);
+		super(context, sSingleThreadExecutor);
 
 		this.moviesSelected = selectedShows;
 	}
@@ -60,11 +59,6 @@ public class UpdateMoviesTask extends GetTask<Movie>
 	@Override
 	protected Movie doTraktStuffInBackground()
 	{		
-		//TODO remove it (or not ?)
-		//allow task to failed before creating notification if something is wrong (bad username, trakt server issue...)
-		//test if user account is ok
-//		tm.accountService().test().fire();
-
 		//sort shows by name, not really necessary
 		Collections.sort(moviesSelected);
 		
@@ -81,8 +75,6 @@ public class UpdateMoviesTask extends GetTask<Movie>
 			 */
 			updateProgress(m.title, (int)(i * (MAX_PERCENTAGE*1.0/moviesSelected.size()*1.0)));
 			updateSecondaryProgress("Downloading...", 0);
-
-//			showToast("Refreshing " + m.title + "...", Toast.LENGTH_SHORT);
 
 			String query = null;
 			
@@ -107,16 +99,12 @@ public class UpdateMoviesTask extends GetTask<Movie>
 				this.publishProgress(0, lastProceedMovie, "update");
 	
 				i++;
-	
-//				showToast(m.title + " refreshed!", Toast.LENGTH_SHORT);
 			}
 			else
 				showToast(m.title + " not found...", Toast.LENGTH_SHORT);
 		}		
 
-		//if user choose to refresh only one show, no need to toast "movie refreshed" then "refresh done"
-		if(moviesSelected.size() > 1)
-			showToast("Refresh done!", Toast.LENGTH_SHORT);
+		showToast("Refresh done!", Toast.LENGTH_SHORT);
 		
 		dbw.close();
 		

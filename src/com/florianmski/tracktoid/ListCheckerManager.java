@@ -133,7 +133,7 @@ public class ListCheckerManager<T>
 	
 	public void setOnActionModeListener(final ActionMode.Callback listener)
 	{
-		this.mActionModeListener = new blabla(listener);
+		this.mActionModeListener = new CustomActionMode(listener);
 	}
 	
 	public ActionMode.Callback getCallback()
@@ -156,12 +156,11 @@ public class ListCheckerManager<T>
 		this.selectedColorResId = id;
 	}
 	
-	//TODO change class name
-	public class blabla implements ActionMode.Callback
+	public class CustomActionMode implements ActionMode.Callback
 	{	
 		private ActionMode.Callback listener;
 		
-		public blabla(ActionMode.Callback listener)
+		public CustomActionMode(ActionMode.Callback listener)
 		{
 			this.listener = listener;
 		}

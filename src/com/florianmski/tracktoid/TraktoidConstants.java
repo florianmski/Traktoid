@@ -14,6 +14,7 @@ public final class TraktoidConstants
 	public final static String BUNDLE_SEASON = get("Season");
 	public final static String BUNDLE_CALENDAR = get("Calendar");
 	public final static String BUNDLE_CLASS = get("Class");
+	public final static String BUNDLE_SLIDE_OPEN = get("SlideOpen");
 	
 	private final static String get(String text)
 	{

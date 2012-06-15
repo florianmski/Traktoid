@@ -3,8 +3,7 @@ package com.florianmski.tracktoid.trakt.tasks.post;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.support.v4.app.Fragment;
-
+import android.content.Context;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
@@ -24,30 +23,30 @@ public abstract class InCollectionTask<T extends TraktoidInterface<T>> extends P
 	protected List<T> traktItems;
 	protected boolean addToCollection;
 
-	public InCollectionTask(Fragment fragment, List<T> traktItems, boolean addToCollection, PostListener pListener) 
+	public InCollectionTask(Context context, List<T> traktItems, boolean addToCollection, PostListener pListener) 
 	{
-		super(fragment, null, pListener);
+		super(context, null, pListener);
 
 		this.traktItems = traktItems;
 		this.addToCollection = addToCollection;
 	}
 	
-	public static <T extends TraktoidInterface<T>> InCollectionTask<?> createTask(Fragment fragment, T traktItem, boolean addToCollection, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> InCollectionTask<?> createTask(Context context, T traktItem, boolean addToCollection, PostListener pListener)
 	{
 		List<T> traktItems = new ArrayList<T>();
 		traktItems.add(traktItem);
-		return createTask(fragment, traktItems, addToCollection, pListener);
+		return createTask(context, traktItems, addToCollection, pListener);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends TraktoidInterface<T>> InCollectionTask<?> createTask(Fragment fragment, List<T> traktItems, boolean addToCollection, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> InCollectionTask<?> createTask(Context context, List<T> traktItems, boolean addToCollection, PostListener pListener)
 	{
 		if(traktItems.get(0) instanceof TvShow)
-			return new InCollectionShowTask(fragment, (List<TvShow>) traktItems, addToCollection, pListener);
+			return new InCollectionShowTask(context, (List<TvShow>) traktItems, addToCollection, pListener);
 		else if(traktItems.get(0) instanceof Movie)
-			return new InCollectionMovieTask(fragment, (List<Movie>) traktItems, addToCollection, pListener);
+			return new InCollectionMovieTask(context, (List<Movie>) traktItems, addToCollection, pListener);
 		else if(traktItems.get(0) instanceof TvShowEpisode)
-			return new InCollectionEpisodeTask(fragment, (List<TvShowEpisode>) traktItems, addToCollection, pListener);
+			return new InCollectionEpisodeTask(context, (List<TvShowEpisode>) traktItems, addToCollection, pListener);
 		else
 			return null;
 	}
@@ -81,9 +80,9 @@ public abstract class InCollectionTask<T extends TraktoidInterface<T>> extends P
 
 	public static final class InCollectionShowTask extends InCollectionTask<TvShow>
 	{
-		public InCollectionShowTask(Fragment fragment,	List<TvShow> traktItems, boolean addToCollection, PostListener pListener) 
+		public InCollectionShowTask(Context context,	List<TvShow> traktItems, boolean addToCollection, PostListener pListener) 
 		{
-			super(fragment, traktItems, addToCollection, pListener);
+			super(context, traktItems, addToCollection, pListener);
 		}
 
 		@Override
@@ -122,9 +121,9 @@ public abstract class InCollectionTask<T extends TraktoidInterface<T>> extends P
 
 	public static final class InCollectionMovieTask extends InCollectionTask<Movie>
 	{
-		public InCollectionMovieTask(Fragment fragment, List<Movie> traktItems, boolean addToCollection, PostListener pListener) 
+		public InCollectionMovieTask(Context context, List<Movie> traktItems, boolean addToCollection, PostListener pListener) 
 		{
-			super(fragment, traktItems, addToCollection, pListener);
+			super(context, traktItems, addToCollection, pListener);
 		}
 
 		@Override
@@ -163,12 +162,12 @@ public abstract class InCollectionTask<T extends TraktoidInterface<T>> extends P
 
 	public static final class InCollectionEpisodeTask extends InCollectionTask<TvShowEpisode>
 	{
-		public InCollectionEpisodeTask(Fragment fragment, List<TvShowEpisode> traktItems, boolean addToCollection, PostListener pListener) 
+		public InCollectionEpisodeTask(Context context, List<TvShowEpisode> traktItems, boolean addToCollection, PostListener pListener) 
 		{
-			super(fragment, traktItems, addToCollection, pListener);
+			super(context, traktItems, addToCollection, pListener);
 		}
 		
-		public static InCollectionEpisodeTask createSeasonTask(Fragment fragment, List<TvShowSeason> traktItems, boolean seen, PostListener pListener)
+		public static InCollectionEpisodeTask createSeasonTask(Context context, List<TvShowSeason> traktItems, boolean seen, PostListener pListener)
 		{
 			List<TvShowEpisode> episodes = new ArrayList<TvShowEpisode>();
 			for(TvShowSeason s : traktItems)
@@ -177,7 +176,7 @@ public abstract class InCollectionTask<T extends TraktoidInterface<T>> extends P
 						episodes.add(e);
 			}
 
-			return new InCollectionEpisodeTask(fragment, episodes, seen, pListener);
+			return new InCollectionEpisodeTask(context, episodes, seen, pListener);
 		}
 
 		@Override

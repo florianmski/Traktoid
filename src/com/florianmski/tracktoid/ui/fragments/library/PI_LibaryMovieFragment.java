@@ -20,7 +20,7 @@ import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateMoviesTask;
-import com.florianmski.tracktoid.ui.fragments.traktitems.PI_TraktItemMovieFragment;
+import com.florianmski.tracktoid.ui.activities.phone.MovieActivity;
 import com.jakewharton.trakt.entities.Movie;
 
 public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
@@ -52,7 +52,7 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 		Bundle b = new Bundle();
 		Movie movie = adapter.getItem(position);
 		b.putSerializable(TraktoidConstants.BUNDLE_TRAKT_ITEM, movie);
-		launchActivityWithSingleFragment(PI_TraktItemMovieFragment.class, b);
+		launchActivity(MovieActivity.class, b);
 	}
 	
 	@Override
@@ -75,7 +75,7 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 	@Override
 	public void onRefreshClick() 
 	{
-		new TraktItemsTask<Movie>(this, new TraktItemsListener<Movie>() 
+		new TraktItemsTask<Movie>(getActivity(), new TraktItemsListener<Movie>() 
 		{
 			@Override
 			public void onTraktItems(List<Movie> movies) 
@@ -114,7 +114,7 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 			public void onClick(DialogInterface dialog, int which) 
 			{
 				if(selectedMovies.size() > 0)
-					new UpdateMoviesTask(PI_LibaryMovieFragment.this, selectedMovies).fire();
+					new UpdateMoviesTask(getActivity(), selectedMovies).fire();
 				else
 					Toast.makeText(getActivity(), "Nothing selected...", Toast.LENGTH_SHORT).show();
 			}
@@ -125,7 +125,7 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 			@Override
 			public void onClick(DialogInterface dialog, int which) 
 			{
-				new UpdateMoviesTask(PI_LibaryMovieFragment.this, movies).fire();
+				new UpdateMoviesTask(getActivity(), movies).fire();
 			}
 		});
 

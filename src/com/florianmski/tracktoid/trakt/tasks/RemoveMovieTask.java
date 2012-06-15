@@ -16,7 +16,7 @@
 
 package com.florianmski.tracktoid.trakt.tasks;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
@@ -27,9 +27,9 @@ public class RemoveMovieTask extends TraktTask<Movie>
 {
 	private Movie movie;
 
-	public RemoveMovieTask(TraktManager tm, Fragment fragment, Movie movie) 
+	public RemoveMovieTask(TraktManager tm, Context context, Movie movie) 
 	{
-		super(fragment);
+		super(context);
 
 		this.movie = movie;
 	}

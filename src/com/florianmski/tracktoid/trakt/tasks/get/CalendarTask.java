@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
 import android.util.Log;
 
 import com.florianmski.tracktoid.ApiCache;
@@ -34,9 +34,9 @@ public class CalendarTask extends GetTask<List<List<CalendarDate>>>
 {		
 	private static List<CalendarListener> listeners = new ArrayList<CalendarListener>();
 
-	public CalendarTask(Fragment fragment) 
+	public CalendarTask(Context context) 
 	{
-		super(fragment);
+		super(context);
 	}
 
 	public static void addObserver(CalendarListener listener)

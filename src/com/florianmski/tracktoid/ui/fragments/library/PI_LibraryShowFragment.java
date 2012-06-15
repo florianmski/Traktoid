@@ -20,7 +20,7 @@ import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
-import com.florianmski.tracktoid.ui.fragments.show.PagerShowFragment;
+import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
@@ -68,13 +68,13 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 	{
 		Bundle b = new Bundle();
 		b.putSerializable(TraktoidConstants.BUNDLE_TRAKT_ITEM, adapter.getItem(position));
-		launchActivityWithSingleFragment(PagerShowFragment.class, b);
+		launchActivity(ShowActivity.class, b);
 	}
 
 	@Override
 	public void onRefreshClick() 
 	{
-		new TraktItemsTask<TvShow>(this, new TraktItemsListener<TvShow>() 
+		new TraktItemsTask<TvShow>(getActivity(), new TraktItemsListener<TvShow>() 
 		{
 			@Override
 			public void onTraktItems(List<TvShow> shows) 
@@ -113,7 +113,7 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 			public void onClick(DialogInterface dialog, int which) 
 			{
 				if(selectedShows.size() > 0)
-					new UpdateShowsTask(PI_LibraryShowFragment.this, selectedShows).fire();
+					new UpdateShowsTask(getActivity(), selectedShows).fire();
 				else
 					Toast.makeText(getActivity(), "Nothing selected...", Toast.LENGTH_SHORT).show();
 			}
@@ -124,7 +124,7 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 			@Override
 			public void onClick(DialogInterface dialog, int which) 
 			{
-				new UpdateShowsTask(PI_LibraryShowFragment.this, shows).fire();
+				new UpdateShowsTask(getActivity(), shows).fire();
 			}
 		});
 

@@ -83,7 +83,7 @@ public class SearchFragment extends TraktFragment
 				String search = edtSearch.getText().toString().trim();
 				getStatusView().show().text("Searching for \"" + search + "\",\nPlease wait...");
 				
-				new TraktItemsTask<TvShow>(SearchFragment.this, new TraktItemsListener<TvShow>() 
+				new TraktItemsTask<TvShow>(getActivity(), new TraktItemsListener<TvShow>() 
 				{
 					@Override
 					public void onTraktItems(List<TvShow> shows) 

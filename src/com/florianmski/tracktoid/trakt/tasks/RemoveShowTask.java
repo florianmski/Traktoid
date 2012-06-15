@@ -16,7 +16,7 @@
 
 package com.florianmski.tracktoid.trakt.tasks;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.db.DatabaseWrapper;
@@ -26,9 +26,9 @@ public class RemoveShowTask extends TraktTask<TvShow>
 {
 	private TvShow show;
 
-	public RemoveShowTask(Fragment fragment, TvShow show) 
+	public RemoveShowTask(Context context, TvShow show) 
 	{
-		super(fragment);
+		super(context);
 
 		this.show = show;
 	}

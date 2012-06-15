@@ -6,6 +6,8 @@ import android.graphics.drawable.TransitionDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -22,6 +24,8 @@ public class BadgesView<T extends TraktoidInterface<T>> extends RelativeLayout
 	private ImageView ivWatchlist;
 	
 	private RelativeLayout rlBadges;
+	
+	private Animation animation = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in);
 	
 	public BadgesView(Context context) 
 	{
@@ -50,6 +54,8 @@ public class BadgesView<T extends TraktoidInterface<T>> extends RelativeLayout
 		ivRating = (ImageView)v.findViewById(R.id.imageViewRating);
 		ivCollection = (ImageView)v.findViewById(R.id.imageViewCollection);
 		ivWatchlist = (ImageView)v.findViewById(R.id.imageViewWatchlist);
+		
+		animation.setDuration(1000);
     }
 	
 	public void setTraktItem(T traktItem)
@@ -83,7 +89,10 @@ public class BadgesView<T extends TraktoidInterface<T>> extends RelativeLayout
 	private void toggleBadge(boolean on, ImageView iv, int drawableId)
 	{
 		if(on)
-			iv.setImageDrawable(getTD(drawableId));
+		{
+			iv.startAnimation(animation);
+			iv.setImageResource(drawableId);
+		}
 		else
 			iv.setImageBitmap(null);
 	}

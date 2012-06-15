@@ -10,7 +10,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 
-public abstract class MovieShowActivity extends TraktActivity
+public abstract class MovieShowActivity extends MenuActivity
 {
 	private static int SHOW = 0;
 	private static int MOVIE = 1;
@@ -33,6 +33,8 @@ public abstract class MovieShowActivity extends TraktActivity
 			else
 				setPrincipalFragment(movieFragment = getMovieFragment());
 		}
+		
+		getAnimationLayout();
 	}
 
 	@Override

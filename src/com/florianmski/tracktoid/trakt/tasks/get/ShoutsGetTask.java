@@ -2,7 +2,7 @@ package com.florianmski.tracktoid.trakt.tasks.get;
 
 import java.util.List;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
 
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Movie;
@@ -16,9 +16,9 @@ public class ShoutsGetTask<T extends TraktoidInterface<T>> extends GetTask<List<
 	private List<Shout> shouts;
 	private ShoutsListener listener;
 	
-	public ShoutsGetTask(Fragment fragment, T traktItem, ShoutsListener listener) 
+	public ShoutsGetTask(Context context, T traktItem, ShoutsListener listener) 
 	{
-		super(fragment);
+		super(context);
 		
 		this.traktItem = traktItem;
 		this.listener = listener;

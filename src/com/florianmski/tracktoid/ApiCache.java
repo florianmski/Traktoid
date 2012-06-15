@@ -106,7 +106,8 @@ public class ApiCache
 	
 	public static List<TraktApiBuilder<?>> getPendingRequests()
 	{
-		//TODO
+		//TODO do something to allow user to perform offline modification then when an internet connection is available, send it to trakt.tv
+		//this is an idea for maybe a "future future" update
 		return null;
 	}
 }

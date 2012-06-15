@@ -18,12 +18,14 @@ import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TabPageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
+import com.viewpagerindicator.UnderlinePageIndicator;
 
-public class PagerFragment extends TraktFragment implements OnPageChangeListener
+public abstract class PagerFragment extends TraktFragment implements OnPageChangeListener
 {
 	public final static int IT_TITLE = 0;
 	public final static int IT_CIRCLE = 1;
 	public final static int IT_TAB = 2;
+	public final static int IT_UNDERLINE = 3;
 
 	protected PageIndicator pageIndicator;
 	protected ViewPager viewPager;
@@ -35,13 +37,6 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 	protected int indicatorType = IT_TITLE;
 
 	protected AQuery aq;
-
-	public static PagerFragment newInstance(Bundle args)
-	{
-		PagerFragment f = new PagerFragment();
-		f.setArguments(args);
-		return f;
-	}
 	
 	public PagerFragment() {}
 
@@ -81,6 +76,9 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 		case IT_TAB :
 			pageIndicator = (TabPageIndicator) v.findViewById(R.id.page_indicator_tab);
 			break;
+		case IT_UNDERLINE :
+			pageIndicator = (UnderlinePageIndicator) v.findViewById(R.id.page_indicator_underline);
+			break;
 		}
 		ivBackground = (ImageView) v.findViewById(R.id.imageViewBackground);
 
@@ -119,6 +117,11 @@ public class PagerFragment extends TraktFragment implements OnPageChangeListener
 
 			if(viewPager.getChildCount() > 1)
 				((CirclePageIndicator)pageIndicator).setVisibility(View.VISIBLE);
+			break;
+		case IT_UNDERLINE :
+			((UnderlinePageIndicator)pageIndicator).setViewPager(viewPager, currentPagerPosition);
+			
+			((UnderlinePageIndicator)pageIndicator).setVisibility(View.VISIBLE);
 			break;
 		}
 		

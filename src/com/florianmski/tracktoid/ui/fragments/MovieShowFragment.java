@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public abstract class MovieShowFragment extends PagerTabsFragment
-{	
+{		
 	public MovieShowFragment() {}
 
 	@Override

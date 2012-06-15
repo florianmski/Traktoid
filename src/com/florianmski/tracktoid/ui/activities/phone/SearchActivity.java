@@ -16,21 +16,15 @@
 
 package com.florianmski.tracktoid.ui.activities.phone;
 
-import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
-import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.ui.fragments.SearchFragment;
 
-public class SearchActivity extends TraktActivity
+public class SearchActivity extends SinglePaneActivity
 {			
 	@Override
-    public void onCreate(Bundle savedInstanceState) 
-    {
-        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_search);
-        setContentView(R.layout.activity_single_fragment);
-        
-        if(savedInstanceState == null)
-			setPrincipalFragment(SearchFragment.newInstance(getIntent().getExtras()));
-    }	
+	public Fragment getFragment() 
+	{
+		return SearchFragment.newInstance(getIntent().getExtras());
+	}
 }

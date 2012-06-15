@@ -6,9 +6,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.florianmski.tracktoid.ui.fragments.login.JoinFragment;
 import com.florianmski.tracktoid.ui.fragments.login.SignInFragment;
-import com.viewpagerindicator.TitleProvider;
 
-public class PagerLoginAdapter extends FragmentPagerAdapter implements TitleProvider
+public class PagerLoginAdapter extends FragmentPagerAdapter
 {
 	private final static String titles[] = {"Sign In", "Join Trakt!"};
 	
@@ -18,7 +17,7 @@ public class PagerLoginAdapter extends FragmentPagerAdapter implements TitleProv
 	}
 
 	@Override
-	public String getTitle(int position) 
+    public CharSequence getPageTitle(int position)
 	{
 		return titles[position];
 	}

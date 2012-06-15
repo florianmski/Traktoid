@@ -33,6 +33,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,7 +43,7 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.image.TraktImage;
-import com.florianmski.tracktoid.ui.activities.phone.EpisodeActivity;
+import com.florianmski.tracktoid.ui.activities.phone.TraktItemsActivity;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.tracktoid.widgets.ScrollingTextView;
 import com.jakewharton.trakt.entities.CalendarDate;
@@ -222,30 +223,27 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 				TraktImage image;
 				File posterImage = null;
 				AQuery aq = listAq.recycle(holder.llEpisodes);
-				
-				//TODO something is wrong with image display
-				
-				if(episode.images.screen != null || episode.images.fanart != null)
-					image = TraktImage.getScreen(episode);
-				else
-				{
-					//offline calendar (display show's poster)
-					image = TraktImage.getPoster(e.show);
-					posterImage = aq.getCachedFile(image.getUrl());
-				}
+								
+//				if(episode.images.screen != null || episode.images.fanart != null)
+				image = TraktImage.getScreen(episode);
+//				else
+//				{
+//					//offline calendar (display show's poster)
+//					image = TraktImage.getPoster(e.show);
+//					posterImage = aq.getCachedFile(image.getUrl());
+//				}
 				
 				holder.bvScreen[i].initialize();
 				
-				//TODO image étirées
-				//faire la méthode opposée de setPlaceHolder()
-				//realeasePlaceholder()
 				if(aq.shouldDelay(holder.llEpisodes, parent, image.getUrl(), 0))
 					setPlaceholder(holder.livScreen[i]);
 				else
 				{
-					if(posterImage != null)
-						aq.id(holder.livScreen[i]).image(posterImage, 0);
-					else
+					removePlaceholder(holder.livScreen[i], ScaleType.CENTER_CROP);
+
+//					if(posterImage != null)
+//						aq.id(holder.livScreen[i]).image(posterImage, 0);
+//					else
 						aq.id(holder.livScreen[i]).image(image.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
 					
 					holder.bvScreen[i].setTraktItem(episode);
@@ -256,12 +254,12 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 					@Override
 					public void onClick(View v) 
 					{
-						Intent i = new Intent(context, EpisodeActivity.class);
+						Intent i = new Intent(context, TraktItemsActivity.class);
 						ArrayList<TvShowEpisode> episodes = new ArrayList<TvShowEpisode>();
 						//workaround to display image in the episode view
 						
-						if(episode.images.screen != null)
-							episode.images.screen = episode.images.screen.replace("-940","");
+//						if(episode.images.screen != null)
+//							episode.images.screen = episode.images.screen.replace("-940","");
 						
 						episode.tvdbId = e.show.tvdbId;
 						
