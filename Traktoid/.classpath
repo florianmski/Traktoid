@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="com/florianmski/tracktoid/ui/fragments/TabsPagerFragment2.java|com/florianmski/tracktoid/ui/activities/phone/MovieShowActivity.java|com/florianmski/tracktoid/adapters/pagers/PagerEpisodeAdapter.java|com/florianmski/tracktoid/adapters/pagers/PagerMovieAdapter.java" kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/trakt-java"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
