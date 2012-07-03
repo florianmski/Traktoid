@@ -44,7 +44,7 @@ public class RemoveShowTask extends TraktTask<TvShow>
 
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
 
-		dbw.removeShow(show.tvdbId);
+		dbw.removeShow(show.url);
 		
 		dbw.close();
 		

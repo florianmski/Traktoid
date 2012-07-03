@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.florianmski.traktoid.TraktoidInterface;
 
-public interface TraktListener <T extends TraktoidInterface<T>>
+public interface TraktListener<T>
 {
 //	public void onBeforeTraktRequest();
 //	public void onAfterTraktRequest(boolean success);

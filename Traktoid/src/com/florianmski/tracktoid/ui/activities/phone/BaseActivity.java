@@ -21,10 +21,10 @@ public class BaseActivity extends SherlockFragmentActivity
 	    {
 	        case android.R.id.home:
 	            // app icon in Action Bar clicked; go home
-	            Intent intent = new Intent(this, HomeActivity.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
-	            overridePendingTransition(android.R.anim.fade_out, android.R.anim.fade_in);
+//	            Intent intent = new Intent(this, HomeActivity.class);
+//	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//	            startActivity(intent);
+//	            overridePendingTransition(android.R.anim.fade_out, android.R.anim.fade_in);
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
@@ -49,8 +49,21 @@ public class BaseActivity extends SherlockFragmentActivity
 		startActivity(i);
 	}
 	
+	public void launchActivityForResult(Class<?> activityToLaunch, int requestCode, Bundle args)
+	{
+		Intent i = new Intent(this, activityToLaunch);
+		if(args != null)
+			i.putExtras(args);
+		startActivityForResult(i, requestCode);
+	}
+	
 	public void launchActivity(Class<?> activityToLaunch)
 	{
 		launchActivity(activityToLaunch, null);
+	}
+	
+	public void launchActivityForResult(Class<?> activityToLaunch, int requestCode)
+	{
+		launchActivityForResult(activityToLaunch, requestCode, null);
 	}
 }

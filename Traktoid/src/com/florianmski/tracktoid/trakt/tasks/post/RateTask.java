@@ -1,5 +1,8 @@
 package com.florianmski.tracktoid.trakt.tasks.post;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
@@ -10,135 +13,157 @@ import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.enumerations.Rating;
+import com.jakewharton.trakt.services.RateService;
 
 public abstract class RateTask<T extends TraktoidInterface<T>> extends PostTask
 {
-	//TODO new 10 rating
-	
-	protected T traktItem;
+	protected List<T> traktItems;
 	protected Rating rating;
 
-	public RateTask(Context context, T traktItem, Rating rating, PostListener pListener) 
+	public RateTask(Context context, List<T> traktItems, Rating rating, PostListener pListener) 
 	{
 		super(context, null, pListener);
 
-		this.traktItem = traktItem;
+		this.traktItems = traktItems;
 		this.rating = rating;
 	}
 
-	public static <T extends TraktoidInterface<T>> RateTask<?> createTask(Context context, T traktItem, Rating rating, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> RateTask<?> createTask(Context context, T traktItem, Rating r, PostListener pListener)
 	{
-		if(traktItem instanceof TvShow)
-			return new RateShowTask(context, (TvShow) traktItem, rating, pListener);
-		else if(traktItem instanceof Movie)
-			return new RateMovieTask(context, (Movie) traktItem, rating, pListener);
-		else if(traktItem instanceof TvShowEpisode)
-			return new RateEpisodeTask(context, (TvShowEpisode) traktItem, rating, pListener);
+		List<T> traktItems = new ArrayList<T>();
+		traktItems.add(traktItem);
+		return createTask(context, traktItems, r, pListener);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends TraktoidInterface<T>> RateTask<?> createTask(Context context, List<T> traktItems, Rating r, PostListener pListener)
+	{
+		if(traktItems.get(0) instanceof TvShow)
+			return new RateShowTask(context, (List<TvShow>) traktItems, r, pListener);
+		else if(traktItems.get(0) instanceof Movie)
+			return new RateMovieTask(context, (List<Movie>) traktItems, r, pListener);
+		else if(traktItems.get(0) instanceof TvShowEpisode)
+			return new RateEpisodeTask(context, (List<TvShowEpisode>) traktItems, r, pListener);
 		else
 			return null;
 	}
 
-	protected abstract TraktApiBuilder<?> createRateBuilder(T traktItem);
-	protected abstract void insertInDb(T traktItem, Rating rating);
+	protected abstract List<TraktApiBuilder<?>> createRateBuilder(List<T> traktItems);
+	protected abstract void insertInDb(List<T> traktItems, Rating rating, DatabaseWrapper dbw);
 
 	@Override
 	protected void doPrePostStuff() 
 	{
-		builders.add(createRateBuilder(traktItem));
+		builders.addAll(createRateBuilder(traktItems));
 	}
 
 	@Override
 	protected void doAfterPostStuff()
 	{
-		insertInDb(traktItem, rating);
+		DatabaseWrapper dbw = new DatabaseWrapper(context);
+		insertInDb(traktItems, rating, dbw);
+		dbw.close();
 	}
 
 	@Override
 	protected void sendEvent(Response result) 
 	{
-		TraktTask.traktItemUpdated(traktItem);
+		TraktTask.traktItemsUpdated(traktItems);
 	}
-	
+
 	public static final class RateShowTask extends RateTask<TvShow>
 	{
-		public RateShowTask(Context context,	TvShow traktItem, Rating rating, PostListener pListener) 
+		public RateShowTask(Context context, List<TvShow> traktItem, Rating rating, PostListener pListener) 
 		{
 			super(context, traktItem, rating, pListener);
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createRateBuilder(TvShow traktItem) 
+		protected List<TraktApiBuilder<?>> createRateBuilder(List<TvShow> traktItems) 
 		{
-			return tm
-					.rateService()
-					.show(Integer.valueOf(traktItem.tvdbId))
-					.rating(rating);
+			List<TraktApiBuilder<?>> builderList = new ArrayList<TraktApiBuilder<?>>();
+			for(TvShow traktItem : traktItems)
+			{
+				RateService.ShowBuilder builder = tm.rateService().show(Integer.valueOf(traktItem.tvdbId)).rating(rating);
+				builderList.add(builder);
+			}
+			return builderList;
 		}
 
 		@Override
-		protected void insertInDb(TvShow traktItem, Rating rating) 
+		protected void insertInDb(List<TvShow> traktItems, Rating rating, DatabaseWrapper dbw) 
 		{
-			traktItem.rating = rating;
-			
-			DatabaseWrapper dbw = new DatabaseWrapper(context);
-			dbw.insertOrUpdateShow(traktItem);
-			dbw.close();
+			for(TvShow traktItem : traktItems)
+			{
+				traktItem.rating = rating;
+				dbw.insertOrUpdateShow(traktItem);
+			}
 		}
 	}
-	
+
 	public static final class RateMovieTask extends RateTask<Movie>
 	{
-		public RateMovieTask(Context context, Movie traktItem, Rating rating, PostListener pListener) 
+		public RateMovieTask(Context context, List<Movie> traktItems, Rating rating, PostListener pListener) 
 		{
-			super(context, traktItem, rating, pListener);
+			super(context, traktItems, rating, pListener);
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createRateBuilder(Movie traktItem) 
+		protected List<TraktApiBuilder<?>> createRateBuilder(List<Movie> traktItems) 
 		{
-			return tm
-					.rateService()
-					.movie(traktItem.imdbId)
-					.rating(rating);
+			List<TraktApiBuilder<?>> builderList = new ArrayList<TraktApiBuilder<?>>();
+			for(Movie traktItem : traktItems)
+			{
+				RateService.MovieBuilder builder = tm.rateService().movie(traktItem.imdbId).rating(rating);
+				builderList.add(builder);
+			}
+			return builderList;
 		}
 
 		@Override
-		protected void insertInDb(Movie traktItem, Rating rating) 
+		protected void insertInDb(List<Movie> traktItems, Rating rating, DatabaseWrapper dbw) 
 		{
-			traktItem.rating = rating;
-			
-			DatabaseWrapper dbw = new DatabaseWrapper(context);
-			dbw.insertOrUpdateMovie(traktItem);
-			dbw.close();
+			for(Movie traktItem : traktItems)
+			{
+				traktItem.rating = rating;
+				dbw.insertOrUpdateMovie(traktItem);
+			}
 		}
 	}
-	
+
 	public static final class RateEpisodeTask extends RateTask<TvShowEpisode>
 	{
-		public RateEpisodeTask(Context context, TvShowEpisode traktItem, Rating rating, PostListener pListener) 
+		public RateEpisodeTask(Context context, List<TvShowEpisode> traktItems, Rating rating, PostListener pListener) 
 		{
-			super(context, traktItem, rating, pListener);
+			super(context, traktItems, rating, pListener);
 		}
 
 		@Override
-		protected TraktApiBuilder<?> createRateBuilder(TvShowEpisode traktItem) 
+		protected List<TraktApiBuilder<?>> createRateBuilder(List<TvShowEpisode> traktItems) 
 		{
-			return tm
-					.rateService()
-					.episode(Integer.valueOf(traktItem.tvdbId))
-					.episode(traktItem.number)
-					.season(traktItem.season)
-					.rating(rating);
+			List<TraktApiBuilder<?>> builderList = new ArrayList<TraktApiBuilder<?>>();
+			for(TvShowEpisode traktItem : traktItems)
+			{
+				RateService.EpisodeBuilder builder = 
+						tm
+						.rateService()
+						.episode(Integer.valueOf(traktItem.tvdbId))
+						.episode(traktItem.number)
+						.season(traktItem.season)
+						.rating(rating);
+				builderList.add(builder);
+			}
+			return builderList;
 		}
 
 		@Override
-		protected void insertInDb(TvShowEpisode traktItem, Rating rating) 
+		protected void insertInDb(List<TvShowEpisode> traktItems, Rating rating, DatabaseWrapper dbw) 
 		{
-			traktItem.rating = rating;
-			
-			DatabaseWrapper dbw = new DatabaseWrapper(context);
-			dbw.insertOrUpdateEpisode(traktItem);
-			dbw.close();
+			for(TvShowEpisode traktItem : traktItems)
+			{
+				traktItem.rating = rating;
+				dbw.insertOrUpdateEpisode(traktItem);
+			}
 		}
 	}
 

@@ -12,18 +12,20 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBShowsTask;
 import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
+public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow> implements TraktListener<TvShow>
 {
 	public static PI_LibraryShowFragment newInstance(Bundle args)
 	{
@@ -33,6 +35,20 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 	}
 
 	public PI_LibraryShowFragment() {}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
+		TraktTask.addObserver(this);
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		TraktTask.removeObserver(this);
+		super.onDestroy();
+	}
 
 	@Override
 	public void checkUpdateTask() 
@@ -75,13 +91,13 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 	public void onRefreshClick() 
 	{
 		new TraktItemsTask<TvShow>(getActivity(), new TraktItemsListener<TvShow>() 
-		{
+				{
 			@Override
 			public void onTraktItems(List<TvShow> shows) 
 			{
 				createShowsDialog(shows);
 			}
-		}, tm.userService().libraryShowsAll(TraktManager.getUsername()), true).fire();
+				}, tm.userService().libraryShowsAll(TraktManager.getUsername()), true).fire();
 	}
 
 	public void createShowsDialog(final List<TvShow> shows)
@@ -146,10 +162,18 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 
 	@Override
 	public void onSaveState(Bundle toSave) {}
-	
-//	@Override
-//	public void onTrakItemUpdated(TvShow traktItem) 
-//	{
-//		Log.e("coucou","coucou tvshow");
-//	}
+
+	@Override
+	public void onTraktItemsUpdated(List<TvShow> traktItems) 
+	{
+		if(adapter != null)
+			adapter.updateItems(traktItems);
+	}
+
+	@Override
+	public void onTraktItemsRemoved(List<TvShow> traktItem) 
+	{
+		if(adapter != null)
+			adapter.remove(traktItem);
+	}
 }

@@ -49,6 +49,8 @@ import com.florianmski.tracktoid.ui.activities.phone.TraktItemsActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.tracktoid.widgets.CheckableListView;
+import com.florianmski.tracktoid.widgets.RateDialog;
+import com.florianmski.tracktoid.widgets.RateDialog.OnColorChangedListener;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
@@ -334,44 +336,6 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
 		super.onCreateOptionsMenu(menu, inflater);
-
-		Drawable d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
-
-		SubMenu rateMenu = menu.addSubMenu("Rate");
-		d.setColorFilter(Color.parseColor("#691909"), PorterDuff.Mode.MULTIPLY);
-		rateMenu.add(0, R.id.action_bar_rate_love, 0, "Totally ninja!")
-		.setIcon(d)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
-		d.setColorFilter(Color.parseColor("#333333"), PorterDuff.Mode.MULTIPLY);
-		rateMenu.add(0, R.id.action_bar_rate_hate, 0, "Week sauce :(")
-		.setIcon(d)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
-		rateMenu.add(0, R.id.action_bar_rate_unrate, 0, "Unrate")
-		.setIcon(d)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-		if(show != null && show.rating != null)
-		{
-			d = getResources().getDrawable(R.drawable.ab_icon_rate).mutate();
-			switch(show.rating)
-			{
-			//TODO go to res/color
-			case Love :
-				d.setColorFilter(Color.parseColor("#691909"), PorterDuff.Mode.MULTIPLY);
-				break;
-			case Hate :
-				d.setColorFilter(Color.parseColor("#333333"), PorterDuff.Mode.MULTIPLY);
-				break;
-			default :
-				break;
-			}
-		}
-
-		MenuItem rateItem = rateMenu.getItem();
-		rateItem.setIcon(d);
-		rateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		
 		menu.add(0, R.id.action_bar_multiple_selection, 0, "Multiple selection")
 		.setIcon(R.drawable.ab_icon_mark)
@@ -383,18 +347,6 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 	{
 		switch(item.getItemId())
 		{
-		case R.id.action_bar_watched :
-			lvSeasons.start();
-			return true;
-		case R.id.action_bar_rate_love :
-			RateTask.createTask(getActivity(), show, Rating.Love, null).fire();
-			return true;
-		case R.id.action_bar_rate_hate :
-			RateTask.createTask(getActivity(), show, Rating.Hate, null).fire();
-			return true;
-		case R.id.action_bar_rate_unrate :
-			RateTask.createTask(getActivity(), show, Rating.Unrate, null).fire();
-			return true;
 		case R.id.action_bar_multiple_selection:
 			lvSeasons.start();
 			return true;

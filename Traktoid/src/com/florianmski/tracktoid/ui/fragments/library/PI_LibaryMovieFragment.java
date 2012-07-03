@@ -12,18 +12,20 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBMoviesTask;
 import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateMoviesTask;
 import com.florianmski.tracktoid.ui.activities.phone.MovieActivity;
 import com.jakewharton.trakt.entities.Movie;
 
-public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
+public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie> implements TraktListener<Movie>
 {
 	public static PI_LibaryMovieFragment newInstance(Bundle args)
 	{
@@ -33,6 +35,20 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 	}
 	
 	public PI_LibaryMovieFragment() {}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
+		TraktTask.addObserver(this);
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		TraktTask.removeObserver(this);
+		super.onDestroy();
+	}
 
 	@Override
 	public void checkUpdateTask() 
@@ -140,5 +156,19 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 		//avoid trying to show dialog if activity no longer exist
 		if(!getActivity().isFinishing())
 			alert.show();
+	}
+
+	@Override
+	public void onTraktItemsUpdated(List<Movie> traktItems) 
+	{
+		if(adapter != null)
+			adapter.updateItems(traktItems);
+	}
+
+	@Override
+	public void onTraktItemsRemoved(List<Movie> traktItem) 
+	{
+		if(adapter != null)
+			adapter.remove(traktItem);
 	}
 }

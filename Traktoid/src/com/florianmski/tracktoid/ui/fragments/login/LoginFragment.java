@@ -1,38 +1,44 @@
 package com.florianmski.tracktoid.ui.fragments.login;
 
-import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
-import com.florianmski.tracktoid.ui.activities.phone.HomeActivity;
+import com.florianmski.tracktoid.ui.activities.phone.StartActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
+import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Response;
 
-public class JoinFragment extends TraktFragment
-{
-	//TODO when click on "ok" on the keyboard, send request
-	//TODO this is the same code as signinfragment, make only one fragment for both ?
-	
+public class LoginFragment extends TraktFragment
+{	
 	private EditText edtUsername;
 	private EditText edtEmail;
 	private EditText edtPassword;
 	private Button btnGo;
+	
+	private boolean join;
 
-	public static JoinFragment newInstance(Bundle args)
+	public static LoginFragment newInstance(Bundle args)
 	{
-		JoinFragment f = new JoinFragment();
+		LoginFragment f = new LoginFragment();
 		f.setArguments(args);
 		return f;
 	}
@@ -42,6 +48,8 @@ public class JoinFragment extends TraktFragment
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		
+		join = getArguments().getBoolean(TraktoidConstants.BUNDLE_JOIN);
 	}
 
 	@Override
@@ -49,6 +57,22 @@ public class JoinFragment extends TraktFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 
+		edtPassword.setOnEditorActionListener(new OnEditorActionListener() 
+		{
+			@Override
+		    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) 
+			{
+		        if (actionId == EditorInfo.IME_ACTION_DONE) 
+		        {
+		        	InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+		            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+		            btnGo.performClick();
+		            return true;	
+		        }
+		        return false;
+		    }
+		});
+		
 		btnGo.setOnClickListener(new OnClickListener() 
 		{
 			@Override
@@ -59,11 +83,11 @@ public class JoinFragment extends TraktFragment
 				final String password = Utils.SHA1(edtPassword.getText().toString().trim());
 
 				if(username.equals(""))
-					edtUsername.setError("Is your username a ninja?");
-				else if(email.equals(""))
-					edtEmail.setError("Is your email a ninja?");
+					edtUsername.setError("really?");
+				else if(join && email.equals(""))
+					edtEmail.setError("really?");
 				else if(password.equals(""))
-					edtPassword.setError("Is your password a ninja?");
+					edtPassword.setError("really?");
 				else if(username.length() < 3 || username.length() > 20)
 					edtUsername.setError("Choose a username between 3 and 20 characters");
 				else if(password.length() < 4)
@@ -72,7 +96,9 @@ public class JoinFragment extends TraktFragment
 				{
 					tm.setAuthentication(username, password);
 
-					new PostTask(getActivity(), tm.accountService().create(username, password, email), new PostListener() 
+					TraktApiBuilder<?> builder = join ? tm.accountService().create(username, password, email) : tm.accountService().test();
+					
+					new PostTask(getActivity(), builder, new PostListener() 
 					{	
 						@Override
 						public void onComplete(Response r, boolean success) 
@@ -81,13 +107,13 @@ public class JoinFragment extends TraktFragment
 							{
 								SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 								prefs.edit()
-								.putString("editTextUsername", username)
-								.putString("editTextPassword", password)
-								.putBoolean("sha1", true)
+								.putString(TraktoidConstants.PREF_USERNAME, username)
+								.putString(TraktoidConstants.PREF_PASSWORD, password)
+								.putBoolean(TraktoidConstants.PREF_SHA1, true)
 								.commit();
 								
 								Toast.makeText(getActivity(), "Welcome home " + username + "!", Toast.LENGTH_LONG).show();
-								startActivity(new Intent(getActivity(), HomeActivity.class));
+								getActivity().setResult(StartActivity.RESULT_LOGIN);
 								getActivity().finish();
 							}
 							else
@@ -118,6 +144,12 @@ public class JoinFragment extends TraktFragment
 		edtEmail = (EditText)v.findViewById(R.id.editTextEmail);
 		edtPassword = (EditText)v.findViewById(R.id.editTextPassword);
 		btnGo = (Button)v.findViewById(R.id.buttonGo);
+		
+		if(!join)
+		{
+			edtEmail.setVisibility(View.GONE);
+			btnGo.setText("Sign In");
+		}
 
 		return v;
 	}

@@ -3,11 +3,13 @@ package com.florianmski.tracktoid.ui.fragments.library;
 import java.util.List;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.ActionMode.Callback;
 import com.actionbarsherlock.view.Menu;
@@ -28,7 +30,7 @@ import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.tracktoid.widgets.CheckableGridView;
 import com.florianmski.traktoid.TraktoidInterface;
 
-public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends TraktFragment implements TraktListener<T>
+public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends TraktFragment
 {
 	protected final static int NB_COLUMNS_TABLET_PORTRAIT = 5;
 	protected final static int NB_COLUMNS_TABLET_LANDSCAPE = 7;
@@ -155,13 +157,13 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 			}
 		});
 
-		TraktTask.addObserver(this);
+//		TraktTask.addObserver(this);
 	}
 
 	@Override
 	public void onDestroy()
 	{
-		TraktTask.removeObserver(this);
+//		TraktTask.removeObserver(this);
 		lcm.removeListener(gd);
 		super.onDestroy();
 	}
@@ -283,17 +285,18 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 	@Override
 	public void onSaveState(Bundle toSave) {}
 
-	@Override
-	public void onTraktItemsUpdated(List<T> traktItems) 
-	{
-		if(adapter != null)
-			adapter.updateItems(traktItems);
-	}
-
-	@Override
-	public void onTraktItemsRemoved(List<T> traktItem) 
-	{
-		if(adapter != null)
-			adapter.remove(traktItem);
-	}
+//	@Override
+//	public void onTraktItemsUpdated(List<T> traktItems) 
+//	{
+//		Log.e("coucou","coucou");
+//		if(adapter != null)
+//			adapter.updateItems(traktItems);
+//	}
+//
+//	@Override
+//	public void onTraktItemsRemoved(List<T> traktItem) 
+//	{
+//		if(adapter != null)
+//			adapter.remove(traktItem);
+//	}
 }

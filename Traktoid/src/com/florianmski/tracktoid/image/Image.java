@@ -60,7 +60,6 @@ public class Image
 			switch(type)
 			{
 			case BANNER :
-				//TODO
 				this.url = getTraktImage(images.screen);
 				break;
 			case FANART :
@@ -69,14 +68,12 @@ public class Image
 			case POSTER :
 				this.url = getTraktImage(images.poster);
 				break;
-				//TODO
 			case SEASON :
 				this.url = getTraktImage(images.screen);
 				break;
 			case SCREEN :
 				this.url = getTraktImage(images.screen);
 				break;
-				//TODO
 			case CALENDAR :
 				this.url = images.screen;
 				break;

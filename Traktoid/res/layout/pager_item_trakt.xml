@@ -5,61 +5,143 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <com.florianmski.tracktoid.widgets.BadgesView
-        android:id="@+id/badgesLayout"
+    <com.florianmski.tracktoid.widgets.FlipView3D
+        android:id="@+id/flipView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <ImageView
-            android:id="@+id/imageViewScreen"
+        <com.florianmski.tracktoid.widgets.BadgesView
+            android:id="@+id/badgesView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/empty"/>
-
-        <RelativeLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_alignBottom="@+id/imageViewScreen"
-            android:background="@drawable/selector_list_classic"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp" >
-
-            <com.florianmski.tracktoid.widgets.ScrollingTextView
-                android:id="@+id/textViewAired"
-                style="@style/Traktoid.SecondaryText.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerInParent="true"
-                android:layout_toLeftOf="@+id/textViewPercentage"
-                android:ellipsize="marquee"
-                android:gravity="center"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="Aired" />
+            android:layout_height="wrap_content" >
 
             <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:src="@drawable/love" />
+                android:id="@+id/imageViewScreen"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/empty" />
 
-            <TextView
-                android:id="@+id/textViewPercentage"
-                style="@style/Traktoid.PrimaryText.Big.Bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_toLeftOf="@+id/imageView1"
+            <RelativeLayout
+                android:id="@+id/back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/imageViewScreen"
+                android:layout_alignTop="@+id/imageViewScreen"
+                android:background="@color/grey_transparent"
+                android:descendantFocusability="afterDescendants"
+                android:gravity="center"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/textViewCollection"
+                    style="@style/Traktoid.PrimaryText.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_list_classic"
+                    android:drawableTop="@drawable/badge_collection"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="collection" />
+
+                <TextView
+                    android:id="@+id/textViewWatchlist"
+                    style="@style/Traktoid.PrimaryText.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/textViewCollection"
+                    android:background="@drawable/selector_list_classic"
+                    android:drawableTop="@drawable/badge_watchlist"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="watchlist" />
+
+                <TextView
+                    android:id="@+id/textViewRate"
+                    style="@style/Traktoid.PrimaryText.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/textViewSeen"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/textViewWatchlist"
+                    android:background="@drawable/selector_list_classic"
+                    android:drawableTop="@drawable/badge_loved"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="rate" />
+
+                <TextView
+                    android:id="@+id/textViewCheckin"
+                    style="@style/Traktoid.PrimaryText.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/textViewCollection"
+                    android:background="@drawable/selector_list_classic"
+                    android:drawableTop="@drawable/badge_watched"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="seen" />
+
+                <TextView
+                    android:id="@+id/textViewSeen"
+                    style="@style/Traktoid.PrimaryText.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/textViewCheckin"
+                    android:layout_alignBottom="@+id/textViewCheckin"
+                    android:layout_toRightOf="@+id/textViewCollection"
+                    android:background="@drawable/selector_list_classic"
+                    android:drawableTop="@drawable/badge_watched"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="checkin" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutItem"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_alignBottom="@+id/imageViewScreen"
+                android:background="@color/grey_transparent"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="91%" />
-        </RelativeLayout>
-    </com.florianmski.tracktoid.widgets.BadgesView>
+                android:paddingRight="5dp" >
+
+                <com.florianmski.tracktoid.widgets.ScrollingTextView
+                    android:id="@+id/textViewAired"
+                    style="@style/Traktoid.SecondaryText.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:layout_toLeftOf="@+id/textViewPercentage"
+                    android:ellipsize="marquee"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="Aired" />
+
+                <ImageView
+                    android:id="@+id/imageViewHeart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/love" />
+
+                <TextView
+                    android:id="@+id/textViewPercentage"
+                    style="@style/Traktoid.PrimaryText.Big.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_toLeftOf="@+id/imageViewHeart"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="91%" />
+            </RelativeLayout>
+        </com.florianmski.tracktoid.widgets.BadgesView>
+    </com.florianmski.tracktoid.widgets.FlipView3D>
 
     <TabHost
         android:id="@android:id/tabhost"

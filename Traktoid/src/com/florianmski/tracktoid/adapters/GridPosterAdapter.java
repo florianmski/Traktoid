@@ -89,14 +89,15 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 					filteredItems.add(item);
 			}
 			break;
-		case FILTER_LOVED :
-			filteredItems.clear();
-			for(T item : items)
-			{
-				if(item.getRating() == Rating.Love)
-					filteredItems.add(item);
-			}
-			break;
+			//TODO rethink this
+//		case FILTER_LOVED :
+//			filteredItems.clear();
+//			for(T item : items)
+//			{
+//				if(item.getRating() == Rating.Love)
+//					filteredItems.add(item);
+//			}
+//			break;
 		}
 		this.notifyDataSetChanged();
 	}

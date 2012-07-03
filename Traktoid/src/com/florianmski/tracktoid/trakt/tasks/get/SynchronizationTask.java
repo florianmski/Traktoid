@@ -41,7 +41,7 @@ public class SynchronizationTask extends GetTask<Activity>
 	private List<Movie> localUpdateMovieList = new ArrayList<Movie>();
 	//movies we'll update
 	private List<Movie> finalUpdateMovieList = new ArrayList<Movie>();
-	
+
 	//episodes we'll update (temp list)
 	private List<TvShowEpisode> localUpdateEpisodeList = new ArrayList<TvShowEpisode>();
 	//episodes we'll update
@@ -167,7 +167,7 @@ public class SynchronizationTask extends GetTask<Activity>
 				show = dbw.getShow(show.tvdbId);
 				finalUpdateShowList.add(show);
 			}
-			
+
 			for(TvShowEpisode episode : localUpdateEpisodeList)
 			{
 				episode = dbw.getEpisode(episode.url);
@@ -176,20 +176,24 @@ public class SynchronizationTask extends GetTask<Activity>
 
 		}
 
-		Update u = tm.updateService().shows().timestamp(timestamp).fire();
-		for(TvShow s : u.shows)
+		//if timestamp == 0 the json we'll incredibly huge
+		if(timestamp != 0)
 		{
-			if(dbw.showExist(s.tvdbId))
-				add(traktUpdateShowList, s);
+			Update u = tm.updateService().shows().timestamp(timestamp).fire();
+			for(TvShow s : u.shows)
+			{
+				if(dbw.showExist(s.tvdbId))
+					add(traktUpdateShowList, s);
+			}
+
+			u = tm.updateService().movies().timestamp(timestamp).fire();
+			for(Movie m : u.movies)
+			{
+				if(dbw.movieExist(m.imdbId))
+					add(traktUpdateMovieList, m);
+			}
 		}
 
-		u = tm.updateService().movies().timestamp(timestamp).fire();
-		for(Movie m : u.movies)
-		{
-			if(dbw.movieExist(m.imdbId))
-				add(traktUpdateMovieList, m);
-		}
-		
 		dbw.close();
 
 		showToast("Sync done!", Toast.LENGTH_SHORT);
@@ -249,6 +253,9 @@ public class SynchronizationTask extends GetTask<Activity>
 
 		if(!traktUpdateShowList.isEmpty())
 			new UpdateShowsTask(context, new ArrayList<TvShow>(traktUpdateShowList)).fire();
+		
+		if(!traktUpdateMovieList.isEmpty())
+			new UpdateMoviesTask(context, new ArrayList<Movie>(traktUpdateMovieList)).fire();
 	}
 }
 

@@ -28,6 +28,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
 import com.florianmski.tracktoid.Utils;
 import com.jakewharton.trakt.entities.CalendarDate;
 import com.jakewharton.trakt.entities.CalendarDate.CalendarTvShowEpisode;
@@ -132,34 +134,34 @@ public class DatabaseWrapper
 	public static final String KEY_TVSHOW_IN_COLLECTION = "in_collection";
 	public static final int COLUMN_TVSHOW_IN_COLLECTION = 26;
 
-	private final static String SELECT_TVSHOW = 
-			KEY_ID + "," +
-					KEY_TVSHOW_TITLE + "," +
-					KEY_TVSHOW_YEAR + "," +
-					KEY_TVSHOW_URL + "," +
-					KEY_TVSHOW_FIRST_AIRED + "," +
-					KEY_TVSHOW_COUNTRY + "," +
-					KEY_TVSHOW_OVERVIEW + "," +
-					KEY_TVSHOW_RUNTIME + "," +
-					KEY_TVSHOW_NETWORK + "," +
-					KEY_TVSHOW_AIR_DAY + "," +
-					KEY_TVSHOW_AIR_TIME + "," +
-					KEY_TVSHOW_CERTIFICATION + "," +
-					KEY_TVSHOW_IMDB_ID + "," +
-					KEY_TVSHOW_TVDB_ID + "," +
-					KEY_TVSHOW_TVRAGE_ID + "," +
-					KEY_TVSHOW_POSTER + "," +
-					KEY_TVSHOW_FANART + "," +
-					KEY_TVSHOW_PERCENTAGE + "," +
-					KEY_TVSHOW_VOTES + "," +
-					KEY_TVSHOW_LOVED + "," +
-					KEY_TVSHOW_HATED + "," +
-					KEY_TVSHOW_RATING + "," +
-					KEY_TVSHOW_IN_WATCHLIST + "," +
-					KEY_TVSHOW_EPISODES_WATCHED + "," +
-					KEY_TVSHOW_EPISODES + "," +
-					KEY_TVSHOW_PROGRESS + "," +
-					KEY_TVSHOW_IN_COLLECTION;
+	//	private final static String SELECT_TVSHOW = 
+	//			KEY_ID + "," +
+	//					KEY_TVSHOW_TITLE + "," +
+	//					KEY_TVSHOW_YEAR + "," +
+	//					KEY_TVSHOW_URL + "," +
+	//					KEY_TVSHOW_FIRST_AIRED + "," +
+	//					KEY_TVSHOW_COUNTRY + "," +
+	//					KEY_TVSHOW_OVERVIEW + "," +
+	//					KEY_TVSHOW_RUNTIME + "," +
+	//					KEY_TVSHOW_NETWORK + "," +
+	//					KEY_TVSHOW_AIR_DAY + "," +
+	//					KEY_TVSHOW_AIR_TIME + "," +
+	//					KEY_TVSHOW_CERTIFICATION + "," +
+	//					KEY_TVSHOW_IMDB_ID + "," +
+	//					KEY_TVSHOW_TVDB_ID + "," +
+	//					KEY_TVSHOW_TVRAGE_ID + "," +
+	//					KEY_TVSHOW_POSTER + "," +
+	//					KEY_TVSHOW_FANART + "," +
+	//					KEY_TVSHOW_PERCENTAGE + "," +
+	//					KEY_TVSHOW_VOTES + "," +
+	//					KEY_TVSHOW_LOVED + "," +
+	//					KEY_TVSHOW_HATED + "," +
+	//					KEY_TVSHOW_RATING + "," +
+	//					KEY_TVSHOW_IN_WATCHLIST + "," +
+	//					KEY_TVSHOW_EPISODES_WATCHED + "," +
+	//					KEY_TVSHOW_EPISODES + "," +
+	//					KEY_TVSHOW_PROGRESS + "," +
+	//					KEY_TVSHOW_IN_COLLECTION;
 
 	private static final String TVSHOWS_TABLE_CREATE = "create table " +
 			TVSHOWS_TABLE + " (" + 
@@ -214,14 +216,14 @@ public class DatabaseWrapper
 	public static final String KEY_SEASON_IN_COLLECTION = "in_collection";
 	public static final int COLUMN_SEASON_IN_COLLECTION = 6;
 
-	private final static String SELECT_SEASON =
-			KEY_ID + "," +
-					KEY_SEASON_SEASON + "," +
-					KEY_SEASON_EPISODES + "," +
-					KEY_SEASON_EPISODES_WATCHED + "," +
-					KEY_SEASON_URL + "," +
-					KEY_SEASON_TVSHOW_ID + "," +
-					KEY_SEASON_IN_COLLECTION;
+	//	private final static String SELECT_SEASON =
+	//			KEY_ID + "," +
+	//					KEY_SEASON_SEASON + "," +
+	//					KEY_SEASON_EPISODES + "," +
+	//					KEY_SEASON_EPISODES_WATCHED + "," +
+	//					KEY_SEASON_URL + "," +
+	//					KEY_SEASON_TVSHOW_ID + "," +
+	//					KEY_SEASON_IN_COLLECTION;
 
 	private static final String SEASONS_TABLE_CREATE = "create table " +
 			SEASONS_TABLE + " (" + 
@@ -237,7 +239,6 @@ public class DatabaseWrapper
 
 	/************************** Episodes table *******************************/
 	private static final String EPISODES_TABLE = "episodes";
-	//TODO rating
 
 	public static final String KEY_EPISODE_SEASON = "season";
 	public static final int COLUMN_EPISODE_SEASON = 1;
@@ -284,6 +285,9 @@ public class DatabaseWrapper
 	public static final String KEY_EPISODE_IN_COLLECTION = "in_collection";
 	public static final int COLUMN_EPISODE_IN_COLLECTION = 15;
 
+	public static final String KEY_EPISODE_RATING = "rating";
+	public static final int COLUMN_EPISODE_RATING = 16;
+
 
 	private final static String SELECT_EPISODE = 
 			EPISODES_TABLE+"."+KEY_ID + "," +
@@ -301,7 +305,8 @@ public class DatabaseWrapper
 					KEY_EPISODE_WATCHED + "," +
 					KEY_EPISODE_SEASON_ID + "," +
 					KEY_EPISODE_IN_WATCHLIST + "," +
-					EPISODES_TABLE+"."+KEY_EPISODE_IN_COLLECTION;
+					EPISODES_TABLE+"."+KEY_EPISODE_IN_COLLECTION + "," +
+					KEY_EPISODE_RATING;
 
 	private static final String EPISODES_TABLE_CREATE = "create table " +
 			EPISODES_TABLE + " (" + 
@@ -320,40 +325,12 @@ public class DatabaseWrapper
 			KEY_EPISODE_WATCHED + " boolean default 0, " +
 			KEY_EPISODE_SEASON_ID + "  REFERENCES " + SEASONS_TABLE + " (" + KEY_SEASON_URL + "), " +	
 			KEY_EPISODE_IN_WATCHLIST + " boolean default 0, " + 
-			KEY_EPISODE_IN_COLLECTION + " boolean default 0 " + // No comma in the end!
+			KEY_EPISODE_IN_COLLECTION + " boolean default 0, " + 
+			KEY_EPISODE_RATING + " text " + // No comma in the end!
 			");";
 
 	/************************** Movie table *******************************/
 	private static final String MOVIES_TABLE = "movies";
-
-	//TODO
-	/*
-	   "genres":["Action","Comedy"],
-	   "people":{
-	      "directors":[
-	         {
-	            "name":"David Fincher"
-	         }
-	      ],
-	      "writers":[
-	         {
-	            "name":"Aaron Sorkin",
-	            "job":"Screenplay"
-	         }
-	      ],
-	      "producers":[
-	         {
-	            "name":"Scott Rudin",
-	            "executive":false
-	         }
-	      ],
-	      "actors":[
-	         {
-	            "name":"Jesse Eisenberg",
-	            "character":"Mark Zuckerberg"
-	         }
-	      ]
-	   },*/
 
 	public static final String KEY_MOVIE_TITLE = "title";
 	public static final int COLUMN_MOVIE_TITLE = 1;
@@ -415,28 +392,28 @@ public class DatabaseWrapper
 	public static final String KEY_MOVIE_IN_COLLECTION = "in_collection";
 	public static final int COLUMN_MOVIE_IN_COLLECTION = 20;
 
-	private final static String SELECT_MOVIE = 
-			KEY_ID + "," +
-					KEY_MOVIE_TITLE + "," +
-					KEY_MOVIE_YEAR + "," +
-					KEY_MOVIE_RELEASED + "," +
-					KEY_MOVIE_URL + "," +
-					KEY_MOVIE_TRAILER + "," +
-					KEY_MOVIE_RUNTIME + "," +
-					KEY_MOVIE_TAGLINE + "," +
-					KEY_MOVIE_OVERVIEW + "," +
-					KEY_MOVIE_CERTIFICATION + "," +
-					KEY_MOVIE_IMDB_ID + "," +
-					KEY_MOVIE_TMDB_ID + "," +
-					KEY_MOVIE_RT_ID + "," +
-					KEY_MOVIE_LAST_UPDATED + "," +
-					KEY_MOVIE_POSTER + "," +
-					KEY_MOVIE_FANART + "," +
-					KEY_MOVIE_PERCENTAGE + "," +
-					KEY_MOVIE_WATCHED + "," +
-					KEY_MOVIE_RATING + "," +
-					KEY_MOVIE_IN_WATCHLIST + "," +
-					KEY_MOVIE_IN_COLLECTION + ",";
+	//	private final static String SELECT_MOVIE = 
+	//			KEY_ID + "," +
+	//					KEY_MOVIE_TITLE + "," +
+	//					KEY_MOVIE_YEAR + "," +
+	//					KEY_MOVIE_RELEASED + "," +
+	//					KEY_MOVIE_URL + "," +
+	//					KEY_MOVIE_TRAILER + "," +
+	//					KEY_MOVIE_RUNTIME + "," +
+	//					KEY_MOVIE_TAGLINE + "," +
+	//					KEY_MOVIE_OVERVIEW + "," +
+	//					KEY_MOVIE_CERTIFICATION + "," +
+	//					KEY_MOVIE_IMDB_ID + "," +
+	//					KEY_MOVIE_TMDB_ID + "," +
+	//					KEY_MOVIE_RT_ID + "," +
+	//					KEY_MOVIE_LAST_UPDATED + "," +
+	//					KEY_MOVIE_POSTER + "," +
+	//					KEY_MOVIE_FANART + "," +
+	//					KEY_MOVIE_PERCENTAGE + "," +
+	//					KEY_MOVIE_WATCHED + "," +
+	//					KEY_MOVIE_RATING + "," +
+	//					KEY_MOVIE_IN_WATCHLIST + "," +
+	//					KEY_MOVIE_IN_COLLECTION;
 
 	private static final String MOVIES_TABLE_CREATE = "create table " +
 			MOVIES_TABLE + " (" + 
@@ -462,6 +439,71 @@ public class DatabaseWrapper
 			KEY_MOVIE_IN_WATCHLIST + " boolean default 0, " +
 			KEY_MOVIE_IN_COLLECTION + " boolean default 0 " + // No comma in the end!
 			");";
+
+	/************************** Genre table *******************************/
+	private static final String GENRES_TABLE = "genres";
+
+	public static final String KEY_GENRE_URL = "url";
+	public static final int COLUMN_GENRE_URL = 0;
+
+	public static final String KEY_GENRE_NAME = "name";
+	public static final int COLUMN_GENRE_NAME = 1;
+
+	private static final String GENRES_TABLE_CREATE = "create table " +
+			GENRES_TABLE + " (" + 
+			KEY_GENRE_URL + " text, " +
+			KEY_GENRE_NAME + " text, " +
+			"PRIMARY KEY (" + KEY_GENRE_URL + "," + KEY_GENRE_NAME + ")" + // No comma in the end!
+			");";
+
+//	/************************** People table *******************************/
+//	private static final String PEOPLES_TABLE = "genres";
+//
+//	public static final String KEY_PEOPLE_URL = "url";
+//	public static final int COLUMN_PEOPLE_URL = 1;
+//
+//	public static final String KEY_PEOPLE_JOB = "job";
+//	public static final int COLUMN_PEOPLE_JOB = 2;
+//
+//	public static final String KEY_PEOPLE_NAME = "name";
+//	public static final int COLUMN_PEOPLE_NAME = 3;
+//
+//	private static final String PEOPLES_TABLE_CREATE = "create table " +
+//			PEOPLES_TABLE + " (" + 
+//			KEY_ID + " integer primary key, " + 
+//			KEY_PEOPLE_URL + " text, " +
+//			KEY_PEOPLE_JOB + " text, " +
+//			KEY_PEOPLE_NAME + " text " + // No comma in the end!
+//			");";
+
+	//TODO
+	/*
+		   "genres":["Action","Comedy"],
+		   "people":{
+		      "directors":[
+		         {
+		            "name":"David Fincher"
+		         }
+		      ],
+		      "writers":[
+		         {
+		            "name":"Aaron Sorkin",
+		            "job":"Screenplay"
+		         }
+		      ],
+		      "producers":[
+		         {
+		            "name":"Scott Rudin",
+		            "executive":false
+		         }
+		      ],
+		      "actors":[
+		         {
+		            "name":"Jesse Eisenberg",
+		            "character":"Mark Zuckerberg"
+		         }
+		      ]
+		   },*/
 
 	/******************************* Triggers ***********************************/
 
@@ -564,6 +606,7 @@ public class DatabaseWrapper
 			db.execSQL(EPISODES_TABLE_CREATE);
 
 			db.execSQL(MOVIES_TABLE_CREATE);
+			db.execSQL(GENRES_TABLE_CREATE);
 
 			db.execSQL(EPISODES_WATCHED_INSERT_TRIGGER_CREATE);
 			db.execSQL(EPISODES_WATCHED_UPDATE_1_TRIGGER_CREATE);
@@ -577,23 +620,11 @@ public class DatabaseWrapper
 		@Override
 		public void onUpgrade(final SQLiteDatabase db, int oldVersion, final int newVersion) 
 		{
-			final ProgressDialog pd;
-			//			pd = ProgressDialog.show(context, "", "Upgrading database from v" + oldVersion + " to v" + newVersion + "\nPlease wait...");
-			//
-			//			new Thread()
-			//			{
-			//				@Override
-			//				public void run()
-			//				{
 			if(newVersion <= 2)
 				upgradeFromV1ToV2(db);
 
 			if(newVersion <= 3)
 				upgradeFromV2ToV3(db);
-			//
-			//					pd.dismiss();
-			//				}
-			//			}.start();
 		}
 
 		private void upgradeFromV1ToV2(SQLiteDatabase db)
@@ -647,6 +678,7 @@ public class DatabaseWrapper
 		private void upgradeFromV2ToV3(SQLiteDatabase db)
 		{
 			db.execSQL(MOVIES_TABLE_CREATE);
+			db.execSQL(GENRES_TABLE_CREATE);
 
 			//adding new columns
 			db.execSQL(
@@ -712,7 +744,7 @@ public class DatabaseWrapper
 	 */
 	private void insertOrUpdate(String table, ContentValues values, String id) 
 	{
-		String key_id = "";
+		String key_id = null;
 
 		if(table.equals(TVSHOWS_TABLE))
 			key_id = KEY_TVSHOW_TVDB_ID;
@@ -723,36 +755,39 @@ public class DatabaseWrapper
 		else if(table.equals(MOVIES_TABLE))
 			key_id = KEY_MOVIE_URL;
 
+		int nbRowsAffected = 0;
+
 		// Try to update the entry!
-		int nbRowsAffected = db.update(
-				table,
-				values,
-				key_id + "=?",
-				new String[]{id});
+		if(id != null)
+			nbRowsAffected = db.update(
+					table,
+					values,
+					key_id + "=?",
+					new String[]{id});
 
 		// If nothing has been updated, insert a new entry
 		if(nbRowsAffected == 0)
 			db.insert(table, null, values);
 	}
-	
+
 	public void putNotNull(ContentValues cv, String key, Integer value)
 	{
 		if(value != null)
 			cv.put(key, value);
 	}
-	
+
 	public void putNotNull(ContentValues cv, String key, Boolean value)
 	{
 		if(value != null)
 			cv.put(key, value);
 	}
-	
+
 	public void putNotNull(ContentValues cv, String key, String value)
 	{
 		if(value != null)
 			cv.put(key, value);
 	}
-	
+
 	public void putNotNull(ContentValues cv, String key, Long value)
 	{
 		if(value != null)
@@ -812,6 +847,8 @@ public class DatabaseWrapper
 		//		putNotNull(values, KEY_TVSHOW_PROGRESS, s.getProgress());
 
 		insertOrUpdate(TVSHOWS_TABLE, values, s.tvdbId);
+		
+		insertOrUpdateGenres(s.genres, s.url);
 	}
 
 	/**
@@ -877,6 +914,8 @@ public class DatabaseWrapper
 		show.year = c.getInt(COLUMN_TVSHOW_YEAR);
 
 		show.progress = c.getInt(COLUMN_TVSHOW_PROGRESS);
+		
+		show.genres = getGenres(show.url);
 
 		return show;
 	}
@@ -918,12 +957,13 @@ public class DatabaseWrapper
 			show = getShowFromCursor(c);
 
 		c.close();
-
+		
 		return show;
 	}
 
 	public void removeShow(String tvdbId)
 	{
+		//TODO redo this
 		boolean showFound = db.delete(
 				TVSHOWS_TABLE,
 				KEY_TVSHOW_TVDB_ID + "=?",
@@ -947,8 +987,10 @@ public class DatabaseWrapper
 									KEY_EPISODE_URL + "=?",
 									new String[]{episode.url});
 						}
-
 					}
+					
+					//TODO
+//					removeGenres(url);
 				}
 	}
 
@@ -1123,19 +1165,33 @@ public class DatabaseWrapper
 		String url = e.url;
 
 		putNotNull(values, KEY_EPISODE_EPISODE, e.number);
-		putNotNull(values, KEY_EPISODE_FIRST_AIRED, e.firstAired.getTime());
-		putNotNull(values, KEY_EPISODE_HATED, e.ratings.hated);
-		putNotNull(values, KEY_EPISODE_LOVED, e.ratings.loved);
+
+		if(e.firstAired != null)
+			putNotNull(values, KEY_EPISODE_FIRST_AIRED, e.firstAired.getTime());
+
+		if(e.ratings != null)
+		{
+			putNotNull(values, KEY_EPISODE_HATED, e.ratings.hated);
+			putNotNull(values, KEY_EPISODE_LOVED, e.ratings.loved);
+			putNotNull(values, KEY_EPISODE_VOTES, e.ratings.votes);
+			putNotNull(values, KEY_EPISODE_PERCENTAGE, e.ratings.percentage);
+		}
+
 		putNotNull(values, KEY_EPISODE_OVERVIEW, e.overview);
-		putNotNull(values, KEY_EPISODE_PERCENTAGE, e.ratings.percentage);
-		putNotNull(values, KEY_EPISODE_SCREEN, e.images.screen);
+
+		if(e.images != null)
+			putNotNull(values, KEY_EPISODE_SCREEN, e.images.screen);
+
 		putNotNull(values, KEY_EPISODE_SEASON, e.season);
 		putNotNull(values, KEY_EPISODE_TITLE, e.title);
 		putNotNull(values, KEY_EPISODE_URL, url);
-		putNotNull(values, KEY_EPISODE_VOTES, e.ratings.votes);
 		putNotNull(values, KEY_EPISODE_WATCHED, e.watched);
 		putNotNull(values, KEY_EPISODE_IN_WATCHLIST, e.inWatchlist);
 		putNotNull(values, KEY_EPISODE_IN_COLLECTION, e.inCollection);
+
+		if(e.rating != null)
+			putNotNull(values, KEY_TVSHOW_RATING, e.rating.toString());
+
 		putNotNull(values, KEY_EPISODE_SEASON_ID, seasonId);
 		insertOrUpdate(EPISODES_TABLE, values, url);
 	}
@@ -1193,6 +1249,7 @@ public class DatabaseWrapper
 		e.watched = c.getInt(COLUMN_EPISODE_WATCHED) != 0;
 		e.inWatchlist = c.getInt(COLUMN_EPISODE_IN_WATCHLIST) != 0;
 		e.inCollection = c.getInt(COLUMN_EPISODE_IN_COLLECTION) != 0;
+		e.rating = c.getString(COLUMN_EPISODE_RATING) == null ? null : Rating.fromValue(c.getString(COLUMN_EPISODE_RATING));
 
 		e.tvdbId = tvdbId;
 
@@ -1235,7 +1292,7 @@ public class DatabaseWrapper
 
 		return null;
 	}
-	
+
 	public String getTvdbIdWithEpisodeId(String episodeId)
 	{
 		String sql = 
@@ -1467,16 +1524,16 @@ public class DatabaseWrapper
 		putNotNull(values, KEY_MOVIE_RUNTIME, m.runtime);
 		putNotNull(values, KEY_MOVIE_TITLE, m.title);
 		putNotNull(values, KEY_MOVIE_URL, m.url);
-		
+
 		if(m.year != null)
 			putNotNull(values, KEY_MOVIE_YEAR, Integer.valueOf(m.year));
-		
+
 		putNotNull(values, KEY_MOVIE_IN_COLLECTION, m.inCollection);
 		putNotNull(values, KEY_MOVIE_IN_WATCHLIST, m.inWatchlist);
-		
+
 		if(m.released != null)
 			putNotNull(values, KEY_MOVIE_RELEASED, m.released.getTime());
-		
+
 		putNotNull(values, KEY_MOVIE_TAGLINE, m.tagline);
 		putNotNull(values, KEY_MOVIE_TMDB_ID, m.tmdbId);
 		putNotNull(values, KEY_MOVIE_TRAILER, m.trailer);
@@ -1487,6 +1544,8 @@ public class DatabaseWrapper
 		//putNotNull(values, KEY_MOVIE_RT_ID, m.);
 
 		insertOrUpdate(MOVIES_TABLE, values, m.url);
+		
+		insertOrUpdateGenres(m.genres, m.url);
 	}
 
 	/**
@@ -1513,7 +1572,6 @@ public class DatabaseWrapper
 		movie.imdbId = c.getString(COLUMN_MOVIE_IMDB_ID);
 		movie.inCollection = c.getInt(COLUMN_MOVIE_IN_COLLECTION) != 0;
 		movie.inWatchlist = c.getInt(COLUMN_MOVIE_IN_WATCHLIST) != 0;
-		//		movie. = c.getString(COLUMN_MOVIE_);
 		movie.overview = c.getString(COLUMN_MOVIE_OVERVIEW);
 		movie.runtime = c.getInt(COLUMN_MOVIE_RUNTIME);
 		movie.rating = c.getString(COLUMN_MOVIE_RATING) == null ? null : Rating.fromValue(c.getString(COLUMN_MOVIE_RATING));
@@ -1530,6 +1588,8 @@ public class DatabaseWrapper
 		movie.watched = c.getInt(COLUMN_MOVIE_WATCHED) != 0;
 		movie.year = c.getInt(COLUMN_MOVIE_YEAR);
 
+		movie.genres = getGenres(movie.url);
+		
 		return movie;
 	}
 
@@ -1569,7 +1629,7 @@ public class DatabaseWrapper
 			movie = getMovieFromCursor(c);
 
 		c.close();
-
+		
 		return movie;
 	}
 
@@ -1579,6 +1639,8 @@ public class DatabaseWrapper
 				MOVIES_TABLE,
 				KEY_MOVIE_URL + "=?",
 				new String[]{url});
+
+		removeGenres(url);
 	}
 
 	public boolean movieExist(String imbdId)
@@ -1594,5 +1656,64 @@ public class DatabaseWrapper
 		c.close();
 
 		return exist;
+	}
+
+	/************************** Genres methods *******************************/
+
+	/**
+	 *  Insert or update a genre
+	 */
+	public void insertOrUpdateGenre(String g, String url) 
+	{
+		ContentValues values = new ContentValues();
+
+		putNotNull(values, KEY_GENRE_NAME, g);
+		putNotNull(values, KEY_GENRE_URL, url);
+
+		insertOrUpdate(GENRES_TABLE, values, null);
+	}
+
+	/**
+	 *  Insert or update a list of MOVIE
+	 */
+	public void insertOrUpdateGenres(List<String> genres, String url)  
+	{
+		for(String g : genres)
+			insertOrUpdateGenre(g, url);
+	}
+
+	private String getGenreFromCursor(Cursor c)
+	{
+		return c.getString(COLUMN_GENRE_NAME);
+	}
+
+	public List<String> getGenres(String url)
+	{
+		List<String> genres = new ArrayList<String>();
+		Cursor c = db.rawQuery(
+				"SELECT * " + 
+						"FROM " + GENRES_TABLE + " " +
+						"WHERE " + KEY_GENRE_URL + "=?" +
+						"ORDER BY " + KEY_GENRE_NAME, 
+						new String[]{url});
+		c.moveToFirst();
+		for(int i = 0; i < c.getCount(); i++)
+		{
+			genres.add(getGenreFromCursor(c));
+			Log.e("test test", "genre : " + genres.get(i));
+			c.moveToNext();
+		}
+
+		c.close();
+
+		return genres;
+	}
+
+	public void removeGenres(String url)
+	{
+		db.delete(
+				GENRES_TABLE,
+				KEY_GENRE_URL + "=?",
+				new String[]{url});
 	}
 }

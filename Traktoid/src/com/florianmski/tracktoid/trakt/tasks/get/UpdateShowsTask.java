@@ -124,6 +124,7 @@ public class UpdateShowsTask extends GetTask<TvShow>
 	{
 		super.onProgressPublished(progress, tmpResult, values);
 
+		//TODO arrayIndexOutOfBoundException here length=0
 		if(values[0].equals("update") && lastProceedShow != null)
 			TraktTask.traktItemUpdated(lastProceedShow);
 	}

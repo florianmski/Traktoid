@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -28,13 +29,19 @@ import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.post.CheckinPostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InCollectionTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InWatchlistTask;
+import com.florianmski.tracktoid.trakt.tasks.post.RateTask;
 import com.florianmski.tracktoid.trakt.tasks.post.SeenTask;
 import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
 import com.florianmski.tracktoid.ui.fragments.PagerTabsViewFragment;
 import com.florianmski.tracktoid.widgets.BadgesView;
+import com.florianmski.tracktoid.widgets.FlipView3D;
+import com.florianmski.tracktoid.widgets.FlipView3D.SwapListener;
+import com.florianmski.tracktoid.widgets.RateDialog;
+import com.florianmski.tracktoid.widgets.RateDialog.OnColorChangedListener;
 import com.florianmski.tracktoid.widgets.ScrollingTextView;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.TvShow;
+import com.jakewharton.trakt.enumerations.Rating;
 
 public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> extends PagerTabsViewFragment implements TraktListener<T>
 {
@@ -42,8 +49,16 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 
 	private ScrollingTextView tvAired;
 	private TextView tvPercentage;
+	private TextView tvWatchlist;
+	private TextView tvCollection;
+	private TextView tvSeen;
+	private TextView tvCheckin;
+	private TextView tvRate;
 	private ImageView ivScreen;
 	private BadgesView<T> bl;
+	private FlipView3D flipView;
+	private RelativeLayout rlBack;
+	private RelativeLayout rlItem;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -55,7 +70,7 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		if(getArguments() != null)
 			item = (T) getArguments().getSerializable(TraktoidConstants.BUNDLE_TRAKT_ITEM);
 
-		getActivity().invalidateOptionsMenu();
+		getSherlockActivity().invalidateOptionsMenu();
 
 		TraktTask.addObserver(this);
 	}
@@ -73,7 +88,86 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		super.onActivityCreated(savedInstanceState);
 
 		mTabsAdapter.addTab(mTabHost.newTabSpec("summary").setIndicator("Summary"), R.layout.pager_item_details_summary, null);
+		mTabsAdapter.addTab(mTabHost.newTabSpec("genres").setIndicator("Genres"), android.R.layout.simple_list_item_1, null);
+		mTabsAdapter.addTab(mTabHost.newTabSpec("links").setIndicator("Links"), android.R.layout.simple_list_item_1, null);
 		//		mTabsAdapter.addTab(mTabHost.newTabSpec("shouts").setIndicator("Shouts"), R.layout.fragment_shouts, null);
+
+		flipView.setOnSwapListener(new SwapListener() 
+		{	
+			@Override
+			public void onSwap(boolean flipped) 
+			{
+				//TODO this not exist < API 11
+//				rlBack.setRotationY(180);
+				if(flipped)
+				{
+					rlBack.setVisibility(View.VISIBLE);
+					rlItem.setVisibility(View.GONE);
+					bl.setOverlaysVisibility(View.GONE);
+				}
+				else
+				{
+					rlBack.setVisibility(View.GONE);
+					rlItem.setVisibility(View.VISIBLE);
+					bl.setOverlaysVisibility(View.VISIBLE);
+				}
+			}
+		});
+		
+		flipView.setOnClickListener(new OnClickListener() 
+		{
+			@Override
+			public void onClick(View v) 
+			{
+				flipView.rotate();
+			}
+		});
+		
+		tvWatchlist.setOnClickListener(new OnClickListener() 
+		{	
+			@Override
+			public void onClick(View v) 
+			{
+				InWatchlistTask.createTask(getActivity(), item, !item.isInWatchlist(), null).fire();
+			}
+		});
+		
+		tvCollection.setOnClickListener(new OnClickListener() 
+		{	
+			@Override
+			public void onClick(View v) 
+			{
+				InCollectionTask.createTask(getActivity(), item, !item.isInCollection(), null).fire();
+			}
+		});
+		
+		tvSeen.setOnClickListener(new OnClickListener() 
+		{	
+			@Override
+			public void onClick(View v) 
+			{
+				SeenTask.createTask(getActivity(), item, !item.isWatched(), null).fire();
+			}
+		});
+		
+		tvRate.setOnClickListener(new OnClickListener() 
+		{	
+			@Override
+			public void onClick(View v) 
+			{
+				//TODO
+			}
+		});
+		
+		tvCheckin.setOnClickListener(new OnClickListener() 
+		{	
+			@Override
+			public void onClick(View v) 
+			{
+				//TODO check if this item is currently hcecked in
+				CheckinPostTask.createTask(getActivity(), item, true, null).fire();
+			}
+		});
 	}
 
 	@Override
@@ -95,8 +189,16 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 
 		tvAired = (ScrollingTextView)v.findViewById(R.id.textViewAired);
 		tvPercentage = (TextView)v.findViewById(R.id.textViewPercentage);
+		tvCheckin = (TextView)v.findViewById(R.id.textViewCheckin);
+		tvCollection = (TextView)v.findViewById(R.id.textViewCollection);
+		tvRate = (TextView)v.findViewById(R.id.textViewRate);
+		tvSeen = (TextView)v.findViewById(R.id.textViewSeen);
+		tvWatchlist = (TextView)v.findViewById(R.id.textViewWatchlist);
 		ivScreen = (ImageView)v.findViewById(R.id.imageViewScreen);
-		bl = (BadgesView<T>)v.findViewById(R.id.badgesLayout);
+		bl = (BadgesView<T>)v.findViewById(R.id.badgesView);
+		flipView = (FlipView3D)v.findViewById(R.id.flipView);
+		rlBack = (RelativeLayout)v.findViewById(R.id.back);
+		rlItem = (RelativeLayout)v.findViewById(R.id.relativeLayoutItem);
 
 		//sometimes pager.getWidth = 0, don't know why so I use this trick
 		int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
@@ -197,6 +299,10 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 			.setIcon(R.drawable.ab_icon_close)
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		}
+		
+		menu.add(0, R.id.action_bar_rate, 0, "Rate")
+		.setIcon(R.drawable.ab_icon_shouts)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 	}
 
 	@Override
@@ -223,6 +329,17 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		case R.id.action_bar_add_to_watchlist:
 		case R.id.action_bar_remove_from_watchlist:
 			InWatchlistTask.createTask(getActivity(), this.item, item.getItemId() == R.id.action_bar_add_to_watchlist, null).fire();
+			break;
+		case R.id.action_bar_rate:
+			new RateDialog(getActivity(), new OnColorChangedListener() 
+			{
+				@Override
+				public void rateChanged(Rating r) 
+				{
+					RateTask.createTask(getActivity(), PI_TraktItemFragment.this.item, r, null).fire();
+				}
+			}, this.item.getRating()).show();
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}

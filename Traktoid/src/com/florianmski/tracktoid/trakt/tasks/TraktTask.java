@@ -1,5 +1,6 @@
 package com.florianmski.tracktoid.trakt.tasks;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -183,10 +184,13 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Context, TRe
 		{
 			try
 			{
-				if(!traktItems.isEmpty())
+				//this is quite ugly, generics are new for me so it might have other cleaner solution
+				//basically I check if the current TraktListener is parameterized with the traktItems list type
+				//(avoid for instance that shows are added to movies grid when there is a synchronization)
+				if(!traktItems.isEmpty() && ((ParameterizedType) l.getClass().getGenericSuperclass()).getActualTypeArguments()[0] == traktItems.get(0).getClass())
 					l.onTraktItemsUpdated(traktItems);
 			}
-			catch(ClassCastException e) {}
+			catch(ClassCastException e) {e.printStackTrace();}
 		}
 	}
 

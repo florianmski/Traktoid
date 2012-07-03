@@ -1,11 +1,12 @@
 package com.florianmski.tracktoid.adapters.pagers;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.florianmski.tracktoid.ui.fragments.login.JoinFragment;
-import com.florianmski.tracktoid.ui.fragments.login.SignInFragment;
+import com.florianmski.tracktoid.TraktoidConstants;
+import com.florianmski.tracktoid.ui.fragments.login.LoginFragment;
 
 public class PagerLoginAdapter extends FragmentPagerAdapter
 {
@@ -25,10 +26,9 @@ public class PagerLoginAdapter extends FragmentPagerAdapter
 	@Override
 	public Fragment getItem(int position) 
 	{
-		if(position == 0)
-			return SignInFragment.newInstance(null);
-		else
-			return JoinFragment.newInstance(null);
+		Bundle b = new Bundle();
+		b.putBoolean(TraktoidConstants.BUNDLE_JOIN, position != 0);
+		return LoginFragment.newInstance(b);
 	}
 
 	@Override
