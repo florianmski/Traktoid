@@ -114,6 +114,9 @@ public class BadgesView<T extends TraktoidInterface<T>> extends RelativeLayout
 
 	public void toggleRating(Rating r)
 	{
+		if(r == null)
+			return;
+		
 		if(r == Rating.Unrate)
 			return;
 		else if(r == Rating.Love)
@@ -122,7 +125,6 @@ public class BadgesView<T extends TraktoidInterface<T>> extends RelativeLayout
 			toggleBadge(true, ivRating, R.drawable.badge_hated);
 		else
 			toggleBadge(true, ivRating, new RateDrawable(r));
-//		toggleBadge((r == Rating.Hate || r == Rating.Love), ivRating, r == Rating.Hate ? R.drawable.badge_hated : R.drawable.badge_loved);
 	}
 
 	public void toggleWatchlist(boolean on)
