@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -25,7 +26,7 @@ public class WatchedEpisodesTask extends TraktTask<TvShow>
 	private TvShow show;
 	private boolean checkin;
 
-	public WatchedEpisodesTask(Context context, String tvdbId, int [] seasons, List<Map<Integer, Boolean>> listWatched) 
+	public WatchedEpisodesTask(Activity context, String tvdbId, int [] seasons, List<Map<Integer, Boolean>> listWatched) 
 	{
 		super(context, sSingleThreadExecutor);
 
@@ -34,7 +35,7 @@ public class WatchedEpisodesTask extends TraktTask<TvShow>
 		this.listWatched.addAll(listWatched);
 	}
 
-	public WatchedEpisodesTask(Context context, String tvdbId, int season, int episode, boolean watched) 
+	public WatchedEpisodesTask(Activity context, String tvdbId, int season, int episode, boolean watched) 
 	{
 		super(context, sSingleThreadExecutor);
 
@@ -44,7 +45,7 @@ public class WatchedEpisodesTask extends TraktTask<TvShow>
 		this.listWatched.get(0).put(episode, watched);
 	}
 
-	public WatchedEpisodesTask(Context context, String tvdbId, List<TvShowSeason> seasons, boolean watched) 
+	public WatchedEpisodesTask(Activity context, String tvdbId, List<TvShowSeason> seasons, boolean watched) 
 	{
 		super(context, sSingleThreadExecutor);
 

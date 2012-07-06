@@ -1,124 +1,67 @@
 package com.florianmski.tracktoid.trakt.tasks.get;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import android.content.Context;
-import android.util.Log;
+import android.app.Activity;
 
 import com.florianmski.tracktoid.ApiCache;
-import com.florianmski.tracktoid.db.DatabaseWrapper;
+import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.BaseTask;
+import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.CalendarDate;
-import com.jakewharton.trakt.entities.CalendarDate.CalendarTvShowEpisode;
-import com.jakewharton.trakt.entities.TvShow;
-import com.jakewharton.trakt.services.CalendarService.ShowsBuilder;
 
-public class CalendarTask extends GetTask<List<List<CalendarDate>>>
+public class CalendarTask extends BaseTask<List<CalendarDate>>
 {		
-	private static List<CalendarListener> listeners = new ArrayList<CalendarListener>();
+	public final static int PREMIERES = 0, USER = 1, SHOWS = 2;  
+	
+	private int type;
+	private CalendarListener listener;
 
-	public CalendarTask(Context context) 
+	public CalendarTask(Activity context, int type, CalendarListener listener) 
 	{
 		super(context);
+		
+		this.type = type;
+		this.listener = listener;
 	}
 
-	public static void addObserver(CalendarListener listener)
-	{
-		listeners.add(listener);
-	}
-
-	public static void removeObserver(CalendarListener listener)
-	{
-		listeners.remove(listener);
-	}
-
-	//instead of doing 3 requests (user shows, premieres and all), we do only "all" and then sorts
 	@Override
-	protected List<List<CalendarDate>> doTraktStuffInBackground()
+	protected List<CalendarDate> doTraktStuffInBackground()
 	{			
-		ShowsBuilder builder = tm.calendarService().shows();
+		TraktApiBuilder<List<CalendarDate>> builder = null;
+		switch(type)
+		{
+		case PREMIERES:
+			builder = tm.calendarService().premieres();
+			break;
+		case USER:
+			builder = tm.userService().calendarShows(TraktManager.getUsername());
+			break;
+		case SHOWS:
+			builder = tm.calendarService().shows();
+			break;
+		}
+		
 		List<CalendarDate> calendarListShows = ApiCache.read(builder, context);
-		//TODO something strange here, take a long time...
-		Log.d("traktoid","start");
-		publishProgress(EVENT, doCalendarTreatement(calendarListShows));
-		Log.d("traktoid","end");
+		if(calendarListShows != null)
+			publishProgress(EVENT, calendarListShows);
 		
 		calendarListShows = builder.fire();
 
 		ApiCache.save(builder, calendarListShows, context);
 		
-		return doCalendarTreatement(calendarListShows);
+		return calendarListShows;
 	}
 
-	private List<List<CalendarDate>> doCalendarTreatement(List<CalendarDate> calendarListShows)
+	@Override
+	protected void sendEvent(List<CalendarDate> result) 
 	{
-		if(calendarListShows == null)
-			return null;
-		
-		List<List<CalendarDate>> calendars = new ArrayList<List<CalendarDate>>();
-
-		List<CalendarDate> calendarListPremieres = new ArrayList<CalendarDate>();
-		List<CalendarDate> calendarListMyShows = new ArrayList<CalendarDate>();
-		
-		DatabaseWrapper dbw = new DatabaseWrapper(context);
-
-		List<TvShow> shows = dbw.getShows();
-
-		dbw.close();
-
-		for(CalendarDate cd : calendarListShows)
-		{
-			CalendarDate calendarPremieres = new CalendarDate();
-			CalendarDate calendarMyShows = new CalendarDate();
-
-			calendarPremieres.date = cd.date;
-			calendarMyShows.date = cd.date;
-
-			List<CalendarTvShowEpisode> episodesPremieres = new ArrayList<CalendarTvShowEpisode>();
-			List<CalendarTvShowEpisode> episodesMyShows = new ArrayList<CalendarTvShowEpisode>();
-
-			for(CalendarTvShowEpisode e : cd.episodes)
-			{				
-				int index = Collections.binarySearch(shows, e.show);
-
-				if(e.episode.number == 1)
-					episodesPremieres.add(e);
-				if(index != -1 && index >= 0 && index < shows.size())
-					episodesMyShows.add(e);
-			}
-
-			if(!episodesPremieres.isEmpty())
-			{
-				calendarPremieres.episodes = episodesPremieres;
-				calendarListPremieres.add(calendarPremieres);
-			}
-
-			if(!episodesMyShows.isEmpty())
-			{
-				calendarMyShows.episodes = episodesMyShows;
-				calendarListMyShows.add(calendarMyShows);
-			}
-		}		
-
-		calendars.add(calendarListPremieres);
-		calendars.add(calendarListMyShows);
-		calendars.add(calendarListShows);
-		
-		return calendars;
+		if(context != null && listener != null)
+			listener.onCalendar(result);
 	}
 
 	public interface CalendarListener
 	{
-		public void onCalendar(List<List<CalendarDate>> calendars);
+		public void onCalendar(List<CalendarDate> calendar);
 	}
-
-	@Override
-	protected void sendEvent(List<List<CalendarDate>> result) 
-	{
-		if(getRef() != null)
-			for(CalendarListener listener : listeners)
-				listener.onCalendar(result);
-	}
-
 }

@@ -31,11 +31,10 @@ public class RecommendationMoviesFragment extends RecommendationFragment<Movie>
 	{
 		MoviesBuilder builder = tm.recommendationsService().movies();
 
-		if(genre != null)
+		if(genre != null && !genre.slug.equals("all-genres"))
 			builder.genre(genre);
 		
-		if(spStartYear != null && spEndYear != null)
-			builder.startYear(spStartYear.getSelectedItemPosition() + START_YEAR).endYear(END_YEAR - spEndYear.getSelectedItemPosition());
+		builder.startYear(startYear).endYear(endYear);
 		
 		return builder;
 	}

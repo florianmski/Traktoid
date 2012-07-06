@@ -1,6 +1,7 @@
 package com.florianmski.tracktoid.trakt.tasks.post;
 
-import android.content.Context;
+import android.app.Activity;
+
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
@@ -16,7 +17,7 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 	protected T traktItem;
 	protected boolean checkin;
 
-	public CheckinPostTask(Context context, T traktItem, boolean checkin, PostListener pListener) 
+	public CheckinPostTask(Activity context, T traktItem, boolean checkin, PostListener pListener) 
 	{
 		super(context, null, pListener);
 
@@ -24,7 +25,7 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 		this.checkin = checkin;
 	}
 	
-	public static <T extends TraktoidInterface<T>> CheckinPostTask<?> createTask(Context context, T traktItem, boolean checkin, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> CheckinPostTask<?> createTask(Activity context, T traktItem, boolean checkin, PostListener pListener)
 	{
 		if(traktItem instanceof Movie)
 			return new CheckinMovieTask(context, (Movie) traktItem, checkin, pListener);
@@ -63,7 +64,7 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 	
 	public static final class CheckinMovieTask extends CheckinPostTask<Movie>
 	{
-		public CheckinMovieTask(Context context, Movie traktItem, boolean checkin, PostListener pListener) 
+		public CheckinMovieTask(Activity context, Movie traktItem, boolean checkin, PostListener pListener) 
 		{
 			super(context, traktItem, checkin, pListener);
 		}
@@ -95,7 +96,7 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 	
 	public static final class CheckinEpisodeTask extends CheckinPostTask<TvShowEpisode>
 	{
-		public CheckinEpisodeTask(Context context, TvShowEpisode traktItem, boolean checkin, PostListener pListener) 
+		public CheckinEpisodeTask(Activity context, TvShowEpisode traktItem, boolean checkin, PostListener pListener) 
 		{
 			super(context, traktItem, checkin, pListener);
 		}

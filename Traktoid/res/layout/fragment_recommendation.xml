@@ -4,15 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include
-        android:id="@+id/recommendationHeader"
-        layout="@layout/view_recommendation_header_list" />
-
     <ListView
         android:id="@+id/listViewRecommendation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/recommendationHeader"
         android:divider="@null"
         android:dividerHeight="0px" />
 

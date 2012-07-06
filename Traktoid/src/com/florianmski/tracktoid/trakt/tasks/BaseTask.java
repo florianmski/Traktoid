@@ -17,7 +17,7 @@ import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.apibuilder.ApiException;
 import com.jakewharton.trakt.TraktException;
 
-public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Activity, TResult>
+public abstract class BaseTask<TResult> extends BackgroundTask<TResult>
 {
 	protected final static int TOAST = -1;
 	protected final static int EVENT = -2;
@@ -33,32 +33,18 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Activity, TR
 
 	private static List<TraktListener> listeners = new ArrayList<TraktListener>();
 	protected static ExecutorService sSingleThreadExecutor = new SingleThreadExecutor();
-
-	public TraktTask(Activity ref) 
+	
+	public BaseTask(Context context) 
 	{
-		this(ref, null);
+		this(context, null);
 	}
 	
-	public TraktTask(Context context) 
+	public BaseTask(Context context, ExecutorService executor) 
 	{
-		this(null, null);
-		this.context = context;
-	}
-	
-	public TraktTask(Context context, ExecutorService executor) 
-	{
-		this(null, executor);
-		this.context = context;
-	}
-
-	public TraktTask(Activity ref, ExecutorService executor) 
-	{
-		super(ref, executor);
+		super(executor);
 
 		this.tm = TraktManager.getInstance();
-		
-		if(getRef() != null)
-			this.context = getRef().getApplicationContext();
+		this.context = context;
 
 		setId(this.getClass().getSimpleName());
 	}
@@ -68,7 +54,7 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Activity, TR
 	{
 		if(!Utils.isOnline(context))
 		{
-			if(getRef() != null && !silentConnectionError)
+			if(context != null && !silentConnectionError)
 				onFailed(new Exception("Internet connection required!"));
 
 			return doOfflineTraktStuff();
@@ -100,7 +86,7 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Activity, TR
 		if(result != null)
 			sendEvent(result);
 		
-		Log.i("Traktoid","task ended!");
+		Log.i("Traktoid","task ended : " + getId());
 	}
 
 	protected abstract void sendEvent(TResult result);
@@ -117,7 +103,7 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Activity, TR
 	@Override
 	protected void onPreExecute()
 	{
-		Log.i("Traktoid","start a task...");
+		Log.i("Traktoid","start task : " + getId());
 	}
 
 	protected abstract TResult doTraktStuffInBackground();
@@ -144,18 +130,19 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Activity, TR
 		}
 		else if(progress == EVENT)
 		{
-			sendEvent(tmpResult);
+			if(tmpResult != null)
+				sendEvent(tmpResult);
 		}
 	}
 
-	public TraktTask<TResult> silent(boolean silent) 
+	public BaseTask<TResult> silent(boolean silent) 
 	{
 		this.silent = silent;
 		return this;
 	}
 
 	//do nothin special in case of connection error (not even showing a toast)
-	public TraktTask<TResult> silentConnectionError(boolean silentConnectionError) 
+	public BaseTask<TResult> silentConnectionError(boolean silentConnectionError) 
 	{
 		this.silentConnectionError = silentConnectionError;
 		return this;
@@ -164,6 +151,16 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Activity, TR
 	public void fire() 
 	{
 		execute();
+	}
+	
+	public void detach()
+	{
+		context = null;
+	}
+	
+	public void attach(Activity a)
+	{
+		context = a;
 	}
 
 	public static <T extends TraktoidInterface<T>> void addObserver(TraktListener<T> listener)

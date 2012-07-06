@@ -6,27 +6,28 @@ import java.util.List;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.actionbarsherlock.view.SubMenu;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.lists.ListRecommendationAdapter;
 import com.florianmski.tracktoid.adapters.lists.ListRecommendationAdapter.DismissListener;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
-import com.florianmski.tracktoid.trakt.tasks.get.GenresTask;
-import com.florianmski.tracktoid.trakt.tasks.get.GenresTask.GenresListener;
-import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
-import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
+import com.florianmski.tracktoid.trakt.tasks.BaseTask;
+import com.florianmski.tracktoid.trakt.tasks.get.RecommendationsTask;
+import com.florianmski.tracktoid.trakt.tasks.get.RecommendationsTask.RecommendationsListener;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.ui.activities.phone.TraktItemsActivity;
+import com.florianmski.tracktoid.ui.fragments.BaseFragment.TaskListener;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
@@ -34,22 +35,44 @@ import com.jakewharton.trakt.entities.DismissResponse;
 import com.jakewharton.trakt.entities.Genre;
 import com.jakewharton.trakt.entities.Response;
 
-public abstract class RecommendationFragment<T extends TraktoidInterface<T>> extends TraktFragment
+public abstract class RecommendationFragment<T extends TraktoidInterface<T>> extends TraktFragment implements TaskListener
 {	
 	protected final static int START_YEAR = 1919;
 	protected final static int END_YEAR = 2019;
-	
+
 	protected ListView lvRecommendations;
-	protected Spinner spGenre, spStartYear, spEndYear;
-	protected ImageView ivSend;
 
 	protected ListRecommendationAdapter<T> adapter;
 
 	protected List<Genre> genres;
 	protected List<T> items;
+	protected Genre genre;
+	protected int startYear = START_YEAR, endYear = END_YEAR;
+
+	private OnMenuItemClickListener startYearListener = new OnMenuItemClickListener()
+	{
+		@Override
+		public boolean onMenuItemClick(MenuItem item) 
+		{
+			startYear = Integer.valueOf(item.getTitle().toString());
+			getSherlockActivity().invalidateOptionsMenu();
+			return true;
+		}
+	};
+
+	private OnMenuItemClickListener endYearListener = new OnMenuItemClickListener() 
+	{
+		@Override
+		public boolean onMenuItemClick(MenuItem item) 
+		{
+			endYear = Integer.valueOf(item.getTitle().toString());
+			getSherlockActivity().invalidateOptionsMenu();
+			return true;
+		}
+	};
 
 	public RecommendationFragment() {}
-	
+
 	public abstract TraktApiBuilder<DismissResponse> getDismissBuilder(String id);
 	public abstract TraktApiBuilder<List<T>> getRecommendationBuilder(Genre genre);
 	public abstract TraktApiBuilder<List<Genre>> getGenreBuilder();
@@ -57,6 +80,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
+		setTaskListener(this);
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
@@ -65,23 +89,6 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
-		
-		if(savedInstanceState == null)
-		{
-			getStatusView().show().text("Retrieving genres,\nPlease wait...");
-
-			new GenresTask(getActivity(), new GenresListener() 
-			{
-				@Override
-				public void onGenres(final List<Genre> genres) 
-				{				
-					RecommendationFragment.this.genres = genres;
-					createGetRecommendationsTask().fire();
-				}
-			}, getGenreBuilder()).fire();
-		}
-		else
-			setAdapter();
 
 		lvRecommendations.setOnItemClickListener(new OnItemClickListener() 
 		{
@@ -92,10 +99,6 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 				b.putSerializable(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<T>) adapter.getItems());
 				b.putInt(TraktoidConstants.BUNDLE_POSITION, position);
 				launchActivity(TraktItemsActivity.class, b);
-//				Intent intent = new Intent(getActivity(), ShowActivity.class);
-//				intent.putExtra(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<T>) adapter.getItems());
-//				intent.putExtra(TraktoidConstants.BUNDLE_POSITION, position);
-//				startActivity(intent);
 			}
 		});
 	}
@@ -106,55 +109,71 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 		View v = inflater.inflate(R.layout.fragment_recommendation, null);
 
 		lvRecommendations = (ListView)v.findViewById(R.id.listViewRecommendation);
-		spGenre = (Spinner) v.findViewById(R.id.spinnerGenre);
-		spStartYear = (Spinner) v.findViewById(R.id.spinnerStartYear);
-		spEndYear = (Spinner) v.findViewById(R.id.spinnerEndYear);
-		ivSend = (ImageView) v.findViewById(R.id.imageViewSend);
 
 		return v;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	{
+		super.onCreateOptionsMenu(menu, inflater);
+
+		if(genres != null)
+		{
+			SubMenu genresMenu = menu.addSubMenu(0, Menu.NONE, 0, genre == null ? "All genres" : genre.name);
+			genresMenu.getItem().setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+			for(final Genre g : genres)
+			{
+				genresMenu.add(0, Menu.NONE, 0, g.name).setOnMenuItemClickListener(new OnMenuItemClickListener() 
+				{
+					@Override
+					public boolean onMenuItemClick(MenuItem item) 
+					{
+						genre = g;
+						getSherlockActivity().invalidateOptionsMenu();
+						return true;
+					}
+				});
+			}
+
+			menu.add(Menu.NONE, R.id.action_bar_send, 3, "Send")
+			.setIcon(R.drawable.ab_icon_send)
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		}
+
+		SubMenu startYearMenu = menu.addSubMenu(0, Menu.NONE, 1, "");
+		startYearMenu.getItem().setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+		SubMenu endYearMenu = menu.addSubMenu(0, Menu.NONE, 2, "");
+		endYearMenu.getItem().setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+		int size = END_YEAR - START_YEAR + 1;
+		for(int i = 0; i < size; i++)
+		{
+			startYearMenu.add(0, Menu.NONE, 0, String.valueOf(START_YEAR+i)).setOnMenuItemClickListener(startYearListener);
+			endYearMenu.add(0, Menu.NONE, 0, String.valueOf(END_YEAR-i)).setOnMenuItemClickListener(endYearListener);
+		}
+
+		startYearMenu.getItem().setTitle(String.valueOf(startYear));
+		endYearMenu.getItem().setTitle(String.valueOf(endYear));
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{
+		switch(item.getItemId())
+		{
+		case R.id.action_bar_send:
+			createGetRecommendationsTask(false, false).fire();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	protected void setAdapter()
 	{
 		if(adapter == null)
-		{
 			lvRecommendations.setAdapter(adapter = new ListRecommendationAdapter<T>(items, getActivity()));
-			
-			String[] itemsGenres = new String[genres.size()+1];
-			itemsGenres[0] = "All Genres";
-
-			for(int i = 1; i < itemsGenres.length; i++)
-				itemsGenres[i] = genres.get(i-1).name;
-
-			ArrayAdapter<String> spinnerAdapterGenres = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, itemsGenres);
-			spinnerAdapterGenres.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-			spGenre.setAdapter(spinnerAdapterGenres);
-			
-			int size = END_YEAR - START_YEAR + 1;
-			String[] itemsStartYear = new String[size];
-			String[] itemsEndYear = new String[size];
-			for(int i = 0; i < size; i++)
-			{
-				itemsStartYear[i] = String.valueOf(START_YEAR+i);
-				itemsEndYear[i] = String.valueOf(END_YEAR-i);
-			}
-			ArrayAdapter<String> spinnerAdapterStartYear = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, itemsStartYear);
-			spinnerAdapterStartYear.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-			spStartYear.setAdapter(spinnerAdapterStartYear);
-			ArrayAdapter<String> spinnerAdapterEndYear = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item, itemsEndYear);
-			spinnerAdapterEndYear.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-			spEndYear.setAdapter(spinnerAdapterEndYear);
-			
-			ivSend.setOnClickListener(new OnClickListener() 
-			{
-				@Override
-				public void onClick(View v) 
-				{
-					adapter.clear();
-					createGetRecommendationsTask().fire();
-				}
-			});
-		}
 		else
 		{
 			adapter.refreshItems(items);
@@ -177,30 +196,59 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 					@Override
 					public void onComplete(Response r, boolean success) 
 					{
-						adapter.clear();
-						createGetRecommendationsTask().fire();
+						createGetRecommendationsTask(false, false).fire();
 					}
 				}).fire();
 			}
 		});
 	}
 
-	protected TraktTask<?> createGetRecommendationsTask()
+	protected BaseTask<?> createGetRecommendationsTask(boolean sendCachedContent, boolean silent)
 	{
-		int index = spGenre == null ? -1 : spGenre.getSelectedItemPosition();
-		Genre genre = index <= 0 || index > genres.size() ? null : genres.get(index-1);
-		getStatusView().show().text("Retrieving recommendations" + ((genre == null) ? "" : " in \"" + genre.name + "\"") + ",\nPlease wait...");	
+		String text = "Retrieving recommendations" + ((genre == null || genre.slug.equals("all-genres")) ? "" : " in \"" + genre.name + "\"") + ",\nPlease wait...";
 
-		return new TraktItemsTask<T>(getActivity(), new TraktItemsListener<T>() 
+		if(!silent)
 		{
+			// avoid to cover the list with text
+			if(sendCachedContent)
+				getStatusView().show().text(text);
+			else
+				Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+		}
+
+		return task = new RecommendationsTask<T>(getActivity(),
+				getGenreBuilder(), 
+				getRecommendationBuilder(genre), 
+				sendCachedContent,
+				(genre == null),
+				new RecommendationsListener<T>() 
+				{
 			@Override
-			public void onTraktItems(List<T> traktItems) 
+			public void onRecommendations(List<Genre> genres, List<T> recommendations) 
 			{
-				RecommendationFragment.this.items = traktItems;
+				RecommendationFragment.this.genres = genres;
+				RecommendationFragment.this.items = recommendations;
 				setAdapter();
+				getSherlockActivity().invalidateOptionsMenu();
 			}
-		}, getRecommendationBuilder(genre), false);
+				});
 	}
+
+	@Override
+	public void onCreateTask() 
+	{
+		createGetRecommendationsTask(true, false);
+		task.fire();
+	}
+
+	@Override
+	public void onTaskIsDone() 
+	{
+		setAdapter();
+	}
+
+	@Override
+	public void onTaskIsRunning() {}
 
 	@Override
 	public void onRestoreState(Bundle savedInstanceState) {}

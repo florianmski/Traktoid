@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -47,7 +46,7 @@ public class SynchronizationTask extends GetTask<Activity>
 	//episodes we'll update
 	private List<TvShowEpisode> finalUpdateEpisodeList = new ArrayList<TvShowEpisode>();
 
-	public SynchronizationTask(Context context) 
+	public SynchronizationTask(android.app.Activity context) 
 	{
 		super(context, sSingleThreadExecutor);
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);

@@ -1,6 +1,7 @@
 package com.florianmski.tracktoid.trakt.tasks.post;
 
-import android.content.Context;
+import android.app.Activity;
+
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
@@ -12,7 +13,7 @@ public class ShoutsPostTask<T extends TraktoidInterface<T>> extends PostTask
 	private String shout;
 	private boolean spoiler;
 	
-	public ShoutsPostTask(Context context, T traktItem, String shout, boolean spoiler, PostListener pListener) 
+	public ShoutsPostTask(Activity context, T traktItem, String shout, boolean spoiler, PostListener pListener) 
 	{
 		super(context, null, pListener);
 		

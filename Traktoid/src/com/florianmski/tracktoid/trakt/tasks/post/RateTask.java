@@ -3,7 +3,9 @@ package com.florianmski.tracktoid.trakt.tasks.post;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
+
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
@@ -20,7 +22,7 @@ public abstract class RateTask<T extends TraktoidInterface<T>> extends PostTask
 	protected List<T> traktItems;
 	protected Rating rating;
 
-	public RateTask(Context context, List<T> traktItems, Rating rating, PostListener pListener) 
+	public RateTask(Activity context, List<T> traktItems, Rating rating, PostListener pListener) 
 	{
 		super(context, null, pListener);
 
@@ -28,7 +30,7 @@ public abstract class RateTask<T extends TraktoidInterface<T>> extends PostTask
 		this.rating = rating;
 	}
 
-	public static <T extends TraktoidInterface<T>> RateTask<?> createTask(Context context, T traktItem, Rating r, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> RateTask<?> createTask(Activity context, T traktItem, Rating r, PostListener pListener)
 	{
 		List<T> traktItems = new ArrayList<T>();
 		traktItems.add(traktItem);
@@ -36,7 +38,7 @@ public abstract class RateTask<T extends TraktoidInterface<T>> extends PostTask
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends TraktoidInterface<T>> RateTask<?> createTask(Context context, List<T> traktItems, Rating r, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> RateTask<?> createTask(Activity context, List<T> traktItems, Rating r, PostListener pListener)
 	{
 		if(traktItems.get(0) instanceof TvShow)
 			return new RateShowTask(context, (List<TvShow>) traktItems, r, pListener);
@@ -73,7 +75,7 @@ public abstract class RateTask<T extends TraktoidInterface<T>> extends PostTask
 
 	public static final class RateShowTask extends RateTask<TvShow>
 	{
-		public RateShowTask(Context context, List<TvShow> traktItem, Rating rating, PostListener pListener) 
+		public RateShowTask(Activity context, List<TvShow> traktItem, Rating rating, PostListener pListener) 
 		{
 			super(context, traktItem, rating, pListener);
 		}
@@ -103,7 +105,7 @@ public abstract class RateTask<T extends TraktoidInterface<T>> extends PostTask
 
 	public static final class RateMovieTask extends RateTask<Movie>
 	{
-		public RateMovieTask(Context context, List<Movie> traktItems, Rating rating, PostListener pListener) 
+		public RateMovieTask(Activity context, List<Movie> traktItems, Rating rating, PostListener pListener) 
 		{
 			super(context, traktItems, rating, pListener);
 		}
@@ -133,7 +135,7 @@ public abstract class RateTask<T extends TraktoidInterface<T>> extends PostTask
 
 	public static final class RateEpisodeTask extends RateTask<TvShowEpisode>
 	{
-		public RateEpisodeTask(Context context, List<TvShowEpisode> traktItems, Rating rating, PostListener pListener) 
+		public RateEpisodeTask(Activity context, List<TvShowEpisode> traktItems, Rating rating, PostListener pListener) 
 		{
 			super(context, traktItems, rating, pListener);
 		}

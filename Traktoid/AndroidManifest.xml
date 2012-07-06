@@ -35,7 +35,7 @@
         <activity android:name=".ui.activities.phone.EpisodeActivity"></activity>
         <activity android:name=".ui.activities.phone.LibraryActivity" android:label="Library"></activity>
         <activity android:name=".ui.activities.phone.SettingsActivity" android:label="Settings"></activity>
-        <activity android:name=".ui.activities.phone.RecommendationActivity" android:label="Recommendation"></activity>
+        <activity android:name=".ui.activities.phone.RecommendationActivity" android:label="Recommendation" android:uiOptions="splitActionBarWhenNarrow"></activity>
         <activity android:name=".ui.activities.phone.AboutActivity" android:label="About"></activity>
         <activity android:name=".ui.activities.phone.LoginActivity" android:label="Login"></activity>
         <activity android:name=".ui.activities.phone.ShoutsActivity" android:label="Shouts" android:windowSoftInputMode="stateAlwaysHidden"></activity>

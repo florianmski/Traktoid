@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.content.Context;
+import android.app.Activity;
 
 import com.florianmski.tracktoid.ApiCache;
+import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 
-public class TraktItemsTask<T extends TraktoidInterface<T>> extends GetTask<List<T>>
+public class TraktItemsTask<T extends TraktoidInterface<T>> extends BaseTask<List<T>>
 {	
 	private List<T> traktItems = new ArrayList<T>();
 	private TraktApiBuilder<?> builder;
@@ -22,7 +23,7 @@ public class TraktItemsTask<T extends TraktoidInterface<T>> extends GetTask<List
 	//recommendation needs only if "all genres" and "no date"
 	//trending needs it
 
-	public TraktItemsTask(Context context, TraktItemsListener<T> listener, TraktApiBuilder<?> builder, boolean sort) 
+	public TraktItemsTask(Activity context, TraktItemsListener<T> listener, TraktApiBuilder<?> builder, boolean sort) 
 	{
 		super(context);
 
@@ -49,17 +50,9 @@ public class TraktItemsTask<T extends TraktoidInterface<T>> extends GetTask<List
 	}
 
 	@Override
-	protected void onProgressPublished(int progress, List<T> tmpResult, String... values)
-	{
-		super.onProgressPublished(progress, tmpResult, values);
-		if(progress == EVENT)
-			sendEvent(traktItems);
-	}	
-
-	@Override
 	protected void sendEvent(List<T> result) 
 	{
-		if(traktItems != null && getRef() != null)
+		if(context != null && listener != null)
 			listener.onTraktItems(traktItems);
 	}
 

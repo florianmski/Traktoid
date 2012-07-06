@@ -1,43 +1,30 @@
 package com.florianmski.tracktoid.adapters.pagers;
 
-import java.util.ArrayList;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.florianmski.tracktoid.ui.fragments.calendar.PI_CalendarFragment;
-import com.jakewharton.trakt.entities.CalendarDate;
 
 public class PagerCalendarAdapter extends FragmentPagerAdapter
 {
 	public final static String calendarTitles[] = new String[]{"Premieres","My shows","Shows"};
-
-	private ArrayList<ArrayList<CalendarDate>> calendars;
 	
-	public PagerCalendarAdapter(ArrayList<ArrayList<CalendarDate>> calendars, FragmentManager fm)
+	public PagerCalendarAdapter(FragmentManager fm)
 	{
 		super(fm);
-		this.calendars = calendars;
-	}
-	
-	public void clear() 
-	{
-		calendars.clear();
-		notifyDataSetChanged();
 	}
 
 	@Override
     public int getCount() 
 	{
-        return calendars.size();
+        return calendarTitles.length;
     }
 
     @Override
     public Fragment getItem(int position) 
     {
-    	//TODO why not calendarfragment.newinstance ?
-    	return new PI_CalendarFragment(calendars.get(position));
+    	return PI_CalendarFragment.newInstance(null);
     }
 
 	@Override

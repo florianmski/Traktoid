@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +49,7 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 	public ListCalendarAdapter(List<CalendarDate> calendarDates, Context context)
 	{
 		super(context, calendarDates);
-
+		
 		int orientation = context.getResources().getConfiguration().orientation;
 		if(orientation == Configuration.ORIENTATION_PORTRAIT)
 			nbByRow = NB_BY_ROW_PORTRAIT;
