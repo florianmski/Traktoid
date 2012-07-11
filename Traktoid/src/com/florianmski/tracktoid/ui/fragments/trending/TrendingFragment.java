@@ -18,7 +18,7 @@ import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListen
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.tracktoid.ui.fragments.traktitems.PI_TraktItemShowFragment;
 import com.florianmski.tracktoid.widgets.coverflow.CoverFlow;
-import com.florianmski.tracktoid.widgets.coverflow.CoverFlowImageAdapter;
+import com.florianmski.tracktoid.widgets.coverflow.CoverFlowAdapter;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class TrendingFragment extends TraktFragment
@@ -86,7 +86,7 @@ public class TrendingFragment extends TraktFragment
 
 	private void setAdapter()
 	{
-		CoverFlowImageAdapter adapter = new CoverFlowImageAdapter(shows);
+		CoverFlowAdapter adapter = new CoverFlowAdapter(getSherlockActivity(), shows);
 		cf.setAdapter(adapter);
 
 		if(adapter.isEmpty())

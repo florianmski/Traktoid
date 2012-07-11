@@ -15,6 +15,8 @@ public class StartActivity extends Activity
 {
 	public final static int RESULT_LOGIN = 42;
 	
+	//TODO do something if there is the popup to rate the app
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{

@@ -20,19 +20,11 @@ public class RemoveShowTask extends TraktTask<TvShow>
 	@Override
 	protected TvShow doTraktStuffInBackground()
 	{
-		showToast("Removing " + show.title + "...", Toast.LENGTH_SHORT);
-		
-		//TODO
-		//delete only locally
-//		tm.showService().unlibrary(Integer.valueOf(show.getTvdbId())).fire();
-
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
 
 		dbw.removeShow(show.url);
 		
 		dbw.close();
-		
-		showToast(show.title + " removed!", Toast.LENGTH_SHORT);
 		
 		return show;
 	}

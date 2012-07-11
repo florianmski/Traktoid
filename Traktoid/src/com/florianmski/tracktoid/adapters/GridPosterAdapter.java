@@ -20,13 +20,11 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.traktoid.TraktoidInterface;
-import com.jakewharton.trakt.enumerations.Rating;
 
 public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapter<T>
 {
 	public static final int FILTER_ALL = 0;
 	public static final int FILTER_UNWATCHED = 1;
-	public static final int FILTER_LOVED = 2;
 
 	protected List<T> filteredItems = new ArrayList<T>();
 	protected int height;
@@ -73,15 +71,6 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 					filteredItems.add(item);
 			}
 			break;
-			//TODO rethink this
-//		case FILTER_LOVED :
-//			filteredItems.clear();
-//			for(T item : items)
-//			{
-//				if(item.getRating() == Rating.Love)
-//					filteredItems.add(item);
-//			}
-//			break;
 		}
 		this.notifyDataSetChanged();
 	}

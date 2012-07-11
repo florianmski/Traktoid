@@ -28,6 +28,7 @@ import android.graphics.Camera;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Transformation;
 import android.widget.Gallery;
 import android.widget.ImageView;
@@ -192,18 +193,18 @@ public class CoverFlow extends Gallery {
     @Override
     public void setAdapter(final SpinnerAdapter adapter) 
     {
-        if (!(adapter instanceof CoverFlowImageAdapter)) 
+        if (!(adapter instanceof CoverFlowAdapter)) 
         {
             throw new IllegalArgumentException("The adapter should derive from "
-                    + CoverFlowImageAdapter.class.getName());
+                    + CoverFlowAdapter.class.getName());
         }
-        final CoverFlowImageAdapter coverAdapter = (CoverFlowImageAdapter) adapter;
+        final CoverFlowAdapter coverAdapter = (CoverFlowAdapter) adapter;
         coverAdapter.setHeight(imageHeight);
         if (withReflection) 
         {
-            ((CoverFlowImageAdapter)adapter).setReflectionGap(reflectionGap);
-            ((CoverFlowImageAdapter)adapter).setWidthRatio(imageReflectionRatio);
-            ((CoverFlowImageAdapter)adapter).setHeight(imageHeight * (1 + imageReflectionRatio));
+            ((CoverFlowAdapter)adapter).setReflectionGap(reflectionGap);
+            ((CoverFlowAdapter)adapter).setWidthRatio(imageReflectionRatio);
+            ((CoverFlowAdapter)adapter).setHeight(imageHeight * (1 + imageReflectionRatio));
             super.setAdapter(adapter);
         } 
         else
@@ -364,7 +365,7 @@ public class CoverFlow extends Gallery {
             withReflection = a.getBoolean(R.styleable.CoverFlow_withReflection, false);
             imageReflectionRatio = a.getFloat(R.styleable.CoverFlow_imageReflectionRatio, 0.2f);
             reflectionGap = a.getDimension(R.styleable.CoverFlow_reflectionGap, 4);
-            setSpacing(-15);
+//            setSpacing(-15);
         } 
         finally 
         {

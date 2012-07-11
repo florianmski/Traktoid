@@ -247,9 +247,6 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 		case R.id.action_bar_filter_all:
 			adapter.setFilter(GridPosterAdapter.FILTER_ALL);
 			break;
-		case R.id.action_bar_filter_loved:
-			adapter.setFilter(GridPosterAdapter.FILTER_LOVED);
-			break;
 		case R.id.action_bar_filter_unwatched:
 			adapter.setFilter(GridPosterAdapter.FILTER_UNWATCHED);
 			break;

@@ -21,10 +21,6 @@ public class RemoveMovieTask extends TraktTask<Movie>
 	@Override
 	protected Movie doTraktStuffInBackground()
 	{
-		//TODO
-		//delete only locally
-		//		tm.showService().unlibrary(Integer.valueOf(show.getTvdbId())).fire();
-
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
 
 		dbw.removeMovie(movie.url);

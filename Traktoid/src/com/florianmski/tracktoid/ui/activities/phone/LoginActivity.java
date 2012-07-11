@@ -9,7 +9,6 @@ public class LoginActivity extends TraktActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
-		//TODO test this, not sure it works
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_single_fragment);
 		

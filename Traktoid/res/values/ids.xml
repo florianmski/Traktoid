@@ -30,7 +30,7 @@
     <item type="id" name="action_bar_filter_unwatched" />
     <item type="id" name="action_bar_filter_loved" />
     
-    <item type="id" name="action_bar_movie_show" />
+    <item type="id" name="action_bar_search" />
     
     <item type="id" name="action_bar_all" />
     <item type="id" name="action_bar_none" />

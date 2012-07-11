@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -109,8 +108,7 @@ public class UpdateShowsTask extends GetTask<TvShow>
 	{
 		super.onProgressPublished(progress, tmpResult, values);
 
-		//TODO arrayIndexOutOfBoundException here length=0
-		if(values[0].equals("update") && lastProceedShow != null)
+		if(values != null && values.length > 0 && values[0].equals("update") && lastProceedShow != null)
 			TraktTask.traktItemUpdated(lastProceedShow);
 	}
 	

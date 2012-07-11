@@ -1,50 +1,77 @@
 package com.florianmski.tracktoid.ui.fragments;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.actionbarsherlock.view.SubMenu;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
+import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.adapters.lists.ListSearchAdapter;
-import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
-import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
-import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
-import com.jakewharton.trakt.entities.TvShow;
+import com.florianmski.tracktoid.trakt.tasks.get.SearchTask;
+import com.florianmski.tracktoid.trakt.tasks.get.SearchTask.SearchListener;
+import com.florianmski.tracktoid.ui.activities.phone.TraktItemsActivity;
+import com.florianmski.tracktoid.ui.fragments.BaseFragment.TaskListener;
 
-public class SearchFragment extends TraktFragment
+public class SearchFragment extends TraktFragment implements TaskListener
 {
-	private List<TvShow> shows = new ArrayList<TvShow>();
-	
+	public final static int 
+	SHOWS = 0, 
+	MOVIES = 1;
+	//	EPISODES = 2, 
+	//	USERS = 3, 
+	//	PEOPLES = 4;
+
+	private List<?> items;
+
 	private ListView lvSearch;
 	private EditText edtSearch;
-	private Button btnSearch;
-	
-	private ListSearchAdapter adapter;
-	
+
+	private int searchType = SHOWS;
+	private OnMenuItemClickListener searchListener = new OnMenuItemClickListener() 
+	{
+		@Override
+		public boolean onMenuItemClick(MenuItem item) 
+		{
+			searchType = item.getOrder();
+			getSherlockActivity().invalidateOptionsMenu();
+			launchTask();
+			return false;
+		}
+	};
+
 	public static SearchFragment newInstance(Bundle args)
 	{
 		SearchFragment f = new SearchFragment();
 		f.setArguments(args);
 		return f;
 	}
-	
+
 	public SearchFragment() {}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
+		setTaskListener(this);
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
@@ -53,83 +80,125 @@ public class SearchFragment extends TraktFragment
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
-        
-		if(savedInstanceState != null)
+
+		lvSearch.setOnItemClickListener(new OnItemClickListener() 
 		{
-			adapter = new ListSearchAdapter(getActivity(), shows);
-			lvSearch.setAdapter(adapter);
-		}
-		
-        lvSearch.setOnItemClickListener(new OnItemClickListener() 
-        {	
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) 
 			{
-				Intent i = new Intent(getActivity(), ShowActivity.class);
-				i.putExtra(TraktoidConstants.BUNDLE_POSITION, position);
-				i.putExtra(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<TvShow>) shows);
-				startActivity(i);
+				Bundle b = new Bundle();
+				b.putSerializable(TraktoidConstants.BUNDLE_RESULTS, (Serializable) ((RootAdapter<?>) (lvSearch.getAdapter())).getItems());
+				b.putInt(TraktoidConstants.BUNDLE_POSITION, position);
+				launchActivity(TraktItemsActivity.class, b);
 			}
 		});
-        
-        btnSearch.setOnClickListener(new OnClickListener()
-        {
+
+		edtSearch.setOnEditorActionListener(new OnEditorActionListener() 
+		{
 			@Override
-			public void onClick(View v)
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) 
 			{
-				if(adapter != null)
-					adapter.clear();
-				
-				String search = edtSearch.getText().toString().trim();
-				getStatusView().show().text("Searching for \"" + search + "\",\nPlease wait...");
-				
-				new TraktItemsTask<TvShow>(getActivity(), new TraktItemsListener<TvShow>() 
+				if (actionId == EditorInfo.IME_ACTION_DONE) 
 				{
-					@Override
-					public void onTraktItems(List<TvShow> shows) 
-					{
-						SearchFragment.this.shows = shows;
-						
-						if(adapter == null)
-						{
-							adapter = new ListSearchAdapter(getActivity(), shows);
-							lvSearch.setAdapter(adapter);
-						}
-						else
-							adapter.refreshItems(shows);
-						
-						if(adapter.isEmpty())
-							getStatusView().hide().text("Nothing found, sorry man...");
-						else
-							getStatusView().hide().text(null);
-					}
-				}, tm.searchService().shows(search), false).fire();
+					InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+					launchTask();
+					return true;	
+				}
+				return false;
 			}
 		});
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		View v = inflater.inflate(R.layout.fragment_search, null);
-		
+
 		lvSearch = (ListView)v.findViewById(android.R.id.list);
-        edtSearch = (EditText)v.findViewById(R.id.editTextSearch);
-        btnSearch = (Button)v.findViewById(R.id.buttonSearch);
-		
+		edtSearch = (EditText)v.findViewById(R.id.editTextSearch);
+
 		return v;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) 
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
-		shows = (ArrayList<TvShow>) savedInstanceState.getSerializable(TraktoidConstants.BUNDLE_RESULTS);
+		super.onCreateOptionsMenu(menu, inflater);
+
+		SubMenu searchMenu = menu.addSubMenu(0, R.id.action_bar_search, 0, "Filter");
+		searchMenu.add(Menu.NONE, Menu.NONE, 0, "Shows").setOnMenuItemClickListener(searchListener);
+		searchMenu.add(Menu.NONE, Menu.NONE, 1, "Movies").setOnMenuItemClickListener(searchListener);
+		//		searchMenu.add(Menu.NONE, Menu.NONE, 2, "Episodes").setOnMenuItemClickListener(searchListener);
+		//		searchMenu.add(Menu.NONE, Menu.NONE, 3, "Users").setOnMenuItemClickListener(searchListener);
+		//		searchMenu.add(Menu.NONE, Menu.NONE, 4, "Peoples").setOnMenuItemClickListener(searchListener);
+
+		MenuItem rateItem = searchMenu.getItem();
+		rateItem.setTitle(searchMenu.getItem(searchType).getTitle())
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+	}
+
+	//	@Override
+	//	public boolean onOptionsItemSelected(MenuItem item) 
+	//	{
+	//		switch(item.getItemId())
+	//		{
+	//		case R.id.action_bar_search:
+	//
+	//			return true;
+	//		}
+	//		return super.onOptionsItemSelected(item);
+	//	}
+
+	public void launchTask()
+	{
+		String query = edtSearch.getText().toString().trim();
+		if(!query.equals(""))
+		{
+			task = new SearchTask(getActivity(), searchType, query, new SearchListener() 
+			{
+				@Override
+				public void onSearch(List<?> results) 
+				{
+					SearchFragment.this.items = results;
+					setAdapter();
+				}
+			});
+
+			if(lvSearch.getAdapter() != null)
+				((RootAdapter<?>)lvSearch.getAdapter()).clear();
+			getStatusView().show().text("Searching for \"" + query + "\",\nPlease wait...");
+			task.fire();
+		}
+	}
+
+	public void setAdapter()
+	{
+		if(items != null)
+		{
+			lvSearch.setAdapter(ListSearchAdapter.createAdapter(getSherlockActivity(), items, searchType));
+			if(items.isEmpty())
+				getStatusView().hide().text("Nothing found");
+			else
+				getStatusView().hide().text(null);
+		}
 	}
 
 	@Override
-	public void onSaveState(Bundle toSave) 
+	public void onRestoreState(Bundle savedInstanceState) {}
+
+	@Override
+	public void onSaveState(Bundle toSave) {}
+
+	@Override
+	public void onCreateTask() {}
+
+	@Override
+	public void onTaskIsDone() 
 	{
-		toSave.putSerializable(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<TvShow>) shows);
+		setAdapter();
 	}
+
+	@Override
+	public void onTaskIsRunning() {}
 }

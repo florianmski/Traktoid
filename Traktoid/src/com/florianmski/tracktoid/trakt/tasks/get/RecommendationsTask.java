@@ -19,11 +19,6 @@ public class RecommendationsTask<T> extends BaseTask<List<T>>
 	
 	private boolean sendCachedContent = true;
 	private boolean shouldSaveResultInCache = true;
-	
-	//TODO Split this task in more task
-	//search task does no need caching
-	//recommendation needs only if "all genres" and "no date"
-	//trending needs it
 
 	public RecommendationsTask(Activity context, 
 			TraktApiBuilder<List<Genre>> genresBuilder, 

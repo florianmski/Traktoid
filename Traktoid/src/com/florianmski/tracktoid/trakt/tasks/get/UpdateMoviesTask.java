@@ -100,7 +100,7 @@ public class UpdateMoviesTask extends GetTask<Movie>
 	{
 		super.onProgressPublished(progress, tmpResult, values);
 
-		if(values[0].equals("update") && lastProceedMovie != null)
+		if(values != null && values.length > 0 && values[0].equals("update") && lastProceedMovie != null)
 			TraktTask.traktItemUpdated(lastProceedMovie);
 	}
 	

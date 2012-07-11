@@ -15,38 +15,28 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader.TileMode;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
+import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.image.TraktImage;
-import com.jakewharton.trakt.entities.TvShow;
+import com.florianmski.traktoid.TraktoidInterface;
 
 /**
  * This class is an adapter that provides base, abstract class for images
  * adapter.
  * 
  */
-public class CoverFlowImageAdapter extends BaseAdapter 
-{
-	//TODO extends RootAdapter
-	//TODO placeholder
-	
-	/** The height. */
+public class CoverFlowAdapter<T extends TraktoidInterface<T>> extends RootAdapter<T> 
+{	
 	private float height = 0;
 
-	/** The bitmap map. */
-
-	private List<TvShow> shows;
-
-	/**
-	 * Gap between the image and its reflection.
-	 */
+	// Gap between the image and its reflection.
 	private float reflectionGap;
 
-	/** The image reflection ratio. */
+	// The image reflection ratio.
 	private float imageReflectionRatio;
 
 	/**
@@ -71,9 +61,9 @@ public class CoverFlowImageAdapter extends BaseAdapter
 		this.reflectionGap = reflectionGap;
 	}
 
-	public CoverFlowImageAdapter(List<TvShow> shows) 
+	public CoverFlowAdapter(Context context, List<T> items) 
 	{
-		this.shows = shows;
+		super(context, items);
 	}
 
 	/**
@@ -90,53 +80,19 @@ public class CoverFlowImageAdapter extends BaseAdapter
 	@Override
 	public int getCount() 
 	{
-		return shows.size();
-	}
-	
-	@Override
-	public final Bitmap getItem(final int position) 
-	{
-		return null;
+		return items.size();
 	}
 
 	@Override
-	public final synchronized long getItemId(final int position) 
+	public final T getItem(final int position) 
+	{
+		return items.get(position);
+	}
+
+	@Override
+	public final long getItemId(final int position) 
 	{
 		return position;
-	}
-
-	@Override
-	public final synchronized ImageView getView(final int position, final View convertView, final ViewGroup parent) 
-	{
-		ImageView imageView;
-		if (convertView == null) 
-		{
-			final Context context = parent.getContext();
-			imageView = new ImageView(context);
-			imageView.setLayoutParams(new CoverFlow.LayoutParams((int) (height*1.0/TraktImage.RATIO_POSTER), (int) height));
-		} 
-		else 
-			imageView = (ImageView) convertView;
-
-		TvShow show = shows.get(position);
-
-		AQuery aq = new AQuery(imageView);
-
-		BitmapAjaxCallback cb = new BitmapAjaxCallback()
-		{
-			@Override
-			public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
-			{
-				if(bm != null)
-					iv.setImageBitmap(createReflectedImages(bm));
-			}
-		};
-
-		TraktImage i = TraktImage.getPoster(show);
-		cb.url(i.getUrl()).fileCache(false).memCache(true);
-		aq.id(imageView).image(cb);
-
-		return imageView;
 	}
 
 	public Bitmap createReflectedImages(final Bitmap originalImage) 
@@ -161,6 +117,45 @@ public class CoverFlowImageAdapter extends BaseAdapter
 		paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));
 		canvas.drawRect(0, height, width, bitmapWithReflection.getHeight() + reflectionGap, paint);
 		return bitmapWithReflection;
+	}
+
+	@Override
+	public View doGetView(int position, View convertView, ViewGroup parent) 
+	{
+		ImageView imageView;
+		if (convertView == null) 
+		{
+			final Context context = parent.getContext();
+			imageView = new ImageView(context);
+			imageView.setLayoutParams(new CoverFlow.LayoutParams((int) (height*1.0/TraktImage.RATIO_POSTER), (int) height));
+		} 
+		else 
+			imageView = (ImageView) convertView;
+
+		T item = items.get(position);
+
+		final AQuery aq = listAq.recycle(convertView);
+		TraktImage i = TraktImage.getPoster(item);
+
+		BitmapAjaxCallback cb = new BitmapAjaxCallback()
+		{
+			@Override
+			public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
+			{
+				if(bm != null)
+					iv.setImageBitmap(createReflectedImages(bm));
+			}
+		}.url(i.getUrl()).fileCache(false).memCache(true);
+		
+		//in case user scroll the list fast, stop loading images from web
+//		if(aq.shouldDelay(position, convertView, parent, i.getUrl()))
+//			setPlaceholder(imageView);
+//		else
+//		{
+			aq.id(imageView).image(cb);
+//		}
+
+		return imageView;
 	}
 
 }

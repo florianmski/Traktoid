@@ -14,13 +14,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:imeOptions="actionDone"
             android:inputType="text" />
 
-        <Button
-            android:id="@+id/buttonSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Go!" />
+        <requestFocus />
     </LinearLayout>
 
     <RelativeLayout
