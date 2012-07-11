@@ -1,0 +1,6 @@
+[submodule "lib/SatelliteMenu"]
+	path = lib/SatelliteMenu
+	url = https://github.com/siyamed/android-satellite-menu.git
+[submodule "libs/SatelliteMenu"]
+	path = libs/SatelliteMenu
+	url = https://github.com/siyamed/android-satellite-menu.git
