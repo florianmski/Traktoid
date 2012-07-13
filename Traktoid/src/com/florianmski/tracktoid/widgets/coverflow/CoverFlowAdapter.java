@@ -15,6 +15,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader.TileMode;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 
 import com.androidquery.AQuery;
@@ -127,7 +128,7 @@ public class CoverFlowAdapter<T extends TraktoidInterface<T>> extends RootAdapte
 		{
 			final Context context = parent.getContext();
 			imageView = new ImageView(context);
-			imageView.setLayoutParams(new CoverFlow.LayoutParams((int) (height*1.0/TraktImage.RATIO_POSTER), (int) height));
+			imageView.setLayoutParams(new CoverFlow.LayoutParams(LayoutParams.MATCH_PARENT, (int) height));
 		} 
 		else 
 			imageView = (ImageView) convertView;
@@ -135,7 +136,7 @@ public class CoverFlowAdapter<T extends TraktoidInterface<T>> extends RootAdapte
 		T item = items.get(position);
 
 		final AQuery aq = listAq.recycle(convertView);
-		TraktImage i = TraktImage.getPoster(item);
+		TraktImage i = TraktImage.getFanart(item);
 
 		BitmapAjaxCallback cb = new BitmapAjaxCallback()
 		{

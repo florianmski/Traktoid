@@ -41,7 +41,7 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode>
 
 		for(TvShowEpisode item : items)
 		{
-			if(item.seasonId == seasonId)
+			if(item.seasonId.equals(seasonId))
 			{
 				int index = Collections.binarySearch(this.items, item);
 				if(index < 0 || index >= this.items.size())
@@ -65,7 +65,7 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode>
 
 		for(TvShowEpisode item : items)
 		{
-			if(item.seasonId == seasonId)
+			if(item.seasonId.equals(seasonId))
 			{
 				int index = Collections.binarySearch(this.items, item);
 				if(index >= 0 && index < this.items.size())

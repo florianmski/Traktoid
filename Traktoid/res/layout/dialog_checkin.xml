@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp" >
+
+    <EditText
+        android:id="@+id/editTextCheckin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Write a message (optionnal)"
+        android:inputType="textMultiLine" >
+
+        <requestFocus />
+    </EditText>
+
+    <com.florianmski.tracktoid.widgets.AlphaToggleButton
+        android:id="@+id/toggleButtonFacebook"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/editTextCheckin"
+        android:layout_margin="5dp"
+        android:background="@drawable/facebook" />
+
+    <com.florianmski.tracktoid.widgets.AlphaToggleButton
+        android:id="@+id/toggleButtonTwitter"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/editTextCheckin"
+        android:layout_margin="5dp"
+        android:layout_toRightOf="@+id/toggleButtonFacebook"
+        android:background="@drawable/twitter" />
+
+    <com.florianmski.tracktoid.widgets.AlphaToggleButton
+        android:id="@+id/toggleButtonTumblr"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/editTextCheckin"
+        android:layout_margin="5dp"
+        android:layout_toRightOf="@+id/toggleButtonTwitter"
+        android:background="@drawable/tumblr" />
+
+    <TextView
+        android:id="@+id/textViewCheckin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/toggleButtonTumblr"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/toggleButtonTumblr"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Button
+        android:id="@+id/buttonCheckin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textViewCheckin"
+        android:layout_below="@+id/textViewCheckin"
+        android:text="Check In!" />
+
+</RelativeLayout>

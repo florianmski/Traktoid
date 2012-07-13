@@ -1,14 +1,26 @@
 package com.florianmski.tracktoid.ui.fragments.traktitems;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ext.SatelliteMenu;
+import android.view.ext.SatelliteMenu.SateliteClickedListener;
+import android.view.ext.SatelliteMenuItem;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
@@ -17,10 +29,10 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
 import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.SatelliteDrawable;
 import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.pagers.PagerDetailsAdapter;
@@ -29,17 +41,18 @@ import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.post.CheckinPostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InCollectionTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InWatchlistTask;
+import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.trakt.tasks.post.RateTask;
 import com.florianmski.tracktoid.trakt.tasks.post.SeenTask;
 import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
 import com.florianmski.tracktoid.ui.fragments.PagerTabsViewFragment;
+import com.florianmski.tracktoid.widgets.AlphaToggleButton;
 import com.florianmski.tracktoid.widgets.BadgesView;
-import com.florianmski.tracktoid.widgets.FlipView3D;
-import com.florianmski.tracktoid.widgets.FlipView3D.SwapListener;
 import com.florianmski.tracktoid.widgets.RateDialog;
 import com.florianmski.tracktoid.widgets.RateDialog.OnColorChangedListener;
 import com.florianmski.tracktoid.widgets.ScrollingTextView;
 import com.florianmski.traktoid.TraktoidInterface;
+import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.enumerations.Rating;
 
@@ -49,16 +62,9 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 
 	private ScrollingTextView tvAired;
 	private TextView tvPercentage;
-	private TextView tvWatchlist;
-	private TextView tvCollection;
-	private TextView tvSeen;
-	private TextView tvCheckin;
-	private TextView tvRate;
 	private ImageView ivScreen;
 	private BadgesView<T> bl;
-	private FlipView3D flipView;
-	private RelativeLayout rlBack;
-	private RelativeLayout rlItem;
+	private SatelliteMenu menu;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -92,80 +98,117 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		mTabsAdapter.addTab(mTabHost.newTabSpec("links").setIndicator("Links"), android.R.layout.simple_list_item_1, null);
 		//		mTabsAdapter.addTab(mTabHost.newTabSpec("shouts").setIndicator("Shouts"), R.layout.fragment_shouts, null);
 
-		flipView.setOnSwapListener(new SwapListener() 
-		{	
-			@Override
-			public void onSwap(boolean flipped) 
-			{
-				//TODO this not exist < API 11
-//				rlBack.setRotationY(180);
-				if(flipped)
-				{
-					rlBack.setVisibility(View.VISIBLE);
-					rlItem.setVisibility(View.GONE);
-					bl.setOverlaysVisibility(View.GONE);
-				}
-				else
-				{
-					rlBack.setVisibility(View.GONE);
-					rlItem.setVisibility(View.VISIBLE);
-					bl.setOverlaysVisibility(View.VISIBLE);
-				}
-			}
-		});
+		List<SatelliteMenuItem> items = new ArrayList<SatelliteMenuItem>();
+		items.add(new SatelliteMenuItem(R.id.action_bar_rate, new SatelliteDrawable(R.drawable.ab_icon_rate, getResources())));
+		items.add(new SatelliteMenuItem(R.id.action_bar_add_to_collection, new SatelliteDrawable(R.drawable.badge_collection, getResources())));
+		items.add(new SatelliteMenuItem(R.id.action_bar_add_to_watchlist, new SatelliteDrawable(R.drawable.badge_watchlist, getResources())));
+		items.add(new SatelliteMenuItem(R.id.action_bar_watched_seen, new SatelliteDrawable(R.drawable.ab_icon_eye, getResources())));
+		if(!(this.item instanceof TvShow))
+			items.add(new SatelliteMenuItem(R.id.action_bar_watched_checkin, new SatelliteDrawable(R.drawable.ab_icon_checkin, getResources())));
 		
-		flipView.setOnClickListener(new OnClickListener() 
+		menu.addItems(items);
+
+		menu.setOnItemClickedListener(new SateliteClickedListener() 
 		{
-			@Override
-			public void onClick(View v) 
+			public void eventOccured(int id) 
 			{
-				flipView.rotate();
-			}
-		});
-		
-		tvWatchlist.setOnClickListener(new OnClickListener() 
-		{	
-			@Override
-			public void onClick(View v) 
-			{
-				InWatchlistTask.createTask(getActivity(), item, !item.isInWatchlist(), null).fire();
-			}
-		});
-		
-		tvCollection.setOnClickListener(new OnClickListener() 
-		{	
-			@Override
-			public void onClick(View v) 
-			{
-				InCollectionTask.createTask(getActivity(), item, !item.isInCollection(), null).fire();
-			}
-		});
-		
-		tvSeen.setOnClickListener(new OnClickListener() 
-		{	
-			@Override
-			public void onClick(View v) 
-			{
-				SeenTask.createTask(getActivity(), item, !item.isWatched(), null).fire();
-			}
-		});
-		
-		tvRate.setOnClickListener(new OnClickListener() 
-		{	
-			@Override
-			public void onClick(View v) 
-			{
-				//TODO
-			}
-		});
-		
-		tvCheckin.setOnClickListener(new OnClickListener() 
-		{	
-			@Override
-			public void onClick(View v) 
-			{
-				//TODO check if this item is currently hcecked in
-				CheckinPostTask.createTask(getActivity(), item, true, null).fire();
+				switch(id)
+				{
+				case R.id.action_bar_rate:
+					new RateDialog(getActivity(), new OnColorChangedListener() 
+					{
+						@Override
+						public void rateChanged(Rating r) 
+						{
+							RateTask.createTask(getActivity(), PI_TraktItemFragment.this.item, r, null).fire();
+						}
+					}, item.getRating()).show();
+					break;
+				case R.id.action_bar_add_to_collection:
+					InCollectionTask.createTask(getActivity(), item, !item.isInCollection(), null).fire();
+					break;
+				case R.id.action_bar_add_to_watchlist:
+					InWatchlistTask.createTask(getActivity(), item, !item.isInWatchlist(), null).fire();
+					break;
+				case R.id.action_bar_watched_checkin:
+					final Dialog dialog = new Dialog(getSherlockActivity());
+					dialog.setContentView(R.layout.dialog_checkin);
+					dialog.setTitle("Checkin");
+					dialog.show();
+
+					final EditText edt = (EditText) dialog.findViewById(R.id.editTextCheckin);
+					final TextView tv = (TextView) dialog.findViewById(R.id.textViewCheckin);
+					Button btnCheckin = (Button) dialog.findViewById(R.id.buttonCheckin);
+					final AlphaToggleButton atbFacebook = (AlphaToggleButton) dialog.findViewById(R.id.toggleButtonFacebook);
+					final AlphaToggleButton atbTwitter = (AlphaToggleButton) dialog.findViewById(R.id.toggleButtonTwitter);
+					final AlphaToggleButton atbTumblr = (AlphaToggleButton) dialog.findViewById(R.id.toggleButtonTumblr);
+
+					edt.addTextChangedListener(new TextWatcher() 
+					{
+						@Override
+						public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+						@Override
+						public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+						@Override
+						public void afterTextChanged(Editable s) 
+						{
+							tv.setText(100 - edt.getText().length() + " chars left");
+						}
+					});
+
+					//TODO might be great to display the name of the item depending on this type (check the trakt website)
+					//for instance : SHOW NAME + "EPISODE NAME" for an episode
+					//MOVIE NAME (YEAR) for a movie
+					edt.setText("I'm watching \"" + item.getTitle() + "\" using #traktoid");
+					btnCheckin.setOnClickListener(new OnClickListener() 
+					{
+						@Override
+						public void onClick(View v) 
+						{
+							CheckinPostTask
+							.createTask(getActivity(), item, true, new PostListener() 
+							{
+								@Override
+								public void onComplete(Response r, boolean success) 
+								{
+									if(r.wait > 0)
+									{
+										AlertDialog.Builder builder = new AlertDialog.Builder(getSherlockActivity());
+										//TODO wait time must be readable (not just seconds)
+										builder.setMessage("There is already a checkin in progress. Either cancel this checkin or wait " + r.wait + " before you can check in again.")
+										.setCancelable(false)
+										.setPositiveButton("Cancel checkin", new DialogInterface.OnClickListener() 
+										{
+											public void onClick(DialogInterface dialog, int id) 
+											{
+												CheckinPostTask.createTask(getSherlockActivity(), item, false, null).fire();
+											}
+										})
+										.setNegativeButton("Close", new DialogInterface.OnClickListener() 
+										{
+											public void onClick(DialogInterface dialog, int id) 
+											{
+												dialog.cancel();
+											}
+										});
+										builder.create().show();
+									}
+								}
+							})
+							.share(atbFacebook.isChecked(), atbTwitter.isChecked(), atbTumblr.isChecked(), false)
+							.message(edt.getText().toString().trim())
+							.fire();
+							dialog.dismiss();
+						}
+					});
+
+					break;
+				case R.id.action_bar_watched_seen:
+					SeenTask.createTask(getActivity(), item, !item.isWatched(), null).fire();
+					break;
+				}
 			}
 		});
 	}
@@ -189,16 +232,12 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 
 		tvAired = (ScrollingTextView)v.findViewById(R.id.textViewAired);
 		tvPercentage = (TextView)v.findViewById(R.id.textViewPercentage);
-		tvCheckin = (TextView)v.findViewById(R.id.textViewCheckin);
-		tvCollection = (TextView)v.findViewById(R.id.textViewCollection);
-		tvRate = (TextView)v.findViewById(R.id.textViewRate);
-		tvSeen = (TextView)v.findViewById(R.id.textViewSeen);
-		tvWatchlist = (TextView)v.findViewById(R.id.textViewWatchlist);
 		ivScreen = (ImageView)v.findViewById(R.id.imageViewScreen);
 		bl = (BadgesView<T>)v.findViewById(R.id.badgesView);
-		flipView = (FlipView3D)v.findViewById(R.id.flipView);
-		rlBack = (RelativeLayout)v.findViewById(R.id.back);
-		rlItem = (RelativeLayout)v.findViewById(R.id.relativeLayoutItem);
+		menu = (SatelliteMenu) v.findViewById(R.id.menu);
+
+		if(Build.VERSION.SDK_INT >= 11)
+			menu.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
 		//sometimes pager.getWidth = 0, don't know why so I use this trick
 		int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
@@ -222,7 +261,6 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		bl.initialize();
 		bl.setTraktItem(item);
 
-		//		Image i = new Image(item.getId(), item.getImages().fanart, Image.FANART);
 		final AQuery aq = new AQuery(ivScreen);
 		//create a bitmap ajax callback object
 		BitmapAjaxCallback cb = new BitmapAjaxCallback().url(TraktImage.getFanart(item).getUrl()).animation(android.R.anim.fade_in).fileCache(false).memCache(true);
@@ -243,66 +281,9 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		if(item != null)
 			setTitle(item.getTitle());
 
-		SubMenu watchMenu = menu.addSubMenu("Watched");
-
-		if(this.item != null && !this.item.isWatched())
-		{
-			watchMenu.add(0, R.id.action_bar_watched_seen, 0, "Seen")
-			.setIcon(R.drawable.ab_icon_eye)
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		}
-		else
-		{
-			watchMenu.add(0, R.id.action_bar_watched_unseen, 0, "Unseen")
-			.setIcon(R.drawable.ab_icon_eye)
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		}
-
-		//it is always possible to do a checkin even if user has already seen it
-		if(!(this.item instanceof TvShow))
-		{
-			watchMenu.add(0, R.id.action_bar_watched_checkin, 0, "Check in")
-			.setIcon(R.drawable.ab_icon_eye)
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		}
-
-		MenuItem watchItem = watchMenu.getItem();
-		watchItem.setIcon(R.drawable.ab_icon_eye)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
 		menu.add(0, R.id.action_bar_shouts, 0, "Shouts")
 		.setIcon(R.drawable.ab_icon_shouts)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-		if(this.item != null && !this.item.isInCollection())
-		{
-			menu.add(0, R.id.action_bar_add_to_collection, 0, "Add to collection")
-			.setIcon(R.drawable.ab_icon_shouts)
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-		}
-		else
-		{
-			menu.add(0, R.id.action_bar_remove_from_collection, 0, "Remove from collection")
-			.setIcon(R.drawable.ab_icon_shouts)
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-		}
-
-		if(this.item != null && !this.item.isInWatchlist())
-		{
-			menu.add(0, R.id.action_bar_add_to_watchlist, 0, "Add to watchlist")
-			.setIcon(R.drawable.ab_icon_shouts)
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-		}
-		else
-		{
-			menu.add(0, R.id.action_bar_remove_from_watchlist, 0, "Remove from watchlist")
-			.setIcon(R.drawable.ab_icon_close)
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-		}
-		
-		menu.add(0, R.id.action_bar_rate, 0, "Rate")
-		.setIcon(R.drawable.ab_icon_shouts)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 	}
 
 	@Override
@@ -310,35 +291,10 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 	{
 		switch(item.getItemId()) 
 		{	
-		case R.id.action_bar_watched_seen:
-		case R.id.action_bar_watched_unseen:
-			SeenTask.createTask(getActivity(), this.item, item.getItemId() == R.id.action_bar_watched_seen, null).fire();
-			break;
-		case R.id.action_bar_watched_checkin:
-			CheckinPostTask.createTask(getActivity(), this.item, true, null).fire();
-			break;
 		case R.id.action_bar_shouts:
 			Intent i = new Intent(getActivity(), ShoutsActivity.class);
 			i.putExtra(TraktoidConstants.BUNDLE_TRAKT_ITEM, this.item);
 			startActivity(i);
-			break;
-		case R.id.action_bar_add_to_collection:
-		case R.id.action_bar_remove_from_collection:
-			InCollectionTask.createTask(getActivity(), this.item, item.getItemId() == R.id.action_bar_add_to_collection, null).fire();
-			break;
-		case R.id.action_bar_add_to_watchlist:
-		case R.id.action_bar_remove_from_watchlist:
-			InWatchlistTask.createTask(getActivity(), this.item, item.getItemId() == R.id.action_bar_add_to_watchlist, null).fire();
-			break;
-		case R.id.action_bar_rate:
-			new RateDialog(getActivity(), new OnColorChangedListener() 
-			{
-				@Override
-				public void rateChanged(Rating r) 
-				{
-					RateTask.createTask(getActivity(), PI_TraktItemFragment.this.item, r, null).fire();
-				}
-			}, this.item.getRating()).show();
 			break;
 		}
 		return super.onOptionsItemSelected(item);

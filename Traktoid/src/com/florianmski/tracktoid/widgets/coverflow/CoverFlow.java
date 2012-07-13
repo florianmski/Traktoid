@@ -332,16 +332,16 @@ public class CoverFlow extends Gallery {
         final int width = child.getLayoutParams().width;
         final int rotation = Math.abs(rotationAngle);
 
-        mCamera.translate(0.0f, 0.0f, 100.0f);
+        mCamera.translate(0.0f, 0.0f, -mMaxZoom);
 
         // As the angle of the view gets less, zoom in
         if (rotation < mMaxRotationAngle) 
         {
-            final float zoomAmount = (float) (mMaxZoom + rotation * 1.5);
+            final float zoomAmount = (float) (mMaxZoom + (rotation * 5));
             mCamera.translate(0.0f, 0.0f, zoomAmount);
         }
 
-        mCamera.rotateY(rotationAngle);
+//        mCamera.rotateY(rotationAngle);
         mCamera.getMatrix(imageMatrix);
         imageMatrix.preTranslate(-(width / 2.0f), -(height / 2.0f));
         imageMatrix.postTranslate((width / 2.0f), (height / 2.0f));

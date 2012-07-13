@@ -65,16 +65,10 @@ public class RateDrawable extends Drawable
     }
 
     @Override
-    public void setAlpha(int alpha) 
-    {
-    	trianglePaint.setAlpha(alpha);
-    }
+    public void setAlpha(int alpha) {}
 
     @Override
-    public void setColorFilter(ColorFilter cf) 
-    {
-    	trianglePaint.setColorFilter(cf);
-    }
+    public void setColorFilter(ColorFilter cf) {}
 
     @Override
     public int getOpacity() 

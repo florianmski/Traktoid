@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
+import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
@@ -88,6 +89,7 @@ public class TrendingFragment extends TraktFragment
 	{
 		CoverFlowAdapter adapter = new CoverFlowAdapter(getSherlockActivity(), shows);
 		cf.setAdapter(adapter);
+		adapter.setHeight((float) (getActivity().getWindowManager().getDefaultDisplay().getWidth()*TraktImage.RATIO_FANART + 100));
 
 		if(adapter.isEmpty())
 			getStatusView().hide().text("No trending shows, strange...");
