@@ -105,7 +105,7 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		items.add(new SatelliteMenuItem(R.id.action_bar_watched_seen, new SatelliteDrawable(R.drawable.ab_icon_eye, getResources())));
 		if(!(this.item instanceof TvShow))
 			items.add(new SatelliteMenuItem(R.id.action_bar_watched_checkin, new SatelliteDrawable(R.drawable.ab_icon_checkin, getResources())));
-		
+
 		menu.addItems(items);
 
 		menu.setOnItemClickedListener(new SateliteClickedListener() 
@@ -131,17 +131,17 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 					InWatchlistTask.createTask(getActivity(), item, !item.isInWatchlist(), null).fire();
 					break;
 				case R.id.action_bar_watched_checkin:
-					final Dialog dialog = new Dialog(getSherlockActivity());
-					dialog.setContentView(R.layout.dialog_checkin);
-					dialog.setTitle("Checkin");
-					dialog.show();
+					final Dialog dialogCheckin = new Dialog(getSherlockActivity());
+					dialogCheckin.setContentView(R.layout.dialog_checkin);
+					dialogCheckin.setTitle("Checkin");
+					dialogCheckin.show();
 
-					final EditText edt = (EditText) dialog.findViewById(R.id.editTextCheckin);
-					final TextView tv = (TextView) dialog.findViewById(R.id.textViewCheckin);
-					Button btnCheckin = (Button) dialog.findViewById(R.id.buttonCheckin);
-					final AlphaToggleButton atbFacebook = (AlphaToggleButton) dialog.findViewById(R.id.toggleButtonFacebook);
-					final AlphaToggleButton atbTwitter = (AlphaToggleButton) dialog.findViewById(R.id.toggleButtonTwitter);
-					final AlphaToggleButton atbTumblr = (AlphaToggleButton) dialog.findViewById(R.id.toggleButtonTumblr);
+					final EditText edt = (EditText) dialogCheckin.findViewById(R.id.editTextCheckin);
+					final TextView tv = (TextView) dialogCheckin.findViewById(R.id.textViewCheckin);
+					Button btnCheckin = (Button) dialogCheckin.findViewById(R.id.buttonCheckin);
+					final AlphaToggleButton atbFacebook = (AlphaToggleButton) dialogCheckin.findViewById(R.id.toggleButtonFacebook);
+					final AlphaToggleButton atbTwitter = (AlphaToggleButton) dialogCheckin.findViewById(R.id.toggleButtonTwitter);
+					final AlphaToggleButton atbTumblr = (AlphaToggleButton) dialogCheckin.findViewById(R.id.toggleButtonTumblr);
 
 					edt.addTextChangedListener(new TextWatcher() 
 					{
@@ -175,32 +175,50 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 								{
 									if(r.wait > 0)
 									{
+										//ask user to cancel the current checkin or not
 										AlertDialog.Builder builder = new AlertDialog.Builder(getSherlockActivity());
 										//TODO wait time must be readable (not just seconds)
 										builder.setMessage("There is already a checkin in progress. Either cancel this checkin or wait " + r.wait + " before you can check in again.")
 										.setCancelable(false)
 										.setPositiveButton("Cancel checkin", new DialogInterface.OnClickListener() 
 										{
+											//if cancel, cancel the current checkin then when it's done resend the checkin then close the dialog
 											public void onClick(DialogInterface dialog, int id) 
 											{
-												CheckinPostTask.createTask(getSherlockActivity(), item, false, null).fire();
+												CheckinPostTask.createTask(getSherlockActivity(), item, false, new PostListener() 
+												{
+													@Override
+													public void onComplete(Response r, boolean success) 
+													{
+														CheckinPostTask
+														.createTask(getActivity(), item, true, null)
+														.share(atbFacebook.isChecked(), atbTwitter.isChecked(), atbTumblr.isChecked(), false)
+														.message(edt.getText().toString().trim())
+														.fire();
+														dialogCheckin.dismiss();
+													}
+												}).fire();
 											}
 										})
 										.setNegativeButton("Close", new DialogInterface.OnClickListener() 
 										{
+											//if close, close the two dialogs and do nothing
 											public void onClick(DialogInterface dialog, int id) 
 											{
 												dialog.cancel();
+												dialogCheckin.dismiss();
 											}
 										});
 										builder.create().show();
 									}
+									//if all is good just close the dialog
+									else
+										dialogCheckin.dismiss();
 								}
 							})
 							.share(atbFacebook.isChecked(), atbTwitter.isChecked(), atbTumblr.isChecked(), false)
 							.message(edt.getText().toString().trim())
 							.fire();
-							dialog.dismiss();
 						}
 					});
 
