@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import android.app.ProgressDialog;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -686,7 +686,7 @@ public class DatabaseWrapper
 	/******************************************************************************/
 	private final Context context;
 	private static SQLiteDatabase db = null;
-	private static Integer nbOpenedInstances = new Integer(0);
+	private static Integer nbOpenedInstances = Integer.valueOf(0);
 
 	public DatabaseWrapper(Context context) 
 	{

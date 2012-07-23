@@ -35,6 +35,7 @@ public class ListSeasonAdapter extends RootAdapter<TvShowSeason>
 		this.notifyDataSetChanged();
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public View doGetView(int position, View convertView, ViewGroup parent) 
 	{
@@ -71,7 +72,8 @@ public class ListSeasonAdapter extends RootAdapter<TvShowSeason>
     {
     	private TextView tvSeason;
     	private TextView tvLeft;
-    	private BadgesView bv;
+    	@SuppressWarnings("rawtypes")
+		private BadgesView bv;
     }
 
 }

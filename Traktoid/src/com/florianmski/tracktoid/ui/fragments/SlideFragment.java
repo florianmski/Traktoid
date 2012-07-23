@@ -27,7 +27,8 @@ import com.jakewharton.trakt.entities.Response;
 
 public class SlideFragment extends TraktFragment
 {
-	private BadgesView bvWatchingNow;
+	private BadgesView<?> bvWatchingNow;
+	//TODO checkin view
 	private TextView tvEpisodeTitle;
 	private TextView tvEpisodeEpisode;
 	private ImageView ivScreen;
@@ -35,6 +36,7 @@ public class SlideFragment extends TraktFragment
 	private ListView lvNavigation;
 	private ListNavigationAdapter adapter;
 	
+	@SuppressWarnings("rawtypes")
 	private TraktoidInterface traktItem;
 
 	public static SlideFragment newInstance(Bundle args)
@@ -89,7 +91,7 @@ public class SlideFragment extends TraktFragment
 	{
 		View v = inflater.inflate(R.layout.fragment_slide, null);
 
-		bvWatchingNow = (BadgesView)v.findViewById(R.id.badgesLayoutWatchingNow);
+		bvWatchingNow = (BadgesView<?>)v.findViewById(R.id.badgesLayoutWatchingNow);
 		tvEpisodeTitle = (TextView)v.findViewById(R.id.textViewTitle);
 		tvEpisodeEpisode = (TextView)v.findViewById(R.id.textViewEpisode);
 		ivScreen = (ImageView)v.findViewById(R.id.imageViewScreen);

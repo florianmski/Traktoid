@@ -119,6 +119,7 @@ public class UpdateShowsTask extends GetTask<TvShow>
 			nm.cancel(NOTIFICATION_ID);
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void createNotification()
 	{
 		notification = new Notification(R.drawable.ab_icon_refresh, "Refreshing...", System.currentTimeMillis());

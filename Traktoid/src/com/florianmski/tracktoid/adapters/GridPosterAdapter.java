@@ -158,6 +158,7 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 		return filteredItems.get(position);
 	}
 
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	public View doGetView(int position, View convertView, ViewGroup parent) 
 	{
@@ -183,8 +184,6 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 		holder.bv.setLayoutParams(paramsRl);
 
 		final T item = getItem(position);
-		String url = item.getImages().poster;
-		String id = item.getId();
 
 		holder.bv.initialize();
 		holder.ivPoster.setImageBitmap(null);

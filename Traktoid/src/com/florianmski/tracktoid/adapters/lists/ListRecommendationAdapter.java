@@ -19,7 +19,7 @@ import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.traktoid.TraktoidInterface;
 
-public class ListRecommendationAdapter<T extends TraktoidInterface> extends RootAdapter<T> 
+public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends RootAdapter<T> 
 {
 	private DismissListener listener;
 	
@@ -39,7 +39,8 @@ public class ListRecommendationAdapter<T extends TraktoidInterface> extends Root
 		return position;
     }
 
-    @Override
+    @SuppressWarnings({ "unchecked", "deprecation" })
+	@Override
 	public View doGetView(int position, View convertView, ViewGroup parent) 
     {
     	final ViewHolder holder;
@@ -54,7 +55,7 @@ public class ListRecommendationAdapter<T extends TraktoidInterface> extends Root
             int width = ((Activity)context).getWindowManager().getDefaultDisplay().getWidth();
             int height = (int) (width * TraktImage.RATIO_FANART);
             holder.ivFanart.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
-            holder.bv = (BadgesView)convertView.findViewById(R.id.badgesLayoutBanner);
+            holder.bv = (BadgesView<T>)convertView.findViewById(R.id.badgesLayoutBanner);
             convertView.setTag(holder);
         } 
         else
@@ -94,7 +95,8 @@ public class ListRecommendationAdapter<T extends TraktoidInterface> extends Root
     	private ImageView ivFanart;
     	private ImageView ivDismiss;
     	private TextView tvShow;
-    	private BadgesView bv;
+    	@SuppressWarnings("rawtypes")
+		private BadgesView bv;
     }
     
     public interface DismissListener

@@ -20,19 +20,18 @@
  */
 package com.florianmski.tracktoid.widgets.coverflow;
 
-import com.florianmski.tracktoid.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Camera;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Transformation;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
+
+import com.florianmski.tracktoid.R;
 
 /**
  * Cover Flow implementation.
@@ -198,13 +197,13 @@ public class CoverFlow extends Gallery {
             throw new IllegalArgumentException("The adapter should derive from "
                     + CoverFlowAdapter.class.getName());
         }
-        final CoverFlowAdapter coverAdapter = (CoverFlowAdapter) adapter;
+        final CoverFlowAdapter<?> coverAdapter = (CoverFlowAdapter<?>) adapter;
         coverAdapter.setHeight(imageHeight);
         if (withReflection) 
         {
-            ((CoverFlowAdapter)adapter).setReflectionGap(reflectionGap);
-            ((CoverFlowAdapter)adapter).setWidthRatio(imageReflectionRatio);
-            ((CoverFlowAdapter)adapter).setHeight(imageHeight * (1 + imageReflectionRatio));
+            ((CoverFlowAdapter<?>)adapter).setReflectionGap(reflectionGap);
+            ((CoverFlowAdapter<?>)adapter).setWidthRatio(imageReflectionRatio);
+            ((CoverFlowAdapter<?>)adapter).setHeight(imageHeight * (1 + imageReflectionRatio));
             super.setAdapter(adapter);
         } 
         else

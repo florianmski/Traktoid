@@ -31,6 +31,7 @@ public abstract class BaseTask<TResult> extends BackgroundTask<TResult>
 	protected Exception error;
 	protected Context context;
 
+	@SuppressWarnings("rawtypes")
 	private static List<TraktListener> listeners = new ArrayList<TraktListener>();
 	protected static ExecutorService sSingleThreadExecutor = new SingleThreadExecutor();
 	

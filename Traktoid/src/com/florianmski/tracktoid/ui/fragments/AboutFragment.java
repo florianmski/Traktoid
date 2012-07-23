@@ -51,6 +51,7 @@ public class AboutFragment extends BaseFragment
 		});
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{

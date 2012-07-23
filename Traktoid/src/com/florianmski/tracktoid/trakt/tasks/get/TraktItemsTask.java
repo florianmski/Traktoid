@@ -17,11 +17,6 @@ public class TraktItemsTask<T extends TraktoidInterface<T>> extends BaseTask<Lis
 	private TraktApiBuilder<?> builder;
 	private boolean sort;
 	private TraktItemsListener<T> listener;
-	
-	//TODO Split this task in more task
-	//search task does no need caching
-	//recommendation needs only if "all genres" and "no date"
-	//trending needs it
 
 	public TraktItemsTask(Activity context, TraktItemsListener<T> listener, TraktApiBuilder<?> builder, boolean sort) 
 	{

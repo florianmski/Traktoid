@@ -8,11 +8,11 @@ import com.jakewharton.trakt.entities.ActivityItemBase;
 import com.jakewharton.trakt.enumerations.ActivityAction;
 import com.jakewharton.trakt.enumerations.ActivityType;
 
-public class CheckinGetTask extends GetTask<TraktoidInterface>
+public class CheckinGetTask extends GetTask<TraktoidInterface<?>>
 {
 	private CheckinListener listener;
 	private ActivityItemBase checkin;
-	private TraktoidInterface traktItem;
+	private TraktoidInterface<?> traktItem;
 	
 
 	public CheckinGetTask(Activity context, CheckinListener listener) 
@@ -23,7 +23,7 @@ public class CheckinGetTask extends GetTask<TraktoidInterface>
 	}
 
 	@Override
-	protected TraktoidInterface doTraktStuffInBackground()
+	protected TraktoidInterface<?> doTraktStuffInBackground()
 	{
 		checkin = tm.userService().watching(TraktManager.getUsername()).fire();
 
@@ -41,11 +41,11 @@ public class CheckinGetTask extends GetTask<TraktoidInterface>
 	
 	public interface CheckinListener
 	{
-		public void onCheckin(TraktoidInterface traktItem);
+		public void onCheckin(TraktoidInterface<?> traktItem);
 	}
 
 	@Override
-	protected void sendEvent(TraktoidInterface result) 
+	protected void sendEvent(TraktoidInterface<?> result) 
 	{
 		if(getRef() != null)
 			listener.onCheckin(result);

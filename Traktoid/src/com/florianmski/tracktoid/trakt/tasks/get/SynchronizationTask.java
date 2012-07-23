@@ -109,6 +109,8 @@ public class SynchronizationTask extends GetTask<Activity>
 							case Rating :
 								episode.rating = activity.rating;
 								break;
+							default:
+								break;
 							}
 							updateEpisode(activity.show, episode);
 						}
@@ -121,6 +123,8 @@ public class SynchronizationTask extends GetTask<Activity>
 						activity.episode.rating = activity.rating;
 						updateEpisode(activity.show, activity.episode);
 						break;
+					default:
+						break;
 					}
 					break;
 				case Show :
@@ -131,6 +135,8 @@ public class SynchronizationTask extends GetTask<Activity>
 						break;
 					case Watchlist :
 						activity.show.inWatchlist = true;
+						break;
+					default:
 						break;
 					}
 					updateShow(activity.show);
@@ -153,8 +159,12 @@ public class SynchronizationTask extends GetTask<Activity>
 					case Seen :
 						activity.movie.watched = true;
 						break;
+					default:
+						break;
 					}
 					updateMovie(activity.movie);
+					break;
+				default:
 					break;
 				}
 			}

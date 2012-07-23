@@ -11,7 +11,7 @@
         android:background="@drawable/selector_invert"
         android:focusable="true"
         android:padding="5dp"
-        android:visibility="invisible" >
+        android:layout_above="@+id/listViewNavigation" >
 
         <ImageView
             android:id="@+id/imageViewScreen"

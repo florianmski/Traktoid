@@ -27,7 +27,9 @@ import com.jakewharton.trakt.entities.Shout;
 
 public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragment
 {
+	@SuppressWarnings("unused")
 	private final static int SPOILER = 0;
+	@SuppressWarnings("unused")
 	private final static int NO_SPOILER = 1;
 
 	private T traktItem;
@@ -39,9 +41,10 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 	
 	private ArrayList<Shout> shouts;
 
-	public static ShoutsFragment newInstance(Bundle args)
+	public static ShoutsFragment<?> newInstance(Bundle args)
 	{
-		ShoutsFragment f = new ShoutsFragment();
+		@SuppressWarnings("rawtypes")
+		ShoutsFragment<?> f = new ShoutsFragment();
 		f.setArguments(args);
 		return f;
 	}

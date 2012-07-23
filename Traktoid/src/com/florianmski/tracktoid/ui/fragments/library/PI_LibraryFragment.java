@@ -1,9 +1,6 @@
 package com.florianmski.tracktoid.ui.fragments.library;
 
-import java.util.List;
-
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +15,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.image.TraktImage;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InCollectionTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InWatchlistTask;
 import com.florianmski.tracktoid.trakt.tasks.post.SeenTask;
@@ -171,6 +166,7 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 	@Override
 	public void onSaveInstanceState(Bundle toSave) {}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
@@ -208,6 +204,7 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 		return calculatePosterHeight(nbColumns);
 	}
 
+	@SuppressWarnings("deprecation")
 	private int calculatePosterHeight(int nbColumns)
 	{
 		int width = (getActivity().getWindowManager().getDefaultDisplay().getWidth()/(nbColumns));

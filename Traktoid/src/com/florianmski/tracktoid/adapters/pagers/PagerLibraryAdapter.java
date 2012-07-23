@@ -28,7 +28,7 @@ public class PagerLibraryAdapter extends FragmentPagerAdapter
 	@Override
 	public Fragment getItem(int position) 
 	{
-		PI_LibraryFragment<? extends TraktoidInterface> f = null;
+		PI_LibraryFragment<? extends TraktoidInterface<?>> f = null;
 		
 		if(position == 0)
 			f = PI_LibraryShowFragment.newInstance(null);

@@ -31,6 +31,7 @@ public abstract class TraktTask<TResult> extends BackgroundTaskWeak<Activity, TR
 	protected Exception error;
 	protected Context context;
 
+	@SuppressWarnings("rawtypes")
 	private static List<TraktListener> listeners = new ArrayList<TraktListener>();
 	protected static ExecutorService sSingleThreadExecutor = new SingleThreadExecutor();
 

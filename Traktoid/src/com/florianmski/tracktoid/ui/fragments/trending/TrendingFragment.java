@@ -24,6 +24,8 @@ import com.jakewharton.trakt.entities.TvShow;
 
 public class TrendingFragment extends TraktFragment
 {	
+	//TODO do the same for movies
+	
 	private CoverFlow cf;
 	private List<TvShow> shows;
 
@@ -85,9 +87,10 @@ public class TrendingFragment extends TraktFragment
 			setAdapter();
 	}
 
+	@SuppressWarnings("deprecation")
 	private void setAdapter()
 	{
-		CoverFlowAdapter adapter = new CoverFlowAdapter(getSherlockActivity(), shows);
+		CoverFlowAdapter<TvShow> adapter = new CoverFlowAdapter<TvShow>(getSherlockActivity(), shows);
 		cf.setAdapter(adapter);
 		adapter.setHeight((float) (getActivity().getWindowManager().getDefaultDisplay().getWidth()*TraktImage.RATIO_FANART + 100));
 

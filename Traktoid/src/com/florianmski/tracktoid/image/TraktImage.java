@@ -14,6 +14,7 @@ public class TraktImage
 	private static Size size = Size.SMALL;
 
 	private String url;
+	@SuppressWarnings("unused")
 	private Type type;
 
 	private TraktImage(String url, Type type, Size size)

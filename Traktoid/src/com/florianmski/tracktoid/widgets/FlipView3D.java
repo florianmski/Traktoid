@@ -10,12 +10,12 @@ import android.widget.FrameLayout;
 public class FlipView3D extends FrameLayout
 {
 	public final static int FRONT = 0, BACK = 1;
+	@SuppressWarnings("unused")
 	private final static int ROTATE_TO_RIGHT = 1, ROTATE_TO_LEFT = -1;
 	
 	private SwapListener listener;
 	private boolean flipped = false;
 	private int direction = ROTATE_TO_LEFT;
-//	private View frontView, backView;
 	
 	public FlipView3D(Context context) 
 	{

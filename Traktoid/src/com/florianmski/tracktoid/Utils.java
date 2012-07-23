@@ -6,14 +6,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -29,8 +25,6 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
-
-import com.florianmski.tracktoid.trakt.tasks.post.WatchedEpisodesTask;
 
 public class Utils 
 {
@@ -149,44 +143,6 @@ public class Utils
 	public static boolean isActivityFinished(Activity a)
 	{
 		return a == null || a.isFinishing();
-	}
-
-	public static void chooseBetweenSeenAndCheckin(final WatchedEpisodesTask task, Context context)
-	{
-		List<Map<Integer, Boolean>> listWatched = task.getListWatched();
-
-		int size = 0;
-		int index = 0;
-		int i = 0;
-
-		for(Map<Integer, Boolean> map : listWatched)
-		{
-			size += map.size();
-			if(size > 0)
-				index = i;
-			i++;
-		}
-
-		//if there is only one episode selected and user want to mark it as watched
-		if(size == 1 && listWatched.get(index).containsValue(true))
-		{
-			final CharSequence[] items = {"I've watched it", "I'm watching it right now!"};
-
-			final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-			builder.setTitle("Pick a method");
-			builder.setItems(items, new DialogInterface.OnClickListener() 
-			{
-				@Override
-				public void onClick(DialogInterface dialog, int item) 
-				{
-					task.init(item == 1).fire();
-				}
-			});
-			builder.create().show();
-		}
-		//standard "seen" method
-		else
-			task.init(false).fire();
 	}
 
 	public static long getPSTTimestamp(long timestamp)

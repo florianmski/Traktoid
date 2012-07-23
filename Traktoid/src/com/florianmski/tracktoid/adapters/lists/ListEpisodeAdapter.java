@@ -80,6 +80,7 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode>
 			notifyDataSetChanged();
 	}
 
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	public View doGetView(final int position, View convertView, ViewGroup parent) 
 	{
@@ -92,7 +93,7 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode>
 			holder.ivScreen = (ImageView)convertView.findViewById(R.id.imageViewScreen);
 			holder.tvTitle = (TextView)convertView.findViewById(R.id.textViewTitle);
 			holder.tvEpisode = (TextView)convertView.findViewById(R.id.textViewEpisode);
-			holder.bv = (BadgesView)convertView.findViewById(R.id.badgesLayout);
+			holder.bv = (BadgesView<TvShowEpisode>)convertView.findViewById(R.id.badgesLayout);
 
 			convertView.setTag(holder);
 		} 
@@ -108,7 +109,6 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode>
 			@Override
 			public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
 			{     
-				//                    aq.id(iv).image(Utils.shadowBitmap(Utils.borderBitmap(bm)), 9.0f / 16.0f);
 				aq.id(iv).image(Utils.borderBitmap(bm, context)).animate(android.R.anim.fade_in);
 			}
 
@@ -136,6 +136,6 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode>
 		private ImageView ivScreen;
 		private TextView tvTitle;
 		private TextView tvEpisode;
-		private BadgesView bv;
+		private BadgesView<TvShowEpisode> bv;
 	}
 }

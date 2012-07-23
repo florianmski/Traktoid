@@ -7,9 +7,6 @@ import java.util.List;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,19 +39,15 @@ import com.florianmski.tracktoid.db.tasks.DBSeasonsTask;
 import com.florianmski.tracktoid.image.Fanart;
 import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.trakt.tasks.post.InCollectionTask.InCollectionEpisodeTask;
-import com.florianmski.tracktoid.trakt.tasks.post.RateTask;
 import com.florianmski.tracktoid.trakt.tasks.post.SeenTask.SeenEpisodeTask;
 import com.florianmski.tracktoid.ui.activities.phone.SeasonActivity;
 import com.florianmski.tracktoid.ui.activities.phone.TraktItemsActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.tracktoid.widgets.CheckableListView;
-import com.florianmski.tracktoid.widgets.RateDialog;
-import com.florianmski.tracktoid.widgets.RateDialog.OnColorChangedListener;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
-import com.jakewharton.trakt.enumerations.Rating;
 
 public class ProgressFragment extends TraktFragment implements TraktListener<TvShow>
 {

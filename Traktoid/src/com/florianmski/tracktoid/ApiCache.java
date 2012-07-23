@@ -16,6 +16,7 @@ import com.jakewharton.trakt.TraktApiBuilder;
 public class ApiCache 
 {
 	private static final String GET_FOLDER = "get/";
+	@SuppressWarnings("unused")
 	private static final String POST_FOLDER = "post/";
 	
 	private static String getPath(TraktApiBuilder<?> builder, String type, Context context)

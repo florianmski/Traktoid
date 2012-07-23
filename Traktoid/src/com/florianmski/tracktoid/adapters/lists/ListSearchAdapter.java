@@ -54,6 +54,7 @@ public abstract class ListSearchAdapter<T> extends RootAdapter<T>
 	protected abstract String getBanner(T item);
 	protected abstract boolean isTraktItem();
 	
+	@SuppressWarnings({ "rawtypes", "deprecation", "unchecked" })
 	@Override
 	public View doGetView(final int position, View convertView, ViewGroup parent) 
 	{
@@ -106,6 +107,7 @@ public abstract class ListSearchAdapter<T> extends RootAdapter<T>
 
 	private static class ViewHolder 
 	{
+		@SuppressWarnings("rawtypes")
 		private BadgesView bvBanner;
 		private ImageView ivBanner;
 		private TextView tvSeason;

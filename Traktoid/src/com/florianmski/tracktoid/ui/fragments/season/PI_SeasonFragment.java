@@ -63,7 +63,7 @@ public class PI_SeasonFragment extends TraktFragment implements TraktListener<Tv
 			season = (TvShowSeason) getArguments().getSerializable(TraktoidConstants.BUNDLE_SEASON);
 			position = getArguments().getInt(TraktoidConstants.BUNDLE_POSITION);
 		}
-		
+
 		TraktTask.addObserver(this);
 	}
 
@@ -73,7 +73,7 @@ public class PI_SeasonFragment extends TraktFragment implements TraktListener<Tv
 		super.onActivityCreated(savedInstanceState);
 
 		getStatusView().show().text("Loading season " + season.season + ",\nPlease wait...");
-		
+
 		ListCheckerManager.getInstance().addListener(lvEpisodes);
 		lvEpisodes.initialize(this, position, ListCheckerManager.<TvShowEpisode>getInstance());
 
@@ -103,18 +103,6 @@ public class PI_SeasonFragment extends TraktFragment implements TraktListener<Tv
 				});
 			}
 		}.start();
-
-//		lvEpisodes.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-//		lvEpisodes.setItemsCanFocus(false);
-//		lvEpisodes.setOnItemLongClickListener(new OnItemLongClickListener() 
-//		{
-//			@Override
-//			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) 
-//			{
-//				mMode = getSherlockActivity().startActionMode(mActionModeListener = new AnActionModeOfEpicProportions());
-//				return true;
-//			}
-//		});
 	}
 
 	@SuppressWarnings("unchecked")
@@ -124,6 +112,7 @@ public class PI_SeasonFragment extends TraktFragment implements TraktListener<Tv
 		View v = inflater.inflate(R.layout.pager_item_season, container, false);
 
 		lvEpisodes = (CheckableListView<TvShowEpisode>)v.findViewById(R.id.listViewEpisodes);
+		//TODO background poster of the season
 		ImageView ivBackground = (ImageView)v.findViewById(R.id.imageViewBackground);
 
 		lvEpisodes.setOnItemClickListener(new OnItemClickListener() 
@@ -131,25 +120,10 @@ public class PI_SeasonFragment extends TraktFragment implements TraktListener<Tv
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View v, int position, long id) 
 			{
-//				if(mMode != null)
-//				{
-//					boolean checked = !lvEpisodes.getCheckedItemPositions().get(position, false);
-//					Log.d("test", "size : " + lvEpisodes.getCheckedItemPositions().size());
-//					Log.d("test", "test : " + checked);
-//					lvEpisodes.getCheckedItemPositions().put(position, checked);
-////					mActionModeListener.onItemCheckedStateChanged(mMode, position, id, !checked);
-//					v.setBackgroundResource(checked ? R.color.list_pressed_color : R.color.list_background_color);
-//				}
-//				else
-//				{
-					Intent i = new Intent(getActivity(), TraktItemsActivity.class);
-					//				i.putExtra(TraktoidConstants.BUNDLE_SEASON_ID, season.url);
-					//				i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, tvdbId);
-					//				i.putExtra(TraktoidConstants.BUNDLE_TITLE, getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
-					i.putExtra(TraktoidConstants.BUNDLE_POSITION, position);
-					i.putExtra(TraktoidConstants.BUNDLE_RESULTS, (Serializable)((RootAdapter<TvShowEpisode>) lvEpisodes.getAdapter()).getItems());
-					startActivity(i);
-//				}
+				Intent i = new Intent(getActivity(), TraktItemsActivity.class);
+				i.putExtra(TraktoidConstants.BUNDLE_POSITION, position);
+				i.putExtra(TraktoidConstants.BUNDLE_RESULTS, (Serializable)((RootAdapter<TvShowEpisode>) lvEpisodes.getAdapter()).getItems());
+				startActivity(i);
 			}
 		});
 
@@ -161,8 +135,8 @@ public class PI_SeasonFragment extends TraktFragment implements TraktListener<Tv
 	{
 		super.onCreateOptionsMenu(menu, inflater);
 		menu.add(0, R.id.action_bar_multiple_selection, 0, "Multiple selection")
-			.setIcon(R.drawable.ab_icon_mark)
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		.setIcon(R.drawable.ab_icon_mark)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 	}
 
 	@Override
@@ -170,7 +144,7 @@ public class PI_SeasonFragment extends TraktFragment implements TraktListener<Tv
 	{
 		if(item.getItemId() == R.id.action_bar_multiple_selection)
 			lvEpisodes.start();
-		
+
 		return super.onOptionsItemSelected(item);
 	}
 

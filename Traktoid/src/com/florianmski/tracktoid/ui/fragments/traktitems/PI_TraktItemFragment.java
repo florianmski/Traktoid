@@ -243,6 +243,7 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		return inflater.inflate(R.layout.pager_item_trakt, null);
 	}
 
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{

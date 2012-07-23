@@ -35,6 +35,7 @@ public class ListShoutsAdapter extends RootAdapter<Shout>
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public View doGetView(final int position, View convertView, ViewGroup parent) 
 	{

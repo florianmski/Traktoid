@@ -1,6 +1,5 @@
 package com.florianmski.tracktoid.adapters.lists;
 
-import java.io.File;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +36,7 @@ import com.jakewharton.trakt.entities.TvShowEpisode;
 public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	public final static int TYPE_SEPARATOR = 0, TYPE_ROW = 1;
 	public final static int NB_BY_ROW_PORTRAIT = 2;
 	public final static int NB_BY_ROW_LANDSCAPE = 3;
@@ -49,7 +47,7 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 	public ListCalendarAdapter(List<CalendarDate> calendarDates, Context context)
 	{
 		super(context, calendarDates);
-		
+
 		int orientation = context.getResources().getConfiguration().orientation;
 		if(orientation == Configuration.ORIENTATION_PORTRAIT)
 			nbByRow = NB_BY_ROW_PORTRAIT;
@@ -100,7 +98,7 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public View doGetView(final int position, View convertView, ViewGroup parent) 
 	{
 		final ViewHolder holder;
@@ -113,7 +111,7 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 			case TYPE_SEPARATOR :
 			{
 				holder.llSeparator = new LinearLayout(context);
-				ListView.LayoutParams params = new ListView.LayoutParams(LayoutParams.FILL_PARENT, 50);
+				ListView.LayoutParams params = new ListView.LayoutParams(LayoutParams.MATCH_PARENT, 50);
 				holder.llSeparator.setLayoutParams(params);
 				holder.llSeparator.setGravity(Gravity.CENTER_VERTICAL);
 				holder.llSeparator.setPadding(15, 0, 0, 0);
@@ -130,17 +128,15 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 			{
 				holder.llEpisodes = new LinearLayout(context);
 				holder.llEpisodes.setOrientation(LinearLayout.HORIZONTAL);
-				ListView.LayoutParams params = new ListView.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+				ListView.LayoutParams params = new ListView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 				holder.llEpisodes.setLayoutParams(params);
-//				holder.llEpisodes.setFocusable(false);
-//				holder.llEpisodes.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 
 				int width = parent.getWidth()/nbByRow;
 				int height = (int) (width*0.562893082);
 
 				for(int i = 0; i < holder.bvScreen.length; i++)
 				{						
-					holder.bvScreen[i] = (BadgesView) LayoutInflater.from(context).inflate(R.layout.item_calendar, null);
+					holder.bvScreen[i] = (BadgesView<TvShowEpisode>) LayoutInflater.from(context).inflate(R.layout.item_calendar, null);
 					holder.bvScreen[i].setLayoutParams(new LinearLayout.LayoutParams(width, height));
 
 					holder.tvShow[i] = (ScrollingTextView) holder.bvScreen[i].findViewById(R.id.textViewShow);
@@ -148,10 +144,10 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 					holder.tvAirTime[i] = (ScrollingTextView) holder.bvScreen[i].findViewById(R.id.textViewAirTime);
 					holder.livScreen[i] = (ImageView) holder.bvScreen[i].findViewById(R.id.imageViewScreen);
 					holder.llScreen[i] = (LinearLayout) holder.bvScreen[i].findViewById(R.id.linearLayoutScreen);
-//					holder.livScreen[i].setFocusable(true);
-					
-//					holder.rlScreen[i].setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
-//					holder.tvShow[i].setDuplicateParentStateEnabled(true);
+					//					holder.livScreen[i].setFocusable(true);
+
+					//					holder.rlScreen[i].setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+					//					holder.tvShow[i].setDuplicateParentStateEnabled(true);
 
 					holder.llEpisodes.addView(holder.bvScreen[i]);
 				}
@@ -206,31 +202,19 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 				holder.tvAirTime[i].setText(e.show.airTime + " on " + e.show.network);
 
 				TraktImage image;
-				File posterImage = null;
 				AQuery aq = listAq.recycle(holder.llEpisodes);
-								
-//				if(episode.images.screen != null || episode.images.fanart != null)
+
 				image = TraktImage.getScreen(episode);
-//				else
-//				{
-//					//offline calendar (display show's poster)
-//					image = TraktImage.getPoster(e.show);
-//					posterImage = aq.getCachedFile(image.getUrl());
-//				}
-				
+
 				holder.bvScreen[i].initialize();
-				
+
 				if(aq.shouldDelay(holder.llEpisodes, parent, image.getUrl(), 0))
 					setPlaceholder(holder.livScreen[i]);
 				else
 				{
 					removePlaceholder(holder.livScreen[i], ScaleType.CENTER_CROP);
+					aq.id(holder.livScreen[i]).image(image.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
 
-//					if(posterImage != null)
-//						aq.id(holder.livScreen[i]).image(posterImage, 0);
-//					else
-						aq.id(holder.livScreen[i]).image(image.getUrl(), true, false, 0, 0, null, android.R.anim.fade_in);
-					
 					holder.bvScreen[i].setTraktItem(episode);
 				}
 
@@ -241,13 +225,9 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 					{
 						Intent i = new Intent(context, TraktItemsActivity.class);
 						ArrayList<TvShowEpisode> episodes = new ArrayList<TvShowEpisode>();
-						//workaround to display image in the episode view
-						
-//						if(episode.images.screen != null)
-//							episode.images.screen = episode.images.screen.replace("-940","");
-						
+
 						episode.tvdbId = e.show.tvdbId;
-						
+
 						episodes.add(episode);
 						i.putExtra(TraktoidConstants.BUNDLE_RESULTS, episodes);
 						context.startActivity(i);
@@ -273,7 +253,8 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 		private ScrollingTextView[] tvTitle = new ScrollingTextView[nbByRow];
 		private ScrollingTextView[] tvAirTime = new ScrollingTextView[nbByRow];
 		private ImageView[] livScreen = new ImageView[nbByRow];
-		private BadgesView[] bvScreen = new BadgesView[nbByRow];
+		@SuppressWarnings("unchecked")
+		private BadgesView<TvShowEpisode>[] bvScreen = new BadgesView[nbByRow];
 		private LinearLayout[] llScreen = new LinearLayout[nbByRow];
 	}
 }

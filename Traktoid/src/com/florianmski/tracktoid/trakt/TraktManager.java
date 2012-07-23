@@ -15,6 +15,7 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 	private static String username;
 	private static String password;
 
+	@SuppressWarnings("unused")
 	private Context context;
 
 	public static synchronized TraktManager getInstance()
