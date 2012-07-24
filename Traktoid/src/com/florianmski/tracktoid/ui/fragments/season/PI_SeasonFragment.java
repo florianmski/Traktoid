@@ -17,19 +17,20 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.TraktListener;
+import com.florianmski.tracktoid.TraktItemsRemovedEvent;
+import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.ui.activities.phone.TraktItemsActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.tracktoid.widgets.CheckableListView;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
+import com.squareup.otto.Subscribe;
 
-public class PI_SeasonFragment extends TraktFragment implements TraktListener<TvShowEpisode>
+public class PI_SeasonFragment extends TraktFragment
 {
 	private TvShowSeason season;
 	private int position;
@@ -63,8 +64,6 @@ public class PI_SeasonFragment extends TraktFragment implements TraktListener<Tv
 			season = (TvShowSeason) getArguments().getSerializable(TraktoidConstants.BUNDLE_SEASON);
 			position = getArguments().getInt(TraktoidConstants.BUNDLE_POSITION);
 		}
-
-		TraktTask.addObserver(this);
 	}
 
 	@Override
@@ -152,7 +151,6 @@ public class PI_SeasonFragment extends TraktFragment implements TraktListener<Tv
 	public void onDestroy() 
 	{
 		ListCheckerManager.getInstance().removeListener(lvEpisodes);
-		TraktTask.removeObserver(this);
 		super.onDestroy();
 	}
 
@@ -162,17 +160,19 @@ public class PI_SeasonFragment extends TraktFragment implements TraktListener<Tv
 	@Override
 	public void onSaveState(Bundle toSave) {}
 
-	@Override
-	public void onTraktItemsUpdated(List<TvShowEpisode> traktItems) 
+	@Subscribe
+	public void onTraktItemsUpdated(TraktItemsUpdatedEvent<TvShowEpisode> event) 
 	{
-		if(traktItems != null)
-			adapter.updateItems(traktItems);
-	}
-
-	@Override
-	public void onTraktItemsRemoved(List<TvShowEpisode> traktItems) 
-	{
-		if(traktItems != null)
+		List<TvShowEpisode> traktItems = event.getTraktItems(this);
+		if(adapter != null && traktItems != null)
 			adapter.remove(traktItems);
+	}
+	
+	@Subscribe
+	public void onTraktItemsRemoved(TraktItemsRemovedEvent<TvShowEpisode> event) 
+	{
+		List<TvShowEpisode> traktItems = event.getTraktItems(this);
+		if(adapter != null && traktItems != null)
+			adapter.updateItems(traktItems);
 	}
 }

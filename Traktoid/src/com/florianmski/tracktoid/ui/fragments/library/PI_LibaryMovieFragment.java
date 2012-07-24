@@ -12,20 +12,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBMoviesTask;
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateMoviesTask;
 import com.florianmski.tracktoid.ui.activities.phone.MovieActivity;
 import com.jakewharton.trakt.entities.Movie;
 
-public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie> implements TraktListener<Movie>
+public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 {
 	public static PI_LibaryMovieFragment newInstance(Bundle args)
 	{
@@ -33,22 +31,8 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie> implements
 		f.setArguments(args);
 		return f;
 	}
-	
-	public PI_LibaryMovieFragment() {}
-	
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState)
-	{
-		super.onActivityCreated(savedInstanceState);
-		TraktTask.addObserver(this);
-	}
 
-	@Override
-	public void onDestroy()
-	{
-		TraktTask.removeObserver(this);
-		super.onDestroy();
-	}
+	public PI_LibaryMovieFragment() {}
 
 	@Override
 	public void checkUpdateTask() 
@@ -70,7 +54,7 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie> implements
 		b.putSerializable(TraktoidConstants.BUNDLE_TRAKT_ITEM, movie);
 		launchActivity(MovieActivity.class, b);
 	}
-	
+
 	@Override
 	public void displayContent() 
 	{
@@ -92,15 +76,15 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie> implements
 	public void onRefreshClick() 
 	{
 		new TraktItemsTask<Movie>(getActivity(), new TraktItemsListener<Movie>() 
-		{
+				{
 			@Override
 			public void onTraktItems(List<Movie> movies) 
 			{
 				createMoviesDialog(movies);					
 			}
-		}, tm.userService().libraryMoviesAll(TraktManager.getUsername()), true).fire();
+				}, tm.userService().libraryMoviesAll(TraktManager.getUsername()), true).fire();
 	}
-	
+
 	public void createMoviesDialog(final List<Movie> movies)
 	{
 		final ArrayList<Movie> selectedMovies = new ArrayList<Movie>();
@@ -156,19 +140,5 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie> implements
 		//avoid trying to show dialog if activity no longer exist
 		if(!getActivity().isFinishing())
 			alert.show();
-	}
-
-	@Override
-	public void onTraktItemsUpdated(List<Movie> traktItems) 
-	{
-		if(adapter != null)
-			adapter.updateItems(traktItems);
-	}
-
-	@Override
-	public void onTraktItemsRemoved(List<Movie> traktItem) 
-	{
-		if(adapter != null)
-			adapter.remove(traktItem);
 	}
 }

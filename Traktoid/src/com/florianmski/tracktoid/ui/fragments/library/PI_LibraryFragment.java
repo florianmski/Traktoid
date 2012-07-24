@@ -1,6 +1,9 @@
 package com.florianmski.tracktoid.ui.fragments.library;
 
+import java.util.List;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktItemsRemovedEvent;
+import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.image.TraktImage;
@@ -24,6 +29,7 @@ import com.florianmski.tracktoid.trakt.tasks.post.SeenTask;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.tracktoid.widgets.CheckableGridView;
 import com.florianmski.traktoid.TraktoidInterface;
+import com.squareup.otto.Subscribe;
 
 public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends TraktFragment
 {
@@ -279,6 +285,25 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 	@Override
 	public void onSaveState(Bundle toSave) {}
 
+	@Subscribe
+	public void onTraktItemsUpdated(TraktItemsUpdatedEvent<T> event) 
+	{
+		List<T> traktItems = event.getTraktItems(this);
+		if(adapter != null && traktItems != null)
+		{
+			adapter.updateItems(traktItems);
+			Log.e("test","test");
+		}
+	}
+	
+	@Subscribe
+	public void onTraktItemsRemoved(TraktItemsRemovedEvent<T> event) 
+	{
+		List<T> traktItems = event.getTraktItems(this);
+		if(adapter != null && traktItems != null)
+			adapter.updateItems(traktItems);
+	}
+	
 //	@Override
 //	public void onTraktItemsUpdated(List<T> traktItems) 
 //	{

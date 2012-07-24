@@ -7,6 +7,7 @@ import android.view.View;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.florianmski.tracktoid.StatusView;
+import com.florianmski.tracktoid.TraktBus;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 
@@ -17,25 +18,6 @@ public abstract class BaseFragment extends SherlockFragment
 	private DatabaseWrapper dbw = null;
 	protected BaseTask<?> task;
 	private TaskListener taskListener;
-
-	//	public static Fragment newInstanceTest(Context context, Bundle args)
-	//	{
-	//		return Fragment.instantiate(context, args.getString(TraktoidConstants.BUNDLE_CLASS), args);
-	//	}
-
-	//	public void launchActivityWithSingleFragment(Class<?> fragmentClass)
-	//	{
-	//		launchActivityWithSingleFragment(fragmentClass, null);
-	//	}
-
-	//	public void launchActivityWithSingleFragment(Class<?> fragmentClass, Bundle args)
-	//	{
-	//		Intent i = new Intent(getActivity(), SinglePaneActivity.class);
-	//		i.putExtra(TraktoidConstants.BUNDLE_CLASS, fragmentClass.getName());
-	//		if(args != null)
-	//			i.putExtras(args);
-	//		startActivity(i);
-	//	}
 
 	public void launchActivity(Class<?> activityToLaunch, Bundle args)
 	{
@@ -56,6 +38,8 @@ public abstract class BaseFragment extends SherlockFragment
 		super.onCreate(savedInstanceState);
 		getActionBar().setHomeButtonEnabled(true);
 
+		TraktBus.getInstance().register(this);
+		
 		if(savedInstanceState != null)
 		{
 			onRestoreState(savedInstanceState);
@@ -127,6 +111,8 @@ public abstract class BaseFragment extends SherlockFragment
 	{
 		super.onDestroy();
 
+		TraktBus.getInstance().unregister(this);
+		
 		if (dbw != null) 
 		{
 			dbw.close();
@@ -160,6 +146,12 @@ public abstract class BaseFragment extends SherlockFragment
 	protected void setSubtitle(String subtitle)
 	{
 		getActionBar().setSubtitle(subtitle);
+	}
+
+	@Override
+	public void onDetach()
+	{
+		super.onDetach();
 	}
 
 	public abstract void onRestoreState(Bundle savedInstanceState);

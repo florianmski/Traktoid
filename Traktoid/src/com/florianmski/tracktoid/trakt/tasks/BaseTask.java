@@ -1,8 +1,5 @@
 package com.florianmski.tracktoid.trakt.tasks;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import android.app.Activity;
@@ -10,10 +7,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.apibuilder.ApiException;
 import com.jakewharton.trakt.TraktException;
 
@@ -31,8 +26,6 @@ public abstract class BaseTask<TResult> extends BackgroundTask<TResult>
 	protected Exception error;
 	protected Context context;
 
-	@SuppressWarnings("rawtypes")
-	private static List<TraktListener> listeners = new ArrayList<TraktListener>();
 	protected static ExecutorService sSingleThreadExecutor = new SingleThreadExecutor();
 	
 	public BaseTask(Context context) 
@@ -162,58 +155,5 @@ public abstract class BaseTask<TResult> extends BackgroundTask<TResult>
 	public void attach(Activity a)
 	{
 		context = a;
-	}
-
-	public static <T extends TraktoidInterface<T>> void addObserver(TraktListener<T> listener)
-	{
-		listeners.add(listener);
-	}
-
-	public static <T extends TraktoidInterface<T>> void removeObserver(TraktListener<T> listener)
-	{
-		listeners.remove(listener);
-	}
-
-	public static <T extends TraktoidInterface<T>> void traktItemUpdated(T traktItem)
-	{
-		List<T> traktItems = new ArrayList<T>();
-		traktItems.add(traktItem);
-		traktItemsUpdated(traktItems);
-	}
-
-	public static <T extends TraktoidInterface<T>> void traktItemRemoved(T traktItem)
-	{
-		List<T> traktItems = new ArrayList<T>();
-		traktItems.add(traktItem);
-		traktItemsRemoved(traktItems);
-	}
-	
-	public static <T extends TraktoidInterface<T>> void traktItemsUpdated(List<T> traktItems)
-	{
-		for(TraktListener<T> l : listeners)
-		{
-			try
-			{
-				//this is quite ugly, generics are new for me so it might have other cleaner solution
-				//basically I check if the current TraktListener is parameterized with the traktItems list type
-				//(avoid for instance that shows are added to movies grid when there is a synchronization)
-				if(!traktItems.isEmpty() && ((ParameterizedType) l.getClass().getGenericSuperclass()).getActualTypeArguments()[0] == traktItems.get(0).getClass())
-					l.onTraktItemsUpdated(traktItems);
-			}
-			catch(ClassCastException e) {e.printStackTrace();}
-		}
-	}
-
-	public static <T extends TraktoidInterface<T>> void traktItemsRemoved(List<T> traktItems)
-	{
-		for(TraktListener<T> l : listeners)
-		{
-			try
-			{
-				if(!traktItems.isEmpty())
-					l.onTraktItemsRemoved(traktItems);
-			}
-			catch(ClassCastException e) {}
-		}
 	}
 }

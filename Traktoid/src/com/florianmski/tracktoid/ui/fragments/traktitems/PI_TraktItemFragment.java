@@ -33,11 +33,11 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.SatelliteDrawable;
-import com.florianmski.tracktoid.TraktListener;
+import com.florianmski.tracktoid.TraktItemsRemovedEvent;
+import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.pagers.PagerDetailsAdapter;
 import com.florianmski.tracktoid.image.TraktImage;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.post.CheckinPostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InCollectionTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InWatchlistTask;
@@ -55,8 +55,9 @@ import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.enumerations.Rating;
+import com.squareup.otto.Subscribe;
 
-public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> extends PagerTabsViewFragment implements TraktListener<T>
+public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> extends PagerTabsViewFragment
 {
 	protected T item;
 
@@ -77,15 +78,6 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 			item = (T) getArguments().getSerializable(TraktoidConstants.BUNDLE_TRAKT_ITEM);
 
 		getSherlockActivity().invalidateOptionsMenu();
-
-		TraktTask.addObserver(this);
-	}
-
-	@Override
-	public void onDestroy()
-	{
-		TraktTask.removeObserver(this);
-		super.onDestroy();
 	}
 
 	@Override
@@ -325,28 +317,32 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 	@Override
 	public void onSaveState(Bundle toSave) {}
 
-	@Override
-	public void onTraktItemsUpdated(List<T> traktItems) 
+	@Subscribe
+	public void onTraktItemsUpdated(TraktItemsUpdatedEvent<T> event) 
 	{
-		for(T traktItem : traktItems)
-			if(traktItem.getId().equals(item.getId()))
-			{
-				this.item = traktItem;
-				getActivity().invalidateOptionsMenu();
-				refreshView();
+		List<T> traktItems = event.getTraktItems(this);
+		if(traktItems != null)
+			for(T traktItem : traktItems)
+				if(traktItem.getId().equals(item.getId()))
+				{
+					this.item = traktItem;
+					getActivity().invalidateOptionsMenu();
+					refreshView();
 
-				break;
-			}
+					break;
+				}
 	}
 
-	@Override
-	public void onTraktItemsRemoved(List<T> traktItems) 
+	@Subscribe
+	public void onTraktItemsRemoved(TraktItemsRemovedEvent<T> event) 
 	{
-		for(T traktItem : traktItems)
-			if(traktItem.getId().equals(item.getId()))
-			{
-				getActivity().finish();
-				break;
-			}
+		List<T> traktItems = event.getTraktItems(this);
+		if(traktItems != null)
+			for(T traktItem : traktItems)
+				if(traktItem.getId().equals(item.getId()))
+				{
+					getActivity().finish();
+					break;
+				}
 	}
 }

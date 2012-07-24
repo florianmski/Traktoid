@@ -14,9 +14,10 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktBus;
+import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.ui.activities.phone.SinglePaneActivity;
 import com.florianmski.tracktoid.ui.fragments.library.PagerLibraryFragment;
 import com.jakewharton.trakt.entities.Movie;
@@ -101,7 +102,7 @@ public class UpdateMoviesTask extends GetTask<Movie>
 		super.onProgressPublished(progress, tmpResult, values);
 
 		if(values != null && values.length > 0 && values[0].equals("update") && lastProceedMovie != null)
-			TraktTask.traktItemUpdated(lastProceedMovie);
+			TraktBus.getInstance().post(new TraktItemsUpdatedEvent<Movie>(lastProceedMovie));
 	}
 	
 	@Override

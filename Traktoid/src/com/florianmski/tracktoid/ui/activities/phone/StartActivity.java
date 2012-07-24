@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.androidquery.service.MarketService;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.trakt.tasks.get.SynchronizationTask;
-import com.florianmski.tracktoid.widgets.AppRater;
 
 public class StartActivity extends Activity
 {
@@ -28,6 +28,8 @@ public class StartActivity extends Activity
 			launchActivityForResult(LoginActivity.class, 1337);
 		else
 			doStuffIfUserIsLogged();
+		
+		Log.e("test","onCreate");
 	}
 	
 	public void doStuffIfUserIsLogged()
@@ -42,7 +44,8 @@ public class StartActivity extends Activity
 		ms.checkVersion();
 
 		//show sometimes a dialog to rate the app on the market 
-		AppRater.app_launched(this);
+		//TODO dialog is shown but replace by the library activity
+//		AppRater.app_launched(this);
 
 		//sync with trakt
 		new SynchronizationTask(this).silentConnectionError(true).fire();
@@ -51,7 +54,9 @@ public class StartActivity extends Activity
 		//does not seem to be a great idea, it's slow and I sometimes get an outOfMemoryError :/
 		//		Image.smallSize = !Utils.isTabletDevice(getActivity());
 		
-		launchActivityForResult(LibraryActivity.class, 117);
+//		launchActivityForResult(LibraryActivity.class, 117);
+		launchActivity(LibraryActivity.class);
+		finish();
 	}
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data)

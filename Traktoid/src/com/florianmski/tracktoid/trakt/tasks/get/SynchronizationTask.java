@@ -10,15 +10,15 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.florianmski.tracktoid.TraktBus;
+import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.jakewharton.trakt.entities.Activity;
 import com.jakewharton.trakt.entities.ActivityItemBase;
 import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
-import com.jakewharton.trakt.entities.Update;
 
 public class SynchronizationTask extends GetTask<Activity>
 {
@@ -185,23 +185,24 @@ public class SynchronizationTask extends GetTask<Activity>
 
 		}
 
-		//if timestamp == 0 the json we'll incredibly huge
-		if(timestamp != 0)
-		{
-			Update u = tm.updateService().shows().timestamp(timestamp).fire();
-			for(TvShow s : u.shows)
-			{
-				if(dbw.showExist(s.tvdbId))
-					add(traktUpdateShowList, s);
-			}
-
-			u = tm.updateService().movies().timestamp(timestamp).fire();
-			for(Movie m : u.movies)
-			{
-				if(dbw.movieExist(m.imdbId))
-					add(traktUpdateMovieList, m);
-			}
-		}
+		//TODO take a lot of time & memory
+		//if timestamp == 0 the json we'll be incredibly huge
+//		if(timestamp != 0)
+//		{
+//			Update u = tm.updateService().shows().timestamp(timestamp).fire();
+//			for(TvShow s : u.shows)
+//			{
+//				if(dbw.showExist(s.tvdbId))
+//					add(traktUpdateShowList, s);
+//			}
+//
+//			u = tm.updateService().movies().timestamp(timestamp).fire();
+//			for(Movie m : u.movies)
+//			{
+//				if(dbw.movieExist(m.imdbId))
+//					add(traktUpdateMovieList, m);
+//			}
+//		}
 
 		dbw.close();
 
@@ -256,9 +257,9 @@ public class SynchronizationTask extends GetTask<Activity>
 	@Override
 	protected void sendEvent(Activity result) 
 	{
-		TraktTask.traktItemsUpdated(finalUpdateShowList);
-		TraktTask.traktItemsUpdated(finalUpdateEpisodeList);
-		TraktTask.traktItemsUpdated(finalUpdateMovieList);
+		TraktBus.getInstance().post(new TraktItemsUpdatedEvent<TvShow>(finalUpdateShowList));
+		TraktBus.getInstance().post(new TraktItemsUpdatedEvent<TvShowEpisode>(finalUpdateEpisodeList));
+		TraktBus.getInstance().post(new TraktItemsUpdatedEvent<Movie>(finalUpdateMovieList));
 
 		if(!traktUpdateShowList.isEmpty())
 			new UpdateShowsTask(context, new ArrayList<TvShow>(traktUpdateShowList)).fire();

@@ -29,7 +29,8 @@ import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.TraktListener;
+import com.florianmski.tracktoid.TraktItemsRemovedEvent;
+import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.lists.ListSeasonAdapter;
@@ -48,8 +49,9 @@ import com.florianmski.tracktoid.widgets.CheckableListView;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
+import com.squareup.otto.Subscribe;
 
-public class ProgressFragment extends TraktFragment implements TraktListener<TvShow>
+public class ProgressFragment extends TraktFragment
 {
 	private final static int PERCENTAGE_STEP = 2;
 
@@ -63,7 +65,7 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 	private ListSeasonAdapter adapter;
 
 	private TvShow show = null;
-	
+
 	private ListCheckerManager<TvShowSeason> lcm;
 
 	public static ProgressFragment newInstance(Bundle args)
@@ -86,9 +88,9 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
-		
+
 		//TODO save state in case of configuration change
-		
+
 		lcm = new ListCheckerManager<TvShowSeason>();
 		lcm.setOnActionModeListener(new Callback() 
 		{
@@ -97,13 +99,13 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 			{
 				return false;
 			}
-			
+
 			@Override
 			public void onDestroyActionMode(ActionMode mode) 
 			{
-				
+
 			}
-			
+
 			@Override
 			public boolean onCreateActionMode(ActionMode mode, Menu menu) 
 			{
@@ -113,9 +115,9 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 				seenMenu.add(0, R.id.action_bar_watched_unseen, 0, "Unseen")
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 				MenuItem seenItem = seenMenu.getItem();
-		        seenItem.setIcon(R.drawable.ab_icon_eye);
-		        seenItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-				
+				seenItem.setIcon(R.drawable.ab_icon_eye);
+				seenItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
 				SubMenu collectionMenu = menu.addSubMenu("collection");
 				collectionMenu.add(0, R.id.action_bar_add_to_collection, 0, "add to collection")
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -126,7 +128,7 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 				collectionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 				return true;
 			}
-			
+
 			@Override
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) 
 			{
@@ -144,10 +146,10 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 				return true;
 			}
 		});
-		
+
 		lcm.addListener(lvSeasons);
 		lvSeasons.initialize(this, 0, lcm);
-		
+
 		if(lcm.isActivated())
 			getSherlockActivity().startActionMode(lcm.getCallback());
 
@@ -172,7 +174,7 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 
 		refreshFragment(getArguments());
 	}
-	
+
 	@Override 
 	public void onDestroy()
 	{
@@ -329,7 +331,7 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
 		super.onCreateOptionsMenu(menu, inflater);
-		
+
 		menu.add(0, R.id.action_bar_multiple_selection, 0, "Multiple selection")
 		.setIcon(R.drawable.ab_icon_mark)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -386,33 +388,37 @@ public class ProgressFragment extends TraktFragment implements TraktListener<TvS
 	@Override
 	public void onSaveState(Bundle toSave) {}
 
-	@Override
-	public void onTraktItemsUpdated(List<TvShow> traktItems) 
+	@Subscribe
+	public void onTraktItemsUpdated(TraktItemsUpdatedEvent<TvShow> event) 
 	{
-		for(TvShow traktItem : traktItems)
-			if(traktItem.tvdbId.equals(this.show.tvdbId) && adapter != null)
-			{
-				displayPercentage(traktItem.progress);
-				displayNextEpisode();
+		List<TvShow> traktItems = event.getTraktItems(this);
+		if(traktItems != null)
+			for(TvShow traktItem : traktItems)
+				if(traktItem.tvdbId.equals(this.show.tvdbId) && adapter != null)
+				{
+					displayPercentage(traktItem.progress);
+					displayNextEpisode();
 
-				if(traktItem.seasons != null)
-					adapter.refreshItems(traktItem.seasons);
+					if(traktItem.seasons != null)
+						adapter.refreshItems(traktItem.seasons);
 
-				this.show = traktItem;
-				getSherlockActivity().invalidateOptionsMenu();
-				
-				break;
-			}
+					this.show = traktItem;
+					getSherlockActivity().invalidateOptionsMenu();
+
+					break;
+				}
 	}
 
-	@Override
-	public void onTraktItemsRemoved(List<TvShow> traktItems) 
+	@Subscribe
+	public void onTraktItemsRemoved(TraktItemsRemovedEvent<TvShow> event) 
 	{
-		for(TvShow traktItem : traktItems)
-			if(traktItem.tvdbId.equals(show.tvdbId))
-			{
-				getActivity().finish();
-				break;
-			}
+		List<TvShow> traktItems = event.getTraktItems(this);
+		if(traktItems != null)
+			for(TvShow traktItem : traktItems)
+				if(traktItem.tvdbId.equals(show.tvdbId))
+				{
+					getActivity().finish();
+					break;
+				}
 	}
 }

@@ -5,8 +5,9 @@ import java.util.List;
 
 import android.app.Activity;
 
+import com.florianmski.tracktoid.TraktBus;
+import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Movie;
@@ -69,7 +70,7 @@ public abstract class RateTask<T extends TraktoidInterface<T>> extends PostTask
 	@Override
 	protected void sendEvent(Response result) 
 	{
-		TraktTask.traktItemsUpdated(traktItems);
+		TraktBus.getInstance().post(new TraktItemsUpdatedEvent<T>(traktItems));
 	}
 
 	public static final class RateShowTask extends RateTask<TvShow>

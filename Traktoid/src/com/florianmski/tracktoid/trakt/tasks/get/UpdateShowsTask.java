@@ -13,9 +13,10 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktBus;
+import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.ui.activities.phone.SinglePaneActivity;
 import com.florianmski.tracktoid.ui.fragments.library.PagerLibraryFragment;
 import com.jakewharton.trakt.entities.TvShow;
@@ -109,7 +110,7 @@ public class UpdateShowsTask extends GetTask<TvShow>
 		super.onProgressPublished(progress, tmpResult, values);
 
 		if(values != null && values.length > 0 && values[0].equals("update") && lastProceedShow != null)
-			TraktTask.traktItemUpdated(lastProceedShow);
+			TraktBus.getInstance().post(new TraktItemsUpdatedEvent<TvShow>(lastProceedShow));
 	}
 	
 	@Override

@@ -2,8 +2,9 @@ package com.florianmski.tracktoid.trakt.tasks.post;
 
 import android.app.Activity;
 
+import com.florianmski.tracktoid.TraktBus;
+import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Movie;
@@ -79,7 +80,7 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 	@Override
 	protected void sendEvent(Response result) 
 	{
-		TraktTask.traktItemUpdated(traktItem);
+		TraktBus.getInstance().post(new TraktItemsUpdatedEvent<T>(traktItem));
 	}
 
 	public static final class CheckinMovieTask extends CheckinPostTask<Movie>

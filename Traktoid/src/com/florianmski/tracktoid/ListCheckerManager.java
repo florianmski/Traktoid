@@ -83,21 +83,9 @@ public class ListCheckerManager<T>
 	
 	public List<T> getItemsList() 
 	{
-		return checkedItems;
+		//we return a new copy of the list because if we clear the list right after, nothing will be send because it is the same list
+		return new ArrayList<T>(checkedItems);
 	}
-	
-//	public List<String> getIdsList() 
-//	{
-//		return checkedItems;
-//	}
-	
-//	public <T> List<T> getItemsList() 
-//	{
-//		List<T> items = new ArrayList<T>();
-//		for(ListCheckerListener l : listeners)
-//			items.addAll(l.<T>getItemsList());
-//		return items;
-//	}
 	
 	public void clear()
 	{

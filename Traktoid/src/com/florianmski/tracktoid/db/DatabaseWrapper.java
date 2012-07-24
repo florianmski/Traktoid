@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -440,25 +441,25 @@ public class DatabaseWrapper
 			"PRIMARY KEY (" + KEY_GENRE_URL + "," + KEY_GENRE_NAME + ")" + // No comma in the end!
 			");";
 
-//	/************************** People table *******************************/
-//	private static final String PEOPLES_TABLE = "genres";
-//
-//	public static final String KEY_PEOPLE_URL = "url";
-//	public static final int COLUMN_PEOPLE_URL = 1;
-//
-//	public static final String KEY_PEOPLE_JOB = "job";
-//	public static final int COLUMN_PEOPLE_JOB = 2;
-//
-//	public static final String KEY_PEOPLE_NAME = "name";
-//	public static final int COLUMN_PEOPLE_NAME = 3;
-//
-//	private static final String PEOPLES_TABLE_CREATE = "create table " +
-//			PEOPLES_TABLE + " (" + 
-//			KEY_ID + " integer primary key, " + 
-//			KEY_PEOPLE_URL + " text, " +
-//			KEY_PEOPLE_JOB + " text, " +
-//			KEY_PEOPLE_NAME + " text " + // No comma in the end!
-//			");";
+	//	/************************** People table *******************************/
+	//	private static final String PEOPLES_TABLE = "genres";
+	//
+	//	public static final String KEY_PEOPLE_URL = "url";
+	//	public static final int COLUMN_PEOPLE_URL = 1;
+	//
+	//	public static final String KEY_PEOPLE_JOB = "job";
+	//	public static final int COLUMN_PEOPLE_JOB = 2;
+	//
+	//	public static final String KEY_PEOPLE_NAME = "name";
+	//	public static final int COLUMN_PEOPLE_NAME = 3;
+	//
+	//	private static final String PEOPLES_TABLE_CREATE = "create table " +
+	//			PEOPLES_TABLE + " (" + 
+	//			KEY_ID + " integer primary key, " + 
+	//			KEY_PEOPLE_URL + " text, " +
+	//			KEY_PEOPLE_JOB + " text, " +
+	//			KEY_PEOPLE_NAME + " text " + // No comma in the end!
+	//			");";
 
 	//TODO
 	/*
@@ -751,7 +752,7 @@ public class DatabaseWrapper
 
 		// If nothing has been updated, insert a new entry
 		if(nbRowsAffected == 0)
-			db.insert(table, null, values);
+			db.insertOrThrow(table, null, values);
 	}
 
 	public void putNotNull(ContentValues cv, String key, Integer value)
@@ -831,7 +832,7 @@ public class DatabaseWrapper
 		//		putNotNull(values, KEY_TVSHOW_PROGRESS, s.getProgress());
 
 		insertOrUpdate(TVSHOWS_TABLE, values, s.tvdbId);
-		
+
 		insertOrUpdateGenres(s.genres, s.url);
 	}
 
@@ -898,7 +899,7 @@ public class DatabaseWrapper
 		show.year = c.getInt(COLUMN_TVSHOW_YEAR);
 
 		show.progress = c.getInt(COLUMN_TVSHOW_PROGRESS);
-		
+
 		show.genres = getGenres(show.url);
 
 		return show;
@@ -941,7 +942,7 @@ public class DatabaseWrapper
 			show = getShowFromCursor(c);
 
 		c.close();
-		
+
 		return show;
 	}
 
@@ -972,9 +973,9 @@ public class DatabaseWrapper
 									new String[]{episode.url});
 						}
 					}
-					
+
 					//TODO
-//					removeGenres(url);
+					//					removeGenres(url);
 				}
 	}
 
@@ -1528,7 +1529,7 @@ public class DatabaseWrapper
 		//putNotNull(values, KEY_MOVIE_RT_ID, m.);
 
 		insertOrUpdate(MOVIES_TABLE, values, m.url);
-		
+
 		insertOrUpdateGenres(m.genres, m.url);
 	}
 
@@ -1573,7 +1574,7 @@ public class DatabaseWrapper
 		movie.year = c.getInt(COLUMN_MOVIE_YEAR);
 
 		movie.genres = getGenres(movie.url);
-		
+
 		return movie;
 	}
 
@@ -1613,7 +1614,7 @@ public class DatabaseWrapper
 			movie = getMovieFromCursor(c);
 
 		c.close();
-		
+
 		return movie;
 	}
 
@@ -1654,7 +1655,11 @@ public class DatabaseWrapper
 		putNotNull(values, KEY_GENRE_NAME, g);
 		putNotNull(values, KEY_GENRE_URL, url);
 
-		insertOrUpdate(GENRES_TABLE, values, null);
+		try
+		{
+			insertOrUpdate(GENRES_TABLE, values, null);
+		}
+		catch(SQLiteConstraintException e){}
 	}
 
 	/**

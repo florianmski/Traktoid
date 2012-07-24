@@ -12,20 +12,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import com.florianmski.tracktoid.TraktListener;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBShowsTask;
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
 import com.jakewharton.trakt.entities.TvShow;
 
-public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow> implements TraktListener<TvShow>
+public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 {
 	public static PI_LibraryShowFragment newInstance(Bundle args)
 	{
@@ -35,20 +33,6 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow> implement
 	}
 
 	public PI_LibraryShowFragment() {}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState)
-	{
-		super.onActivityCreated(savedInstanceState);
-		TraktTask.addObserver(this);
-	}
-
-	@Override
-	public void onDestroy()
-	{
-		TraktTask.removeObserver(this);
-		super.onDestroy();
-	}
 
 	@Override
 	public void checkUpdateTask() 
@@ -162,18 +146,4 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow> implement
 
 	@Override
 	public void onSaveState(Bundle toSave) {}
-
-	@Override
-	public void onTraktItemsUpdated(List<TvShow> traktItems) 
-	{
-		if(adapter != null)
-			adapter.updateItems(traktItems);
-	}
-
-	@Override
-	public void onTraktItemsRemoved(List<TvShow> traktItem) 
-	{
-		if(adapter != null)
-			adapter.remove(traktItem);
-	}
 }
