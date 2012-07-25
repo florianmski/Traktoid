@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <com.florianmski.tracktoid.widgets.BadgesView
+    <com.florianmski.tracktoid.widgets.OverlaysView
         android:id="@+id/badgesView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -74,15 +74,7 @@
             sat:satelliteDistance="100dp"
             sat:totalSpacingDegree="90" />
 
-        <!-- <com.capricorn.ArcMenu -->
-        <!-- android:id="@+id/arc_menu" -->
-        <!-- android:layout_width="wrap_content" -->
-        <!-- android:layout_height="wrap_content" -->
-        <!-- android:layout_above="@+id/relativeLayoutItem" -->
-        <!-- android:layout_alignParentLeft="true" > -->
-        <!-- </com.capricorn.ArcMenu> -->
-
-    </com.florianmski.tracktoid.widgets.BadgesView>
+    </com.florianmski.tracktoid.widgets.OverlaysView>
 
     <TabHost
         android:id="@android:id/tabhost"

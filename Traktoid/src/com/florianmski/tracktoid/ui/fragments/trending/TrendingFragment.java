@@ -9,117 +9,116 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ListView;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
-import com.florianmski.tracktoid.image.TraktImage;
-import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
-import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
+import com.florianmski.tracktoid.adapters.lists.ListTrendingAdapter;
+import com.florianmski.tracktoid.trakt.tasks.BaseTask;
+import com.florianmski.tracktoid.trakt.tasks.get.TrendingTask;
+import com.florianmski.tracktoid.trakt.tasks.get.TrendingTask.TrendingListener;
+import com.florianmski.tracktoid.ui.activities.TraktItemsActivity;
+import com.florianmski.tracktoid.ui.fragments.BaseFragment.TaskListener;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
-import com.florianmski.tracktoid.ui.fragments.traktitems.PI_TraktItemShowFragment;
-import com.florianmski.tracktoid.widgets.coverflow.CoverFlow;
-import com.florianmski.tracktoid.widgets.coverflow.CoverFlowAdapter;
-import com.jakewharton.trakt.entities.TvShow;
+import com.florianmski.traktoid.TraktoidInterface;
+import com.jakewharton.trakt.TraktApiBuilder;
 
-public class TrendingFragment extends TraktFragment
-{	
-	//TODO do the same for movies
+public abstract class TrendingFragment<T extends TraktoidInterface<T>> extends TraktFragment implements TaskListener
+{		
+	private ListView lvTrending;
+
+	protected ListTrendingAdapter<T> adapter;
 	
-	private CoverFlow cf;
-	private List<TvShow> shows;
-
-	public static TrendingFragment newInstance(Bundle args)
-	{
-		TrendingFragment f = new TrendingFragment();
-		f.setArguments(args);
-		return f;
-	}
+	private List<T> items;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
+		setTaskListener(this);
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
+	
+	public abstract TraktApiBuilder<List<T>> getTrendingBuilder();
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
-
-		getStatusView().show().text("Retrieving trending shows,\nPlease wait...");
 		
-		cf.setOnItemSelectedListener(new OnItemSelectedListener() 
-		{
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) 
-			{
-				setTitle(shows.get(position).title);
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {}
-		});
-
-		cf.setOnItemClickListener(new OnItemClickListener() 
+		lvTrending.setOnItemClickListener(new OnItemClickListener() 
 		{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) 
 			{
-				getFragmentManager().beginTransaction().replace(R.id.fragment_show, PI_TraktItemShowFragment.newInstance(shows.get(position))).commit();
+				Bundle b = new Bundle();
+				b.putSerializable(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<T>) adapter.getItems());
+				b.putInt(TraktoidConstants.BUNDLE_POSITION, position);
+				launchActivity(TraktItemsActivity.class, b);
 			}
 		});
-
-		if(savedInstanceState == null)
-		{
-			new TraktItemsTask<TvShow>(getActivity(), new TraktItemsListener<TvShow>() 
-			{
-				@Override
-				public void onTraktItems(List<TvShow> shows) 
-				{
-					TrendingFragment.this.shows = shows;
-					setAdapter();
-				}
-			}, tm.showService().trending(), false).fire();
-		}
-		else
-			setAdapter();
 	}
 
-	@SuppressWarnings("deprecation")
-	private void setAdapter()
+	protected BaseTask<?> createGetRecommendationsTask(boolean sendCachedContent, boolean silent)
 	{
-		CoverFlowAdapter<TvShow> adapter = new CoverFlowAdapter<TvShow>(getSherlockActivity(), shows);
-		cf.setAdapter(adapter);
-		adapter.setHeight((float) (getActivity().getWindowManager().getDefaultDisplay().getWidth()*TraktImage.RATIO_FANART + 100));
+		getStatusView().show().text("Retrieving trending,\nPlease wait...");
 
-		if(adapter.isEmpty())
-			getStatusView().hide().text("No trending shows, strange...");
+		return task = new TrendingTask<T>(getSherlockActivity(), getTrendingBuilder(), new TrendingListener<T>() {
+			@Override
+			public void onTrending(List<T> trending) 
+			{
+				TrendingFragment.this.items = trending;
+				setAdapter();
+			}
+		});
+	}
+	
+	protected void setAdapter()
+	{
+		if(adapter == null)
+			lvTrending.setAdapter(adapter = new ListTrendingAdapter<T>(items, getActivity()));
+		else
+		{
+			adapter.refreshItems(items);
+			if(lvTrending.getAdapter() == null)
+				lvTrending.setAdapter(adapter);
+		}
+
+		if(adapter.getCount() == 0)
+			getStatusView().hide().text("No trending, strange...");
 		else
 			getStatusView().hide().text(null);
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		View v = inflater.inflate(R.layout.fragment_trending, null);
 
-		cf = (CoverFlow)v.findViewById(R.id.coverflow);
+		lvTrending = (ListView)v.findViewById(R.id.listViewTrending);
 
 		return v;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) 
+	public void onCreateTask() 
 	{
-		shows = (ArrayList<TvShow>) savedInstanceState.get(TraktoidConstants.BUNDLE_RESULTS);
+		createGetRecommendationsTask(true, false);
+		task.fire();
 	}
 
 	@Override
-	public void onSaveState(Bundle toSave) 
+	public void onTaskIsDone() 
 	{
-		toSave.putSerializable(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<TvShow>) shows);
+		setAdapter();
 	}
+
+	@Override
+	public void onTaskIsRunning() {}
+	
+	@Override
+	public void onRestoreState(Bundle savedInstanceState) {}
+
+	@Override
+	public void onSaveState(Bundle toSave) {}
 }

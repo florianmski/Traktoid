@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.florianmski.tracktoid.widgets.BadgesView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.florianmski.tracktoid.widgets.OverlaysView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/badgesLayoutBanner"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
@@ -12,7 +12,7 @@
 
     <TextView
         style="@style/Traktoid.PrimaryText.Medium.Bold"
-        android:id="@+id/textViewShow"
+        android:id="@+id/textViewTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageViewBanner"
@@ -20,7 +20,7 @@
         android:background="@drawable/selector_list_classic"
         android:gravity="left|center"
         android:padding="5dp"
-        android:text="Show" >
+        android:text="Title" >
     </TextView>
 
     <ImageView
@@ -34,4 +34,4 @@
         android:src="@drawable/ab_icon_close"
         android:duplicateParentState="false" />
 
-</com.florianmski.tracktoid.widgets.BadgesView>
+</com.florianmski.tracktoid.widgets.OverlaysView>

@@ -5,19 +5,22 @@
     android:layout_height="fill_parent" >
 
     <ImageView
-        android:id="@+id/imageViewBanner"
+        android:id="@+id/imageViewFanart"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent" >
+    </ImageView>
 
     <TextView
-        style="@style/Traktoid.PrimaryText.Small.Bold"
-        android:id="@+id/textViewShow"
+        android:id="@+id/textViewTitle"
+        style="@style/Traktoid.PrimaryText.Medium.Bold"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageViewBanner"
-        android:background="#8F000000"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/selector_list_classic"
         android:gravity="left|center"
-        android:padding="3dp"
-        android:text="Show" />
+        android:padding="5dp"
+        android:text="Title" >
+    </TextView>
 
 </com.florianmski.tracktoid.widgets.OverlaysView>

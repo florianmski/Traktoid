@@ -27,7 +27,7 @@ import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.ui.activities.TraktItemsActivity;
-import com.florianmski.tracktoid.widgets.BadgesView;
+import com.florianmski.tracktoid.widgets.OverlaysView;
 import com.florianmski.tracktoid.widgets.ScrollingTextView;
 import com.jakewharton.trakt.entities.CalendarDate;
 import com.jakewharton.trakt.entities.CalendarDate.CalendarTvShowEpisode;
@@ -136,7 +136,7 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 
 				for(int i = 0; i < holder.bvScreen.length; i++)
 				{						
-					holder.bvScreen[i] = (BadgesView<TvShowEpisode>) LayoutInflater.from(context).inflate(R.layout.item_calendar, null);
+					holder.bvScreen[i] = (OverlaysView<TvShowEpisode>) LayoutInflater.from(context).inflate(R.layout.item_calendar, null);
 					holder.bvScreen[i].setLayoutParams(new LinearLayout.LayoutParams(width, height));
 
 					holder.tvShow[i] = (ScrollingTextView) holder.bvScreen[i].findViewById(R.id.textViewShow);
@@ -254,7 +254,7 @@ public class ListCalendarAdapter extends RootAdapter<CalendarDate> implements Se
 		private ScrollingTextView[] tvAirTime = new ScrollingTextView[nbByRow];
 		private ImageView[] livScreen = new ImageView[nbByRow];
 		@SuppressWarnings("unchecked")
-		private BadgesView<TvShowEpisode>[] bvScreen = new BadgesView[nbByRow];
+		private OverlaysView<TvShowEpisode>[] bvScreen = new OverlaysView[nbByRow];
 		private LinearLayout[] llScreen = new LinearLayout[nbByRow];
 	}
 }

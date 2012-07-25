@@ -47,7 +47,7 @@ import com.florianmski.tracktoid.trakt.tasks.post.SeenTask;
 import com.florianmski.tracktoid.ui.activities.ShoutsActivity;
 import com.florianmski.tracktoid.ui.fragments.PagerTabsViewFragment;
 import com.florianmski.tracktoid.widgets.AlphaToggleButton;
-import com.florianmski.tracktoid.widgets.BadgesView;
+import com.florianmski.tracktoid.widgets.OverlaysView;
 import com.florianmski.tracktoid.widgets.RateDialog;
 import com.florianmski.tracktoid.widgets.RateDialog.OnColorChangedListener;
 import com.florianmski.tracktoid.widgets.ScrollingTextView;
@@ -64,7 +64,7 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 	private ScrollingTextView tvAired;
 	private TextView tvPercentage;
 	private ImageView ivScreen;
-	private BadgesView<T> bl;
+	private OverlaysView<T> bl;
 	private SatelliteMenu menu;
 
 	@SuppressWarnings("unchecked")
@@ -244,7 +244,7 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		tvAired = (ScrollingTextView)v.findViewById(R.id.textViewAired);
 		tvPercentage = (TextView)v.findViewById(R.id.textViewPercentage);
 		ivScreen = (ImageView)v.findViewById(R.id.imageViewScreen);
-		bl = (BadgesView<T>)v.findViewById(R.id.badgesView);
+		bl = (OverlaysView<T>)v.findViewById(R.id.badgesView);
 		menu = (SatelliteMenu) v.findViewById(R.id.menu);
 
 		if(Build.VERSION.SDK_INT >= 11)

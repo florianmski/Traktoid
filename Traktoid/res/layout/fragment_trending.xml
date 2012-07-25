@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:coverflow="http://schemas.android.com/apk/res/com.florianmski.tracktoid"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.florianmski.tracktoid.widgets.coverflow.CoverFlow
-        android:id="@+id/coverflow"
+    <ListView
+        android:id="@+id/listViewTrending"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        coverflow:withReflection="false" />
-
-<!--     <TextView -->
-<!--         android:id="@+id/textViewShowTitle" -->
-<!--         android:layout_width="wrap_content" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_below="@+id/coverflow" -->
-<!--         android:layout_centerHorizontal="true" -->
-<!--         android:textAppearance="?android:attr/textAppearanceMedium" /> -->
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0px" />
 
     <include layout="@layout/view_status" />
 

@@ -1,19 +1,14 @@
 package com.florianmski.tracktoid.ui.activities;
 
-import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
-import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.ui.fragments.trending.TrendingFragment;
+import com.florianmski.tracktoid.ui.fragments.trending.PagerTrendingFragment;
 
-public class TrendingActivity extends TraktActivity
+public class TrendingActivity extends SinglePaneActivity
 {
 	@Override
-	public void onCreate(Bundle savedInstanceState) 
+	public Fragment getFragment() 
 	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_trending);
-		
-		if(savedInstanceState == null)
-			getSupportFragmentManager().beginTransaction().replace(R.id.fragment_trending, TrendingFragment.newInstance(getIntent().getExtras())).commit();
+		return PagerTrendingFragment.newInstance(getIntent().getExtras());
 	}
 }

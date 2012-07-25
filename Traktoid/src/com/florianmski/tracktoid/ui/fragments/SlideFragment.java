@@ -21,13 +21,13 @@ import com.florianmski.tracktoid.trakt.tasks.post.CheckinPostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.ui.activities.LibraryActivity;
 import com.florianmski.tracktoid.ui.activities.MenuActivity;
-import com.florianmski.tracktoid.widgets.BadgesView;
+import com.florianmski.tracktoid.widgets.OverlaysView;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Response;
 
 public class SlideFragment extends TraktFragment
 {
-	private BadgesView<?> bvWatchingNow;
+	private OverlaysView<?> bvWatchingNow;
 	//TODO checkin view
 	private TextView tvEpisodeTitle;
 	private TextView tvEpisodeEpisode;
@@ -91,7 +91,7 @@ public class SlideFragment extends TraktFragment
 	{
 		View v = inflater.inflate(R.layout.fragment_slide, null);
 
-		bvWatchingNow = (BadgesView<?>)v.findViewById(R.id.badgesLayoutWatchingNow);
+		bvWatchingNow = (OverlaysView<?>)v.findViewById(R.id.badgesLayoutWatchingNow);
 		tvEpisodeTitle = (TextView)v.findViewById(R.id.textViewTitle);
 		tvEpisodeEpisode = (TextView)v.findViewById(R.id.textViewEpisode);
 		ivScreen = (ImageView)v.findViewById(R.id.imageViewScreen);

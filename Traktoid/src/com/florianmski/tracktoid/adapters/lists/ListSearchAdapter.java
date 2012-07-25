@@ -18,7 +18,7 @@ import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.ui.fragments.SearchFragment;
-import com.florianmski.tracktoid.widgets.BadgesView;
+import com.florianmski.tracktoid.widgets.OverlaysView;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvEntity;
@@ -65,7 +65,7 @@ public abstract class ListSearchAdapter<T> extends RootAdapter<T>
 			convertView = LayoutInflater.from(context).inflate(R.layout.list_item_serie, parent, false);
 			holder = new ViewHolder();
 
-			holder.bvBanner = (BadgesView)convertView.findViewById(R.id.badgesLayoutBanner);
+			holder.bvBanner = (OverlaysView)convertView.findViewById(R.id.badgesLayoutBanner);
 			holder.ivBanner = (ImageView)convertView.findViewById(R.id.imageViewBanner);
 			holder.tvSeason = (TextView)convertView.findViewById(R.id.textViewShow);
 
@@ -108,7 +108,7 @@ public abstract class ListSearchAdapter<T> extends RootAdapter<T>
 	private static class ViewHolder 
 	{
 		@SuppressWarnings("rawtypes")
-		private BadgesView bvBanner;
+		private OverlaysView bvBanner;
 		private ImageView ivBanner;
 		private TextView tvSeason;
 	}

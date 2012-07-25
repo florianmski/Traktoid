@@ -18,7 +18,7 @@ import com.androidquery.AQuery;
 import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.image.TraktImage;
-import com.florianmski.tracktoid.widgets.BadgesView;
+import com.florianmski.tracktoid.widgets.OverlaysView;
 import com.florianmski.traktoid.TraktoidInterface;
 
 public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapter<T>
@@ -173,7 +173,7 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 			holder.ivPoster = (ImageView) convertView.findViewById(R.id.imageViewPoster);
 			holder.ivPoster.setScaleType(ScaleType.CENTER_CROP);
 
-			holder.bv = (BadgesView<T>) convertView.findViewById(R.id.badgesLayout);
+			holder.bv = (OverlaysView<T>) convertView.findViewById(R.id.badgesLayout);
 
 			convertView.setTag(holder);
 		} 
@@ -207,6 +207,6 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 	private static class ViewHolder<T extends TraktoidInterface<T>> 
 	{
 		private ImageView ivPoster;
-		private BadgesView<T> bv;
+		private OverlaysView<T> bv;
 	}
 }

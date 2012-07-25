@@ -44,7 +44,7 @@ import com.florianmski.tracktoid.trakt.tasks.post.SeenTask.SeenEpisodeTask;
 import com.florianmski.tracktoid.ui.activities.SeasonActivity;
 import com.florianmski.tracktoid.ui.activities.TraktItemsActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
-import com.florianmski.tracktoid.widgets.BadgesView;
+import com.florianmski.tracktoid.widgets.OverlaysView;
 import com.florianmski.tracktoid.widgets.CheckableListView;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
@@ -60,7 +60,7 @@ public class ProgressFragment extends TraktFragment
 	private CheckableListView<TvShowSeason> lvSeasons;
 	private ImageView ivBackground;
 
-	private BadgesView<TvShowEpisode> bvNextEpisode;
+	private OverlaysView<TvShowEpisode> bvNextEpisode;
 
 	private ListSeasonAdapter adapter;
 
@@ -322,7 +322,7 @@ public class ProgressFragment extends TraktFragment
 		sbProgress.setEnabled(false);
 		sbProgress.setProgressDrawable(getResources().getDrawable(R.drawable.gradient_progress));
 
-		bvNextEpisode = (BadgesView<TvShowEpisode>)v.findViewById(R.id.badgesLayoutNextEpisode);
+		bvNextEpisode = (OverlaysView<TvShowEpisode>)v.findViewById(R.id.badgesLayoutNextEpisode);
 
 		return v;
 	}

@@ -19,7 +19,7 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.image.TraktImage;
-import com.florianmski.tracktoid.widgets.BadgesView;
+import com.florianmski.tracktoid.widgets.OverlaysView;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
 public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode>
@@ -93,7 +93,7 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode>
 			holder.ivScreen = (ImageView)convertView.findViewById(R.id.imageViewScreen);
 			holder.tvTitle = (TextView)convertView.findViewById(R.id.textViewTitle);
 			holder.tvEpisode = (TextView)convertView.findViewById(R.id.textViewEpisode);
-			holder.bv = (BadgesView<TvShowEpisode>)convertView.findViewById(R.id.badgesLayout);
+			holder.bv = (OverlaysView<TvShowEpisode>)convertView.findViewById(R.id.badgesLayout);
 
 			convertView.setTag(holder);
 		} 
@@ -136,6 +136,6 @@ public class ListEpisodeAdapter extends RootAdapter<TvShowEpisode>
 		private ImageView ivScreen;
 		private TextView tvTitle;
 		private TextView tvEpisode;
-		private BadgesView<TvShowEpisode> bv;
+		private OverlaysView<TvShowEpisode> bv;
 	}
 }

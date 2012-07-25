@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.florianmski.tracktoid"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <com.florianmski.tracktoid.widgets.BadgesView
+    <com.florianmski.tracktoid.widgets.OverlaysView
         android:id="@+id/badgesLayoutWatchingNow"
         android:layout_width="fill_parent"
         android:layout_height="75dp"
@@ -51,7 +50,7 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:singleLine="true" />
-    </com.florianmski.tracktoid.widgets.BadgesView>
+    </com.florianmski.tracktoid.widgets.OverlaysView>
 
     <com.viewpagerindicator.CirclePageIndicator
         android:id="@+id/page_indicator_circle"

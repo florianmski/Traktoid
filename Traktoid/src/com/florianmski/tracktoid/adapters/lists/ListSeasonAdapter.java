@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.adapters.RootAdapter;
-import com.florianmski.tracktoid.widgets.BadgesView;
+import com.florianmski.tracktoid.widgets.OverlaysView;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
 public class ListSeasonAdapter extends RootAdapter<TvShowSeason>
@@ -47,7 +47,7 @@ public class ListSeasonAdapter extends RootAdapter<TvShowSeason>
             holder = new ViewHolder();
             holder.tvSeason = (TextView)convertView.findViewById(R.id.textViewSeason);
             holder.tvLeft = (TextView)convertView.findViewById(R.id.textViewLeft);
-            holder.bv = (BadgesView)convertView.findViewById(R.id.badgesLayout);
+            holder.bv = (OverlaysView)convertView.findViewById(R.id.badgesLayout);
             
             convertView.setTag(holder);
         } 
@@ -73,7 +73,7 @@ public class ListSeasonAdapter extends RootAdapter<TvShowSeason>
     	private TextView tvSeason;
     	private TextView tvLeft;
     	@SuppressWarnings("rawtypes")
-		private BadgesView bv;
+		private OverlaysView bv;
     }
 
 }

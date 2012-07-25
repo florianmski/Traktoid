@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -19,18 +18,11 @@ import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.widgets.OverlaysView;
 import com.florianmski.traktoid.TraktoidInterface;
 
-public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends RootAdapter<T> 
-{
-	private DismissListener listener;
-	
-	public ListRecommendationAdapter(List<T> recommendations, Context context)
+public class ListTrendingAdapter<T extends TraktoidInterface<T>> extends RootAdapter<T> 
+{	
+	public ListTrendingAdapter(List<T> trending, Context context)
 	{
-		super(context, recommendations);
-	}
-	
-	public void setOnDismissListener(DismissListener listener)
-	{
-		this.listener = listener;
+		super(context, trending);
 	}
     
     @Override
@@ -47,11 +39,10 @@ public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends R
 
         if (convertView == null) 
         {
-        	convertView = LayoutInflater.from(context).inflate(R.layout.list_item_recommendation, null);
+        	convertView = LayoutInflater.from(context).inflate(R.layout.list_item_trending, null);
             holder = new ViewHolder();
             holder.ivFanart = (ImageView)convertView.findViewById(R.id.imageViewFanart);
-            holder.ivDismiss = (ImageView)convertView.findViewById(R.id.imageViewDismiss);
-            holder.tvTitle = (TextView)convertView.findViewById(R.id.textViewShow);
+            holder.tvTitle = (TextView)convertView.findViewById(R.id.textViewTitle);
             int width = ((Activity)context).getWindowManager().getDefaultDisplay().getWidth();
             int height = (int) (width * TraktImage.RATIO_FANART);
             holder.ivFanart.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
@@ -62,16 +53,6 @@ public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends R
             holder = (ViewHolder) convertView.getTag();
         
         final T s = getItem(position);
-        
-        holder.ivDismiss.setOnClickListener(new OnClickListener() 
-        {	
-			@Override
-			public void onClick(View v) 
-			{
-				if(listener != null)
-					listener.onDismiss(s.getId());
-			}
-		});
         
         holder.bv.initialize();
         
@@ -93,14 +74,8 @@ public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends R
     private static class ViewHolder 
     {
     	private ImageView ivFanart;
-    	private ImageView ivDismiss;
     	private TextView tvTitle;
     	@SuppressWarnings("rawtypes")
 		private OverlaysView bv;
-    }
-    
-    public interface DismissListener
-    {
-    	public void onDismiss(String id);
     }
 }

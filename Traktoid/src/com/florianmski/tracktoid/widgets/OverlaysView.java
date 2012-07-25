@@ -14,10 +14,9 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.enumerations.Rating;
 
-public class BadgesView<T extends TraktoidInterface<T>> extends RelativeLayout
+public class OverlaysView<T extends TraktoidInterface<T>> extends RelativeLayout
 {
-	//TODO rename badges -> overlays
-	//TODO there is an issue with gridviews, for the first item, overlays don't appear, don't know why...
+	//there is an issue with gridviews, for the first item, overlays don't appear, don't know why...
 
 	private T traktItem;
 	private ImageView ivWatched;
@@ -29,19 +28,19 @@ public class BadgesView<T extends TraktoidInterface<T>> extends RelativeLayout
 
 	private Animation animation = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in);
 
-	public BadgesView(Context context) 
+	public OverlaysView(Context context) 
 	{
 		super(context);
 		initView(context);
 	}
 
-	public BadgesView(Context context, AttributeSet attrs) 
+	public OverlaysView(Context context, AttributeSet attrs) 
 	{
 		super(context, attrs);
 		initView(context);
 	}
 
-	public BadgesView(Context context, AttributeSet attrs, int defStyle) 
+	public OverlaysView(Context context, AttributeSet attrs, int defStyle) 
 	{
 		super(context, attrs, defStyle);
 		initView(context);
@@ -66,10 +65,10 @@ public class BadgesView<T extends TraktoidInterface<T>> extends RelativeLayout
 
 		//		startAnimation(animation);
 
-		toggleWatched(BadgesView.this.traktItem.isWatched());
-		toggleRating(BadgesView.this.traktItem.getRating());
-		toggleWatchlist(BadgesView.this.traktItem.isInWatchlist());
-		toggleCollection(BadgesView.this.traktItem.isInCollection());
+		toggleWatched(OverlaysView.this.traktItem.isWatched());
+		toggleRating(OverlaysView.this.traktItem.getRating());
+		toggleWatchlist(OverlaysView.this.traktItem.isInWatchlist());
+		toggleCollection(OverlaysView.this.traktItem.isInCollection());
 	}
 
 	public void initialize()

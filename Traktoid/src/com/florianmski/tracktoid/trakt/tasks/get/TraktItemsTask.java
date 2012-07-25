@@ -1,6 +1,5 @@
 package com.florianmski.tracktoid.trakt.tasks.get;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import com.jakewharton.trakt.TraktApiBuilder;
 
 public class TraktItemsTask<T extends TraktoidInterface<T>> extends BaseTask<List<T>>
 {	
-	private List<T> traktItems = new ArrayList<T>();
 	private TraktApiBuilder<?> builder;
 	private boolean sort;
 	private TraktItemsListener<T> listener;
@@ -31,8 +29,9 @@ public class TraktItemsTask<T extends TraktoidInterface<T>> extends BaseTask<Lis
 	@Override
 	protected List<T> doTraktStuffInBackground()
 	{		
-		traktItems = (List<T>) ApiCache.read(builder, context);
-		publishProgress(EVENT, traktItems);
+		List<T> traktItems = (List<T>) ApiCache.read(builder, context);
+		if(traktItems != null)
+			publishProgress(EVENT, traktItems);
 
 		traktItems = (List<T>) builder.fire();
 
@@ -40,7 +39,7 @@ public class TraktItemsTask<T extends TraktoidInterface<T>> extends BaseTask<Lis
 			Collections.sort(traktItems);
 
 		ApiCache.save(builder, traktItems, context);
-		
+
 		return traktItems;
 	}
 
@@ -48,7 +47,7 @@ public class TraktItemsTask<T extends TraktoidInterface<T>> extends BaseTask<Lis
 	protected void sendEvent(List<T> result) 
 	{
 		if(context != null && listener != null)
-			listener.onTraktItems(traktItems);
+			listener.onTraktItems(result);
 	}
 
 	public interface TraktItemsListener<E extends TraktoidInterface<E>>

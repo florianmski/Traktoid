@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.florianmski.tracktoid.widgets.BadgesView 
+<com.florianmski.tracktoid.widgets.OverlaysView 
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/badgesLayout"
     android:layout_width="fill_parent"
@@ -17,4 +17,4 @@
         android:background="@drawable/selector_no_background" >
     </RelativeLayout>
 
-</com.florianmski.tracktoid.widgets.BadgesView>
+</com.florianmski.tracktoid.widgets.OverlaysView>
