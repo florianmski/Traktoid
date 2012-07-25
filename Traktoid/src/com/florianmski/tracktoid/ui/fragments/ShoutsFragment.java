@@ -3,42 +3,41 @@ package com.florianmski.tracktoid.ui.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.lists.ListShoutsAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask.ShoutsListener;
+import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
+import com.florianmski.tracktoid.trakt.tasks.post.ShoutsPostTask;
 import com.florianmski.traktoid.TraktoidInterface;
+import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.Shout;
 
 public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragment
 {
-	@SuppressWarnings("unused")
-	private final static int SPOILER = 0;
-	@SuppressWarnings("unused")
-	private final static int NO_SPOILER = 1;
-
 	private T traktItem;
 
 	private ListView lvShouts;
 	private EditText edtShout;
-	private Button btnSend;
+	private ImageView btnSend;
+	private ToggleButton tbSpoiler;
 	private ListShoutsAdapter adapter;
-	
+
 	private ArrayList<Shout> shouts;
 
 	public static ShoutsFragment<?> newInstance(Bundle args)
@@ -66,14 +65,12 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 
 		traktItem = (T)getArguments().get(TraktoidConstants.BUNDLE_TRAKT_ITEM);
 
-		setTitle("Shouts : " + traktItem.getTitle());
+		setTitle(traktItem.getTitle());
 
 		if(savedInstanceState != null)
 			setAdapter();
 		else
-		{
-			createGetShoutsTask().fire();
-		}
+			createGetShoutsTask(true).fire();
 
 		lvShouts.setOnItemClickListener(new OnItemClickListener() 
 		{
@@ -94,63 +91,34 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 					Toast.makeText(getActivity(), "Empty shout!", Toast.LENGTH_LONG).show();
 				else
 				{
-					//close keyboard if it is open
-					//because it does weird things with popup position
-					InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-					mgr.hideSoftInputFromWindow(edtShout.getWindowToken(), 0);
-
-					btnSend.postDelayed(new Runnable() 
+					new ShoutsPostTask<T>(getSherlockActivity(), traktItem, edtShout.getText().toString().trim(), tbSpoiler.isChecked(), new PostListener() 
 					{
 						@Override
-						public void run() 
+						public void onComplete(Response r, boolean success) 
 						{
-//							qa.show(btnSend);
+							if(success)
+							{
+								//post the task 3sec later to let trakt the time to save the shout
+								new Handler().postDelayed(new Runnable() 
+								{
+									@Override
+									public void run() 
+									{
+										createGetShoutsTask(adapter.getCount() == 0).fire();
+									}
+								}, 3000);
+							}
 						}
-					}, 50);
+					}).fire();
 				}
 			}
 		});
-
-		//TODO better way to ask if spoiler or not
-//		qa = new QuickAction(getActivity(), QuickAction.HORIZONTAL);
-//		qa.addActionItem(new ActionItem(SPOILER, "My shout contain\n a spoiler!"));
-//		qa.addActionItem(new ActionItem(NO_SPOILER, "Stay calm! \nNo spoiler..."));
-//
-//		qa.setOnActionItemClickListener(new OnActionItemClickListener() 
-//		{
-//			@Override
-//			public void onItemClick(QuickAction source, int pos, int actionId) 
-//			{
-//				new ShoutsPostTask<T>(ShoutsFragment.this, traktItem, edtShout.getText().toString().trim(), actionId == SPOILER, new PostListener() 
-//				{
-//					@Override
-//					public void onComplete(Response r, boolean success) 
-//					{
-//						if(success)
-//						{
-//							adapter.clear();
-//
-//							//post the task 3sec later to let trakt the time to save the shout
-//							new Handler().postDelayed(new Runnable() 
-//							{
-//								@Override
-//								public void run() 
-//								{
-//									createGetShoutsTask().fire();
-//								}
-//							}, 3000);
-//						}
-//					}
-//				}).fire();
-//			}
-//		});
-
-
 	}
 
-	private ShoutsGetTask<T> createGetShoutsTask()
+	private ShoutsGetTask<T> createGetShoutsTask(boolean displayLoading)
 	{
-		getStatusView().show().text("Loading shouts,\nPlease wait...");
+		if(displayLoading)
+			getStatusView().show().text("Loading shouts,\nPlease wait...");
 
 		return new ShoutsGetTask<T>(getActivity(), traktItem, new ShoutsListener() 
 		{
@@ -162,7 +130,7 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 			}
 		});
 	}
-	
+
 	private void setAdapter()
 	{		
 		if(adapter == null)
@@ -188,7 +156,8 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 
 		lvShouts = (ListView)v.findViewById(R.id.listViewShouts);
 		edtShout = (EditText)v.findViewById(R.id.editTextShout);
-		btnSend = (Button)v.findViewById(R.id.buttonSend);
+		btnSend = (ImageView)v.findViewById(R.id.buttonSend);
+		tbSpoiler = (ToggleButton)v.findViewById(R.id.toggleButtonSpoiler);
 
 		return v;
 	}

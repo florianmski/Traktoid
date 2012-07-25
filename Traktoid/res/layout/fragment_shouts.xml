@@ -8,36 +8,54 @@
         android:id="@+id/listViewShouts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/relativeLayout1"
+        android:layout_above="@+id/relativeLayoutWriteShout"
         android:layout_alignParentTop="true"
         android:cacheColorHint="#00000000" />
 
     <include
-        android:layout_above="@+id/relativeLayout1"
+        android:layout_above="@+id/relativeLayoutWriteShout"
         layout="@layout/view_status" />
 
-    <LinearLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="fill_parent"
+    <RelativeLayout
+        android:id="@+id/relativeLayoutWriteShout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" >
 
+        <ImageView
+            android:id="@+id/buttonSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/toggleButtonSpoiler"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/selector_list_classic"
+            android:src="@drawable/ab_icon_send" />
+
+        <ToggleButton
+            android:id="@+id/toggleButtonSpoiler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/editTextShout"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/buttonSend"
+            android:textOff="Spoiler"
+            android:textOn="Spoiler" />
+
         <EditText
             android:id="@+id/editTextShout"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/toggleButtonSpoiler"
+            android:ems="10"
             android:gravity="top"
             android:hint="Please write your shout in English..."
             android:inputType="textMultiLine" >
-        </EditText>
 
-        <Button
-            android:id="@+id/buttonSend"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:padding="15dp"
-            android:text="Send!" />
-    </LinearLayout>
+            <requestFocus />
+        </EditText>
+    </RelativeLayout>
 
 </RelativeLayout>

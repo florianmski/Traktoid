@@ -3,7 +3,7 @@ package com.florianmski.tracktoid.trakt.tasks.post;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
+import android.content.Context;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.trakt.tasks.BaseTask;
@@ -16,7 +16,7 @@ public class PostTask extends BaseTask<Response>
 	protected PostListener pListener;
 	protected Response r;
 
-	public PostTask(Activity context, TraktApiBuilder<?> builder, PostListener pListener) 
+	public PostTask(Context context, TraktApiBuilder<?> builder, PostListener pListener) 
 	{
 		//post request one by one
 		super(context, sSingleThreadExecutor);

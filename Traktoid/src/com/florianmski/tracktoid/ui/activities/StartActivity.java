@@ -14,9 +14,7 @@ import com.florianmski.tracktoid.trakt.tasks.get.SynchronizationTask;
 public class StartActivity extends Activity
 {
 	public final static int RESULT_LOGIN = 42;
-	
-	//TODO do something if there is the popup to rate the app
-	
+		
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
@@ -34,11 +32,6 @@ public class StartActivity extends Activity
 	
 	public void doStuffIfUserIsLogged()
 	{
-		//TODO make something smart
-		//check if db need an upgrade
-		//		DatabaseWrapper dbw = new DatabaseWrapper(getActivity());
-		//		dbw.open();
-
 		//check if a new version of Traktoid is available and display a dialog if so
 		MarketService ms = new MarketService(this);
 		ms.checkVersion();

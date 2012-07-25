@@ -1,6 +1,6 @@
 package com.florianmski.tracktoid.trakt.tasks.post;
 
-import android.app.Activity;
+import android.content.Context;
 
 import com.florianmski.tracktoid.TraktBus;
 import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
@@ -13,8 +13,6 @@ import com.jakewharton.trakt.entities.TvShowEpisode;
 
 public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends PostTask
 {
-	//TODO add social networks
-
 	protected T traktItem;
 	protected boolean checkin;
 	protected boolean facebook = false;
@@ -23,7 +21,7 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 	protected boolean foursquare = false;
 	protected String message = "";
 
-	public CheckinPostTask(Activity context, T traktItem, boolean checkin, PostListener pListener) 
+	public CheckinPostTask(Context context, T traktItem, boolean checkin, PostListener pListener) 
 	{
 		super(context, null, pListener);
 
@@ -31,7 +29,7 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 		this.checkin = checkin;
 	}
 
-	public static <T extends TraktoidInterface<T>> CheckinPostTask<?> createTask(Activity context, T traktItem, boolean checkin, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> CheckinPostTask<?> createTask(Context context, T traktItem, boolean checkin, PostListener pListener)
 	{
 		if(traktItem instanceof Movie)
 			return new CheckinMovieTask(context, (Movie) traktItem, checkin, pListener);
@@ -85,7 +83,7 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 
 	public static final class CheckinMovieTask extends CheckinPostTask<Movie>
 	{
-		public CheckinMovieTask(Activity context, Movie traktItem, boolean checkin, PostListener pListener) 
+		public CheckinMovieTask(Context context, Movie traktItem, boolean checkin, PostListener pListener) 
 		{
 			super(context, traktItem, checkin, pListener);
 		}
@@ -119,7 +117,7 @@ public abstract class CheckinPostTask<T extends TraktoidInterface<T>> extends Po
 
 	public static final class CheckinEpisodeTask extends CheckinPostTask<TvShowEpisode>
 	{
-		public CheckinEpisodeTask(Activity context, TvShowEpisode traktItem, boolean checkin, PostListener pListener) 
+		public CheckinEpisodeTask(Context context, TvShowEpisode traktItem, boolean checkin, PostListener pListener) 
 		{
 			super(context, traktItem, checkin, pListener);
 		}

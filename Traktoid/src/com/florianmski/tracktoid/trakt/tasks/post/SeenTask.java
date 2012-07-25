@@ -3,7 +3,7 @@ package com.florianmski.tracktoid.trakt.tasks.post;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
+import android.content.Context;
 
 import com.florianmski.tracktoid.TraktBus;
 import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
@@ -26,7 +26,7 @@ public abstract class SeenTask<T extends TraktoidInterface<T>> extends PostTask
 	protected List<T> traktItems;
 	protected boolean seen;
 
-	public SeenTask(Activity context, List<T> traktItems, boolean seen, PostListener pListener) 
+	public SeenTask(Context context, List<T> traktItems, boolean seen, PostListener pListener) 
 	{
 		super(context, null, pListener);
 
@@ -34,7 +34,7 @@ public abstract class SeenTask<T extends TraktoidInterface<T>> extends PostTask
 		this.seen = seen;
 	}
 
-	public static <T extends TraktoidInterface<T>> SeenTask<?> createTask(Activity context, T traktItem, boolean seen, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> SeenTask<?> createTask(Context context, T traktItem, boolean seen, PostListener pListener)
 	{
 		List<T> traktItems = new ArrayList<T>();
 		traktItems.add(traktItem);
@@ -42,7 +42,7 @@ public abstract class SeenTask<T extends TraktoidInterface<T>> extends PostTask
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends TraktoidInterface<T>> SeenTask<?> createTask(Activity context, List<T> traktItems, boolean seen, PostListener pListener)
+	public static <T extends TraktoidInterface<T>> SeenTask<?> createTask(Context context, List<T> traktItems, boolean seen, PostListener pListener)
 	{
 		if(traktItems.get(0) instanceof TvShow)
 			return new SeenShowTask(context, (List<TvShow>) traktItems, seen, pListener);
@@ -83,7 +83,7 @@ public abstract class SeenTask<T extends TraktoidInterface<T>> extends PostTask
 
 	public static final class SeenShowTask extends SeenTask<TvShow>
 	{
-		public SeenShowTask(Activity context, List<TvShow> traktItems, boolean seen, PostListener pListener) 
+		public SeenShowTask(Context context, List<TvShow> traktItems, boolean seen, PostListener pListener) 
 		{
 			super(context, traktItems, seen, pListener);
 		}
@@ -119,7 +119,7 @@ public abstract class SeenTask<T extends TraktoidInterface<T>> extends PostTask
 
 	public static final class SeenMovieTask extends SeenTask<Movie>
 	{
-		public SeenMovieTask(Activity context, List<Movie> traktItems, boolean seen, PostListener pListener) 
+		public SeenMovieTask(Context context, List<Movie> traktItems, boolean seen, PostListener pListener) 
 		{
 			super(context, traktItems, seen, pListener);
 		}
@@ -161,12 +161,12 @@ public abstract class SeenTask<T extends TraktoidInterface<T>> extends PostTask
 
 	public static final class SeenEpisodeTask extends SeenTask<TvShowEpisode>
 	{
-		public SeenEpisodeTask(Activity context, List<TvShowEpisode> traktItems, boolean seen, PostListener pListener) 
+		public SeenEpisodeTask(Context context, List<TvShowEpisode> traktItems, boolean seen, PostListener pListener) 
 		{
 			super(context, traktItems, seen, pListener);
 		}
 
-		public static SeenEpisodeTask createSeasonTask(Activity context, List<TvShowSeason> traktItems, boolean seen, PostListener pListener)
+		public static SeenEpisodeTask createSeasonTask(Context context, List<TvShowSeason> traktItems, boolean seen, PostListener pListener)
 		{
 			List<TvShowEpisode> episodes = new ArrayList<TvShowEpisode>();
 			for(TvShowSeason s : traktItems)

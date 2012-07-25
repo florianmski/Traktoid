@@ -16,7 +16,6 @@ public abstract class BaseTask<TResult> extends BackgroundTask<TResult>
 {
 	protected final static int TOAST = -1;
 	protected final static int EVENT = -2;
-	protected final static int ERROR = -3;
 
 	protected TraktManager tm;
 	//this not will not display toast
@@ -91,8 +90,7 @@ public abstract class BaseTask<TResult> extends BackgroundTask<TResult>
 	{
 		e.printStackTrace();
 		this.error = e;
-		this.publishProgress(ERROR, null);
-		showToast("Error : " + e.getMessage(), Toast.LENGTH_LONG);
+		Toast.makeText(context, "Error : " + e.getMessage(), Toast.LENGTH_LONG).show();
 	}
 
 	@Override
@@ -119,10 +117,6 @@ public abstract class BaseTask<TResult> extends BackgroundTask<TResult>
 	{
 		if(progress == TOAST)
 			Toast.makeText(context, values[1], Integer.parseInt(values[0])).show();
-		else if(progress == ERROR)
-		{
-			//TODO something smart
-		}
 		else if(progress == EVENT)
 		{
 			if(tmpResult != null)
