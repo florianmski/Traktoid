@@ -188,12 +188,8 @@ public abstract class PagerTabsViewFragment extends TraktFragment
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) 
+	public void onSaveInstanceState(Bundle toSave)
 	{
 		toSave.putString("tab", mTabHost.getCurrentTabTag());
 	}
-
 }

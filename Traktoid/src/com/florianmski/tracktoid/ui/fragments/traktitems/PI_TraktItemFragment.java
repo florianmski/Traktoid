@@ -311,12 +311,6 @@ public abstract class PI_TraktItemFragment<T extends TraktoidInterface<T>> exten
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
-
 	@Subscribe
 	public void onTraktItemsUpdated(TraktItemsUpdatedEvent<T> event) 
 	{

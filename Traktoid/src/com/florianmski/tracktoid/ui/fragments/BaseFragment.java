@@ -14,7 +14,6 @@ import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 public abstract class BaseFragment extends SherlockFragment
 {
 	private StatusView sv;
-	private boolean restoreStateCalled = false;
 	private DatabaseWrapper dbw = null;
 	protected BaseTask<?> task;
 	private TaskListener taskListener;
@@ -39,12 +38,6 @@ public abstract class BaseFragment extends SherlockFragment
 		getActionBar().setHomeButtonEnabled(true);
 
 		TraktBus.getInstance().register(this);
-		
-		if(savedInstanceState != null)
-		{
-			onRestoreState(savedInstanceState);
-			restoreStateCalled = true;
-		}
 
 		if(taskListener != null)
 			setRetainInstance(true);
@@ -54,13 +47,6 @@ public abstract class BaseFragment extends SherlockFragment
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
-
-		//in case the fragment use setRetainInstance(true)
-		if(savedInstanceState != null && !restoreStateCalled)
-		{
-			onRestoreState(savedInstanceState);
-			restoreStateCalled = true;
-		}
 
 		if(taskListener != null)
 		{
@@ -84,13 +70,6 @@ public abstract class BaseFragment extends SherlockFragment
 				}
 			}
 		}
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle toSave)
-	{
-		super.onSaveInstanceState(toSave);
-		onSaveState(toSave);
 	}
 
 	@Override
@@ -153,9 +132,6 @@ public abstract class BaseFragment extends SherlockFragment
 	{
 		super.onDetach();
 	}
-
-	public abstract void onRestoreState(Bundle savedInstanceState);
-	public abstract void onSaveState(Bundle toSave);
 
 	public void setTaskListener(TaskListener listener)
 	{

@@ -62,12 +62,6 @@ public class PI_CalendarFragment extends TraktFragment implements TaskListener
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
-
-	@Override
 	public void onCreateTask() 
 	{
 		task = new CalendarTask(getActivity(), type, new CalendarListener() 

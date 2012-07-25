@@ -115,10 +115,4 @@ public abstract class TrendingFragment<T extends TraktoidInterface<T>> extends T
 
 	@Override
 	public void onTaskIsRunning() {}
-	
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
 }

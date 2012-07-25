@@ -1,6 +1,5 @@
 package com.florianmski.tracktoid.ui.fragments;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
@@ -20,15 +19,17 @@ import android.widget.ToggleButton;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.lists.ListShoutsAdapter;
+import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask;
 import com.florianmski.tracktoid.trakt.tasks.get.ShoutsGetTask.ShoutsListener;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.trakt.tasks.post.ShoutsPostTask;
+import com.florianmski.tracktoid.ui.fragments.BaseFragment.TaskListener;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Response;
 import com.jakewharton.trakt.entities.Shout;
 
-public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragment
+public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragment implements TaskListener
 {
 	private T traktItem;
 
@@ -38,7 +39,7 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 	private ToggleButton tbSpoiler;
 	private ListShoutsAdapter adapter;
 
-	private ArrayList<Shout> shouts;
+	private List<Shout> shouts;
 
 	public static ShoutsFragment<?> newInstance(Bundle args)
 	{
@@ -50,27 +51,23 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 
 	public ShoutsFragment() {}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
+		setTaskListener(this);
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		
+		traktItem = (T)getArguments().get(TraktoidConstants.BUNDLE_TRAKT_ITEM);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		traktItem = (T)getArguments().get(TraktoidConstants.BUNDLE_TRAKT_ITEM);
-
 		setTitle(traktItem.getTitle());
-
-		if(savedInstanceState != null)
-			setAdapter();
-		else
-			createGetShoutsTask(true).fire();
 
 		lvShouts.setOnItemClickListener(new OnItemClickListener() 
 		{
@@ -115,17 +112,17 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 		});
 	}
 
-	private ShoutsGetTask<T> createGetShoutsTask(boolean displayLoading)
+	private BaseTask<?> createGetShoutsTask(boolean displayLoading)
 	{
 		if(displayLoading)
 			getStatusView().show().text("Loading shouts,\nPlease wait...");
 
-		return new ShoutsGetTask<T>(getActivity(), traktItem, new ShoutsListener() 
+		return task = new ShoutsGetTask<T>(getActivity(), traktItem, new ShoutsListener() 
 		{
 			@Override
 			public void onShouts(List<Shout> shouts) 
 			{
-				ShoutsFragment.this.shouts = (ArrayList<Shout>) shouts;
+				ShoutsFragment.this.shouts = shouts;
 				setAdapter();
 			}
 		});
@@ -139,7 +136,11 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 			lvShouts.setAdapter(adapter);
 		}
 		else
+		{
 			adapter.refreshItems(shouts);
+			if(lvShouts.getAdapter() == null)
+				lvShouts.setAdapter(adapter);
+		}
 
 		if(adapter.isEmpty())
 			getStatusView().hide().text("No shouts :(\nBe the first! Come on!");
@@ -162,16 +163,19 @@ public class ShoutsFragment<T extends TraktoidInterface<T>> extends TraktFragmen
 		return v;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) 
+	public void onCreateTask() 
 	{
-		shouts = (ArrayList<Shout>) savedInstanceState.get(TraktoidConstants.BUNDLE_RESULTS);
+		createGetShoutsTask(true);
+		task.fire();
 	}
 
 	@Override
-	public void onSaveState(Bundle toSave) 
+	public void onTaskIsDone() 
 	{
-		toSave.putSerializable(TraktoidConstants.BUNDLE_RESULTS, shouts);
+		setAdapter();
 	}
+
+	@Override
+	public void onTaskIsRunning() {}
 }

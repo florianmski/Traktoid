@@ -273,18 +273,6 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 	//		getSherlockActivity().invalidateOptionsMenu();
 	//	}
 
-	@Override
-	public void onResume()
-	{
-		super.onResume();
-	}
-
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
-
 	@Subscribe
 	public void onTraktItemsUpdated(TraktItemsUpdatedEvent<T> event) 
 	{

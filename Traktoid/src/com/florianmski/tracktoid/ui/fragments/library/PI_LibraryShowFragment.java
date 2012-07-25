@@ -140,10 +140,4 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 		if(!getActivity().isFinishing())
 			alert.show();
 	}
-
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
 }

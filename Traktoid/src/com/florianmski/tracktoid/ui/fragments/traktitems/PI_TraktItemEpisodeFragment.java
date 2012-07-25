@@ -40,11 +40,4 @@ public class PI_TraktItemEpisodeFragment extends PI_TraktItemFragment<TvShowEpis
 		if(item != null)
 			setSubtitle("S" + Utils.addZero(item.season) + " E" + Utils.addZero(item.number));
 	}
-	
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
-
 }

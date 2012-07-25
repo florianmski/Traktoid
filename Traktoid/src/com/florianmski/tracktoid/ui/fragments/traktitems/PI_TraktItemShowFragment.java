@@ -22,16 +22,4 @@ public class PI_TraktItemShowFragment extends PI_TraktItemFragment<TvShow>
 		return newInstance(args);
 	}
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) 
-	{
-		super.onActivityCreated(savedInstanceState);
-	}
-
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
-
 }

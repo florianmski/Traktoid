@@ -56,12 +56,9 @@ public abstract class PagerTabsFragment extends TraktFragment implements ViewPag
 
 		return v;
 	}
-	
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
 
 	@Override
-	public void onSaveState(Bundle toSave) 
+	public void onSaveInstanceState(Bundle toSave)
 	{
 		toSave.putInt("tab", getActionBar().getSelectedTab().getPosition());
 	}

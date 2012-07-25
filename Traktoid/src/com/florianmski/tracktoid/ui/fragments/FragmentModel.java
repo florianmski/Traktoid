@@ -58,10 +58,4 @@ public class FragmentModel extends TraktFragment
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
 }

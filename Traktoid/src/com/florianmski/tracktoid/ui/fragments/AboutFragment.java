@@ -74,10 +74,4 @@ public class AboutFragment extends BaseFragment
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
 }

@@ -135,10 +135,4 @@ public class SlideFragment extends TraktFragment
 
 		return v;
 	}
-	
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
 }

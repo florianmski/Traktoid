@@ -183,13 +183,7 @@ public class SearchFragment extends TraktFragment implements TaskListener
 				getStatusView().hide().text(null);
 		}
 	}
-
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
-
+	
 	@Override
 	public void onCreateTask() {}
 

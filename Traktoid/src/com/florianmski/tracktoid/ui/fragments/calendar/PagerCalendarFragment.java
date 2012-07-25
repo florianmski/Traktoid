@@ -57,10 +57,4 @@ public class PagerCalendarFragment extends PagerTabsFragment
 	{
 		return inflater.inflate(R.layout.fragment_calendar, null);
 	}
-
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
 }

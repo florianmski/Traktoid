@@ -221,8 +221,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 				getRecommendationBuilder(genre), 
 				sendCachedContent,
 				(genre == null),
-				new RecommendationsListener<T>() 
-				{
+				new RecommendationsListener<T>() {
 			@Override
 			public void onRecommendations(List<Genre> genres, List<T> recommendations) 
 			{
@@ -231,7 +230,7 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 				setAdapter();
 				getSherlockActivity().invalidateOptionsMenu();
 			}
-				});
+		});
 	}
 
 	@Override
@@ -249,10 +248,4 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 
 	@Override
 	public void onTaskIsRunning() {}
-
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
 }

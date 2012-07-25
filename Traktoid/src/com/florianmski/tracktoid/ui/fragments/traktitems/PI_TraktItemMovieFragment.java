@@ -23,16 +23,4 @@ public class PI_TraktItemMovieFragment extends PI_TraktItemFragment<Movie>
 	}
 
 	public PI_TraktItemMovieFragment() {}
-	
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) 
-	{
-		super.onActivityCreated(savedInstanceState);
-	}
-	
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
 }

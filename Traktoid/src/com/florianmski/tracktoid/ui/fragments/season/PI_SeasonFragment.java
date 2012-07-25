@@ -140,12 +140,6 @@ public class PI_SeasonFragment extends TraktFragment
 		super.onDestroy();
 	}
 
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
-
 	@Subscribe
 	public void onTraktItemsUpdated(TraktItemsUpdatedEvent<TvShowEpisode> event) 
 	{

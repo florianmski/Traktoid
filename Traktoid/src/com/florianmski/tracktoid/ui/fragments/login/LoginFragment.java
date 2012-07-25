@@ -33,7 +33,7 @@ public class LoginFragment extends TraktFragment
 	private EditText edtEmail;
 	private EditText edtPassword;
 	private Button btnGo;
-	
+
 	private boolean join;
 
 	public static LoginFragment newInstance(Bundle args)
@@ -42,13 +42,13 @@ public class LoginFragment extends TraktFragment
 		f.setArguments(args);
 		return f;
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		
+
 		join = getArguments().getBoolean(TraktoidConstants.BUNDLE_JOIN);
 	}
 
@@ -60,19 +60,19 @@ public class LoginFragment extends TraktFragment
 		edtPassword.setOnEditorActionListener(new OnEditorActionListener() 
 		{
 			@Override
-		    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) 
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) 
 			{
-		        if (actionId == EditorInfo.IME_ACTION_DONE) 
-		        {
-		        	InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-		            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-		            btnGo.performClick();
-		            return true;	
-		        }
-		        return false;
-		    }
+				if (actionId == EditorInfo.IME_ACTION_DONE) 
+				{
+					InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+					btnGo.performClick();
+					return true;	
+				}
+				return false;
+			}
 		});
-		
+
 		btnGo.setOnClickListener(new OnClickListener() 
 		{
 			@Override
@@ -97,7 +97,7 @@ public class LoginFragment extends TraktFragment
 					tm.setAuthentication(username, password);
 
 					TraktApiBuilder<?> builder = join ? tm.accountService().create(username, password, email) : tm.accountService().test();
-					
+
 					new PostTask(getActivity(), builder, new PostListener() 
 					{	
 						@Override
@@ -111,7 +111,7 @@ public class LoginFragment extends TraktFragment
 								.putString(TraktoidConstants.PREF_PASSWORD, password)
 								.putBoolean(TraktoidConstants.PREF_SHA1, true)
 								.commit();
-								
+
 								Toast.makeText(getActivity(), "Welcome home " + username + "!", Toast.LENGTH_LONG).show();
 								getActivity().setResult(StartActivity.RESULT_LOGIN);
 								getActivity().finish();
@@ -144,7 +144,7 @@ public class LoginFragment extends TraktFragment
 		edtEmail = (EditText)v.findViewById(R.id.editTextEmail);
 		edtPassword = (EditText)v.findViewById(R.id.editTextPassword);
 		btnGo = (Button)v.findViewById(R.id.buttonGo);
-		
+
 		if(!join)
 		{
 			edtEmail.setVisibility(View.GONE);
@@ -153,10 +153,4 @@ public class LoginFragment extends TraktFragment
 
 		return v;
 	}
-
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
 }

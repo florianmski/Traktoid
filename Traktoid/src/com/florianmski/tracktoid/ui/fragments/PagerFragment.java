@@ -56,6 +56,8 @@ public abstract class PagerFragment extends TraktFragment implements OnPageChang
 		
 		if(savedInstanceState == null)
 			currentPagerPosition = getArguments() == null ? 0 : getArguments().getInt(TraktoidConstants.BUNDLE_POSITION, 0);
+		else
+			currentPagerPosition = savedInstanceState.getInt(TraktoidConstants.BUNDLE_POSITION, 0);
 	}
 
 	@Override
@@ -147,13 +149,7 @@ public abstract class PagerFragment extends TraktFragment implements OnPageChang
 	}
 
 	@Override
-	public void onRestoreState(Bundle savedInstanceState) 
-	{
-		currentPagerPosition = savedInstanceState.getInt(TraktoidConstants.BUNDLE_POSITION, 0);
-	}
-
-	@Override
-	public void onSaveState(Bundle toSave) 
+	public void onSaveInstanceState(Bundle toSave)
 	{
 		toSave.putInt(TraktoidConstants.BUNDLE_POSITION, currentPagerPosition);
 	}

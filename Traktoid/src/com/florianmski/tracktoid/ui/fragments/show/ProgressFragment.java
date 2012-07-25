@@ -382,12 +382,6 @@ public class ProgressFragment extends TraktFragment
 
 	}
 
-	@Override
-	public void onRestoreState(Bundle savedInstanceState) {}
-
-	@Override
-	public void onSaveState(Bundle toSave) {}
-
 	@Subscribe
 	public void onTraktItemsUpdated(TraktItemsUpdatedEvent<TvShow> event) 
 	{
