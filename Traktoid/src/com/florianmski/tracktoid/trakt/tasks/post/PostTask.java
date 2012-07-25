@@ -6,11 +6,11 @@ import java.util.List;
 import android.app.Activity;
 import android.widget.Toast;
 
-import com.florianmski.tracktoid.trakt.tasks.TraktTask;
+import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Response;
 
-public class PostTask extends TraktTask<Response>
+public class PostTask extends BaseTask<Response>
 {
 	protected List<TraktApiBuilder<?>> builders;
 	protected PostListener pListener;
@@ -77,7 +77,7 @@ public class PostTask extends TraktTask<Response>
 	@Override
 	protected void onCompleted(Response r)
 	{
-		if(pListener != null && getRef() != null)
+		if(pListener != null && context != null)
 			pListener.onComplete(r, r != null);
 		
 		if(r != null)

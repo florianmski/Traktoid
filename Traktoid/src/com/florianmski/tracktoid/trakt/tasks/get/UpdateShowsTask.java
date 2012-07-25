@@ -17,13 +17,14 @@ import com.florianmski.tracktoid.TraktBus;
 import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
+import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 import com.florianmski.tracktoid.ui.activities.phone.SinglePaneActivity;
 import com.florianmski.tracktoid.ui.fragments.library.PagerLibraryFragment;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
-public class UpdateShowsTask extends GetTask<TvShow>
+public class UpdateShowsTask extends BaseTask<TvShow>
 {
 	//TODO make one task with shows/movies
 	

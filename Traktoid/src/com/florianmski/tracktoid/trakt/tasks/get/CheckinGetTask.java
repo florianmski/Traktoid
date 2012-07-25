@@ -3,12 +3,13 @@ package com.florianmski.tracktoid.trakt.tasks.get;
 import android.app.Activity;
 
 import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.ActivityItemBase;
 import com.jakewharton.trakt.enumerations.ActivityAction;
 import com.jakewharton.trakt.enumerations.ActivityType;
 
-public class CheckinGetTask extends GetTask<TraktoidInterface<?>>
+public class CheckinGetTask extends BaseTask<TraktoidInterface<?>>
 {
 	private CheckinListener listener;
 	private ActivityItemBase checkin;
@@ -47,7 +48,7 @@ public class CheckinGetTask extends GetTask<TraktoidInterface<?>>
 	@Override
 	protected void sendEvent(TraktoidInterface<?> result) 
 	{
-		if(getRef() != null)
+		if(context != null && listener != null)
 			listener.onCheckin(result);
 	}
 }

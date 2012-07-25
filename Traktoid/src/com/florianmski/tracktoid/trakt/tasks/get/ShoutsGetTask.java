@@ -4,13 +4,14 @@ import java.util.List;
 
 import android.app.Activity;
 
+import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.Shout;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class ShoutsGetTask<T extends TraktoidInterface<T>> extends GetTask<List<Shout>>
+public class ShoutsGetTask<T extends TraktoidInterface<T>> extends BaseTask<List<Shout>>
 {
 	private T traktItem;
 	private List<Shout> shouts;
@@ -45,7 +46,7 @@ public class ShoutsGetTask<T extends TraktoidInterface<T>> extends GetTask<List<
 	@Override
 	protected void sendEvent(List<Shout> result) 
 	{
-		if(getRef() != null)
+		if(context != null && listener != null)
 			listener.onShouts(shouts);
 	}
 

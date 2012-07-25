@@ -14,13 +14,14 @@ import com.florianmski.tracktoid.TraktBus;
 import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 import com.jakewharton.trakt.entities.Activity;
 import com.jakewharton.trakt.entities.ActivityItemBase;
 import com.jakewharton.trakt.entities.Movie;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class SynchronizationTask extends GetTask<Activity>
+public class SynchronizationTask extends BaseTask<Activity>
 {
 	private Activity activities;
 
