@@ -2,6 +2,7 @@ package com.florianmski.tracktoid.image;
 
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.entities.Images;
+import com.jakewharton.trakt.entities.TvShowSeason;
 
 
 public class TraktImage 
@@ -10,6 +11,10 @@ public class TraktImage
 	public final static double RATIO_FANART = 358.0/636.0;
 	public final static double RATIO_POSTER = 1.471014493;
 	public final static double RATIO_BANNER = 55.0/300.0;
+	
+	private final static String tvdbUrl = "http://thetvdb.com/banners";
+	private final static String tvdbSmallSize = "/_cache";
+	private final static String tvdbSeason = "/seasons/%s-%s.jpg";
 
 	private static Size size = Size.SMALL;
 
@@ -23,6 +28,13 @@ public class TraktImage
 		this.type = type;
 	}
 
+	public static TraktImage getSeasonPoster(TvShowSeason season, String tvdbId)
+	{
+		String url = tvdbUrl + (size == Size.SMALL ? tvdbSmallSize : "");
+		url = String.format(url += tvdbSeason, tvdbId, season.season);
+		return new TraktImage(url, Type.POSTER, size);
+	}
+	
 	public static <T extends TraktoidInterface<T>> TraktImage getPoster(T traktItem)
 	{
 		return getImage(traktItem, Type.POSTER);

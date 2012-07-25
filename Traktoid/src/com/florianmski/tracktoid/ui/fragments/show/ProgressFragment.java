@@ -198,7 +198,7 @@ public class ProgressFragment extends TraktFragment
 
 				setTitle(show.title);
 
-				new DBSeasonsTask(getActivity(), new DBAdapter() 
+				new DBSeasonsTask(getActivity(), show.tvdbId, true, false, new DBAdapter() 
 				{
 					@Override
 					public void onDBSeasons(List<TvShowSeason> seasons) 
@@ -211,7 +211,7 @@ public class ProgressFragment extends TraktFragment
 						else
 							getStatusView().hide().text(null);
 					}
-				}, show.tvdbId, true, false).execute();
+				}).execute();
 
 				displayClearLogo();
 

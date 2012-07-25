@@ -12,29 +12,33 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktItemsRemovedEvent;
+import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.pagers.PagerSeasonAdapter;
-import com.florianmski.tracktoid.db.DatabaseWrapper;
+import com.florianmski.tracktoid.db.tasks.DBAdapter;
+import com.florianmski.tracktoid.db.tasks.DBSeasonsTask;
+import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.trakt.tasks.post.InCollectionTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InWatchlistTask;
 import com.florianmski.tracktoid.trakt.tasks.post.SeenTask;
 import com.florianmski.tracktoid.ui.fragments.PagerFragment;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
+import com.squareup.otto.Subscribe;
 
 public class PagerSeasonFragment extends PagerFragment
 {
 	private String tvdbId;
-	private List<TvShowSeason> seasons;
 	private ListCheckerManager<TvShowEpisode> lcm;
-	
+
 	public static PagerSeasonFragment newInstance(Bundle args)
 	{
 		PagerSeasonFragment f = new PagerSeasonFragment();
 		f.setArguments(args);
 		return f;
 	}
-	
+
 	public PagerSeasonFragment() {}
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -48,12 +52,12 @@ public class PagerSeasonFragment extends PagerFragment
 	public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
-		
+
 		getStatusView().show().text("Loading seasons,\nPlease wait...");
 		setTitle(getArguments().getString(TraktoidConstants.BUNDLE_TITLE));
-		
+
 		tvdbId = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
-		
+
 		lcm = ListCheckerManager.getInstance();
 		lcm.setPageSelected(currentPagerPosition);
 		lcm.setOnActionModeListener(new Callback() 
@@ -63,13 +67,13 @@ public class PagerSeasonFragment extends PagerFragment
 			{
 				return false;
 			}
-			
+
 			@Override
 			public void onDestroyActionMode(ActionMode mode) 
 			{
-				
+
 			}
-			
+
 			@Override
 			public boolean onCreateActionMode(ActionMode mode, Menu menu) 
 			{
@@ -79,18 +83,18 @@ public class PagerSeasonFragment extends PagerFragment
 				seenMenu.add(0, R.id.action_bar_watched_unseen, 0, "Unseen")
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 				MenuItem seenItem = seenMenu.getItem();
-		        seenItem.setIcon(R.drawable.ab_icon_eye);
-		        seenItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		        
-		        SubMenu watchlistMenu = menu.addSubMenu("watchlist");
-		        watchlistMenu.add(0, R.id.action_bar_add_to_watchlist, 0, "add to watchlist")
+				seenItem.setIcon(R.drawable.ab_icon_eye);
+				seenItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+				SubMenu watchlistMenu = menu.addSubMenu("watchlist");
+				watchlistMenu.add(0, R.id.action_bar_add_to_watchlist, 0, "add to watchlist")
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		        watchlistMenu.add(0, R.id.action_bar_remove_from_watchlist, 0, "remove from watchlist")
+				watchlistMenu.add(0, R.id.action_bar_remove_from_watchlist, 0, "remove from watchlist")
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 				MenuItem watchlistItem = watchlistMenu.getItem();
 				watchlistItem.setIcon(R.drawable.badge_watchlist);
 				watchlistItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-				
+
 				SubMenu collectionMenu = menu.addSubMenu("collection");
 				collectionMenu.add(0, R.id.action_bar_add_to_collection, 0, "add to collection")
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -101,7 +105,7 @@ public class PagerSeasonFragment extends PagerFragment
 				collectionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 				return true;
 			}
-			
+
 			@Override
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) 
 			{
@@ -123,81 +127,60 @@ public class PagerSeasonFragment extends PagerFragment
 				return true;
 			}
 		});
-		
+
 		if(lcm.isActivated())
 			getSherlockActivity().startActionMode(lcm.getCallback());
 
-//		new DBSeasonsTask(this, new DBAdapter() 
-//		{
-//			@Override
-//			public void onDBSeasons(List<TvShowSeason> seasons) 
-//			{
-//				SeasonActivity.this.seasons = seasons;
-//				Utils.removeLoading();
-//				initPagerActivity(new PagedListEpisodesAdapter(seasons, tvdbId, SeasonActivity.this));
-//			}
-//		}, tvdbId, true, true).fire();
-
 		setData();
 	}
-	
-	//don't know why but using this thread is like 3 time faster than using an asynctask doing the same thing (???)
+
 	public void setData()
 	{
-		//TODO proper task
-		new Thread()
+		new DBSeasonsTask(getActivity(), tvdbId, false, true, new DBAdapter() 
 		{
 			@Override
-			public void run()
+			public void onDBSeasons(List<TvShowSeason> seasons) 
 			{
-				DatabaseWrapper dbw = getDBWrapper();
-				seasons = dbw.getSeasons(tvdbId, false, true);
-
 				adapter = new PagerSeasonAdapter(seasons, getFragmentManager());
 
-				getActivity().runOnUiThread(new Runnable() 
-				{
-					@Override
-					public void run() 
-					{
-						if(((PagerSeasonAdapter)adapter).isEmpty())
-							getStatusView().hide().text("No seasons, this is strange...");
-						else
-							getStatusView().hide().text(null);
-						
-						initPagerFragment(adapter);
-					}
-				});
+				if(((PagerSeasonAdapter)adapter).isEmpty())
+					getStatusView().hide().text("No seasons, this is strange...");
+				else
+					getStatusView().hide().text(null);
+
+				initPagerFragment(adapter);
 			}
-		}.start();
+		}).execute();
 	}
 	
-	//TODO
-//	@Override
-//	public void onShowUpdated(TvShow show)
-//	{
-//		if(show.tvdbId.equals(tvdbId) && adapter != null && show.seasons != null)
-//			((PagerSeasonAdapter) adapter).reloadData(show.seasons);
-//	}
-//
-//	@Override
-//	public void onShowRemoved(TvShow show)
-//	{
-//		if(show.tvdbId.equals(tvdbId))
-//			getActivity().finish();
-//	}
-	
+	@SuppressWarnings("rawtypes")
+	@Subscribe
+	public void onTraktItemsUpdated(TraktItemsUpdatedEvent event) 
+	{
+		//TODO
+		//		if(show.tvdbId.equals(tvdbId) && adapter != null && show.seasons != null)
+		//			((PagerSeasonAdapter) adapter).reloadData(show.seasons);
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Subscribe
+	public void onTraktItemsRemoved(TraktItemsRemovedEvent event) 
+	{
+		//TODO
+		//		if(show.tvdbId.equals(tvdbId))
+		//		getActivity().finish();
+	}
+
 	@Override
 	public void onPageSelected(int position) 
 	{
 		super.onPageSelected(position);
-		
+
 		lcm.setPageSelected(position);
 		setSubtitle(adapter.getPageTitle(position).toString());
-		//TODO
-//		setBackground(TraktImage.getnew Image(tvdbId, seasons.get(position).season));
+		setBackground(TraktImage.getSeasonPoster(((PagerSeasonAdapter)adapter).getSeason(position), tvdbId));
 	}
-	
+
 	public interface OnWatchedModeListener
 	{
 		public void setWatchedMode(boolean on);

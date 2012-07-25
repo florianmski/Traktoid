@@ -11,7 +11,7 @@ public class DBSeasonsTask extends DBTask<List<TvShowSeason>>
 	private boolean getEpisodesToo;
 	private boolean orderByASC;
 	
-	public DBSeasonsTask(Context context, DBListener listener, String tvdbId, boolean getEpisodesToo, boolean orderByASC) 
+	public DBSeasonsTask(Context context, String tvdbId, boolean getEpisodesToo, boolean orderByASC, DBListener listener) 
 	{
 		super(context, listener);
 		

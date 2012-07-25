@@ -40,6 +40,11 @@ public class PagerSeasonAdapter extends FragmentStatePagerAdapter
 
 		return seasons;
 	}
+	
+	public TvShowSeason getSeason(int position)
+	{
+		return seasons.get(position);
+	}
 
 	@Override
 	public int getCount() 

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -90,7 +89,7 @@ public class PI_SeasonFragment extends TraktFragment
 				else
 					getStatusView().hide().text(null);
 			}
-		}).execute();
+		}).execute();		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -100,8 +99,6 @@ public class PI_SeasonFragment extends TraktFragment
 		View v = inflater.inflate(R.layout.pager_item_season, container, false);
 
 		lvEpisodes = (CheckableListView<TvShowEpisode>)v.findViewById(R.id.listViewEpisodes);
-		//TODO background poster of the season
-		ImageView ivBackground = (ImageView)v.findViewById(R.id.imageViewBackground);
 
 		lvEpisodes.setOnItemClickListener(new OnItemClickListener() 
 		{

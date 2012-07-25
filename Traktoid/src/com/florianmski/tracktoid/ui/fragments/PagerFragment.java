@@ -80,6 +80,7 @@ public abstract class PagerFragment extends TraktFragment implements OnPageChang
 			pageIndicator = (UnderlinePageIndicator) v.findViewById(R.id.page_indicator_underline);
 			break;
 		}
+		
 		ivBackground = (ImageView) v.findViewById(R.id.imageViewBackground);
 
 		return v;
@@ -100,6 +101,8 @@ public abstract class PagerFragment extends TraktFragment implements OnPageChang
 
 		ivBackground.setScaleType(ScaleType.CENTER_CROP);
 
+		pageIndicator.setOnPageChangeListener(this);
+		
 		switch(indicatorType)
 		{
 		case IT_TITLE :
@@ -124,8 +127,6 @@ public abstract class PagerFragment extends TraktFragment implements OnPageChang
 			((UnderlinePageIndicator)pageIndicator).setVisibility(View.VISIBLE);
 			break;
 		}
-		
-		pageIndicator.setOnPageChangeListener(this);
 	}
 
 	public void setPageIndicatorType(int it)
