@@ -64,6 +64,12 @@ public class RecommendationsTask<T> extends BaseTask<List<T>>
 		
 		return recommendations;
 	}
+	
+	@Override
+	protected List<T> doOfflineTraktStuff()
+	{	
+		return ApiCache.read(recommendationsBuilder, context);
+	}
 
 	@Override
 	protected void sendEvent(List<T> result) 

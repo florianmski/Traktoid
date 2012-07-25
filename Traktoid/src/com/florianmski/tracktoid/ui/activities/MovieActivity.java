@@ -1,4 +1,4 @@
-package com.florianmski.tracktoid.ui.activities.phone;
+package com.florianmski.tracktoid.ui.activities;
 
 import android.support.v4.app.Fragment;
 

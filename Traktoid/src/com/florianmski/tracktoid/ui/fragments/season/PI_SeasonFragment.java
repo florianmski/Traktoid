@@ -23,7 +23,7 @@ import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
-import com.florianmski.tracktoid.ui.activities.phone.TraktItemsActivity;
+import com.florianmski.tracktoid.ui.activities.TraktItemsActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.tracktoid.widgets.CheckableListView;
 import com.jakewharton.trakt.entities.TvShowEpisode;

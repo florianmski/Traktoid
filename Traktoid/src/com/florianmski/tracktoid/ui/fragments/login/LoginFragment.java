@@ -22,7 +22,7 @@ import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
-import com.florianmski.tracktoid.ui.activities.phone.StartActivity;
+import com.florianmski.tracktoid.ui.activities.StartActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Response;

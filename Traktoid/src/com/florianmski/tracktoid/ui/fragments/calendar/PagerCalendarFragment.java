@@ -40,13 +40,13 @@ public class PagerCalendarFragment extends PagerTabsFragment
 	{
 		Bundle args = new Bundle();
 
-		args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, CalendarTask.PREMIERES);
+		args.putInt(TraktoidConstants.BUNDLE_CALENDAR, CalendarTask.PREMIERES);
 		mTabsAdapter.addTab("Premieres", PI_CalendarFragment.class, args);
 		args = new Bundle();
-		args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, CalendarTask.USER);
+		args.putInt(TraktoidConstants.BUNDLE_CALENDAR, CalendarTask.USER);
 		mTabsAdapter.addTab("My shows", PI_CalendarFragment.class, args);
 		args = new Bundle();
-		args.putSerializable(TraktoidConstants.BUNDLE_CALENDAR, CalendarTask.SHOWS);
+		args.putInt(TraktoidConstants.BUNDLE_CALENDAR, CalendarTask.SHOWS);
 		mTabsAdapter.addTab("Shows", PI_CalendarFragment.class, args);
 
 		getActionBar().setSelectedNavigationItem(1);

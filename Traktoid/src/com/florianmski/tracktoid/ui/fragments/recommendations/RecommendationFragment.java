@@ -26,7 +26,7 @@ import com.florianmski.tracktoid.trakt.tasks.get.RecommendationsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.RecommendationsTask.RecommendationsListener;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
-import com.florianmski.tracktoid.ui.activities.phone.TraktItemsActivity;
+import com.florianmski.tracktoid.ui.activities.TraktItemsActivity;
 import com.florianmski.tracktoid.ui.fragments.BaseFragment.TaskListener;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.traktoid.TraktoidInterface;

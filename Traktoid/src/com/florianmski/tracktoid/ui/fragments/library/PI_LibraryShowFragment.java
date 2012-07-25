@@ -20,7 +20,7 @@ import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
-import com.florianmski.tracktoid.ui.activities.phone.ShowActivity;
+import com.florianmski.tracktoid.ui.activities.ShowActivity;
 import com.jakewharton.trakt.entities.TvShow;
 
 public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>

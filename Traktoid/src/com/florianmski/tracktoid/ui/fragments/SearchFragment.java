@@ -29,7 +29,7 @@ import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.adapters.lists.ListSearchAdapter;
 import com.florianmski.tracktoid.trakt.tasks.get.SearchTask;
 import com.florianmski.tracktoid.trakt.tasks.get.SearchTask.SearchListener;
-import com.florianmski.tracktoid.ui.activities.phone.TraktItemsActivity;
+import com.florianmski.tracktoid.ui.activities.TraktItemsActivity;
 import com.florianmski.tracktoid.ui.fragments.BaseFragment.TaskListener;
 
 public class SearchFragment extends TraktFragment implements TaskListener

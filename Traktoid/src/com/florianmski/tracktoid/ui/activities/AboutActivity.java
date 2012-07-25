@@ -1,4 +1,4 @@
-package com.florianmski.tracktoid.ui.activities.phone;
+package com.florianmski.tracktoid.ui.activities;
 
 import com.florianmski.tracktoid.ui.fragments.AboutFragment;
 

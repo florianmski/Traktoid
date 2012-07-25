@@ -19,7 +19,7 @@ import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
 import com.florianmski.tracktoid.trakt.tasks.BaseTask;
-import com.florianmski.tracktoid.ui.activities.phone.SinglePaneActivity;
+import com.florianmski.tracktoid.ui.activities.SinglePaneActivity;
 import com.florianmski.tracktoid.ui.fragments.library.PagerLibraryFragment;
 import com.jakewharton.trakt.entities.Movie;
 

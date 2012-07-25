@@ -20,7 +20,7 @@ import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateMoviesTask;
-import com.florianmski.tracktoid.ui.activities.phone.MovieActivity;
+import com.florianmski.tracktoid.ui.activities.MovieActivity;
 import com.jakewharton.trakt.entities.Movie;
 
 public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>

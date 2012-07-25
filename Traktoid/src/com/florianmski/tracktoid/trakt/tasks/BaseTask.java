@@ -48,10 +48,11 @@ public abstract class BaseTask<TResult> extends BackgroundTask<TResult>
 	{
 		if(!Utils.isOnline(context))
 		{
-			if(context != null && !silentConnectionError)
+			TResult result = doOfflineTraktStuff();
+			if(context != null && !silentConnectionError && result == null)
 				onFailed(new Exception("Internet connection required!"));
 
-			return doOfflineTraktStuff();
+			return result;
 		}
 		try
 		{

@@ -19,27 +19,27 @@
 		android:name=".TraktoidApplication"
         android:hardwareAccelerated="true">
 
-        <activity android:name=".ui.activities.phone.StartActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        <activity android:name=".ui.activities.StartActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         
-        <activity android:name=".ui.activities.phone.SearchActivity" android:label="Search"></activity>
-        <activity android:name=".ui.activities.phone.CalendarActivity" android:label="Calendar"></activity>
-        <activity android:name=".ui.activities.phone.ShowActivity"></activity>
-        <activity android:name=".ui.activities.phone.TraktItemsActivity"></activity>
-        <activity android:name=".ui.activities.phone.MovieActivity"></activity>
-        <activity android:name=".ui.activities.phone.SeasonActivity"></activity>
-        <activity android:name=".ui.activities.phone.EpisodeActivity"></activity>
-        <activity android:name=".ui.activities.phone.LibraryActivity" android:label="Library"></activity>
-        <activity android:name=".ui.activities.phone.SettingsActivity" android:label="Settings"></activity>
-        <activity android:name=".ui.activities.phone.RecommendationActivity" android:label="Recommendation" android:uiOptions="splitActionBarWhenNarrow"></activity>
-        <activity android:name=".ui.activities.phone.AboutActivity" android:label="About"></activity>
-        <activity android:name=".ui.activities.phone.LoginActivity" android:label="Login"></activity>
-        <activity android:name=".ui.activities.phone.ShoutsActivity" android:label="Shouts" android:windowSoftInputMode="stateAlwaysHidden"></activity>
-        <activity android:name=".ui.activities.phone.TrendingActivity" android:label="Trending" ></activity>
+        <activity android:name=".ui.activities.SearchActivity" android:label="Search"></activity>
+        <activity android:name=".ui.activities.CalendarActivity" android:label="Calendar"></activity>
+        <activity android:name=".ui.activities.ShowActivity"></activity>
+        <activity android:name=".ui.activities.TraktItemsActivity"></activity>
+        <activity android:name=".ui.activities.MovieActivity"></activity>
+        <activity android:name=".ui.activities.SeasonActivity"></activity>
+        <activity android:name=".ui.activities.EpisodeActivity"></activity>
+        <activity android:name=".ui.activities.LibraryActivity" android:label="Library"></activity>
+        <activity android:name=".ui.activities.SettingsActivity" android:label="Settings"></activity>
+        <activity android:name=".ui.activities.RecommendationActivity" android:label="Recommendation" android:uiOptions="splitActionBarWhenNarrow"></activity>
+        <activity android:name=".ui.activities.AboutActivity" android:label="About"></activity>
+        <activity android:name=".ui.activities.LoginActivity" android:label="Login"></activity>
+        <activity android:name=".ui.activities.ShoutsActivity" android:label="Shouts" android:windowSoftInputMode="stateAlwaysHidden"></activity>
+        <activity android:name=".ui.activities.TrendingActivity" android:label="Trending" ></activity>
 
     </application>
 </manifest>

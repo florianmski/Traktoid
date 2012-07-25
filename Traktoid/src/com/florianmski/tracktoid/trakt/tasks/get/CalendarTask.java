@@ -27,7 +27,27 @@ public class CalendarTask extends BaseTask<List<CalendarDate>>
 
 	@Override
 	protected List<CalendarDate> doTraktStuffInBackground()
-	{			
+	{					
+		TraktApiBuilder<List<CalendarDate>> builder = getBuilder();
+		List<CalendarDate> calendarListShows = ApiCache.read(builder, context);
+		if(calendarListShows != null)
+			publishProgress(EVENT, calendarListShows);
+		
+		calendarListShows = builder.fire();
+
+		ApiCache.save(builder, calendarListShows, context);
+		
+		return calendarListShows;
+	}
+	
+	@Override
+	protected List<CalendarDate> doOfflineTraktStuff()
+	{	
+		return ApiCache.read(getBuilder(), context);
+	}
+	
+	private TraktApiBuilder<List<CalendarDate>> getBuilder()
+	{
 		TraktApiBuilder<List<CalendarDate>> builder = null;
 		switch(type)
 		{
@@ -42,15 +62,7 @@ public class CalendarTask extends BaseTask<List<CalendarDate>>
 			break;
 		}
 		
-		List<CalendarDate> calendarListShows = ApiCache.read(builder, context);
-		if(calendarListShows != null)
-			publishProgress(EVENT, calendarListShows);
-		
-		calendarListShows = builder.fire();
-
-		ApiCache.save(builder, calendarListShows, context);
-		
-		return calendarListShows;
+		return builder;
 	}
 
 	@Override

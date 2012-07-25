@@ -12,11 +12,11 @@ import android.widget.TextView;
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.adapters.lists.ListNavigationAdapter.NavigationItem;
-import com.florianmski.tracktoid.ui.activities.phone.CalendarActivity;
-import com.florianmski.tracktoid.ui.activities.phone.LibraryActivity;
-import com.florianmski.tracktoid.ui.activities.phone.RecommendationActivity;
-import com.florianmski.tracktoid.ui.activities.phone.SearchActivity;
-import com.florianmski.tracktoid.ui.activities.phone.TrendingActivity;
+import com.florianmski.tracktoid.ui.activities.CalendarActivity;
+import com.florianmski.tracktoid.ui.activities.LibraryActivity;
+import com.florianmski.tracktoid.ui.activities.RecommendationActivity;
+import com.florianmski.tracktoid.ui.activities.SearchActivity;
+import com.florianmski.tracktoid.ui.activities.TrendingActivity;
 
 public class ListNavigationAdapter extends RootAdapter<NavigationItem>
 {	

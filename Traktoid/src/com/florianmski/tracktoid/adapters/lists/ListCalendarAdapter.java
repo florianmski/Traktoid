@@ -26,7 +26,7 @@ import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.image.TraktImage;
-import com.florianmski.tracktoid.ui.activities.phone.TraktItemsActivity;
+import com.florianmski.tracktoid.ui.activities.TraktItemsActivity;
 import com.florianmski.tracktoid.widgets.BadgesView;
 import com.florianmski.tracktoid.widgets.ScrollingTextView;
 import com.jakewharton.trakt.entities.CalendarDate;

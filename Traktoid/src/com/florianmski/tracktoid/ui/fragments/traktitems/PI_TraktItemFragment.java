@@ -44,7 +44,7 @@ import com.florianmski.tracktoid.trakt.tasks.post.InWatchlistTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
 import com.florianmski.tracktoid.trakt.tasks.post.RateTask;
 import com.florianmski.tracktoid.trakt.tasks.post.SeenTask;
-import com.florianmski.tracktoid.ui.activities.phone.ShoutsActivity;
+import com.florianmski.tracktoid.ui.activities.ShoutsActivity;
 import com.florianmski.tracktoid.ui.fragments.PagerTabsViewFragment;
 import com.florianmski.tracktoid.widgets.AlphaToggleButton;
 import com.florianmski.tracktoid.widgets.BadgesView;
