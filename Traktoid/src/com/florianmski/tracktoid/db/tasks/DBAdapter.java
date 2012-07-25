@@ -18,6 +18,8 @@ public abstract class DBAdapter implements DBListener
 	@Override
 	public void onDBSeasons(List<TvShowSeason> seasons) {}
 	@Override
+	public void onDBSeason(List<TvShowEpisode> episodes) {}
+	@Override
 	public void onDBEpisodes(List<TvShowEpisode> episodes) {}
 	@Override
 	public void onDBCalendar(List<CalendarDate> calendar) {}

@@ -5,9 +5,8 @@ import java.util.List;
 import android.content.Context;
 import com.jakewharton.trakt.entities.TvShowSeason;
 
-public class DBSeasonsTask extends DBTask
+public class DBSeasonsTask extends DBTask<List<TvShowSeason>>
 {
-	private List<TvShowSeason> seasons;
 	private String tvdbId;
 	private boolean getEpisodesToo;
 	private boolean orderByASC;
@@ -22,15 +21,15 @@ public class DBSeasonsTask extends DBTask
 	}
 	
 	@Override
-	protected void doDBStuff() 
+	protected List<TvShowSeason> doDBStuff() 
 	{
-		seasons = dbw.getSeasons(tvdbId, getEpisodesToo, orderByASC);
+		return dbw.getSeasons(tvdbId, getEpisodesToo, orderByASC);
 	}
 	
 	@Override
-	protected void onPostExecute (Boolean success)
+	protected void onCompleted(List<TvShowSeason> result)
 	{
-		listener.onDBSeasons(seasons);
+		listener.onDBSeasons(result);
 	}
 	
 }

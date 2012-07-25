@@ -211,7 +211,7 @@ public class ProgressFragment extends TraktFragment
 						else
 							getStatusView().hide().text(null);
 					}
-				}, show.tvdbId, true, false).fire();
+				}, show.tvdbId, true, false).execute();
 
 				displayClearLogo();
 

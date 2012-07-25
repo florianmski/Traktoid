@@ -17,6 +17,8 @@ public class TraktoidApplication extends Application
 	@Override
 	public void onCreate() 
 	{
+		//TODO add bugsense
+		//TODO do lint corrections
 		// The following line triggers the initialization of ACRA
 //		ACRA.init(this);
 

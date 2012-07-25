@@ -144,32 +144,6 @@ public class PagerSeasonFragment extends PagerFragment
 	//don't know why but using this thread is like 3 time faster than using an asynctask doing the same thing (???)
 	public void setData()
 	{
-//		new Thread()
-//		{
-//			@Override
-//			public void run()
-//			{
-//				DatabaseWrapper dbw = getDBWrapper();
-//				String tvdb_id = getArguments().getString(TraktoidConstants.BUNDLE_TVDB_ID);
-//				List<TvShowSeason> seasons = dbw.getSeasons(tvdb_id, true, true);
-//
-//				adapter = new PagerSeasonAdapter(seasons, tvdb_id, getFragmentManager(), getActivity().getApplicationContext());
-//
-//				getActivity().runOnUiThread(new Runnable() 
-//				{
-//					@Override
-//					public void run() 
-//					{
-//						if(((PagerSeasonAdapter)adapter).isEmpty())
-//							getStatusView().hide().text("No seasons, this is strange...");
-//						else
-//							getStatusView().hide().text(null);
-//						
-//						initPagerFragment(adapter);
-//					}
-//				});
-//			}
-//		}.start();
 		//TODO proper task
 		new Thread()
 		{

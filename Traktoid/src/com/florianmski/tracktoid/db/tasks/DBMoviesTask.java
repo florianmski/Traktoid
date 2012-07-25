@@ -6,25 +6,23 @@ import android.content.Context;
 
 import com.jakewharton.trakt.entities.Movie;
 
-public class DBMoviesTask extends DBTask
-{
-	private List<Movie> movies;
-	
+public class DBMoviesTask extends DBTask<List<Movie>>
+{	
 	public DBMoviesTask(Context context, DBListener listener) 
 	{
 		super(context, listener);
 	}
 	
 	@Override
-	protected void doDBStuff() 
+	protected List<Movie> doDBStuff() 
 	{
-		movies = dbw.getMovies();		
+		return dbw.getMovies();		
 	}
 	
 	@Override
-	protected void onPostExecute (Boolean success)
+	protected void onCompleted(List<Movie> result)
 	{
-		listener.onDBMovies(movies);
+		listener.onDBMovies(result);
 	}
 	
 }

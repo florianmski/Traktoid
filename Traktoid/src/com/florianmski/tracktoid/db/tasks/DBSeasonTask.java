@@ -6,17 +6,17 @@ import android.content.Context;
 
 import com.jakewharton.trakt.entities.TvShowEpisode;
 
-public class DBEpisodesTask extends DBTask<List<TvShowEpisode>>
+public class DBSeasonTask  extends DBTask<List<TvShowEpisode>>
 {
 	private String seasonId;
 	
-	public DBEpisodesTask(Context context, DBListener listener, String seasonId) 
+	public DBSeasonTask(Context context, String seasonId, DBListener listener) 
 	{
 		super(context, listener);
 		
 		this.seasonId = seasonId;
 	}
-	
+
 	@Override
 	protected List<TvShowEpisode> doDBStuff() 
 	{
@@ -26,7 +26,7 @@ public class DBEpisodesTask extends DBTask<List<TvShowEpisode>>
 	@Override
 	protected void onCompleted(List<TvShowEpisode> result)
 	{
-		listener.onDBEpisodes(result);
+		listener.onDBSeason(result);
 	}
-	
+
 }

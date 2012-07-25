@@ -59,7 +59,7 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 					adapter.refreshItems(shows);
 					getStatusView().hide().text(null);
 				}
-			}).fire();
+			}).execute();
 		}
 	}
 

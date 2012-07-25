@@ -22,7 +22,8 @@ import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.RootAdapter;
 import com.florianmski.tracktoid.adapters.lists.ListEpisodeAdapter;
-import com.florianmski.tracktoid.db.DatabaseWrapper;
+import com.florianmski.tracktoid.db.tasks.DBAdapter;
+import com.florianmski.tracktoid.db.tasks.DBSeasonTask;
 import com.florianmski.tracktoid.ui.activities.TraktItemsActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.tracktoid.widgets.CheckableListView;
@@ -76,32 +77,20 @@ public class PI_SeasonFragment extends TraktFragment
 		ListCheckerManager.getInstance().addListener(lvEpisodes);
 		lvEpisodes.initialize(this, position, ListCheckerManager.<TvShowEpisode>getInstance());
 
-		//TODO proper task
-		new Thread()
+		new DBSeasonTask(getSherlockActivity(), season.url, new DBAdapter() 
 		{
-			@Override
-			public void run()
+			public void onDBSeason(List<TvShowEpisode> episodes)
 			{
-				DatabaseWrapper dbw = getDBWrapper();
-				List<TvShowEpisode> episodes = dbw.getEpisodes(season.url);
-
 				adapter = new ListEpisodeAdapter(episodes, season.url, getActivity());
 
-				getActivity().runOnUiThread(new Runnable() 
-				{
-					@Override
-					public void run() 
-					{
-						lvEpisodes.setAdapter(adapter);
+				lvEpisodes.setAdapter(adapter);
 
-						if(adapter.isEmpty())
-							getStatusView().hide().text("No episodes for this season");
-						else
-							getStatusView().hide().text(null);
-					}
-				});
+				if(adapter.isEmpty())
+					getStatusView().hide().text("No episodes for this season");
+				else
+					getStatusView().hide().text(null);
 			}
-		}.start();
+		}).execute();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -167,7 +156,7 @@ public class PI_SeasonFragment extends TraktFragment
 		if(adapter != null && traktItems != null)
 			adapter.remove(traktItems);
 	}
-	
+
 	@Subscribe
 	public void onTraktItemsRemoved(TraktItemsRemovedEvent<TvShowEpisode> event) 
 	{

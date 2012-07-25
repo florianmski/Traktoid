@@ -68,7 +68,7 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 					adapter.refreshItems(movies);
 					getStatusView().hide().text(null);
 				}
-			}).fire();
+			}).execute();
 		}
 	}
 
