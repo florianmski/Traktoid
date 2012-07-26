@@ -51,7 +51,7 @@ public class ListRecommendationAdapter<T extends TraktoidInterface<T>> extends R
             holder = new ViewHolder();
             holder.ivFanart = (ImageView)convertView.findViewById(R.id.imageViewFanart);
             holder.ivDismiss = (ImageView)convertView.findViewById(R.id.imageViewDismiss);
-            holder.tvTitle = (TextView)convertView.findViewById(R.id.textViewShow);
+            holder.tvTitle = (TextView)convertView.findViewById(R.id.textViewTitle);
             int width = ((Activity)context).getWindowManager().getDefaultDisplay().getWidth();
             int height = (int) (width * TraktImage.RATIO_FANART);
             holder.ivFanart.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
