@@ -1,17 +1,18 @@
 package com.florianmski.tracktoid;
 
 import java.io.File;
-
-import org.acra.annotation.ReportsCrashes;
+import java.io.IOException;
+import java.io.InputStream;
 
 import android.app.Application;
 import android.os.Environment;
+import android.util.Log;
 
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.androidquery.util.AQUtility;
+import com.bugsense.trace.BugSenseHandler;
 import com.florianmski.tracktoid.trakt.TraktManager;
 
-@ReportsCrashes(formUri = TraktoidConstants.KEY_BUGSENSE, formKey="") 
 public class TraktoidApplication extends Application
 {
 	@Override
@@ -19,8 +20,21 @@ public class TraktoidApplication extends Application
 	{
 		//TODO add bugsense
 		//TODO do lint corrections
-		// The following line triggers the initialization of ACRA
-//		ACRA.init(this);
+
+		// If you want to use BugSense for your fork, register with
+		// them and place your API key in /assets/bugsense.txt
+		// (This prevents me receiving reports of crashes from forked 
+		// versions which is somewhat confusing!)      
+		try 
+		{
+			InputStream inputStream = getAssets().open("bugsense.txt");
+			String key = Utils.readInputStream(inputStream).trim();
+			BugSenseHandler.setup(this, key);
+		} 
+		catch (IOException e) 
+		{
+			Log.d("TAG", "No bugsense keyfile found");
+		}
 
 		TraktManager.create(this);
 

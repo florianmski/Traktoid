@@ -2,7 +2,6 @@ package com.florianmski.tracktoid.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -118,7 +117,6 @@ public class CheckableListView<T> extends ListView implements ListCheckerListene
 	@Override
 	public void onCheckNone(int position) 
 	{
-		Log.d("test","onCheckNone : " + position);
 		if(this.position == position)
 		{
 			for(T item : ((RootAdapter<T>) getAdapter()).getItems())

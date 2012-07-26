@@ -32,7 +32,7 @@ public class PagerDetailsAdapter<T extends TraktoidInterface<T>> extends TabsVie
 			break;
 		case android.R.layout.simple_list_item_1:
 			TextView tvGenres = (TextView)v.findViewById(android.R.id.text1);
-			//TODO
+			//TODO do something better
 			try
 			{
 				for(String text : ((MediaBase)item).genres)

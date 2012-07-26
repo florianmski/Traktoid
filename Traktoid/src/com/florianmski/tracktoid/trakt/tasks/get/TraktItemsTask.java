@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.app.Activity;
 
-import com.florianmski.tracktoid.ApiCache;
 import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
@@ -29,16 +28,10 @@ public class TraktItemsTask<T extends TraktoidInterface<T>> extends BaseTask<Lis
 	@Override
 	protected List<T> doTraktStuffInBackground()
 	{		
-		List<T> traktItems = (List<T>) ApiCache.read(builder, context);
-		if(traktItems != null)
-			publishProgress(EVENT, traktItems);
-
-		traktItems = (List<T>) builder.fire();
+		List<T> traktItems = (List<T>) builder.fire();
 
 		if(sort && traktItems != null && traktItems.size() > 0)
 			Collections.sort(traktItems);
-
-		ApiCache.save(builder, traktItems, context);
 
 		return traktItems;
 	}

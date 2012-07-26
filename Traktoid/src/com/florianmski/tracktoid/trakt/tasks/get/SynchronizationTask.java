@@ -11,8 +11,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.florianmski.tracktoid.TraktBus;
-import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
+import com.florianmski.tracktoid.events.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 import com.jakewharton.trakt.entities.Activity;

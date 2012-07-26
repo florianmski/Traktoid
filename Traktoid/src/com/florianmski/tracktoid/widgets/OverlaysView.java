@@ -98,7 +98,8 @@ public class OverlaysView<T extends TraktoidInterface<T>> extends RelativeLayout
 	{
 		if(on)
 		{
-			iv.startAnimation(animation);
+			//to many issues with this animation, don't use it for the moment
+//			iv.startAnimation(animation);
 			iv.setImageDrawable(drawable);
 		}
 		else
@@ -116,11 +117,7 @@ public class OverlaysView<T extends TraktoidInterface<T>> extends RelativeLayout
 			return;
 		
 		if(r == Rating.Unrate)
-			return;
-		else if(r == Rating.Love)
-			toggleBadge(true, ivRating, R.drawable.badge_loved);
-		else if(r == Rating.Hate)
-			toggleBadge(true, ivRating, R.drawable.badge_hated);
+			toggleBadge(false, ivRating, null);
 		else
 			toggleBadge(true, ivRating, new RateDrawable(r));
 	}

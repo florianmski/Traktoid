@@ -7,10 +7,10 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
-import android.graphics.Shader.TileMode;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.Shader;
+import android.graphics.Shader.TileMode;
 import android.graphics.drawable.Drawable;
 
 import com.florianmski.tracktoid.widgets.RateDialog.RatingColor;
@@ -37,7 +37,6 @@ public class RateDrawable extends Drawable
     	
     	Shader s = new LinearGradient(size/2, size/2, 0, size, darkerColor, color, TileMode.MIRROR);
         trianglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-//        trianglePaint.setColor(color);
         trianglePaint.setShader(s);
         trianglePaint.setStyle(Style.FILL);
         
@@ -46,8 +45,6 @@ public class RateDrawable extends Drawable
         textPaint.setTextAlign(Align.CENTER);
         textPaint.setTextSize(size/2);
         textPaint.setStyle(Style.FILL);
-        
-//    	setBounds(0, 0, size, size);
     }
 
     @Override

@@ -13,7 +13,6 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.florianmski.tracktoid.Utils;
 import com.jakewharton.trakt.entities.CalendarDate;
@@ -1689,7 +1688,6 @@ public class DatabaseWrapper
 		for(int i = 0; i < c.getCount(); i++)
 		{
 			genres.add(getGenreFromCursor(c));
-			Log.e("test test", "genre : " + genres.get(i));
 			c.moveToNext();
 		}
 

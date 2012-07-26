@@ -1,10 +1,13 @@
 package com.florianmski.tracktoid.trakt;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
-import com.florianmski.tracktoid.R;
+
 import com.florianmski.tracktoid.Utils;
 import com.jakewharton.trakt.ServiceManager;
 
@@ -29,8 +32,18 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 	private TraktManager(Context context) 
 	{		
 		this.context = context;
+   
+		try 
+		{
+			InputStream inputStream = context.getAssets().open("trakt_key.txt");
+			String key = Utils.readInputStream(inputStream).trim();
+			setApiKey(key);
+		} 
+		catch (IOException e) 
+		{
+			throw new IllegalStateException("You must put your trakt api key in assets/trakt_key.txt");
+		}
 
-		setApiKey(context.getResources().getString(R.string.trakt_key));
 		setAccountInformations(context);
 	}
 
@@ -74,95 +87,4 @@ public class TraktManager extends ServiceManager implements OnSharedPreferenceCh
 
 		setAuthentication(username, password);
 	}
-
-//	public void addObserver(TraktListener listener)
-//	{
-//		listeners.add(listener);
-//	}
-//
-//	public void removeObserver(TraktListener listener)
-//	{
-//		listeners.remove(listener);
-//	}
-
-//	public void onBeforeTraktRequest(TraktListener listener)
-//	{
-//		if(listeners.contains(listener))
-//			listener.onBeforeTraktRequest();
-//	}
-
-//	public synchronized void onAfterTraktRequest(TraktListener listener, boolean success, boolean inQueue)
-//	{
-//		//		if(!tasks.isEmpty())
-//		//			tasks.remove(task);
-//		//
-//		//		if(!tasks.isEmpty())
-//		//			tasks.get(0).execute();
-//		//		
-//		//		if(listeners.contains(listener))
-//		//			listener.onAfterTraktRequest(success);
-//		
-//		//at the end of their execution ALL the task come here, even the ones that weren't queued. Be careful!
-//		if(!tasks.isEmpty() && inQueue)
-//		{
-//			tasks.remove(0);
-//
-//			if(!tasks.isEmpty())
-//				tasks.get(0).inQueue().fire();
-//		}
-//
-//		if(listeners.contains(listener))
-//			listener.onAfterTraktRequest(success);
-//	}
-
-//	public void onErrorTraktRequest(TraktListener listener, Exception e)
-//	{
-//		if(listeners.contains(listener))
-//			listener.onErrorTraktRequest(e);
-//	}
-//
-//	@Override
-//	public void onShowUpdated(TvShow show)
-//	{
-//		for(TraktListener l : listeners)
-//			l.onShowUpdated(show);
-//	}
-//
-//	@Override
-//	public void onShowRemoved(TvShow show)
-//	{
-//		for(TraktListener l : listeners)
-//			l.onShowRemoved(show);
-//	}
-//	
-//	@Override
-//	public void onMovieUpdated(Movie movie)
-//	{
-//		for(TraktListener l : listeners)
-//			l.onMovieUpdated(movie);
-//	}
-//
-//	@Override
-//	public void onMovieRemoved(Movie movie)
-//	{
-//		for(TraktListener l : listeners)
-//			l.onMovieRemoved(movie);
-//	}
-//	
-//
-//	@Override
-//	public void onCalendar(ArrayList<ArrayList<CalendarDate>> calendars) 
-//	{
-//		for(TraktListener l : listeners)
-//			l.onCalendar(calendars);
-//	}	
-//
-//	@Override
-//	public void onBeforeTraktRequest() {}
-//
-//	@Override
-//	public void onAfterTraktRequest(boolean success) {}
-//
-//	@Override
-//	public void onErrorTraktRequest(Exception e) {}
 }

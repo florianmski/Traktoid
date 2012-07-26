@@ -14,9 +14,10 @@ import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktBus;
-import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
+import com.florianmski.tracktoid.events.TraktItemsUpdatedEvent;
+import com.florianmski.tracktoid.events.UpdateShowsStatusEvent;
 import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 import com.florianmski.tracktoid.ui.activities.SinglePaneActivity;
 import com.florianmski.tracktoid.ui.fragments.library.PagerLibraryFragment;
@@ -43,6 +44,8 @@ public class UpdateShowsTask extends BaseTask<TvShow>
 		super(context, sSingleThreadExecutor);
 
 		this.showsSelected = selectedShows;
+		
+		TraktBus.getInstance().post(new UpdateShowsStatusEvent(true));
 	}
 
 	@Override
@@ -119,6 +122,8 @@ public class UpdateShowsTask extends BaseTask<TvShow>
 	{		
 		if(nm != null)
 			nm.cancel(NOTIFICATION_ID);
+		
+		TraktBus.getInstance().post(new UpdateShowsStatusEvent(false));
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -154,9 +159,5 @@ public class UpdateShowsTask extends BaseTask<TvShow>
 	}
 
 	@Override
-	protected void sendEvent(TvShow result) 
-	{
-		// TODO Auto-generated method stub
-	}
-
+	protected void sendEvent(TvShow result) {}
 }

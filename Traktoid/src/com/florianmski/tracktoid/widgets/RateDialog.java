@@ -361,10 +361,6 @@ public class RateDialog extends Dialog {
 	    	RatingColor res = RATING_MAPPING.get(value);
 	    	if(res != null)
 	    		return res;
-	    	else if(value == Rating.Love)
-	    		return RatingColor.TotallyNinja;
-	    	else if(value == Rating.Hate)
-	    		return RatingColor.WeakSauce;
 	    	else
 	    		return RatingColor.Meh;
 	    }

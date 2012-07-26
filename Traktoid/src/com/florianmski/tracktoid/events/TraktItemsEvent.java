@@ -1,4 +1,4 @@
-package com.florianmski.tracktoid;
+package com.florianmski.tracktoid.events;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;

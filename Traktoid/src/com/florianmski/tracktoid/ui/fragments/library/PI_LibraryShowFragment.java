@@ -16,12 +16,15 @@ import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBShowsTask;
+import com.florianmski.tracktoid.events.UpdateShowsStatusEvent;
 import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateShowsTask;
 import com.florianmski.tracktoid.ui.activities.ShowActivity;
 import com.jakewharton.trakt.entities.TvShow;
+import com.squareup.otto.Subscribe;
 
 public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 {
@@ -35,9 +38,9 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 	public PI_LibraryShowFragment() {}
 
 	@Override
-	public void checkUpdateTask() 
+	public boolean checkUpdateTask() 
 	{
-		//TODO
+		return BaseTask.isRunning(UpdateShowsTask.class.getSimpleName());
 	}
 
 	@Override
@@ -49,18 +52,19 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 	@Override
 	public void displayContent() 
 	{
-		if(getDBWrapper().isThereShows())
+		new DBShowsTask(getActivity(), new DBAdapter() 
 		{
-			new DBShowsTask(getActivity(), new DBAdapter() 
+			@Override
+			public void onDBShows(List<TvShow> shows)
 			{
-				@Override
-				public void onDBShows(List<TvShow> shows)
-				{
-					adapter.refreshItems(shows);
+				adapter.refreshItems(shows);
+
+				if(shows.size() == 0)
+					getStatusView().hide().text("Hit the refresh button to add your shows");
+				else
 					getStatusView().hide().text(null);
-				}
-			}).execute();
-		}
+			}
+		}).execute();
 	}
 
 	@Override
@@ -74,14 +78,14 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 	@Override
 	public void onRefreshClick() 
 	{
-		new TraktItemsTask<TvShow>(getActivity(), new TraktItemsListener<TvShow>() 
-				{
+		new TraktItemsTask<TvShow>(getActivity(), new TraktItemsListener<TvShow>() {
 			@Override
 			public void onTraktItems(List<TvShow> shows) 
 			{
+				setRefresh(false);
 				createShowsDialog(shows);
 			}
-				}, tm.userService().libraryShowsAll(TraktManager.getUsername()), true).fire();
+		}, tm.userService().libraryShowsAll(TraktManager.getUsername()), true).fire();
 	}
 
 	public void createShowsDialog(final List<TvShow> shows)
@@ -139,5 +143,11 @@ public class PI_LibraryShowFragment extends PI_LibraryFragment<TvShow>
 		//avoid trying to show dialog if activity no longer exist
 		if(!getActivity().isFinishing())
 			alert.show();
+	}
+
+	@Subscribe
+	public void onUpdateShowsOver(UpdateShowsStatusEvent event)
+	{
+		setRefresh(event.isRunning());
 	}
 }

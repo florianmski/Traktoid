@@ -173,7 +173,7 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 			holder.ivPoster = (ImageView) convertView.findViewById(R.id.imageViewPoster);
 			holder.ivPoster.setScaleType(ScaleType.CENTER_CROP);
 
-			holder.bv = (OverlaysView<T>) convertView.findViewById(R.id.badgesLayout);
+			holder.ov = (OverlaysView<T>) convertView.findViewById(R.id.badgesLayout);
 
 			convertView.setTag(holder);
 		} 
@@ -181,11 +181,11 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 			holder = (ViewHolder<T>) convertView.getTag();
 
 		GridView.LayoutParams paramsRl = new GridView.LayoutParams(LayoutParams.FILL_PARENT, height);
-		holder.bv.setLayoutParams(paramsRl);
+		holder.ov.setLayoutParams(paramsRl);
 
 		final T item = getItem(position);
 
-		holder.bv.initialize();
+		holder.ov.initialize();
 		holder.ivPoster.setImageBitmap(null);
 
 		TraktImage i = TraktImage.getPoster(item);
@@ -198,7 +198,7 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 			holder.ivPoster.setScaleType(ScaleType.CENTER_CROP);
 			aq.id(holder.ivPoster).image(i.getUrl(), true, true);
 
-			holder.bv.setTraktItem(item);
+			holder.ov.setTraktItem(item);
 		}
 
 		return lcm.checkView(item, convertView);
@@ -207,6 +207,6 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 	private static class ViewHolder<T extends TraktoidInterface<T>> 
 	{
 		private ImageView ivPoster;
-		private OverlaysView<T> bv;
+		private OverlaysView<T> ov;
 	}
 }

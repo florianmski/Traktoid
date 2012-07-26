@@ -15,9 +15,10 @@ import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktBus;
-import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.db.DatabaseWrapper;
+import com.florianmski.tracktoid.events.TraktItemsUpdatedEvent;
+import com.florianmski.tracktoid.events.UpdateMoviesStatusEvent;
 import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 import com.florianmski.tracktoid.ui.activities.SinglePaneActivity;
 import com.florianmski.tracktoid.ui.fragments.library.PagerLibraryFragment;
@@ -40,11 +41,13 @@ public class UpdateMoviesTask extends BaseTask<Movie>
 		super(context, sSingleThreadExecutor);
 
 		this.moviesSelected = selectedShows;
+		
+		TraktBus.getInstance().post(new UpdateMoviesStatusEvent(true));
 	}
 
 	@Override
 	protected Movie doTraktStuffInBackground()
-	{		
+	{				
 		//sort shows by name, not really necessary
 		Collections.sort(moviesSelected);
 		
@@ -64,17 +67,17 @@ public class UpdateMoviesTask extends BaseTask<Movie>
 
 			String query = null;
 			
-			if(m.imdbId != null && !m.imdbId.trim().equals(""))
-				query = m.imdbId;
-			else if(m.tmdbId != null && !m.tmdbId.trim().equals(""))
-				query = m.tmdbId;
-			else if(m.url != null && !m.url.trim().equals(""))
+//			if(m.imdbId != null && !m.imdbId.trim().equals(""))
+//				query = m.imdbId;
+//			else if(m.tmdbId != null && !m.tmdbId.trim().equals(""))
+//				query = m.tmdbId;
+			//seems to always work with the "slug"
+			//for instance this does not work with the imdbId of "Monsters" even if I can find this movie on trakt and on the tmdb...
+			if(m.url != null && !m.url.trim().equals(""))
 				query = m.url.substring(m.url.lastIndexOf("/")+1);
 			
 			if(query != null)
-			{
-				Log.e("test", "url " + m.url + "test " + query);
-				
+			{				
 				m = tm.movieService().summary(query).fire();
 	
 				dbw.insertOrUpdateMovie(m);
@@ -111,6 +114,8 @@ public class UpdateMoviesTask extends BaseTask<Movie>
 	{		
 		if(nm != null)
 			nm.cancel(NOTIFICATION_ID);
+		
+		TraktBus.getInstance().post(new UpdateMoviesStatusEvent(false));
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -146,9 +151,6 @@ public class UpdateMoviesTask extends BaseTask<Movie>
 	}
 
 	@Override
-	protected void sendEvent(Movie result) 
-	{
-		// TODO Auto-generated method stub
-	}
+	protected void sendEvent(Movie result) {}
 
 }

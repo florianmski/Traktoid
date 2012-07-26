@@ -1,4 +1,4 @@
-package com.florianmski.tracktoid;
+package com.florianmski.tracktoid.events;
 
 import java.util.List;
 

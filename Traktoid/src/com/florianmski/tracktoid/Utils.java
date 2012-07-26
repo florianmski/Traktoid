@@ -1,6 +1,7 @@
 package com.florianmski.tracktoid;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -238,5 +239,15 @@ public class Utils
 	public static String getExtFolderPath(Context context)
 	{
 		return Environment.getExternalStorageDirectory() + "/Android/data/" + context.getPackageName() + "/";
+	}
+	
+	public static String readInputStream(InputStream in) throws IOException 
+	{
+		StringBuffer stream = new StringBuffer();
+		byte[] b = new byte[4096];
+		for (int n; (n = in.read(b)) != -1;)
+			stream.append(new String(b, 0, n));
+
+		return stream.toString();
 	}
 }

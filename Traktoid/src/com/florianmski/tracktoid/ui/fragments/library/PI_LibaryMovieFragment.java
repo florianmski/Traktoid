@@ -16,12 +16,15 @@ import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
 import com.florianmski.tracktoid.db.tasks.DBAdapter;
 import com.florianmski.tracktoid.db.tasks.DBMoviesTask;
+import com.florianmski.tracktoid.events.UpdateMoviesStatusEvent;
 import com.florianmski.tracktoid.trakt.TraktManager;
+import com.florianmski.tracktoid.trakt.tasks.BaseTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask;
 import com.florianmski.tracktoid.trakt.tasks.get.TraktItemsTask.TraktItemsListener;
 import com.florianmski.tracktoid.trakt.tasks.get.UpdateMoviesTask;
 import com.florianmski.tracktoid.ui.activities.MovieActivity;
 import com.jakewharton.trakt.entities.Movie;
+import com.squareup.otto.Subscribe;
 
 public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 {
@@ -35,9 +38,9 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 	public PI_LibaryMovieFragment() {}
 
 	@Override
-	public void checkUpdateTask() 
+	public boolean checkUpdateTask() 
 	{
-		//TODO
+		return BaseTask.isRunning(UpdateMoviesTask.class.getSimpleName());
 	}
 
 	@Override
@@ -58,31 +61,32 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 	@Override
 	public void displayContent() 
 	{
-		if(getDBWrapper().isThereMovies())
+		new DBMoviesTask(getActivity(), new DBAdapter() 
 		{
-			new DBMoviesTask(getActivity(), new DBAdapter() 
+			@Override
+			public void onDBMovies(List<Movie> movies)
 			{
-				@Override
-				public void onDBMovies(List<Movie> movies)
-				{
-					adapter.refreshItems(movies);
+				adapter.refreshItems(movies);
+				
+				if(movies.size() == 0)
+					getStatusView().hide().text("Hit the refresh button to add your movies");
+				else
 					getStatusView().hide().text(null);
-				}
-			}).execute();
-		}
+			}
+		}).execute();
 	}
 
 	@Override
 	public void onRefreshClick() 
 	{
-		new TraktItemsTask<Movie>(getActivity(), new TraktItemsListener<Movie>() 
-				{
+		new TraktItemsTask<Movie>(getActivity(), new TraktItemsListener<Movie>() {
 			@Override
 			public void onTraktItems(List<Movie> movies) 
 			{
+				setRefresh(false);
 				createMoviesDialog(movies);					
 			}
-				}, tm.userService().libraryMoviesAll(TraktManager.getUsername()), true).fire();
+		}, tm.userService().libraryMoviesAll(TraktManager.getUsername()), true).fire();
 	}
 
 	public void createMoviesDialog(final List<Movie> movies)
@@ -140,5 +144,11 @@ public class PI_LibaryMovieFragment extends PI_LibraryFragment<Movie>
 		//avoid trying to show dialog if activity no longer exist
 		if(!getActivity().isFinishing())
 			alert.show();
+	}
+
+	@Subscribe
+	public void onUpdateMoviesOver(UpdateMoviesStatusEvent event)
+	{
+		setRefresh(event.isRunning());
 	}
 }

@@ -25,6 +25,4 @@ public final class TraktoidConstants
 	public final static String PREF_USERNAME = "editTextUsername";
 	public final static String PREF_PASSWORD = "editTextPassword";
 	public final static String PREF_SHA1 = "sha1";
-	
-	public final static String KEY_BUGSENSE = "http://www.bugsense.com/api/acra?api_key=386949cc";
 }

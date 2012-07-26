@@ -3,11 +3,14 @@ package com.florianmski.tracktoid.ui.fragments.library;
 import java.util.List;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.view.ActionMode;
@@ -18,10 +21,10 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.florianmski.tracktoid.ListCheckerManager;
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.TraktItemsRemovedEvent;
-import com.florianmski.tracktoid.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.adapters.GridPosterAdapter;
+import com.florianmski.tracktoid.events.TraktItemsRemovedEvent;
+import com.florianmski.tracktoid.events.TraktItemsUpdatedEvent;
 import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.trakt.tasks.post.InCollectionTask;
 import com.florianmski.tracktoid.trakt.tasks.post.InWatchlistTask;
@@ -40,8 +43,11 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 
 	protected CheckableGridView<T> gd;
 	protected GridPosterAdapter<T> adapter;
+	private FrameLayout flProgress;
 	
 	protected ListCheckerManager<T> lcm;
+	
+	private boolean refresh = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -50,7 +56,7 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 		setHasOptionsMenu(true);
 	}
 
-	public abstract void checkUpdateTask();
+	public abstract boolean checkUpdateTask();
 	public abstract GridPosterAdapter<T> setupAdapter();
 	public abstract void onGridItemClick(AdapterView<?> arg0, View v, int position, long arg3);
 	public abstract void displayContent();
@@ -60,7 +66,7 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-
+		
 		lcm = new ListCheckerManager<T>();
 		lcm.setNoSelectedColorResId(R.drawable.selector_no_background);
 		lcm.setSelectedViewResId(R.id.relativeLayoutSelectorPurpose);
@@ -140,8 +146,6 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 		
 		getStatusView().show().text("Loading ,\nPlease wait...");
 
-		checkUpdateTask();
-
 		refreshGridView();
 
 		adapter = setupAdapter();
@@ -157,14 +161,11 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 				onGridItemClick(arg0, arg1, position, arg3);
 			}
 		});
-
-//		TraktTask.addObserver(this);
 	}
 
 	@Override
 	public void onDestroy()
 	{
-//		TraktTask.removeObserver(this);
 		lcm.removeListener(gd);
 		super.onDestroy();
 	}
@@ -225,7 +226,7 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 		SubMenu filterMenu = menu.addSubMenu(0, R.id.action_bar_filter, 0, "Filter");
 		filterMenu.add(0, R.id.action_bar_filter_all, 0, "All");
 		filterMenu.add(0, R.id.action_bar_filter_unwatched, 0, "Unwatched");
-		filterMenu.add(0, R.id.action_bar_filter_loved, 0, "Loved");
+//		filterMenu.add(0, R.id.action_bar_filter_loved, 0, "Loved");
 
 		MenuItem rateItem = filterMenu.getItem();
 		rateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -233,10 +234,17 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 		menu.add(0, R.id.action_bar_multiple_selection, 0, "Multiple selection")
 		.setIcon(R.drawable.ab_icon_mark)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		
+		if(flProgress == null)
+			createProgressItem();
+		
+		MenuItem refreshItem = menu.add(Menu.NONE, R.id.action_bar_refresh, 0, "Refresh");
+		refreshItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, R.id.action_bar_refresh, 0, "Refresh")
-		.setIcon(R.drawable.ab_icon_refresh)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		if(refresh || checkUpdateTask())
+			refreshItem.setActionView(flProgress);
+		else
+			refreshItem.setIcon(R.drawable.ab_icon_refresh);
 	}
 
 	@Override
@@ -245,6 +253,7 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 		switch(item.getItemId())
 		{
 		case R.id.action_bar_refresh:
+			setRefresh(true);
 			onRefreshClick();
 			break;
 		case R.id.action_bar_filter_all:
@@ -259,29 +268,13 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	//TODO
-	//	@Override
-	//	public void onBeforeTraktRequest()
-	//	{
-	//		getSherlockActivity().invalidateOptionsMenu();
-	//	}
-	//
-	//	@Override
-	//	public void onAfterTraktRequest(boolean success) 
-	//	{
-	//		getSherlockActivity().invalidateOptionsMenu();
-	//	}
-
+	
 	@Subscribe
 	public void onTraktItemsUpdated(TraktItemsUpdatedEvent<T> event) 
 	{
 		List<T> traktItems = event.getTraktItems(this);
 		if(adapter != null && traktItems != null)
-		{
 			adapter.updateItems(traktItems);
-			Log.e("test","test");
-		}
 	}
 	
 	@Subscribe
@@ -292,18 +285,26 @@ public abstract class PI_LibraryFragment<T extends TraktoidInterface<T>> extends
 			adapter.updateItems(traktItems);
 	}
 	
-//	@Override
-//	public void onTraktItemsUpdated(List<T> traktItems) 
-//	{
-//		Log.e("coucou","coucou");
-//		if(adapter != null)
-//			adapter.updateItems(traktItems);
-//	}
-//
-//	@Override
-//	public void onTraktItemsRemoved(List<T> traktItem) 
-//	{
-//		if(adapter != null)
-//			adapter.remove(traktItem);
-//	}
+	public void createProgressItem()
+	{
+		flProgress = new FrameLayout(getSherlockActivity());
+		ProgressBar pb = new ProgressBar(getSherlockActivity());
+		pb.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
+		lp.setMargins(px/2, px, px/2, px);
+		pb.setLayoutParams(lp);
+		flProgress.addView(pb);
+		flProgress.setClickable(true);
+		flProgress.setBackgroundResource(R.drawable.abs__item_background_holo_light);
+	}
+	
+	public void setRefresh(boolean on)
+	{
+		this.refresh = on;
+		getSherlockActivity().invalidateOptionsMenu();
+		
+		if(on)
+			getStatusView().hide().text(null);
+	}
 }

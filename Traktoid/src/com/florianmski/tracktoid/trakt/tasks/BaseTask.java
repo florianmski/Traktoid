@@ -9,8 +9,6 @@ import android.widget.Toast;
 
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.TraktManager;
-import com.jakewharton.apibuilder.ApiException;
-import com.jakewharton.trakt.TraktException;
 
 public abstract class BaseTask<TResult> extends BackgroundTask<TResult>
 {
@@ -53,25 +51,8 @@ public abstract class BaseTask<TResult> extends BackgroundTask<TResult>
 
 			return result;
 		}
-		try
-		{
-			return doTraktStuffInBackground();
-		}
-		catch (ApiException e) 
-		{
-			onFailed(e);
-			return null;
-		}
-		catch (TraktException e) 
-		{
-			onFailed(e);
-			return null;
-		}
-		catch (IllegalArgumentException e) 
-		{
-			onFailed(e);
-			return null;
-		}
+			
+		return doTraktStuffInBackground();
 	}
 
 	@Override

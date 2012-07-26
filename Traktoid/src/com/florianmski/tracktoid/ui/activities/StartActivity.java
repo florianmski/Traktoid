@@ -26,8 +26,6 @@ public class StartActivity extends Activity
 			launchActivityForResult(LoginActivity.class, 1337);
 		else
 			doStuffIfUserIsLogged();
-		
-		Log.e("test","onCreate");
 	}
 	
 	public void doStuffIfUserIsLogged()
