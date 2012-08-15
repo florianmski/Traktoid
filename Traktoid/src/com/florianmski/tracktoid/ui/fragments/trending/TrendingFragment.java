@@ -52,6 +52,8 @@ public abstract class TrendingFragment<T extends TraktoidInterface<T>> extends T
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) 
 			{
 				Bundle b = new Bundle();
+				//TODO this is too big to use bundles
+				//instead get them in the cache ;)
 				b.putSerializable(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<T>) adapter.getItems());
 				b.putInt(TraktoidConstants.BUNDLE_POSITION, position);
 				launchActivity(TraktItemsActivity.class, b);

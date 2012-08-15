@@ -56,7 +56,6 @@
         android:id="@+id/page_indicator_circle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayoutWatchingNow"
         android:padding="10dp"
         android:visibility="gone" />
 

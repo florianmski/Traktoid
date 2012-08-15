@@ -8,8 +8,8 @@
         <item name="subtitleTextStyle">@style/Traktoid.SecondaryText.Small</item>
         <item name="android:titleTextStyle">@style/Traktoid.PrimaryText.Medium.Bold</item>
         <item name="android:subtitleTextStyle">@style/Traktoid.SecondaryText.Small</item>
-        <item name="icon">@drawable/ab_icon_home</item>
-        <item name="android:icon">@drawable/ab_icon_home</item>
+        <item name="icon">@drawable/gd_action_bar_list</item>
+        <item name="android:icon">@drawable/gd_action_bar_list</item>
         <item name="actionBarItemBackground">@drawable/selector_no_background</item>
         <item name="android:actionBarItemBackground">@drawable/selector_no_background</item>
     </style>

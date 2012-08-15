@@ -18,7 +18,6 @@ public class TraktoidApplication extends Application
 	@Override
 	public void onCreate() 
 	{
-		//TODO add bugsense
 		//TODO do lint corrections
 
 		// If you want to use BugSense for your fork, register with

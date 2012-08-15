@@ -47,7 +47,7 @@ public abstract class BaseTask<TResult> extends BackgroundTask<TResult>
 		{
 			TResult result = doOfflineTraktStuff();
 			if(context != null && !silentConnectionError && result == null)
-				onFailed(new Exception("Internet connection required!"));
+				throw new IllegalStateException("Internet connection required!");
 
 			return result;
 		}

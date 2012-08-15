@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.florianmski.tracktoid"
-      android:versionCode="11"
-      android:versionName="0.7.0.1"
+      android:versionCode="12"
+      android:versionName="0.7.0.1337"
       android:installLocation="preferExternal">
       
     <uses-sdk android:minSdkVersion="4"
@@ -19,7 +19,7 @@
 		android:name=".TraktoidApplication"
         android:hardwareAccelerated="true">
 
-        <activity android:name=".ui.activities.StartActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        <activity android:name=".ui.activities.LibraryActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -33,7 +33,6 @@
         <activity android:name=".ui.activities.MovieActivity"></activity>
         <activity android:name=".ui.activities.SeasonActivity"></activity>
         <activity android:name=".ui.activities.EpisodeActivity"></activity>
-        <activity android:name=".ui.activities.LibraryActivity" android:label="Library"></activity>
         <activity android:name=".ui.activities.SettingsActivity" android:label="Settings"></activity>
         <activity android:name=".ui.activities.RecommendationActivity" android:label="Recommendation" android:uiOptions="splitActionBarWhenNarrow"></activity>
         <activity android:name=".ui.activities.AboutActivity" android:label="About"></activity>

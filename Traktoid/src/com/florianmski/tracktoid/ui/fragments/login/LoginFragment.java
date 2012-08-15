@@ -1,6 +1,7 @@
 package com.florianmski.tracktoid.ui.fragments.login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -15,14 +16,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.Utils;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask;
 import com.florianmski.tracktoid.trakt.tasks.post.PostTask.PostListener;
-import com.florianmski.tracktoid.ui.activities.StartActivity;
+import com.florianmski.tracktoid.ui.activities.LibraryActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.jakewharton.trakt.TraktApiBuilder;
 import com.jakewharton.trakt.entities.Response;
@@ -112,8 +112,7 @@ public class LoginFragment extends TraktFragment
 								.putBoolean(TraktoidConstants.PREF_SHA1, true)
 								.commit();
 
-								Toast.makeText(getActivity(), "Welcome home " + username + "!", Toast.LENGTH_LONG).show();
-								getActivity().setResult(StartActivity.RESULT_LOGIN);
+								startActivity(new Intent(getSherlockActivity(), LibraryActivity.class));
 								getActivity().finish();
 							}
 							else
