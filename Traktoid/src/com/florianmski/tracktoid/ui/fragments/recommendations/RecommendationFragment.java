@@ -141,21 +141,21 @@ public abstract class RecommendationFragment<T extends TraktoidInterface<T>> ext
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 
-		SubMenu startYearMenu = menu.addSubMenu(0, Menu.NONE, 1, "");
-		startYearMenu.getItem().setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-		SubMenu endYearMenu = menu.addSubMenu(0, Menu.NONE, 2, "");
-		endYearMenu.getItem().setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-		int size = END_YEAR - START_YEAR + 1;
-		for(int i = 0; i < size; i++)
-		{
-			startYearMenu.add(0, Menu.NONE, 0, String.valueOf(START_YEAR+i)).setOnMenuItemClickListener(startYearListener);
-			endYearMenu.add(0, Menu.NONE, 0, String.valueOf(END_YEAR-i)).setOnMenuItemClickListener(endYearListener);
-		}
-
-		startYearMenu.getItem().setTitle(String.valueOf(startYear));
-		endYearMenu.getItem().setTitle(String.valueOf(endYear));
+//		SubMenu startYearMenu = menu.addSubMenu(0, Menu.NONE, 1, "");
+//		startYearMenu.getItem().setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//
+//		SubMenu endYearMenu = menu.addSubMenu(0, Menu.NONE, 2, "");
+//		endYearMenu.getItem().setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//
+//		int size = END_YEAR - START_YEAR + 1;
+//		for(int i = 0; i < size; i++)
+//		{
+//			startYearMenu.add(0, Menu.NONE, 0, String.valueOf(START_YEAR+i)).setOnMenuItemClickListener(startYearListener);
+//			endYearMenu.add(0, Menu.NONE, 0, String.valueOf(END_YEAR-i)).setOnMenuItemClickListener(endYearListener);
+//		}
+//
+//		startYearMenu.getItem().setTitle(String.valueOf(startYear));
+//		endYearMenu.getItem().setTitle(String.valueOf(endYear));
 	}
 
 	@Override

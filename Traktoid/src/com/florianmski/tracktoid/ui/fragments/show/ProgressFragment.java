@@ -286,15 +286,7 @@ public class ProgressFragment extends TraktFragment
 				public void onClick(View v) 
 				{
 					Intent i = new Intent(getActivity(), TraktItemsActivity.class);
-					//					for(TvShowSeason s : adapter.getItems())
-					//					{
-					//						if(s.season == e.season)
-					//							i.putExtra(TraktoidConstants.BUNDLE_SEASON_ID, s.url);
-					//					}
-					//					
-					//					i.putExtra(TraktoidConstants.BUNDLE_TVDB_ID, show.tvdbId);
-					List<TvShowEpisode> nextEpisode = new ArrayList<TvShowEpisode>();
-					nextEpisode.add(e);
+					List<TvShowEpisode> nextEpisode = getDBWrapper().getEpisodes(e.seasonId);
 					i.putExtra(TraktoidConstants.BUNDLE_RESULTS, (Serializable) nextEpisode);
 					i.putExtra(TraktoidConstants.BUNDLE_POSITION, e.number-1);
 					startActivity(i);
