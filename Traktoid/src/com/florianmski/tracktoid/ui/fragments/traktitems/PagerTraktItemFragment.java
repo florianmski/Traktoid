@@ -1,12 +1,16 @@
 package com.florianmski.tracktoid.ui.fragments.traktitems;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
 
+import com.florianmski.tracktoid.ApiCache;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.adapters.pagers.PagerTraktItemAdapter;
+import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.ui.fragments.PagerFragment;
+import com.florianmski.tracktoid.ui.fragments.trending.TrendingFragment;
 import com.florianmski.traktoid.TraktoidInterface;
 
 public class PagerTraktItemFragment<T extends TraktoidInterface<T>> extends PagerFragment
@@ -43,7 +47,18 @@ public class PagerTraktItemFragment<T extends TraktoidInterface<T>> extends Page
 			@SuppressWarnings("unchecked")
 			public void run()
 			{
-				final List<T> items = (List<T>)getArguments().getSerializable(TraktoidConstants.BUNDLE_RESULTS);
+				final List<T> items = new ArrayList<T>();
+				int trendingType = getArguments().getInt(TraktoidConstants.BUNDLE_TRENDING, 0);
+				
+				if(trendingType != 0)
+				{
+					if(trendingType == TrendingFragment.MOVIE)
+						items.addAll((List<T>) ApiCache.read(TraktManager.getInstance().movieService().trending(), getSherlockActivity()));
+					else
+						items.addAll((List<T>) ApiCache.read(TraktManager.getInstance().showService().trending(), getSherlockActivity()));
+				}
+				else
+					items.addAll((List<T>)getArguments().getSerializable(TraktoidConstants.BUNDLE_RESULTS));
 
 				getActivity().runOnUiThread(new Runnable() 
 				{

@@ -16,6 +16,7 @@ public final class TraktoidConstants
 	public final static String BUNDLE_CLASS = get("Class");
 	public final static String BUNDLE_SLIDE_OPEN = get("SlideOpen");
 	public final static String BUNDLE_JOIN = get("Join");
+	public final static String BUNDLE_TRENDING = get("TrendingInCache");
 	
 	private final static String get(String text)
 	{

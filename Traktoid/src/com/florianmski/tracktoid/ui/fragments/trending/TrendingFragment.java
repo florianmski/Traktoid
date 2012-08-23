@@ -1,6 +1,5 @@
 package com.florianmski.tracktoid.ui.fragments.trending;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
@@ -22,9 +21,12 @@ import com.florianmski.tracktoid.ui.fragments.BaseFragment.TaskListener;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
 import com.florianmski.traktoid.TraktoidInterface;
 import com.jakewharton.trakt.TraktApiBuilder;
+import com.jakewharton.trakt.entities.Movie;
 
 public abstract class TrendingFragment<T extends TraktoidInterface<T>> extends TraktFragment implements TaskListener
 {		
+	public final static int SHOW = 1, MOVIE = 2;
+	
 	private ListView lvTrending;
 
 	protected ListTrendingAdapter<T> adapter;
@@ -52,9 +54,9 @@ public abstract class TrendingFragment<T extends TraktoidInterface<T>> extends T
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) 
 			{
 				Bundle b = new Bundle();
-				//TODO this is too big to use bundles
+				//this is too big to use bundles
 				//instead get them in the cache ;)
-				b.putSerializable(TraktoidConstants.BUNDLE_RESULTS, (ArrayList<T>) adapter.getItems());
+				b.putInt(TraktoidConstants.BUNDLE_TRENDING, items.get(position).getClass().equals(Movie.class) ? MOVIE : SHOW);
 				b.putInt(TraktoidConstants.BUNDLE_POSITION, position);
 				launchActivity(TraktItemsActivity.class, b);
 			}
