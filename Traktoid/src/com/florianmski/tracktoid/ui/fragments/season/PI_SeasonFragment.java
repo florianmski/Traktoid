@@ -143,16 +143,16 @@ public class PI_SeasonFragment extends TraktFragment
 	@Subscribe
 	public void onTraktItemsUpdated(TraktItemsUpdatedEvent<TvShowEpisode> event) 
 	{
-		List<TvShowEpisode> traktItems = event.getTraktItems(this);
+		List<TvShowEpisode> traktItems = event.getTraktItems(TvShowEpisode.class);
 		if(adapter != null && traktItems != null)
-			adapter.remove(traktItems);
+			adapter.updateItems(traktItems);
 	}
 
 	@Subscribe
 	public void onTraktItemsRemoved(TraktItemsRemovedEvent<TvShowEpisode> event) 
 	{
-		List<TvShowEpisode> traktItems = event.getTraktItems(this);
+		List<TvShowEpisode> traktItems = event.getTraktItems(TvShowEpisode.class);
 		if(adapter != null && traktItems != null)
-			adapter.updateItems(traktItems);
+			adapter.remove(traktItems);
 	}
 }

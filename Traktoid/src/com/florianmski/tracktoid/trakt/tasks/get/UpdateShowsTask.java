@@ -56,6 +56,8 @@ public class UpdateShowsTask extends BaseTask<TvShow>
 		
 		createNotification();
 		
+		showToast("Refreshing...", Toast.LENGTH_SHORT);
+		
 		DatabaseWrapper dbw = new DatabaseWrapper(context);
 
 		int i = 0;
@@ -68,7 +70,7 @@ public class UpdateShowsTask extends BaseTask<TvShow>
 			updateProgress(s.title, (int)(i * (MAX_PERCENTAGE*1.0/showsSelected.size()*1.0)));
 			updateSecondaryProgress("Downloading...", 0);
 
-			showToast("Refreshing " + s.title + "...", Toast.LENGTH_SHORT);
+//			showToast("Refreshing " + s.title + "...", Toast.LENGTH_SHORT);
 
 			s = tm.showService().summary(s.tvdbId).extended().fire();
 
@@ -96,7 +98,7 @@ public class UpdateShowsTask extends BaseTask<TvShow>
 
 			i++;
 
-			showToast(s.title + " refreshed!", Toast.LENGTH_SHORT);
+//			showToast(s.title + " refreshed!", Toast.LENGTH_SHORT);
 		}		
 
 		//if user choose to refresh only one show, no need to toast "show refreshed" then "refresh done"

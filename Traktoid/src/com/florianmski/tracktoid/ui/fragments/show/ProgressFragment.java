@@ -2,7 +2,6 @@ package com.florianmski.tracktoid.ui.fragments.show;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import android.content.Intent;
@@ -44,8 +43,8 @@ import com.florianmski.tracktoid.trakt.tasks.post.SeenTask.SeenEpisodeTask;
 import com.florianmski.tracktoid.ui.activities.SeasonActivity;
 import com.florianmski.tracktoid.ui.activities.TraktItemsActivity;
 import com.florianmski.tracktoid.ui.fragments.TraktFragment;
-import com.florianmski.tracktoid.widgets.OverlaysView;
 import com.florianmski.tracktoid.widgets.CheckableListView;
+import com.florianmski.tracktoid.widgets.OverlaysView;
 import com.jakewharton.trakt.entities.TvShow;
 import com.jakewharton.trakt.entities.TvShowEpisode;
 import com.jakewharton.trakt.entities.TvShowSeason;
@@ -198,12 +197,12 @@ public class ProgressFragment extends TraktFragment
 
 				setTitle(show.title);
 
-				new DBSeasonsTask(getActivity(), show.tvdbId, true, false, new DBAdapter() 
+				new DBSeasonsTask(getActivity(), show.tvdbId, false, true, new DBAdapter() 
 				{
 					@Override
 					public void onDBSeasons(List<TvShowSeason> seasons) 
 					{
-						Collections.reverse(seasons);
+//						Collections.reverse(seasons);
 						adapter.refreshItems(seasons);
 
 						if(adapter.isEmpty())
@@ -375,20 +374,23 @@ public class ProgressFragment extends TraktFragment
 	}
 
 	@Subscribe
-	public void onTraktItemsUpdated(TraktItemsUpdatedEvent<TvShow> event) 
+	public void onTraktItemsUpdated(TraktItemsUpdatedEvent<TvShowEpisode> event) 
 	{
-		List<TvShow> traktItems = event.getTraktItems(this);
+		List<TvShowEpisode> traktItems = event.getTraktItems(TvShowEpisode.class);
 		if(traktItems != null)
-			for(TvShow traktItem : traktItems)
+			for(TvShowEpisode traktItem : traktItems)
 				if(traktItem.tvdbId.equals(this.show.tvdbId) && adapter != null)
 				{
-					displayPercentage(traktItem.progress);
+					TvShow s = getDBWrapper().getShow(traktItem.tvdbId);
+					s.seasons = getDBWrapper().getSeasons(s.tvdbId, false, true);
+					
+					displayPercentage(s.progress);
 					displayNextEpisode();
 
-					if(traktItem.seasons != null)
-						adapter.refreshItems(traktItem.seasons);
+					if(s.seasons != null)
+						adapter.refreshItems(s.seasons);
 
-					this.show = traktItem;
+					this.show = s;
 					getSherlockActivity().invalidateOptionsMenu();
 
 					break;
@@ -398,7 +400,7 @@ public class ProgressFragment extends TraktFragment
 	@Subscribe
 	public void onTraktItemsRemoved(TraktItemsRemovedEvent<TvShow> event) 
 	{
-		List<TvShow> traktItems = event.getTraktItems(this);
+		List<TvShow> traktItems = event.getTraktItems(TvShowEpisode.class);
 		if(traktItems != null)
 			for(TvShow traktItem : traktItems)
 				if(traktItem.tvdbId.equals(show.tvdbId))

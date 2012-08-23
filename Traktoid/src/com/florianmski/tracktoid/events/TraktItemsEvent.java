@@ -26,9 +26,17 @@ public class TraktItemsEvent<T extends TraktoidInterface<T>>
 		//this is quite ugly, generics are new for me so it might have other cleaner solution
 		//basically I check if the current TraktListener is parameterized with the traktItems list type
 		//(avoid for instance that shows are added to movies grid when there is a synchronization)
-		if(!traktItems.isEmpty() 
-				&& ((ParameterizedType) o.getClass().getGenericSuperclass()).getActualTypeArguments()[0] == traktItems.get(0).getClass())
-			return traktItems;
+
+		if(!traktItems.isEmpty())
+		{
+			Class<?> clazz = o.getClass();
+			Class<?> superclass = clazz.getSuperclass();
+
+			if (superclass.getTypeParameters().length > 0 && ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0] == traktItems.get(0).getClass())
+				return traktItems;
+			else if(o instanceof Class && (Class<?>)o == traktItems.get(0).getClass())
+				return traktItems;
+		}
 
 		return null;
 	}

@@ -172,11 +172,10 @@ public abstract class InCollectionTask<T extends TraktoidInterface<T>> extends P
 		public static InCollectionEpisodeTask createSeasonTask(Context context, List<TvShowSeason> traktItems, boolean seen, PostListener pListener)
 		{
 			List<TvShowEpisode> episodes = new ArrayList<TvShowEpisode>();
+			DatabaseWrapper dbw = new DatabaseWrapper(context);
 			for(TvShowSeason s : traktItems)
-			{
-				for(TvShowEpisode e : s.episodes.episodes)
-						episodes.add(e);
-			}
+				episodes.addAll(dbw.getEpisodes(s.url));
+			dbw.close();
 
 			return new InCollectionEpisodeTask(context, episodes, seen, pListener);
 		}

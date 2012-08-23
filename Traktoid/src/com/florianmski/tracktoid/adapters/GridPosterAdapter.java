@@ -2,7 +2,11 @@ package com.florianmski.tracktoid.adapters;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import android.app.Activity;
 import android.os.Handler;
@@ -13,6 +17,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.SectionIndexer;
 
 import com.androidquery.AQuery;
 import com.florianmski.tracktoid.ListCheckerManager;
@@ -21,7 +26,7 @@ import com.florianmski.tracktoid.image.TraktImage;
 import com.florianmski.tracktoid.widgets.OverlaysView;
 import com.florianmski.traktoid.TraktoidInterface;
 
-public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapter<T>
+public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapter<T> implements SectionIndexer
 {
 	public static final int FILTER_ALL = 0;
 	public static final int FILTER_UNWATCHED = 1;
@@ -31,6 +36,9 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 	protected int currentFilter = 0;
 	protected Handler h = new Handler();
 	private ListCheckerManager<T> lcm;
+	
+	private Map<String, Integer> alphaIndexer = new HashMap<String, Integer>();
+	private String[] sections;
 
 	public GridPosterAdapter(Activity context, List<T> items, int height, ListCheckerManager<T> lcm)
 	{
@@ -107,6 +115,7 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 		{
 			Collections.sort(this.items);
 			setFilter(currentFilter);
+			createAlphaIndexer();
 		}
 	}
 
@@ -118,6 +127,7 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 		{
 			items.remove(index);
 			setFilter(currentFilter);
+			createAlphaIndexer();
 		}
 	}
 
@@ -136,7 +146,10 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 		}
 
 		if(dataChanged)
+		{
 			setFilter(currentFilter);
+			createAlphaIndexer();
+		}
 	}
 
 	@Override
@@ -144,6 +157,7 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 	{
 		this.items = items;
 		setFilter(currentFilter);
+		createAlphaIndexer();
 	}
 
 	@Override
@@ -202,6 +216,61 @@ public class GridPosterAdapter<T extends TraktoidInterface<T>> extends RootAdapt
 		}
 
 		return lcm.checkView(item, convertView);
+	}
+	
+	public void createAlphaIndexer()
+	{
+		if(getCount() <= 0)
+			return;
+
+		alphaIndexer.clear();
+
+		String previousFirstLetter = items.get(0).getTitle().substring(0, 1).toUpperCase();
+		alphaIndexer.put(previousFirstLetter, 0);
+		for (int i = 0; i < items.size(); i++)
+		{
+			String actualFirstLetter = items.get(i).getTitle().substring(0, 1).toUpperCase();
+			if (!actualFirstLetter.equals(previousFirstLetter))
+			{
+				alphaIndexer.put(actualFirstLetter, i);
+				previousFirstLetter = actualFirstLetter;
+			}
+		}
+
+		Set<String> keys = alphaIndexer.keySet();
+		Iterator<String> it = keys.iterator();
+		ArrayList<String> keyList = new ArrayList<String>();
+		while (it.hasNext())
+		{
+			String key = it.next();
+			keyList.add(key);
+		}
+
+		Collections.sort(keyList);
+
+		sections = new String[keyList.size()];
+		keyList.toArray(sections);
+	}
+	
+	@Override
+	public int getPositionForSection(int section)
+	{
+		String letter = "";
+		if(section < sections.length)
+			letter = sections[section];
+		return alphaIndexer.get(letter);
+	}
+
+	@Override
+	public int getSectionForPosition(int position)
+	{
+		return 0;
+	}
+
+	@Override
+	public Object[] getSections()
+	{
+		return sections;
 	}
 
 	private static class ViewHolder<T extends TraktoidInterface<T>> 

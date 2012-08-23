@@ -154,6 +154,8 @@ public abstract class SeenTask<T extends TraktoidInterface<T>> extends PostTask
 			for(Movie traktItem : traktItems)
 			{
 				traktItem.watched = seen;
+				if(seen)
+					traktItem.inWatchlist = false;
 				dbw.insertOrUpdateMovie(traktItem);
 			}
 		}
@@ -169,11 +171,10 @@ public abstract class SeenTask<T extends TraktoidInterface<T>> extends PostTask
 		public static SeenEpisodeTask createSeasonTask(Context context, List<TvShowSeason> traktItems, boolean seen, PostListener pListener)
 		{
 			List<TvShowEpisode> episodes = new ArrayList<TvShowEpisode>();
+			DatabaseWrapper dbw = new DatabaseWrapper(context);
 			for(TvShowSeason s : traktItems)
-			{
-				for(TvShowEpisode e : s.episodes.episodes)
-					episodes.add(e);
-			}
+				episodes.addAll(dbw.getEpisodes(s.url));
+			dbw.close();
 
 			return new SeenEpisodeTask(context, episodes, seen, pListener);
 		}
@@ -214,6 +215,8 @@ public abstract class SeenTask<T extends TraktoidInterface<T>> extends PostTask
 			for(TvShowEpisode traktItem : traktItems)
 			{
 				traktItem.watched = seen;
+				if(seen)
+					traktItem.inWatchlist = false;
 				dbw.insertOrUpdateEpisode(traktItem);
 			}
 		}
