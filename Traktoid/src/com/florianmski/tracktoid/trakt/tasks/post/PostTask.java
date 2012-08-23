@@ -53,7 +53,7 @@ public class PostTask extends BaseTask<Response>
 			//sometimes there is no response but the action was performed (ex : remove sthg from collection)
 			else if(r == null)
 			{
-				showToast("Send to Trakt!", Toast.LENGTH_SHORT);
+				showToast("Sent to Trakt!", Toast.LENGTH_SHORT);
 				//we don't want to return null because returning null is when the request has failed (exception, see TraktTask)
 				r = new Response();
 				doAfterPostStuff();
