@@ -1,13 +1,11 @@
 Traktoid
 ===================
 
-An awesome android app that works with the Trakt v2 API http://trakt.tv/
+An awesome android app that works with the [Trakt v2 API](http://trakt.tv/)
 
-![](https://lh6.ggpht.com/28NWKnVI39_8PFJj9RjDYStgGFtBKX_wdgrBqljw2TcKjn47u_hH7-xSu10HqRd_-S4=h230)
-![](https://lh6.ggpht.com/M4Hq4K4vCvrbMh8BXTMk58-TUro8asPqofONh1QkB1z6fYbE11_DOYBsEHbtPB_J7m4=h230)
-![](https://lh4.ggpht.com/btKj-rl6689-ws1m9h6IzChmfqCGVaBzSUYtGrF9cuUrwdbYilRHu9J0QifUjPeEPgY=h230)
-![](https://lh6.ggpht.com/qDochjwGy2HGFYpJNWSgf2RS4qVFsl3ML6YnPMiIWb-3NzjOaSUbrFJ34nEPXNdDXJ0h=h230)
-![](https://lh4.ggpht.com/UnILKnxqB_l4brCFCfaxifyqgNGAnHFaWiJ65aECfDsZoy_wXlpicl3ELA5yFQQe4bM=h230)
+![](http://i.imgur.com/YQSpK7R.jpg?1)
+![](http://i.imgur.com/mVJtWv1.jpg?1)
+![](http://i.imgur.com/uA79fN8.jpg?1)
 
 [Sign up for testing](https://plus.google.com/communities/113346133721976635769)
 
