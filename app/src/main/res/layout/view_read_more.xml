@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/textViewReadMore"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:text="read more"
+    android:textStyle="bold"
+    android:textColor="?attr/colorPrimary"
+    android:textAllCaps="true"
+    android:paddingBottom="@dimen/keyline_margin"
+    android:paddingLeft="@dimen/keyline_margin"
+    android:paddingRight="@dimen/keyline_margin"/>

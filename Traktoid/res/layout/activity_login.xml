@@ -1,9 +1,0 @@
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <fragment android:name="com.florianmski.tracktoid.ui.fragments.pagers.LoginPagerFragment"
-        android:id="@+id/fragment_pager_login"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</merge>

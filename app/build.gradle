@@ -1,0 +1,82 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.2'
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+apply plugin: 'android-apt'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "com.florianmski.tracktoid"
+        minSdkVersion 16
+        targetSdkVersion 21
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+    }
+}
+
+repositories {
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:recyclerview-v7:21.0.3'
+    compile 'com.android.support:appcompat-v7:21.0.3'
+
+    compile 'io.reactivex:rxandroid:0.23.0'
+
+    compile 'com.squareup.picasso:picasso:2.5.0'
+    compile 'com.jakewharton.timber:timber:2.5.0'
+
+//    compile 'com.uwetrottmann:trakt-java:+'
+    compile project(':trakt-java-git')
+    compile 'com.jpardogo.materialtabstrip:library:1.0.5'
+    compile 'com.getbase:floatingactionbutton:1.1.0'
+
+    apt 'net.simonvt.schematic:schematic-compiler:0.6.0'
+    compile 'net.simonvt.schematic:schematic:0.6.0'
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.2.1@aar') {
+        transitive = true;
+    }
+
+//    compile 'org.lucasr.twowayview:core:1.0.0-SNAPSHOT@aar'
+//    compile 'org.lucasr.twowayview:layouts:1.0.0-SNAPSHOT@aar'
+//    compile 'org.lucasr.twowayview:twowayview:0.1.4'
+
+//    compile files('libs/schematic-annotations-0.5.4-SNAPSHOT.jar')
+//    apt files('libs/schematic-compiler-0.5.4-SNAPSHOT.jar')
+//    compile files('libs/schematic-0.5.4.aar')
+}

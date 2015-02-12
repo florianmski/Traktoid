@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:trakt= "http://schemas.android.com/apk/res-auto"
+                android:id="@+id/frameLayoutNextEpisode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:foreground="?android:selectableItemBackground">
+
+    <com.florianmski.tracktoid.ui.widgets.TraktImageView
+            android:id="@+id/traktImageViewNextEpisode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            trakt:type="screen" />
+
+    <com.florianmski.tracktoid.ui.widgets.FlagsView
+            android:id="@+id/flagsViewNextEpisode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+</FrameLayout>

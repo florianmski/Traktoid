@@ -1,6 +1,0 @@
-[submodule "libs/SatelliteMenu"]
-	path = libs/SatelliteMenu
-	url = https://github.com/siyamed/android-satellite-menu.git
-[submodule "libs/ArcMenu"]
-	path = libs/ArcMenu
-	url = https://github.com/daCapricorn/ArcMenu.git
