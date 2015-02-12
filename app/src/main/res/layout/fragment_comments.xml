@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:layout_above="@+id/relativeLayoutWriteShout"
+        layout="@layout/fragment_item_group" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutWriteShout"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+        <ImageView
+            android:id="@+id/buttonSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/toggleButtonSpoiler"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ab_icon_send" />
+
+        <ToggleButton
+            android:id="@+id/toggleButtonSpoiler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/editTextShout"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/buttonSend"
+            android:textOff="Spoiler"
+            android:textOn="Spoiler" />
+
+        <EditText
+            android:id="@+id/editTextShout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/toggleButtonSpoiler"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="Please write your shout in English..."
+            android:inputType="textMultiLine" >
+        </EditText>
+    </RelativeLayout>
+
+</RelativeLayout>

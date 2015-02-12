@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/accoundView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.florianmski.tracktoid.ui.widgets.TraktImageView
+                android:id="@+id/tivFanart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:type="fanart" />
+
+            <com.florianmski.tracktoid.ui.widgets.BezelImageView
+                android:id="@+id/imageViewProfile"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="@dimen/keyline_margin"
+                android:layout_marginLeft="@dimen/keyline_margin"
+                android:scaleType="centerCrop"
+                app:maskDrawable="@drawable/circle_mask" />
+
+            <TextView
+                android:id="@+id/textViewAction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/imageViewProfile"
+                android:layout_alignBottom="@id/tivFanart"
+                android:paddingBottom="16dp"
+                android:text="Just chilling"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/textViewUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/textViewAction"
+                android:layout_alignLeft="@id/imageViewProfile"
+                android:text="Username"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false" />
+
+</FrameLayout>

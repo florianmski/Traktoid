@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:trakt= "http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="4dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Dummy view to have a bg behind the poster -->
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/background_floating_material_dark"
+            android:layout_alignBottom="@+id/tivPoster"
+            android:layout_alignTop="@+id/linearLayoutBasicInfos"/>
+
+        <com.florianmski.tracktoid.ui.widgets.TraktImageView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:id="@id/tivPoster"
+            tools:src="@color/blue"
+            trakt:type="poster"
+            android:layout_marginLeft="@dimen/keyline_margin"
+            android:layout_marginStart="@dimen/keyline_margin"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:id="@id/linearLayoutBasicInfos"
+            android:orientation="vertical"
+            android:layout_gravity="bottom"
+            android:padding="@dimen/keyline_margin"
+            android:layout_alignBottom="@id/tivPoster"
+            android:layout_toRightOf="@id/tivPoster"
+            android:layout_toEndOf="@id/tivPoster"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewTitle"
+                style="?android:textAppearanceMedium"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                tools:text="Title"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewSubtitle"
+                android:textStyle="bold"
+                tools:text="Subtitle"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/frameLayoutBackground"
+        android:background="@color/background_floating_material_dark">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/linearLayout">
+
+            <include layout="@layout/view_trakt_actions"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_margin="@dimen/keyline_margin"/>
+
+            <include layout="@layout/view_tagline"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     tools:visibility="visible"
+                     android:visibility="gone"
+                     android:layout_margin="@dimen/keyline_margin"/>
+
+            <include layout="@layout/view_next_episode"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     tools:visibility="visible"
+                     android:visibility="gone"
+                     android:layout_margin="@dimen/keyline_margin"/>
+
+            <com.florianmski.tracktoid.ui.widgets.ReadMoreView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/expandableTextViewInfos"
+                trakt:content="@+id/linearLayoutInfos"
+                trakt:text="@+id/textViewOverview"
+                android:background="?android:selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@id/linearLayoutInfos"
+                    android:orientation="vertical"
+                    android:divider="?android:dividerHorizontal"
+                    android:showDividers="middle"
+                    android:paddingLeft="@dimen/keyline_margin"
+                    android:paddingRight="@dimen/keyline_margin">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="Overview"
+                        android:id="@+id/textViewOverview"
+                        style="?android:textAppearance"
+                        android:padding="@dimen/keyline_margin"/>
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tableLayoutInfos"
+                        android:stretchColumns="*"
+                        android:padding="@dimen/keyline_margin"/>
+
+                </LinearLayout>
+
+            </com.florianmski.tracktoid.ui.widgets.ReadMoreView>
+
+            <include layout="@layout/view_divider"
+                     android:layout_width="match_parent"
+                     android:layout_height="1dp"
+                     tools:layout_height="2dp"
+                     android:layout_marginLeft="@dimen/keyline_margin"
+                     android:layout_marginRight="@dimen/keyline_margin"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewSeasons"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_marginTop="@dimen/keyline_margin"
+                android:layout_marginBottom="@dimen/keyline_margin"
+                android:clipToPadding="false"
+                android:paddingLeft="@dimen/keyline_margin"
+                android:paddingRight="@dimen/keyline_margin" />
+
+            <include layout="@layout/view_divider"
+                     android:layout_width="match_parent"
+                     android:layout_height="1dp"
+                     tools:layout_height="2dp"
+                     android:layout_marginLeft="@dimen/keyline_margin"
+                     android:layout_marginRight="@dimen/keyline_margin" />
+
+            <include layout="@layout/view_rate"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:visibility="gone"
+                     android:padding="@dimen/keyline_margin"
+                     android:background="?android:selectableItemBackground"/>
+
+            <include layout="@layout/view_divider"
+                     android:layout_width="match_parent"
+                     android:layout_height="1dp"
+                     android:visibility="gone"
+                     tools:layout_height="2dp"
+                     android:layout_marginLeft="@dimen/keyline_margin"
+                     android:layout_marginRight="@dimen/keyline_margin"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Comments"
+                android:id="@+id/textViewComments"
+                style="?android:textAppearance"
+                android:padding="@dimen/keyline_margin"
+                android:background="?android:selectableItemBackground"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

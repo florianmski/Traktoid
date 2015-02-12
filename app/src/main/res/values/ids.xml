@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--menu ids-->
+
+    <item type="id" name="action_bar_filter" />
+    <item type="id" name="action_bar_filter_plays" />
+    <item type="id" name="action_bar_filter_watched" />
+    <item type="id" name="action_bar_filter_collection" />
+    <item type="id" name="action_bar_filter_watchlist" />
+    <item type="id" name="action_bar_filter_all" />
+    <item type="id" name="action_bar_filter_hide_watched" />
+    <item type="id" name="action_bar_filter_hide_complete" />
+
+    <item type="id" name="action_bar_search" />
+    
+    <item type="id" name="action_bar_all" />
+    <item type="id" name="action_bar_none" />
+    <item type="id" name="action_bar_multiple_selection" />
+
+    <!-- ExpandableView ids -->
+
+    <item type="id" name="viewHeader" />
+    <item type="id" name="viewContent" />
+
+    <!--drawer ids-->
+
+    <item type="id" name="drawer_library" />
+    <item type="id" name="drawer_progress" />
+    <item type="id" name="drawer_calendar" />
+    <item type="id" name="drawer_trending" />
+    <item type="id" name="drawer_recommendations" />
+    <item type="id" name="drawer_search" />
+
+</resources>

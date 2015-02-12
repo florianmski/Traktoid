@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <com.florianmski.tracktoid.ui.widgets.RoundViewGroup
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
+        android:layout_margin="10dp">
+
+        <com.florianmski.tracktoid.ui.widgets.RoundView
+            android:id="@+id/viewWatchlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:color="@color/watchlist"
+            />
+
+        <com.florianmski.tracktoid.ui.widgets.RoundView
+            android:id="@+id/viewCollection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:color="@color/collection"
+            />
+
+        <com.florianmski.tracktoid.ui.widgets.RoundView
+            android:id="@+id/viewSeen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:color="@color/seen"
+            />
+    </com.florianmski.tracktoid.ui.widgets.RoundViewGroup>
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
+        android:background="@color/background_title"
+        android:textColor="@color/white"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        />
+
+    <TextView
+        android:id="@+id/textViewSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
+        android:background="@color/background_title"
+        android:textColor="@color/white"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>

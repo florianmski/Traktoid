@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="keyline_margin">16dp</dimen>
+    <dimen name="keyline_content_start">72dp</dimen>
+    <dimen name="fragment_margin">100dp</dimen>
+</resources>

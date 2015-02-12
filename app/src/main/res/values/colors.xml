@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Global colors -->
+    <color name="blue">@android:color/holo_blue_light</color>
+    <color name="red">@android:color/holo_red_light</color>
+    <color name="green">@android:color/holo_green_light</color>
+    <color name="gray">@android:color/darker_gray</color>
+
+    <color name="darker_blue">@android:color/holo_blue_dark</color>
+    <color name="darker_red">@android:color/holo_red_dark</color>
+    <color name="darker_green">@android:color/holo_green_dark</color>
+    <color name="darker_gray">#303030</color>
+
+    <color name="blue_transparent">#AA33B5E5</color>
+    <color name="red_transparent">#AAFF4444</color>
+    <color name="green_transparent">#AA99CC00</color>
+    <color name="gray_transparent">#90AAAAAA</color>
+    <color name="black_transparent">#4000</color>
+
+    <color name="collection">@color/blue_300</color>
+    <color name="watchlist">@color/red_300</color>
+    <color name="seen">@color/light_green_300</color>
+    <color name="collection_pressed">@color/blue_500</color>
+    <color name="watchlist_pressed">@color/red_500</color>
+    <color name="seen_pressed">@color/light_green_500</color>
+    <color name="background_title">@color/blue</color>
+
+    <color name="trakt_blue_1_transparent">#804DBCE9</color>
+    <color name="grey_transparent">#AA222222</color>
+
+    <color name="grey">#444</color>
+    <color name="light_grey">#bebebe</color>
+
+    <!-- Material colors -->
+    <color name="primary">@color/blue_grey_300</color>
+    <color name="primaryDark">@color/blue_grey_500</color>
+    <color name="accent">#9E9E9E</color>
+
+    <color name="primaryShow">@color/teal_300</color>
+    <color name="primaryDarkShow">@color/teal_500</color>
+
+    <color name="primaryMovie">@color/deep_purple_300</color>
+    <color name="primaryDarkMovie">@color/deep_purple_500</color>
+    
+    <!-- ActionBar colors -->
+    <color name="action_bar_background_color">@color/grey_transparent</color>
+    <color name="action_bar_separator_color">@color/footer_color</color>
+    
+    <!-- Tab colors -->
+    <color name="footer_color">@color/trakt_blue_1_transparent</color>
+    <color name="tab_background_color">@color/action_bar_background_color</color>
+    <color name="tab_focused_color">@android:color/transparent</color>
+    <color name="tab_pressed_color">@color/trakt_blue_1_transparent</color>
+    
+    <!-- ListView colors -->
+    <color name="list_background_color">@color/grey_transparent</color>
+    <color name="list_focused_color">@color/trakt_blue_1_transparent</color>
+    <color name="list_pressed_color">@color/trakt_blue_1_transparent</color>
+    <color name="list_divider_color">@color/grey</color>
+    <color name="list_cache_color_hint_color">@android:color/transparent</color>
+    
+    <!-- Text colors -->
+    <color name="primary_text_color">@color/white</color>
+    <color name="secondary_text_color">@color/light_grey</color>
+
+    <color name="holo_blue">#33B5E5</color>
+    <color name="holo_dark_blue">#0099CC</color>
+</resources>

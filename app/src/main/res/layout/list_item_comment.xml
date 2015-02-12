@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/keyline_margin" >
+
+    <com.florianmski.tracktoid.ui.widgets.BezelImageView
+        android:id="@+id/imageViewAvatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="centerCrop"
+        app:maskDrawable="@drawable/circle_mask" />
+
+    <TextView
+        style="@android:style/TextAppearance"
+        android:id="@+id/textViewUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/keyline_margin"
+        android:layout_toRightOf="@+id/imageViewAvatar"
+        tools:text="Username"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/textViewDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/textViewUsername"
+        android:layout_below="@id/textViewUsername"
+        tools:text="Date"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageViewAvatar">
+
+        <TextView
+            android:id="@+id/textViewComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/keyline_margin"
+            tools:text="Comment"
+            tools:lines="15"
+            android:autoLink="web"
+            android:textColor="@color/white"/>
+
+    </FrameLayout>
+
+</RelativeLayout>

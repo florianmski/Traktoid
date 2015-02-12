@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tav="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:id="@+id/linearLayoutActions">
+
+    <com.florianmski.tracktoid.ui.widgets.TraktActionView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:minHeight="0dp"
+        android:id="@+id/traktActionViewSeen"
+        tav:colorChecked="@color/seen"
+        tav:colorPressed="@color/seen_pressed"
+        android:text="Seen"/>
+
+    <com.florianmski.tracktoid.ui.widgets.TraktActionView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:minHeight="0dp"
+        android:id="@+id/traktActionViewCollection"
+        tav:colorChecked="@color/collection"
+        tav:colorPressed="@color/collection_pressed"
+        android:text="Collection"
+        android:layout_toRightOf="@+id/traktActionViewSeen"
+        />
+
+    <com.florianmski.tracktoid.ui.widgets.TraktActionView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:minHeight="0dp"
+        android:id="@+id/traktActionViewWatchlist"
+        tav:colorChecked="@color/watchlist"
+        tav:colorPressed="@color/watchlist_pressed"
+        android:text="Watchlist"
+        android:layout_toRightOf="@+id/traktActionViewCollection"/>
+
+</LinearLayout>
