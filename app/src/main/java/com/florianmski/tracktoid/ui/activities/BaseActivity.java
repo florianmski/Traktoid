@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.florianmski.tracktoid.R;
@@ -44,6 +45,23 @@ public abstract class BaseActivity extends ActionBarActivity
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+            // This is temporary, this is a naive implementation of the up navigation.
+            // It's in fact the back navigation.
+            // Did this so I don't have the up button not working at all
+            // I need to figure out how to handle complex situation such as activities with multiple parents
+            // or parents which need data.
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onPostCreate(Bundle savedInstanceState)
     {
         super.onPostCreate(savedInstanceState);
@@ -55,10 +73,10 @@ public abstract class BaseActivity extends ActionBarActivity
         super.setContentView(layoutResID);
     }
 
-	public void setPrincipalFragment(Fragment fragment)
-	{
-		getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
-	}
+    public void setPrincipalFragment(Fragment fragment)
+    {
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+    }
 
     protected static Intent makeIntent(Activity a, Class<?> activityToLaunch, Bundle args)
     {
@@ -77,11 +95,11 @@ public abstract class BaseActivity extends ActionBarActivity
     {
         a.startActivity(makeIntent(a, activityToLaunch, args));
     }
-	
-	public static void launchActivityForResult(FragmentActivity a, Class<?> activityToLaunch, int requestCode, Bundle args)
-	{
-		a.startActivityForResult(makeIntent(a, activityToLaunch, args), requestCode);
-	}
+
+    public static void launchActivityForResult(FragmentActivity a, Class<?> activityToLaunch, int requestCode, Bundle args)
+    {
+        a.startActivityForResult(makeIntent(a, activityToLaunch, args), requestCode);
+    }
 
     public void setTheme(TraktoidTheme theme)
     {
