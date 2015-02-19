@@ -21,10 +21,11 @@ public abstract class SwitchFragment extends BaseFragment implements View.OnClic
     private final static int FRAGMENT_SWITCH_RES_ID = R.id.fragment_switch;
 
     protected FloatingActionButton2 fab;
-    protected int index = 0;
+    protected int index = getDefaultIndex();
 
     public abstract Fragment getFragment(int index);
     public abstract int getCount();
+    public abstract int getDefaultIndex();
 
     public SwitchFragment() {}
 

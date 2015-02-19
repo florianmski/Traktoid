@@ -13,6 +13,12 @@ public abstract class SwitchShowMovieFragment extends SwitchFragment
         MOVIE
     }
 
+    // by default, display fragment linked to shows
+    // later we can persist this in SharedPreference so user is always greeted with the context he prefers
+    // this allow the user to stay in the same context (movie or show) if he switch fragment
+    // for instance Library (movie) -> Search (movie)
+    private static State currentState = State.SHOW;
+
     public abstract Fragment getShowFragment();
     public abstract Fragment getMovieFragment();
 
@@ -27,7 +33,7 @@ public abstract class SwitchShowMovieFragment extends SwitchFragment
     @Override
     public Fragment getFragment(int index)
     {
-        switch(State.values()[index])
+        switch(currentState = State.values()[index])
         {
             case SHOW:
                 return getShowFragment();
@@ -50,6 +56,12 @@ public abstract class SwitchShowMovieFragment extends SwitchFragment
         super.replaceFragment(previousFragment, nextFragment);
 
         setupFAB();
+    }
+
+    @Override
+    public int getDefaultIndex()
+    {
+        return currentState.ordinal();
     }
 
     private void setupFAB()
