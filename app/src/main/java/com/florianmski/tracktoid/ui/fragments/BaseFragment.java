@@ -42,6 +42,11 @@ public abstract class BaseFragment extends Fragment implements DrawInsetsFrameLa
             setupActionBar();
     }
 
+    protected void showActionBar(boolean show)
+    {
+        ((BaseActivity)getActivity()).showActionBar(show);
+    }
+
     protected void setupActionBar()
     {
 //        if(getActionBar().getNavigationMode() != ActionBar.NAVIGATION_MODE_STANDARD)

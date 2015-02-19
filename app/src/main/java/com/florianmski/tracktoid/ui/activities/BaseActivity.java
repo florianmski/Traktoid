@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
 import com.florianmski.tracktoid.R;
 import com.florianmski.tracktoid.TraktoidConstants;
@@ -18,6 +19,7 @@ import com.florianmski.tracktoid.utils.Utils;
 public abstract class BaseActivity extends ActionBarActivity
 {
     private Toolbar toolbar;
+    protected boolean actionBarShown = true;
 
     protected abstract View getContentView();
 
@@ -110,5 +112,17 @@ public abstract class BaseActivity extends ActionBarActivity
     public Toolbar getToolbar()
     {
         return (Toolbar)findViewById(R.id.toolbar);
+    }
+
+    public void showActionBar(boolean show)
+    {
+        if(show == actionBarShown)
+            return;
+
+        actionBarShown = show;
+        getToolbar().animate()
+                .translationY(show ? 0 : -getToolbar().getBottom())
+                .alpha(show ? 1 : 0)
+                .setInterpolator(new DecelerateInterpolator());
     }
 }
