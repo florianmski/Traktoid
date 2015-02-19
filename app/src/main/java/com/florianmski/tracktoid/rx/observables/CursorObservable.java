@@ -126,7 +126,8 @@ public abstract class CursorObservable<T> implements Observable.OnSubscribe<T>
                 else
                     Timber.d("updating : " + uri.toString().replace("content://com.florianmski.tracktoid.data.provider.TraktoidProvider/", ""));
 
-                call(subscriber);
+                if(subscriber != null)
+                    call(subscriber);
             }
         }
     }
