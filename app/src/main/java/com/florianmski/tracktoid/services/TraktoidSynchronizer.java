@@ -409,6 +409,14 @@ public class TraktoidSynchronizer
                     {
                         DateTime syncTime1 = funcGetItemSyncTime.call(t1);
                         DateTime syncTime2 = funcGetItemSyncTime.call(t2);
+
+                        // apparently sometimes API send back null values
+                        // in this case take "now" time
+                        if(syncTime1 == null)
+                            syncTime1 = DateHelper.now();
+                        if(syncTime2 == null)
+                            syncTime2 = DateHelper.now();
+
                         return -syncTime1.compareTo(syncTime2);
                     }
                 })
@@ -426,7 +434,11 @@ public class TraktoidSynchronizer
                     @Override
                     public Boolean call(T t)
                     {
-                        return funcGetItemSyncTime.call(t).isAfter(lastLocalSyncTime);
+                        DateTime syncTime = funcGetItemSyncTime.call(t);
+                        if(syncTime == null)
+                            syncTime = DateHelper.now();
+
+                        return syncTime.isAfter(lastLocalSyncTime);
                     }
                 })
                 .collect(new ArrayList<T>(), new Action2<ArrayList<T>, T>()
