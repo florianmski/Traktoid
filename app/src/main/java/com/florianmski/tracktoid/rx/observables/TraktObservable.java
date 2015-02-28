@@ -1,5 +1,6 @@
 package com.florianmski.tracktoid.rx.observables;
 
+import com.uwetrottmann.trakt.v2.exceptions.CheckinInProgressException;
 import com.uwetrottmann.trakt.v2.exceptions.OAuthUnauthorizedException;
 
 import rx.Observable;
@@ -7,7 +8,7 @@ import rx.Subscriber;
 
 public abstract class TraktObservable<T> implements Observable.OnSubscribe<T>
 {
-    public abstract T fire() throws OAuthUnauthorizedException;
+    public abstract T fire() throws OAuthUnauthorizedException, CheckinInProgressException;
 
     @Override
     public void call(Subscriber<? super T> subscriber)

@@ -29,6 +29,17 @@
             android:layout_marginLeft="@dimen/keyline_margin"
             android:layout_marginStart="@dimen/keyline_margin"/>
 
+        <com.getbase.floatingactionbutton.FloatingActionButton2
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            trakt:fab_colorNormal="?attr/colorPrimary"
+            trakt:fab_colorPressed="?attr/colorPrimaryDark"
+            android:src="@drawable/ic_check_white_24dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"

@@ -16,7 +16,7 @@ import com.uwetrottmann.trakt.v2.entities.MoreImageSizes;
 
 public abstract class TraktItemActivity extends HeaderActivity
 {
-    protected abstract TraktItemFragment<?> getFragment(String id, Bundle activityBundle);
+    protected abstract TraktItemFragment getFragment(String id, Bundle activityBundle);
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -26,7 +26,7 @@ public abstract class TraktItemActivity extends HeaderActivity
         Bundle activityBundle = getIntent().getExtras();
         String id = activityBundle.getString(TraktoidConstants.BUNDLE_ID);
 
-        TraktItemFragment<?> fragment;
+        TraktItemFragment fragment;
 
         if(savedInstanceState == null)
         {
@@ -34,7 +34,7 @@ public abstract class TraktItemActivity extends HeaderActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment, fragment, null).commit();
         }
         else
-            fragment = (TraktItemFragment<?>) getSupportFragmentManager().findFragmentById(R.id.fragment);
+            fragment = (TraktItemFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
 
         fragment.addScrollListener(new NotifyingScrollView.OnScrollChangedListener()
         {

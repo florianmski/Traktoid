@@ -45,6 +45,7 @@
             />
 
         <service android:name=".services.TraktoidService" />
+        <service android:name=".services.CheckinService" />
 
         <service
                 android:name=".services.sync.AuthenticatorService">

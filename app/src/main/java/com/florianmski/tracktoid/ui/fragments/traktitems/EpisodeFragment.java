@@ -2,25 +2,32 @@ package com.florianmski.tracktoid.ui.fragments.traktitems;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
 
-import com.florianmski.tracktoid.utils.DateHelper;
-import com.florianmski.tracktoid.utils.DbHelper;
 import com.florianmski.tracktoid.TraktoidConstants;
 import com.florianmski.tracktoid.TraktoidTheme;
 import com.florianmski.tracktoid.data.WEpisode;
+import com.florianmski.tracktoid.data.WShow;
 import com.florianmski.tracktoid.data.database.ProviderSchematic;
 import com.florianmski.tracktoid.rx.observables.CursorObservable;
 import com.florianmski.tracktoid.rx.observables.TraktObservable;
+import com.florianmski.tracktoid.trakt.CheckinManager;
 import com.florianmski.tracktoid.trakt.TraktManager;
 import com.florianmski.tracktoid.trakt.TraktSender;
 import com.florianmski.tracktoid.ui.activities.CommentsActivity;
+import com.florianmski.tracktoid.utils.DateHelper;
+import com.florianmski.tracktoid.utils.DbHelper;
+import com.florianmski.tracktoid.utils.Utils;
 import com.uwetrottmann.trakt.v2.entities.Episode;
+import com.uwetrottmann.trakt.v2.entities.EpisodeCheckinResponse;
+import com.uwetrottmann.trakt.v2.entities.Show;
 import com.uwetrottmann.trakt.v2.enums.Extended;
 import com.uwetrottmann.trakt.v2.exceptions.OAuthUnauthorizedException;
 
 import rx.Observable;
+import rx.functions.Func1;
 
-public class EpisodeFragment extends TraktItemFragment<WEpisode>
+public class EpisodeFragment extends TraktItemFragment<WEpisode, EpisodeCheckinResponse>
 {
     private String showId;
     private int season;
@@ -84,6 +91,33 @@ public class EpisodeFragment extends TraktItemFragment<WEpisode>
     }
 
     @Override
+    public Observable<EpisodeCheckinResponse> getCheckinObservable()
+    {
+        final Episode episode = item.getTraktItem();
+        return Observable.create(new CursorObservable<WShow>(
+                        getActivity(),
+                        ProviderSchematic.Shows.withId(item.showId),
+                        ProviderSchematic.Shows.PROJECTION,
+                        null, null, null)
+        {
+            @Override
+            protected WShow toObject(Cursor cursor)
+            {
+                return WShow.unpack(cursor);
+            }
+        }).flatMap(new Func1<WShow, Observable<EpisodeCheckinResponse>>()
+        {
+            @Override
+            public Observable<EpisodeCheckinResponse> call(WShow wShow)
+            {
+                Show show = wShow.getTraktItem();
+                String title = String.format("%s %s", show.title, Utils.getSeasonEpisodeString(episode.season, episode.number));
+                return CheckinManager.getInstance().checkinEpisode(getActivity(), episode.ids.trakt, title, show.runtime);
+            }
+        });
+    }
+
+    @Override
     public void refreshView(WEpisode item)
     {
         this.item = item;
@@ -95,6 +129,12 @@ public class EpisodeFragment extends TraktItemFragment<WEpisode>
             addInfo("Ratings", String.format("%.01f/10", rating));
 
         refreshGeneralView(item.getTraktBase());
+
+        if(!CheckinManager.getInstance().checkinInProgress())
+        {
+            fab.setVisibility(View.VISIBLE);
+            fab.show(true);
+        }
     }
     @Override
     public String getDateText(boolean invalidTime)

@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.florianmski.tracktoid.TraktoidPrefs;
 
@@ -260,5 +261,17 @@ public class Utils
         }
 
         return dir.delete();
+    }
+
+    public static void disableClipOnParents(View v)
+    {
+        if (v.getParent() == null)
+            return;
+
+        if (v instanceof ViewGroup)
+            ((ViewGroup) v).setClipChildren(false);
+
+        if (v.getParent() instanceof View)
+            disableClipOnParents((View) v.getParent());
     }
 }

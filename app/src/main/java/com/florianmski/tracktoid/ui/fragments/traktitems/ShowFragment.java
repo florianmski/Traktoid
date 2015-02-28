@@ -42,6 +42,7 @@ import com.florianmski.tracktoid.ui.widgets.TraktImageView;
 import com.squareup.picasso.Picasso;
 import com.uwetrottmann.trakt.v2.entities.Airs;
 import com.uwetrottmann.trakt.v2.entities.Episode;
+import com.uwetrottmann.trakt.v2.entities.EpisodeCheckinResponse;
 import com.uwetrottmann.trakt.v2.entities.Season;
 import com.uwetrottmann.trakt.v2.entities.Show;
 import com.uwetrottmann.trakt.v2.enums.Extended;
@@ -59,7 +60,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ShowFragment extends MediaBaseFragment<WShow>
+public class ShowFragment extends MediaBaseFragment<WShow, EpisodeCheckinResponse>
 {
     private FrameLayout flNextEpisode;
     private TraktImageView tivNextEpisode;
@@ -239,6 +240,12 @@ public class ShowFragment extends MediaBaseFragment<WShow>
                 return item;
             }
         });
+    }
+
+    @Override
+    public Observable<EpisodeCheckinResponse> getCheckinObservable()
+    {
+        throw new UnsupportedOperationException("not supported yet!");
     }
 
     @Override

@@ -10,7 +10,7 @@ import com.florianmski.tracktoid.ui.fragments.traktitems.MovieFragment;
 public class MovieActivity extends TraktItemActivity
 {
     @Override
-    protected MediaBaseFragment<WMovie> getFragment(String id, Bundle activityBundle)
+    protected MediaBaseFragment getFragment(String id, Bundle activityBundle)
     {
         return MovieFragment.newInstance(id);
     }
