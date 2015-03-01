@@ -98,7 +98,7 @@ public class EpisodeFragment extends TraktItemFragment<WEpisode, EpisodeCheckinR
                         getActivity(),
                         ProviderSchematic.Shows.withId(item.showId),
                         ProviderSchematic.Shows.PROJECTION,
-                        null, null, null)
+                        null, null, null, false)
         {
             @Override
             protected WShow toObject(Cursor cursor)

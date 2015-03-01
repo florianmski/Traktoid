@@ -71,7 +71,7 @@ public class CheckinService extends IntentService
             i.putExtra(BUNDLE_CHECKIN, BUNDLE_STOP_CHECKIN);
             PendingIntent pendingIntent = PendingIntent.getService(this, 0, i, 0);
             notificationBuilder = new NotificationCompat.Builder(this)
-                    .setContentTitle(String.format("You are watching %s", title))
+                    .setContentTitle(String.format("Watching %s", title))
                     .setColor(TraktoidTheme.DEFAULT.getColorDark(this))
                     .setSmallIcon(R.drawable.ic_check_white_24dp)
                     .setOngoing(true)
@@ -124,7 +124,7 @@ public class CheckinService extends IntentService
                         if(checkin == BUNDLE_CHECKIN_MOVIE)
                             DbHelper.updateMovie(CheckinService.this, cv.get(), String.valueOf(id));
                         else if(checkin == BUNDLE_CHECKIN_EPISODE)
-                            DbHelper.updateMovie(CheckinService.this, cv.get(), String.valueOf(id));
+                            DbHelper.updateEpisode(CheckinService.this, cv.get(), String.valueOf(id));
                     }
 
                     @Override

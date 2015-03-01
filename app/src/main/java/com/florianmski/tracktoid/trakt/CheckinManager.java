@@ -35,9 +35,9 @@ public class CheckinManager
         return manager;
     }
 
-    public Observable<MovieCheckinResponse> checkinMovie(Context context, final int id, String title, int duration)
+    public Observable<MovieCheckinResponse> checkinMovie(final Context context, final int id, final String title, final int duration)
     {
-        return checkin(context, new TraktObservable<MovieCheckinResponse>()
+        return checkin(new TraktObservable<MovieCheckinResponse>()
         {
             @Override
             public MovieCheckinResponse fire() throws OAuthUnauthorizedException, CheckinInProgressException
@@ -45,12 +45,19 @@ public class CheckinManager
                 MovieCheckin checkin = new MovieCheckin.Builder(new SyncMovie().id(MovieIds.trakt(id)), APP_VERSION, null).build();
                 return TraktManager.getInstance().checkin().checkin(checkin);
             }
-        }, id, title, duration);
+        }, new Action0()
+        {
+            @Override
+            public void call()
+            {
+                CheckinService.checkinMovie(context, id, title, duration);
+            }
+        });
     }
 
-    public Observable<EpisodeCheckinResponse> checkinEpisode(Context context, final int id, String title, int duration)
+    public Observable<EpisodeCheckinResponse> checkinEpisode(final Context context, final int id, final String title, final int duration)
     {
-        return checkin(context, new TraktObservable<EpisodeCheckinResponse>()
+        return checkin(new TraktObservable<EpisodeCheckinResponse>()
         {
             @Override
             public EpisodeCheckinResponse fire() throws OAuthUnauthorizedException, CheckinInProgressException
@@ -58,23 +65,23 @@ public class CheckinManager
                 EpisodeCheckin checkin = new EpisodeCheckin.Builder(new SyncEpisode().id(EpisodeIds.trakt(id)), APP_VERSION, null).build();
                 return TraktManager.getInstance().checkin().checkin(checkin);
             }
-        }, id, title, duration);
+        }, new Action0()
+        {
+            @Override
+            public void call()
+            {
+                CheckinService.checkinEpisode(context, id, title, duration);
+            }
+        });
     }
 
-    private <T extends BaseCheckinResponse> Observable<T> checkin(final Context context, TraktObservable<T> traktObservable, final int id, final String title, final int duration)
+    private <T extends BaseCheckinResponse> Observable<T> checkin(TraktObservable<T> traktObservable, Action0 callServiceAction)
     {
         return Observable
                 .create(traktObservable)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .doOnCompleted(new Action0()
-                {
-                    @Override
-                    public void call()
-                    {
-                        CheckinService.checkinEpisode(context, id, title, duration);
-                    }
-                });
+                .doOnCompleted(callServiceAction);
     }
 
     public void stop(Context context)
