@@ -13,14 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.florianmski.tracktoid.R;
-import com.florianmski.tracktoid.utils.Utils;
 import com.florianmski.tracktoid.adapters.AdapterInterface;
 import com.florianmski.tracktoid.containers.ContainerInterface;
 import com.florianmski.tracktoid.errors.Comportment;
@@ -28,6 +26,7 @@ import com.florianmski.tracktoid.errors.ErrorHandler;
 import com.florianmski.tracktoid.errors.NoResultException;
 import com.florianmski.tracktoid.errors.RetrofitComportment;
 import com.florianmski.tracktoid.ui.fragments.BaseFragment;
+import com.florianmski.tracktoid.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +73,6 @@ public abstract class ItemScrollFragment<T, E, V extends ViewGroup, S, A extends
     protected boolean refreshAtStart = true;
     protected boolean instantLoad = false;
     protected AnimatorSet fadeAnim;
-    protected boolean actionBarShown = true;
     protected View viewBeingAnimated;
 
     public ItemScrollFragment(ContainerInterface.ViewContainerInterface<T, V, A> viewContainer)
@@ -196,16 +194,13 @@ public abstract class ItemScrollFragment<T, E, V extends ViewGroup, S, A extends
         swipeRefreshLayout.setProgressViewEndTarget(false, getGroupView().getPaddingTop() * 2);
     }
 
-    protected void showActionBar(boolean show)
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser)
     {
-        if(show == actionBarShown)
-            return;
+        super.setUserVisibleHint(isVisibleToUser);
 
-        actionBarShown = show;
-        getToolbar().animate()
-                .translationY(show ? 0 : -getToolbar().getBottom())
-                .alpha(show ? 1 : 0)
-                .setInterpolator(new DecelerateInterpolator());
+        if(isVisibleToUser)
+            showActionBar(true);
     }
 
     public V getGroupView()

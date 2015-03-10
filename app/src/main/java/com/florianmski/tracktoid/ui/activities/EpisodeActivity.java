@@ -11,7 +11,7 @@ import com.florianmski.tracktoid.ui.fragments.traktitems.TraktItemFragment;
 public class EpisodeActivity extends TraktItemActivity
 {
     @Override
-    protected TraktItemFragment<?> getFragment(String id, Bundle activityBundle)
+    protected TraktItemFragment getFragment(String id, Bundle activityBundle)
     {
         String showId = activityBundle.getString(TraktoidConstants.BUNDLE_SHOW_ID);
         int season = activityBundle.getInt(TraktoidConstants.BUNDLE_SEASON);

@@ -10,7 +10,7 @@ import com.florianmski.tracktoid.ui.fragments.traktitems.ShowFragment;
 public class ShowActivity extends TraktItemActivity
 {
     @Override
-    protected MediaBaseFragment<WShow> getFragment(String id, Bundle activityBundle)
+    protected MediaBaseFragment getFragment(String id, Bundle activityBundle)
     {
         return ShowFragment.newInstance(id);
     }

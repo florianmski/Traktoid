@@ -7,8 +7,9 @@ import com.florianmski.tracktoid.data.TraktoidItem;
 import com.florianmski.tracktoid.image.ImagesTest;
 import com.florianmski.tracktoid.image.Type;
 import com.squareup.picasso.Picasso;
+import com.uwetrottmann.trakt.v2.entities.BaseCheckinResponse;
 
-public abstract class MediaBaseFragment<T extends TraktoidItem> extends TraktItemFragment<T>
+public abstract class MediaBaseFragment<T extends TraktoidItem, C extends BaseCheckinResponse> extends TraktItemFragment<T, C>
 {
     @Override
     protected void refreshGeneralView(TraktBase traktBase)

@@ -5,30 +5,46 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.View;
+import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-import com.florianmski.tracktoid.*;
 import com.florianmski.tracktoid.R;
+import com.florianmski.tracktoid.TraktoidTheme;
+
+import timber.log.Timber;
 
 public class FloatingActionButton2 extends FloatingActionButton
 {
+    public final static int ANIM_TRANSLATE = 1;
+    public final static int ANIM_SCALE = 2;
+
     private boolean visible = true;
+    private int animation = ANIM_TRANSLATE;
 
     public FloatingActionButton2(Context context)
     {
         super(context);
+        init();
     }
 
     public FloatingActionButton2(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+        init();
     }
 
     public FloatingActionButton2(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
+        init();
+    }
+
+    private void init()
+    {
+        visible = getVisibility() == View.VISIBLE;
     }
 
     public FloatingActionButton2 addToLayout(RelativeLayout rl)
@@ -50,6 +66,8 @@ public class FloatingActionButton2 extends FloatingActionButton
 
     public void reactToScroll(int dy)
     {
+        Timber.d("dy : " + dy);
+
         if(dy > 0)
             show(false);
         else if(dy < 0)
@@ -67,10 +85,33 @@ public class FloatingActionButton2 extends FloatingActionButton
             return;
 
         visible = show;
-        animate().translationY(show ? 0 : getHeight())
-                .alpha(show ? 1 : 0)
-                .setInterpolator(new DecelerateInterpolator())
-                .setListener(listener);
+        animate(show, listener);
+    }
+
+    private void animate(boolean show, Animator.AnimatorListener listener)
+    {
+        if(animation == ANIM_TRANSLATE)
+        {
+            animate().translationY(show ? 0 : getHeight())
+                    .alpha(show ? 1 : 0)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .setListener(listener);
+        }
+        else if(animation == ANIM_SCALE)
+        {
+            setScaleX(show ? 0f : 1f);
+            setScaleY(show ? 0f : 1f);
+            animate()
+                    .scaleX(show ? 1f : 0f)
+                    .scaleY(show ? 1f : 0f)
+                    .setInterpolator(new BounceInterpolator())
+                    .setListener(listener);
+        }
+    }
+
+    public void setAnimation(int anim)
+    {
+        this.animation = anim;
     }
 
     public void setTheme(final TraktoidTheme theme)

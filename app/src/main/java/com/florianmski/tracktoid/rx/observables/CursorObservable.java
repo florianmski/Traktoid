@@ -35,7 +35,7 @@ public abstract class CursorObservable<T> implements Observable.OnSubscribe<T>
 
     protected abstract T toObject(Cursor cursor);
 
-    public CursorObservable(Context context, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
+    public CursorObservable(Context context, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder, boolean listenToUpdates)
     {
         this.contentObserver = new ForceLoadContentObserver();
 
@@ -46,7 +46,13 @@ public abstract class CursorObservable<T> implements Observable.OnSubscribe<T>
         this.selectionArgs = selectionArgs;
         this.sortOrder = sortOrder;
 
-        context.getContentResolver().registerContentObserver(uri, false, contentObserver);
+        if(listenToUpdates)
+            context.getContentResolver().registerContentObserver(uri, false, contentObserver);
+    }
+
+    public CursorObservable(Context context, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
+    {
+        this(context, uri, projection, selection, selectionArgs, sortOrder, true);
     }
 
     private void closeCursor()
@@ -126,7 +132,8 @@ public abstract class CursorObservable<T> implements Observable.OnSubscribe<T>
                 else
                     Timber.d("updating : " + uri.toString().replace("content://com.florianmski.tracktoid.data.provider.TraktoidProvider/", ""));
 
-                call(subscriber);
+                if(subscriber != null)
+                    call(subscriber);
             }
         }
     }

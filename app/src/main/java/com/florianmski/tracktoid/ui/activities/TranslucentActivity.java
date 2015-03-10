@@ -113,6 +113,7 @@ public abstract class TranslucentActivity extends BaseActivity implements DrawIn
         super.setTheme(theme);
 
         // set statusbar color
-        difl.setInsetStatusBarBackground(new ColorDrawable(theme.getColorDark(this)));
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            difl.setInsetStatusBarBackground(new ColorDrawable(theme.getColorDark(this)));
     }
 }
